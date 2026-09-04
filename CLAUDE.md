@@ -15,6 +15,10 @@ bootstrap validates.
 - `doctrine/BUILD_LEARNING_LEDGER.md` — incidents, captured in the change that fixes them.
 - `ux/UX_MANIFEST.yaml` — human-surface state (journeys and their `UX_READY` /
   `INTERFACE_READY` status) under the bound `ux-design-assurance` module.
+- `doctrine/MUTATION_SURFACE.json` — the harness routes that can change governed state. The
+  hook matcher, the guard's classification and the drill's coverage are all derived from it.
+- `doctrine/RATCHETS.json` — counted debts and the armed-obligation floor, two-sided.
+- `doctrine/EXTERNAL_ENABLEMENT.md` — what only the governor or the platform can turn on.
 - `product/` — Stage 1 architecture, domain model and decision instruments.
 - `.doctrine/runtime/` — derived orientation evidence for this session; never committed,
   never authority.
@@ -27,8 +31,15 @@ derived standing assessment. To run it by hand:
 ```bash
 python3 scripts/doctrine-orient.py orient      # verify the Doctrine checkout, emit the receipt
 python3 scripts/doctrine-orient.py check       # consequence gate; run before commit/deploy/claims
+python3 scripts/doctrine-gate.py               # repository gates over the binding documents
 python3 scripts/doctrine-drill.py              # prove every protection fails under its violation
 ```
+
+Three layers, and none of them stands in for another. `scripts/doctrine-hook.py` denies an act
+before it happens, but only in a session whose host loaded this project's hook configuration.
+`.githooks/pre-commit` and `pre-push` refuse a commit or push and are compulsory for local git.
+CI at the pull-request chokepoint is the only layer that binds a human, and it is not enabled
+yet — `doctrine/EXTERNAL_ENABLEMENT.md` says what that needs.
 
 The seam expects the live `builders-doctrine` checkout beside this repository or at
 `$DOCTRINE_ROOT`. It fingerprints the central bootstrap before executing it, verifies the
@@ -43,3 +54,5 @@ mismatch. Until orientation is VALID: inspection and diagnosis only.
 3. Work on a branch; the default branch is merged through review.
 4. No real person's art, address, phone number or email in fixtures, screenshots or tests.
 5. Report what was SEEN, NOT SEEN and UNKNOWN. A green claim needs a receipt.
+6. An indeterminate verdict is a denial. If a guard, a gate or a check cannot establish that a
+   consequential act is permitted, the act does not happen — a malfunction is never permission.

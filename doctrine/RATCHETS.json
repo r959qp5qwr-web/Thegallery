@@ -1,0 +1,19 @@
+{
+  "_what": "Counted debts and armed-obligation floors. A ratchet is equality in BOTH directions (C-0005): the check fails when the number rises AND when it falls below the record, so every payoff and every regression is a visible diff line in the same change that causes it. Never widen a ratchet to silence a red; fix the cause or record the movement deliberately.",
+  "armed_fixed_decisions": {
+    "value": 8,
+    "_what": "FIXED decisions in doctrine/PRODUCT_STATE.json whose enforcement_locus names a path that exists AND that something in this repository executes, with no weakening word anywhere in the clause. Held by scripts/doctrine-gate.py G1 (candidate C-0006 class).",
+    "last_moved": "2026-09-04",
+    "last_moved_reason": "Enforcement closure: the guard's indeterminate verdict became a denial (GAL-G6), the git hooks became fail-closed and gained the repository gates (GAL-G7, GAL-G8), the banned-claim and reserved-contact sweeps became real checks (GAL-07, GAL-G4), and the stage block became a guard rule (GAL-G9). Before this change the honest count was 0: nothing in the tree was executed on a compulsory path.",
+    "members": [
+      "GAL-07:ARMED",
+      "GAL-G1:ARMED_AS_CONFIGURED",
+      "GAL-G2:ARMED_AS_CONFIGURED",
+      "GAL-G4:ARMED",
+      "GAL-G6:ARMED_AS_CONFIGURED",
+      "GAL-G7:ARMED",
+      "GAL-G8:ARMED",
+      "GAL-G9:ARMED_AS_CONFIGURED"
+    ]
+  }
+}

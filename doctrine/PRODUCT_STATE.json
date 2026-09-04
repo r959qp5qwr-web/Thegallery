@@ -177,10 +177,11 @@
       "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §4, §9 copy discipline",
       "decided_at": "2026-09-04",
       "status": "FIXED",
-      "enforcement_locus": "Build-failing banned-claim regex over the governed copy home: verified|vetted|certified|safe|guaranteed|authentic (per-audience sets)",
-      "enforcement_state": "UNARMED",
-      "proof_state": "INTENDED",
-      "required_consequence": "The platform does not claim that work is authentic, handmade, high quality, safe to buy, or that a maker is commercially reliable."
+      "enforcement_locus": "scripts/doctrine-gate.py G5 fails any commit whose rendered copy surfaces under ux/reference/interface/surfaces/ carry the banned vocabulary; .githooks/pre-commit executes it on every commit.",
+      "enforcement_state": "ARMED",
+      "proof_state": "IMPLEMENTED",
+      "required_consequence": "The platform does not claim that work is authentic, handmade, high quality, safe to buy, or that a maker is commercially reliable.",
+      "scope_debt": "The sweep's root set is the rendered copy surfaces that exist today. Application source and the governed copy home enter the same root set in Stage 2; carried as obligation OBL-GAL-012 with its activation condition, never as prose inside this clause (L-A19)."
     },
     {
       "id": "GAL-08",
@@ -347,9 +348,10 @@
       "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §3 (FIXED)",
       "decided_at": "2026-09-04",
       "status": "FIXED",
-      "enforcement_locus": "scripts/doctrine-hook.py GUARD-1 (pre-act denial of any mutating command targeting the Doctrine checkout) and .githooks/pre-push (refuses a builders-doctrine remote); drilled by scripts/doctrine-drill.py D-19/D-20/D-21/D-28",
+      "enforcement_locus": "scripts/doctrine-hook.py GUARD-1 denies any shell, file-write or GitHub-API act that targets the Doctrine checkout or repository, wired through .claude/settings.json; .githooks/pre-push refuses a push whose remote URL names builders-doctrine. Drilled by scripts/doctrine-drill.py.",
       "enforcement_state": "ARMED_AS_CONFIGURED",
-      "proof_state": "IMPLEMENTED"
+      "proof_state": "IMPLEMENTED",
+      "layer_note": "The push route is compulsory (git runs the hook); the agent routes are as-configured (the host must have loaded this project's hook configuration). The weaker of the two is the honest claim."
     },
     {
       "id": "GAL-G2",
@@ -357,9 +359,10 @@
       "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §3 (FIXED); Playbook §3",
       "decided_at": "2026-09-04",
       "status": "FIXED",
-      "enforcement_locus": "scripts/doctrine-orient.py check invoked by scripts/doctrine-hook.py GUARD-2 before consequential Bash acts and by .githooks/pre-commit and pre-push; SessionStart hook orients automatically; drilled D-01..D-18",
+      "enforcement_locus": "scripts/doctrine-hook.py GUARD-2 denies a consequential act when scripts/doctrine-orient.py check fails, and GUARD-0 denies when the guard cannot establish a verdict at all; .claude/settings.json wires it to every mutation-capable tool.",
       "enforcement_state": "ARMED_AS_CONFIGURED",
-      "proof_state": "IMPLEMENTED"
+      "proof_state": "IMPLEMENTED",
+      "layer_note": "In-session mutation is guarded only as-configured. The commit and push routes are held separately and compulsorily by GAL-G7."
     },
     {
       "id": "GAL-G3",
@@ -377,9 +380,10 @@
       "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §15; Canon 'Screenshots for publication come from the synthetic world'",
       "decided_at": "2026-09-04",
       "status": "FIXED",
-      "enforcement_locus": "MANUAL review of fixture provenance now; a no-invented-real-content sweep once fixtures exist",
-      "enforcement_state": "MANUAL",
-      "proof_state": "INTENDED"
+      "enforcement_locus": "scripts/doctrine-gate.py G5 fails any commit whose rendered surfaces carry an email outside the reserved example domains or a real-shaped phone number; .githooks/pre-commit executes it.",
+      "enforcement_state": "ARMED",
+      "proof_state": "IMPLEMENTED",
+      "scope_debt": "Committed fixtures and screenshots enter the same sweep in Stage 2 (OBL-GAL-012)."
     },
     {
       "id": "GAL-G5",
@@ -390,6 +394,50 @@
       "enforcement_locus": "Name-sweep gate over source and copy once source exists",
       "enforcement_state": "UNARMED",
       "proof_state": "INTENDED"
+    },
+    {
+      "id": "GAL-G6",
+      "summary": "An indeterminate guard verdict is a denial: the guard's own crash, an unparseable payload, an absent payload or a corrupt mutation-surface file may not authorise a consequential act. Read-only tools are never matched, so inspection and diagnosis survive any guard malfunction, and governance paths stay writable so the guard can be repaired.",
+      "source": "Governor enforcement-closure instruction 2026-09-04, taken as the derogation the Canon's fail-open ruling reserves to the Governor",
+      "decided_at": "2026-09-04",
+      "status": "FIXED",
+      "enforcement_locus": "scripts/doctrine-hook.py GUARD-0 exits 2 on every indeterminate path; .claude/settings.json matches only mutation-capable tools, derived from doctrine/MUTATION_SURFACE.json and held by scripts/doctrine-gate.py G2.",
+      "enforcement_state": "ARMED_AS_CONFIGURED",
+      "proof_state": "IMPLEMENTED",
+      "layer_note": "The one fail-open this cannot close is structural: the host treats any non-zero exit other than 2 as a non-blocking error, so a guard that never starts (missing interpreter, missing file) lets the act through. That residue is OBL-GAL-010 and is why the compulsory git layer exists."
+    },
+    {
+      "id": "GAL-G7",
+      "summary": "No commit and no push happens on an invalid, stale or absent orientation, and no commit happens while the repository gates are red.",
+      "source": "Builders' Playbook §3 consequence gate; Governor enforcement-closure instruction 2026-09-04",
+      "decided_at": "2026-09-04",
+      "status": "FIXED",
+      "enforcement_locus": ".githooks/pre-commit and .githooks/pre-push run scripts/doctrine-orient.py check and scripts/doctrine-gate.py, and refuse the act on failure or when the interpreter is absent.",
+      "enforcement_state": "ARMED",
+      "proof_state": "IMPLEMENTED",
+      "layer_note": "Compulsory for every local git commit and push in this checkout, by any actor. The residue is `--no-verify`, which is deliberate and visible; the CI job named in doctrine/EXTERNAL_ENABLEMENT.md is the layer that closes it."
+    },
+    {
+      "id": "GAL-G8",
+      "summary": "No commit or push reaches the default branch from a build session; the default branch is reached through review.",
+      "source": "Canon Day Zero #6; Commission v1.1 §15",
+      "decided_at": "2026-09-04",
+      "status": "FIXED",
+      "enforcement_locus": ".githooks/pre-commit refuses a commit on main or master and .githooks/pre-push refuses a push to refs/heads/main or refs/heads/master; scripts/doctrine-hook.py GUARD-3 denies the same acts through the shell and the GitHub API.",
+      "enforcement_state": "ARMED",
+      "proof_state": "IMPLEMENTED",
+      "layer_note": "Compulsory locally. A push made outside this checkout, or a merge performed in the GitHub UI, is the governor's own act and is not this product's to prevent; branch protection is the platform layer (doctrine/EXTERNAL_ENABLEMENT.md)."
+    },
+    {
+      "id": "GAL-G9",
+      "summary": "The active stage's blocked list is enforced, not remembered: application source, schema and deployment configuration cannot be created while the stage blocks them.",
+      "source": "doctrine/PRODUCT_STATE.json active_stage.blocked_until_acceptance; Commission v1.1 §15 stage gates",
+      "decided_at": "2026-09-04",
+      "status": "FIXED",
+      "enforcement_locus": "scripts/doctrine-hook.py GUARD-4 denies a local write into an application root or build manifest while active_stage.blocked_until_acceptance names it.",
+      "enforcement_state": "ARMED_AS_CONFIGURED",
+      "proof_state": "IMPLEMENTED",
+      "layer_note": "As-configured at the hook layer; the compulsory layer is that such files would have to reach a commit, where GAL-G7's gates run."
     }
   ],
   "mandated_outcomes": [
@@ -1108,70 +1156,135 @@
       "state": "OPEN",
       "owner": "GOVERNOR",
       "summary": "Stage 1 artefacts are complete and awaiting the governor's review: the nine strategic decisions in product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md need a ruling and the interface reference set needs acceptance before Stage 2 implementation begins.",
-      "evidence_path": "product/ and ux/ after Stage 1"
+      "evidence_path": "product/ and ux/ after Stage 1",
+      "activation_condition": "The governor reviews the Stage 1 artefacts and rules on the strategic decisions in product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md.",
+      "future_acceptance_test": "doctrine/PRODUCT_STATE.json records each strategic decision's ruling with its date, ux/UX_MANIFEST.yaml moves the affected journeys to INTERFACE_READY, and active_stage advances to STAGE_2 with its own blocked list."
     },
     {
       "id": "OBL-GAL-002",
       "state": "NOT_SEEN",
       "owner": "BUILDER",
-      "summary": "Runtime hook liveness: .claude/settings.json registers the SessionStart and PreToolUse hooks and the drill proves the guard's decisions, but whether Claude Code executes project hooks in a given session cannot be proven from inside the repository (Canon, 'The hook surface'). Hook enforcement is ARMED-as-configured at most; the git hooks and the explicit check command are the downstream layers.",
-      "evidence_path": "SessionStart output at the start of a later session"
+      "summary": "Host invocation of this project's hooks is unproven. Evidence gathered 2026-09-04: the harness's own SessionStart and Stop hooks did execute in this session (the transcript carries a stop_hook_summary record and the git-identity hook's effect), so the hook door exists and works in this environment; this project's .claude/settings.json was created after session start and hook configuration is snapshotted then, so no project hook fired. Script behaviour and hook configuration are proven; host invocation is not.",
+      "evidence_path": "SessionStart output at the start of a later session",
+      "activation_condition": "A fresh harness session starts with this branch checked out and .claude/settings.json present at session start.",
+      "future_acceptance_test": "The SessionStart output of that session contains the standing assessment and the line 'DOCTRINE GUARD: pre-act enforcement live for this session', and a deliberate denial attempt in that session returns a GUARD-rule denial. Procedure and expected evidence: doctrine/receipts/HOOK_LIVENESS_VERIFICATION.md."
     },
     {
       "id": "OBL-GAL-003",
       "state": "UNARMED",
       "owner": "BUILDER+GOVERNOR",
       "summary": "No CI exists. The orientation check cannot run at the pull-request chokepoint until CI can read the builders-doctrine repository (a read-only deploy key or token provisioned by the governor). Until then the trunk layer is UNARMED and branch protection state is UNKNOWN (dashboard-only fact).",
-      "evidence_path": ".github/workflows once created"
+      "evidence_path": ".github/workflows once created",
+      "activation_condition": "GitHub Actions is enabled for the repository and a read credential for builders-doctrine is stored as the repository secret named in doctrine/EXTERNAL_ENABLEMENT.md.",
+      "future_acceptance_test": "A run of the workflow .github/workflows/doctrine.yml on a pull request completes green, and the same workflow is a required status check on the default branch."
     },
     {
       "id": "OBL-GAL-004",
       "state": "STANDING",
       "owner": "BUILDER",
       "summary": "Doctrine 1.1.0 is ACTIVE_PENDING_REPIN, not FROZEN. Any advance of builders-doctrine's default branch makes this binding stale and every session will refuse orientation until the binding is re-pinned in a governed change that re-derives all fingerprints and re-orients. Re-pinning is a deliberate act, never an implementation convenience.",
-      "evidence_path": "doctrine/DOCTRINE_BINDING.json history"
+      "evidence_path": "doctrine/DOCTRINE_BINDING.json history",
+      "activation_condition": "The default branch of builders-doctrine advances beyond the bound commit.",
+      "future_acceptance_test": "doctrine/DOCTRINE_BINDING.json names the new commit with every fingerprint re-derived, and scripts/doctrine-orient.py orient succeeds against it in the same change."
     },
     {
       "id": "OBL-GAL-005",
       "state": "OPEN",
       "owner": "GOVERNOR",
       "summary": "Thegallery had no commits and no main branch at binding. The first governed commits are on the designated branch claude/the-gallery-foundation-7plo1e; the governor's merge establishes main. Branch protection on main is a GitHub setting this session cannot see or set (UNKNOWN until observed).",
-      "evidence_path": "GitHub repository settings"
+      "evidence_path": "GitHub repository settings",
+      "activation_condition": "The governor merges this branch, creating main.",
+      "future_acceptance_test": "git ls-remote origin shows refs/heads/main, and the branch-protection state required by doctrine/EXTERNAL_ENABLEMENT.md is observed."
     },
     {
       "id": "OBL-GAL-006",
       "state": "UNARMED",
       "owner": "BUILDER",
       "summary": "Audit Protocol L-A22 receipt machinery (numeric or green claims in commit messages bound to real suite exit status) is UNARMED until test suites exist in Stage 2; until then commit messages carry no numeric test claims.",
-      "evidence_path": "scripts/ once suites exist"
+      "evidence_path": "scripts/ once suites exist",
+      "activation_condition": "Stage 2 creates the first executable test suite.",
+      "future_acceptance_test": "A receipt writer records parsed counts and real exit status per suite, bound by content digest, and a commit carrying a numeric claim without a matching receipt is refused."
     },
     {
       "id": "OBL-GAL-007",
-      "state": "UNARMED",
+      "state": "RESOLVED",
       "owner": "BUILDER",
-      "summary": "C-0006-class gate over binding documents (a machine parsing hard-obligation clauses of CLAUDE.md and this file against a floor of armed loci) does not exist here; C-0006 remains OPEN centrally.",
-      "evidence_path": "none"
+      "summary": "A C-0006-class gate over the binding documents now exists: scripts/doctrine-gate.py G1 parses every FIXED decision's enforcement clause, disarms it on any weakening word, refuses a clause that cites a locus which does not exist or that nothing executes, refuses an ARMED claim resting only on the as-configured hook layer, and holds the armed count as a two-sided ratchet. C-0006 remains OPEN centrally and is not this product's to close.",
+      "evidence_path": "none",
+      "activation_condition": "This obligation is discharged: scripts/doctrine-gate.py G1 is the C-0006-class gate over the binding documents, with a two-sided armed-count ratchet in doctrine/RATCHETS.json.",
+      "future_acceptance_test": "scripts/doctrine-gate.py G1 passes on a commit and fails when a FIXED decision claims an enforcement it does not have — drilled by scripts/doctrine-drill.py."
     },
     {
       "id": "OBL-GAL-008",
       "state": "OPEN",
       "owner": "GOVERNOR",
       "summary": "Stage 2 deployed proof needs provisioning that does not exist in the build environment: a database/auth/storage project, a hosting project, a transactional email sender and domain, and DNS. None of these credentials is present. They are batched in product/STAGE_2_VERTICAL_SLICE.md so they can be provisioned ahead of dependence.",
-      "evidence_path": "product/STAGE_2_VERTICAL_SLICE.md"
+      "evidence_path": "product/STAGE_2_VERTICAL_SLICE.md",
+      "activation_condition": "The governor provisions the items listed in product/STAGE_2_VERTICAL_SLICE.md §4 and doctrine/EXTERNAL_ENABLEMENT.md.",
+      "future_acceptance_test": "Each credential is present in the hosting environment and the deployed email round trip is walked on a phone."
     },
     {
       "id": "UNK-GAL-001",
       "state": "UNKNOWN",
       "owner": "GOVERNOR",
       "summary": "Whether the central obligation OBL-UXDA-001 (re-pin and verified orientation of maa.se, Ustaad and Ahoy against Doctrine 1.1.0) has been discharged is unknown from this session; those repositories are outside its scope. It does not affect this binding, which pins the authoritative default-branch commit.",
-      "evidence_path": "builders-doctrine VERSION.json OPEN_OBLIGATION"
+      "evidence_path": "builders-doctrine VERSION.json OPEN_OBLIGATION",
+      "activation_condition": "The governor reports the state of OBL-UXDA-001 in builders-doctrine, or that repository's VERSION.json records its closure.",
+      "future_acceptance_test": "builders-doctrine VERSION.json no longer carries OBL-UXDA-001 as OPEN."
     },
     {
       "id": "OBS-GAL-001",
       "state": "OBSERVED",
       "owner": "GOVERNOR",
       "summary": "builders-doctrine tracks operating/__pycache__/doctrine_bootstrap.cpython-311.pyc, a compiled shadow of the fingerprinted executable (already recorded centrally in the assimilation report §10.7). It is not pinned here; the seam executes the .py source with bytecode writing disabled. No action is possible from this read-only product.",
-      "evidence_path": "builders-doctrine git ls-files"
+      "evidence_path": "builders-doctrine git ls-files",
+      "activation_condition": "A Governor-directed change in builders-doctrine removes the tracked bytecode file.",
+      "future_acceptance_test": "git ls-files in builders-doctrine no longer lists operating/__pycache__/."
+    },
+    {
+      "id": "OBL-GAL-009",
+      "state": "UNARMED",
+      "owner": "BUILDER",
+      "summary": "Mutation-surface drift: doctrine/MUTATION_SURFACE.json was inventoried from the tool surface offered on 2026-09-04. A tool the harness adds later matches no namespace rule and would be classified indeterminate by the guard (denied) but would also not be in the matcher, so the guard would never see it.",
+      "activation_condition": "The harness announces a tool that is not in the inventory and not covered by a namespace rule.",
+      "future_acceptance_test": "The inventory is re-derived, scripts/doctrine-gate.py G2 passes against the regenerated matcher, and the drill's coverage count moves in the same change.",
+      "evidence_path": "doctrine/MUTATION_SURFACE.json uncovered_routes_declared"
+    },
+    {
+      "id": "OBL-GAL-010",
+      "state": "UNARMED",
+      "owner": "BUILDER+GOVERNOR",
+      "summary": "Host-level fail-open residue: the harness treats exit code 2 as a block and every other non-zero exit as a non-blocking error. A guard that cannot start at all (interpreter absent, file removed, process killed) therefore lets the act proceed, and nothing inside the guard can prevent that. This is the reason the compulsory git layer and the CI layer exist rather than an argument that the hook layer suffices.",
+      "activation_condition": "CI runs the gates at the pull-request chokepoint, so that any act which slipped a dead hook is still caught before it reaches the default branch.",
+      "future_acceptance_test": "A pull request whose head commit was made with --no-verify is refused by the required Doctrine status check.",
+      "evidence_path": "scripts/doctrine-hook.py module docstring; doctrine/EXTERNAL_ENABLEMENT.md"
+    },
+    {
+      "id": "UNK-GAL-002",
+      "state": "UNKNOWN",
+      "owner": "BUILDER",
+      "summary": "Whether this project's PreToolUse hooks are applied to tool calls made inside a subagent started through Agent, Task or Workflow is not provable from inside the repository. Delegation is itself a guarded act, so an unoriented session cannot start one.",
+      "activation_condition": "A fresh session with hooks live runs a delegated agent that attempts a denied act.",
+      "future_acceptance_test": "The subagent's attempt returns a GUARD-rule denial, or the absence of one is recorded and the delegation class is declared UNARMED.",
+      "evidence_path": "doctrine/MUTATION_SURFACE.json uncovered_routes_declared"
+    },
+    {
+      "id": "OBL-GAL-011",
+      "state": "OPEN",
+      "owner": "GOVERNOR",
+      "summary": "Branch protection on the default branch, and the Doctrine status check as a required check, are platform settings this session can neither read nor set.",
+      "activation_condition": "main exists and GitHub Actions is enabled.",
+      "future_acceptance_test": "The repository's branch-protection state shows the Doctrine check required and direct pushes refused; recorded by observation, since dashboard-only facts are otherwise UNKNOWN.",
+      "evidence_path": "doctrine/EXTERNAL_ENABLEMENT.md"
+    },
+    {
+      "id": "OBL-GAL-012",
+      "state": "UNARMED",
+      "owner": "BUILDER",
+      "summary": "The banned-vocabulary and no-real-contact sweeps (gate G5) cover the rendered copy surfaces that exist today. Application source, the governed copy home and committed fixtures are not yet in the sweep's root set because they do not yet exist.",
+      "activation_condition": "Stage 2 creates the first application source file or committed fixture.",
+      "future_acceptance_test": "G5's root set is derived from the tracked corpus rather than one directory, the drill plants a violation in application source and the gate goes red.",
+      "evidence_path": "scripts/doctrine-gate.py G5"
     }
   ],
   "most_recent_accepted_product_harvest": {
@@ -1205,6 +1318,6 @@
     }
   },
   "learning_ledger": "doctrine/BUILD_LEARNING_LEDGER.md",
-  "updated_at": "2026-09-04T06:24:11+00:00",
-  "update_reason": "Stage 1 complete: product, journey, domain and access architecture; four journey contracts at UX_READY with wireframes; Interface Foundation and a three-surface reference set with six inheritance demonstrations rendered and reviewed; strategic decisions instrumented for the governor; Stage 2 slice proposed. Promise proof states advanced to DESIGNED where a rendered or architected surface exists."
+  "updated_at": "2026-09-04T08:03:24+00:00",
+  "update_reason": "Enforcement closure on the Governor instruction of 2026-09-04: the guard's indeterminate verdict became a denial, the guarded mutation surface was derived from the harness's real tool inventory rather than assumed to be Bash, the git hooks were made fail-closed, a repository gate over the binding documents was added with a two-sided armed-count ratchet, and every obligation now carries an activation condition and a future acceptance test."
 }

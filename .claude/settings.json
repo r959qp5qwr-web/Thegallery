@@ -1,4 +1,6 @@
 {
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "_doctrine": "Wiring for the product-local Doctrine guard. The PreToolUse matcher is DERIVED from doctrine/MUTATION_SURFACE.json and scripts/doctrine-gate.py fails when the two drift (Canon: derive every guarded set, never hand-list it). Read-only tools are deliberately absent from the matcher so that a malfunctioning guard can never block inspection or diagnosis.",
   "hooks": {
     "SessionStart": [
       {
@@ -13,12 +15,12 @@
     ],
     "PreToolUse": [
       {
-        "matcher": "Bash",
+        "matcher": "Agent|Artifact|Bash|CronCreate|CronDelete|DesignSync|Edit|MultiEdit|NotebookEdit|PushNotification|ScheduleWakeup|SendMessage|SendUserFile|Task|Workflow|Write|mcp__Claude_Code_Remote__|mcp__Google_Drive__|mcp__github__",
         "hooks": [
           {
             "type": "command",
             "command": "python3 \"${CLAUDE_PROJECT_DIR:-.}/scripts/doctrine-hook.py\" pre-tool-use",
-            "timeout": 120
+            "timeout": 180
           }
         ]
       }

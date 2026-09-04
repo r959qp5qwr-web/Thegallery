@@ -1,0 +1,190 @@
+{
+  "schema_version": "1.0",
+  "_what": "The mutation surface of the harness this product is built in, inventoried from the tool surface actually offered to the session on 2026-09-04. The guard's classification, the hook matcher in .claude/settings.json and the drill's coverage are all DERIVED from this file (Canon: derive every guarded set; never hand-list it in three places). A tool that appears in the environment and not here is an UNCOVERED ROUTE, not a safe one: scripts/doctrine-gate.py fails when the matcher and this file disagree, and the honest consequence is recorded in PRODUCT_STATE obligation OBL-GAL-009.",
+  "inventoried_at": "2026-09-04",
+  "inventory_method": "Enumerated from the session's own tool listing (direct tools, deferred tools announced by the harness, and connected MCP servers github / Google_Drive / Claude_Code_Remote). Re-run the inventory whenever the harness announces new tools; this file is the thing that must change.",
+  "classes": {
+    "READ_ONLY": "Cannot change repository, deployment, published or external state. Never denied; deliberately NOT matched by the hook so that a malfunctioning guard can never block inspection or diagnosis.",
+    "LOCAL_WRITE": "Writes files in the working tree. Route: file path.",
+    "SHELL": "Arbitrary local acts including git, package managers, deploy CLIs. Route: command string.",
+    "REMOTE_REPO_WRITE": "Changes a GitHub repository through the API without touching the local working tree or local git hooks. This route bypasses .githooks entirely.",
+    "PUBLICATION": "Puts content outside the repository where other people can read it.",
+    "DELEGATION": "Starts another agent or session that carries its own tool surface.",
+    "EXTERNAL_WRITE": "Writes state in a third-party system or another session.",
+    "SCHEDULING": "Creates durable triggers that act later, outside this session.",
+    "SESSION_LOCAL": "Bookkeeping that lives and dies with this session and changes nothing a later reader could be misled by. Never denied and deliberately not matched: a guard that interrupts a to-do list teaches the operator to switch it off, which is the real failure mode."
+  },
+  "tools": {
+    "READ_ONLY": [
+      "Read",
+      "Glob",
+      "Grep",
+      "ToolSearch",
+      "ListAgents",
+      "ReadNotifications",
+      "SearchSkills",
+      "ListSkills",
+      "SearchPlugins",
+      "ListPlugins",
+      "ListConnectors",
+      "SearchMcpRegistry",
+      "ListMcpResourcesTool",
+      "ReadMcpResourceTool",
+      "ReadMcpResourceDirTool",
+      "WebSearch",
+      "WebFetch",
+      "AskUserQuestion",
+      "ShowOnboardingRolePicker",
+      "SuggestSkills",
+      "SuggestConnectors",
+      "SuggestPluginInstall",
+      "ReportFindings",
+      "EnterPlanMode",
+      "ExitPlanMode",
+      "Monitor",
+      "Skill"
+    ],
+    "LOCAL_WRITE": [
+      "Write",
+      "Edit",
+      "MultiEdit",
+      "NotebookEdit"
+    ],
+    "SHELL": [
+      "Bash"
+    ],
+    "REMOTE_REPO_WRITE": [
+      "mcp__github__create_or_update_file",
+      "mcp__github__delete_file",
+      "mcp__github__push_files",
+      "mcp__github__create_branch",
+      "mcp__github__create_repository",
+      "mcp__github__fork_repository",
+      "mcp__github__merge_pull_request",
+      "mcp__github__create_pull_request",
+      "mcp__github__update_pull_request",
+      "mcp__github__update_pull_request_branch",
+      "mcp__github__enable_pr_auto_merge",
+      "mcp__github__disable_pr_auto_merge",
+      "mcp__github__actions_run_trigger",
+      "mcp__github__issue_write",
+      "mcp__github__sub_issue_write",
+      "mcp__github__add_issue_comment",
+      "mcp__github__pull_request_review_write",
+      "mcp__github__add_comment_to_pending_review",
+      "mcp__github__add_reply_to_pull_request_comment",
+      "mcp__github__resolve_review_thread",
+      "mcp__github__unresolve_review_thread",
+      "mcp__github__request_copilot_review",
+      "mcp__github__subscribe_pr_activity",
+      "mcp__github__unsubscribe_pr_activity"
+    ],
+    "PUBLICATION": [
+      "Artifact",
+      "SendUserFile"
+    ],
+    "DELEGATION": [
+      "Agent",
+      "Task",
+      "Workflow"
+    ],
+    "EXTERNAL_WRITE": [
+      "mcp__Google_Drive__create_file",
+      "mcp__Google_Drive__update_file",
+      "mcp__Google_Drive__copy_file",
+      "mcp__Google_Drive__trash_file",
+      "mcp__Google_Drive__share_file",
+      "mcp__Claude_Code_Remote__create_session",
+      "mcp__Claude_Code_Remote__send_message",
+      "mcp__Claude_Code_Remote__interrupt_session",
+      "mcp__Claude_Code_Remote__archive_session",
+      "mcp__Claude_Code_Remote__unarchive_session",
+      "mcp__Claude_Code_Remote__set_session_title",
+      "mcp__Claude_Code_Remote__set_session_tags",
+      "mcp__Claude_Code_Remote__add_repo",
+      "mcp__Claude_Code_Remote__register_repo_root",
+      "mcp__Claude_Code_Remote__watch_url",
+      "mcp__Claude_Code_Remote__unwatch_url",
+      "SendMessage",
+      "DesignSync",
+      "PushNotification"
+    ],
+    "SCHEDULING": [
+      "CronCreate",
+      "CronDelete",
+      "ScheduleWakeup",
+      "mcp__Claude_Code_Remote__create_trigger",
+      "mcp__Claude_Code_Remote__update_trigger",
+      "mcp__Claude_Code_Remote__delete_trigger",
+      "mcp__Claude_Code_Remote__fire_trigger",
+      "mcp__Claude_Code_Remote__send_later"
+    ],
+    "SESSION_LOCAL": [
+      "TaskCreate",
+      "TaskUpdate",
+      "TaskStop",
+      "TaskGet",
+      "TaskList",
+      "TaskOutput"
+    ]
+  },
+  "namespace_rules": {
+    "_what": "A tool that appears inside a covered namespace but is not listed above is classified by verb, so a new MCP tool is not silently unguarded.",
+    "mcp__github__": {
+      "read_verbs": [
+        "get_",
+        "list_",
+        "search_",
+        "issue_read",
+        "pull_request_read",
+        "actions_get",
+        "actions_list",
+        "run_secret_scanning"
+      ],
+      "default_for_unknown": "REMOTE_REPO_WRITE"
+    },
+    "mcp__Google_Drive__": {
+      "read_verbs": [
+        "get_",
+        "list_",
+        "search_",
+        "read_",
+        "download_"
+      ],
+      "default_for_unknown": "EXTERNAL_WRITE"
+    },
+    "mcp__Claude_Code_Remote__": {
+      "read_verbs": [
+        "get_",
+        "list_"
+      ],
+      "default_for_unknown": "EXTERNAL_WRITE"
+    }
+  },
+  "hook_matcher_classes": [
+    "LOCAL_WRITE",
+    "SHELL",
+    "REMOTE_REPO_WRITE",
+    "PUBLICATION",
+    "DELEGATION",
+    "EXTERNAL_WRITE",
+    "SCHEDULING"
+  ],
+  "uncovered_routes_declared": [
+    {
+      "route": "A tool the harness adds after this inventory that matches no namespace rule",
+      "state": "UNARMED at the hook layer",
+      "downstream": "The change still has to become a commit to matter; .githooks and the CI job at the pull-request chokepoint are the layers that see it regardless of route."
+    },
+    {
+      "route": "Tool calls made by a subagent started through Agent/Task/Workflow",
+      "state": "UNKNOWN — whether the harness applies this project's PreToolUse hooks inside a subagent's own tool loop is not provable from inside the repository",
+      "downstream": "Delegation itself is a guarded act, so an unoriented session cannot start one; and the same downstream layers apply."
+    },
+    {
+      "route": "A human operating git in this checkout outside any agent session",
+      "state": "By design not a hook concern",
+      "downstream": ".githooks/pre-commit and pre-push, which are fail-closed and bypassable only with an explicit --no-verify; CI is the layer that closes that."
+    }
+  ]
+}

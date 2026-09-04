@@ -1,0 +1,78 @@
+# The Gallery — Doctrine enforcement at the pull-request chokepoint.
+#
+# This is the layer that catches what the other two cannot: a commit made with --no-verify, a
+# change pushed from a checkout whose core.hooksPath was never set, and any mutation that
+# reached the repository through a route the harness guard did not see. It is the only layer
+# that binds a human as well as an agent.
+#
+# INERT UNTIL ENABLED. It needs GitHub Actions switched on for the repository and a read
+# credential for the private central Doctrine repository, because orientation is meaningless
+# without the Doctrine to fingerprint against. Both are governor acts and neither can be done
+# from a build session: see doctrine/EXTERNAL_ENABLEMENT.md. Until they are done this file is
+# a description, not a gate, and doctrine/PRODUCT_STATE.json says so (OBL-GAL-003).
+name: Doctrine
+
+on:
+  pull_request:
+  push:
+    branches-ignore: []
+
+permissions:
+  contents: read
+
+jobs:
+  doctrine:
+    name: Orientation, gates and drill
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the product
+        uses: actions/checkout@v4
+        with:
+          path: Thegallery
+          fetch-depth: 0
+
+      - name: Refuse to run without the Doctrine credential
+        env:
+          DOCTRINE_READ_TOKEN: ${{ secrets.DOCTRINE_READ_TOKEN }}
+        run: |
+          if [ -z "${DOCTRINE_READ_TOKEN}" ]; then
+            echo "::error::The repository secret DOCTRINE_READ_TOKEN is not set, so the central Doctrine cannot be read and orientation cannot be verified."
+            echo "This job fails closed: an unverifiable governing state is not permission. See doctrine/EXTERNAL_ENABLEMENT.md item 2."
+            exit 1
+          fi
+
+      - name: Check out the central Doctrine at the bound commit
+        env:
+          DOCTRINE_READ_TOKEN: ${{ secrets.DOCTRINE_READ_TOKEN }}
+        run: |
+          set -eu
+          BOUND=$(python3 -c "import json;print(json.load(open('Thegallery/doctrine/DOCTRINE_BINDING.json'))['doctrine']['commit'])")
+          echo "binding pins ${BOUND}"
+          git clone --quiet "https://x-access-token:${DOCTRINE_READ_TOKEN}@github.com/r959qp5qwr-web/builders-doctrine.git" builders-doctrine
+          git -C builders-doctrine checkout --quiet "${BOUND}"
+          echo "DOCTRINE_ROOT=${GITHUB_WORKSPACE}/builders-doctrine" >> "$GITHUB_ENV"
+
+      - name: Orient against the bound Doctrine
+        working-directory: Thegallery
+        run: python3 -B scripts/doctrine-orient.py orient --session-id "ci-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+
+      - name: Consequence gate
+        working-directory: Thegallery
+        run: python3 -B scripts/doctrine-orient.py check --session-id "ci-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+
+      - name: Repository gates
+        working-directory: Thegallery
+        run: python3 -B scripts/doctrine-gate.py
+
+      - name: Drill every protection under its own violation
+        working-directory: Thegallery
+        run: python3 -B scripts/doctrine-drill.py
+
+      - name: Preserve drill evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: doctrine-drill-${{ github.run_id }}
+          path: Thegallery/.doctrine/runtime/drills/
+          if-no-files-found: warn
+          retention-days: 30
