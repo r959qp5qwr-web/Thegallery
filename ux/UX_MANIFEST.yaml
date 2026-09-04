@@ -16,21 +16,25 @@ foundations:
 
 interface_reference_set:
   path: ux/reference/interface/INTERFACE_REFERENCE_SET.md
-  status: NOT_ESTABLISHED
+  status: DRAFT_AWAITING_GOVERNOR_ACCEPTANCE
+  surfaces: [R-1, R-2, R-3]
+  inheritance_demonstrations: [I-1, I-2, I-3, I-4, I-5, I-6]
 
 active_journey: J-001
 
 # Critical journeys (Playbook §5A classification by consequence). Statuses are the module's
 # legal statuses; a status changes only with the evidence the gate names.
+# INTERFACE_DESIGNING here means: UX section frozen at UX_READY, interface section complete,
+# INTERFACE_READY withheld until the governor accepts the reference set (G-IF1).
 journeys:
   - id: J-001
     name: Visitor encounters a work and reaches the maker
     criticality: CRITICAL
     reason: delivers core value; crosses roles; ends at the trust-bearing direct-contact handoff
-    status: IDENTIFIED
+    status: INTERFACE_DESIGNING
     contract: ux/journeys/J-001-visitor-encounter-to-contact.md
-    wireframes: []
-    interface_references: []
+    wireframes: [ux/wireframes/J-001-flow.png]
+    interface_references: [ux/reference/interface/renders/R-1-entrance.png, ux/reference/interface/renders/R-2-work-detail.png, ux/reference/interface/renders/R-2b-handoff-sheet.png, ux/reference/interface/renders/I-1-maker-gallery.png]
     last_verified_build: ""
     verification_report: ""
     deferred_reason: ""
@@ -40,10 +44,10 @@ journeys:
     name: Maker enters by email, creates a gallery and publishes a first work
     criticality: CRITICAL
     reason: sign-in and admission door; creates a consequential public commitment; privacy of the account email
-    status: IDENTIFIED
+    status: INTERFACE_DESIGNING
     contract: ux/journeys/J-002-maker-door-and-first-publish.md
-    wireframes: []
-    interface_references: []
+    wireframes: [ux/wireframes/J-002-flow.png]
+    interface_references: [ux/reference/interface/renders/R-3-studio-add-work.png, ux/reference/interface/renders/I-4-maker-door.png, ux/reference/interface/renders/I-5-states.png]
     last_verified_build: ""
     verification_report: ""
     deferred_reason: ""
@@ -53,9 +57,9 @@ journeys:
     name: Maker changes work status and every public surface follows
     criticality: CRITICAL
     reason: high-frequency routine act; truthfulness promise P-11 depends on it
-    status: IDENTIFIED
+    status: UX_READY
     contract: ux/journeys/J-003-status-change-propagates.md
-    wireframes: []
+    wireframes: [ux/wireframes/J-003-flow.png]
     interface_references: []
     last_verified_build: ""
     verification_report: ""
@@ -66,10 +70,10 @@ journeys:
     name: Operator resolves a report, suspends and reinstates a maker
     criticality: CRITICAL
     reason: operator journey holding up user-facing promises P-14; irreversible-feeling sanction with a release path
-    status: IDENTIFIED
+    status: INTERFACE_DESIGNING
     contract: ux/journeys/J-004-operator-report-to-reinstatement.md
-    wireframes: []
-    interface_references: []
+    wireframes: [ux/wireframes/J-004-flow.png]
+    interface_references: [ux/reference/interface/renders/I-6-operator-report.png]
     last_verified_build: ""
     verification_report: ""
     deferred_reason: ""

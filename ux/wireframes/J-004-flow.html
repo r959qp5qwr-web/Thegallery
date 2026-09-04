@@ -1,0 +1,34 @@
+<!doctype html><html><head><meta charset="utf-8"><title>J-004 wireframes</title><link rel="stylesheet" href="wire.css"></head><body>
+<div class="strip">
+<div class="f"><span class="cap">1 · Operator queue (/operator/reports)</span>
+ <div class="hdr"><span class="m">OPERATOR</span><span>[sign out]</span></div>
+ <div class="p"><div class="t">Reports</div><div class="m">2 submitted · 1 under review</div></div>
+ <div class="row"><span>Impersonation · work “Salt Bowl” by Dhaaga Studio<br><span class="m">submitted 3 h ago</span></span><span>›</span></div>
+ <div class="row"><span>Spam or misuse · maker “Kabir Lohar Works”<br><span class="m">submitted 1 d ago</span></span><span>›</span></div>
+ <div class="row"><span>Prohibited resale · work “Ash Jar”<br><span class="m">under review · 2 d</span></span><span>›</span></div>
+ <div class="ann">states: not signed in (distinct wording) · signed in, not operator (“Not permitted”) · empty queue</div>
+</div>
+<div class="f"><span class="cap">2 · Report detail — subject as the public sees it + governed state</span>
+ <div class="hdr"><span>[back]</span><span class="m">Report</span><span></span></div>
+ <div class="p"><div class="m">Impersonation · submitted 3 h ago</div><p>Reporter’s note: “This is a photograph of my work, listed under another name.”</p></div>
+ <div class="p m">Subject (public rendering)</div>
+ <div class="box img" style="aspect-ratio:4/3">work “Salt Bowl” · Dhaaga Studio</div>
+ <div class="p m">Governed state</div><div class="row"><span>Work</span><span>published · enquire</span></div><div class="row"><span>Maker</span><span>active · 2 works</span></div><div class="row"><span>History</span><span>no prior actions</span></div>
+ <div class="p" style="display:flex;gap:8px"><div class="btn" style="flex:1">Dismiss</div><div class="btn" style="flex:1">Take down work</div><div class="btn" style="flex:1">Suspend maker</div></div>
+</div>
+<div class="f"><span class="cap">3 · Suspend dialog — required reason, named consequence</span>
+ <div class="hdr"><span>[back]</span><span class="m">Report</span><span></span></div>
+ <div class="p" style="opacity:.4"><div class="m">Impersonation</div><div class="box img" style="aspect-ratio:4/3">subject</div></div>
+ <div class="dim"></div>
+ <div class="dlg"><h3>Suspend Dhaaga Studio?</h3><p>Their gallery, works and workshops leave every public surface. They will see this reason at sign-in and can appeal by email. You can reinstate at any time.</p><div class="fld"><label>Reason (required, recorded)</label><div class="in">…</div></div><div style="display:flex;gap:8px;justify-content:flex-end"><div class="btn">Cancel</div><div class="btn p1 d">Suspend</div></div><div class="ann">confirm stays disabled until a reason is written · failure records nothing</div></div>
+</div>
+<div class="f"><span class="cap">4 · Maker page — reinstate from where the suspension shows</span>
+ <div class="hdr"><span>[back]</span><span class="m">Maker</span><span></span></div>
+ <div class="p"><div class="t">Dhaaga Studio</div><div class="m" style="color:#a00">SUSPENDED · 3 h ago · “impersonation report upheld”</div></div>
+ <div class="p m">History (append-only)</div>
+ <div class="row"><span>Suspended · operator · 3 h ago<br><span class="m">reason: impersonation report upheld</span></span></div>
+ <div class="row"><span>Report actioned · 3 h ago</span></div>
+ <div class="p"><div class="btn p1">Reinstate (reason required)</div><div class="ann">reinstatement restores exactly what was suspended; both rows remain</div></div>
+</div>
+</div>
+</body></html>

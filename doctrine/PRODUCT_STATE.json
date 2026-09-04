@@ -22,7 +22,7 @@
   },
   "active_stage": {
     "code": "STAGE_1",
-    "label": "Product and interface architecture (Build Commission v1.1 §15)",
+    "label": "Product and interface architecture (Build Commission v1.1 §15) — artefacts complete; awaiting the governor's review",
     "entered_at": "2026-09-04T04:45:14+00:00",
     "authorised_by": "Stage 0 orientation VALID in the binding session; receipt recorded at doctrine/receipts/STAGE0-ORIENTATION-2026-09-04.md",
     "next_acceptance_condition": "The governor reviews the Stage 1 artefacts (product/PRODUCT_ARCHITECTURE.md, product/DOMAIN_MODEL.md, ux/journeys/*, ux/INTERFACE_FOUNDATION.md, ux/reference/interface/*) and rules on the STRATEGIC open decisions in open_governor_decisions; only that ruling authorises Stage 2 (the vertical slice). Until then application source, schema and deployment configuration are not created.",
@@ -43,9 +43,9 @@
       {
         "code": "STAGE_1",
         "label": "Product and interface architecture",
-        "state": "ACTIVE",
+        "state": "COMPLETE_AWAITING_GOVERNOR_REVIEW",
         "gate": "the governor can see what the product is, how it moves, how the maker publishes and how the operator acts; direction accepted",
-        "evidence": null
+        "evidence": "product/PRODUCT_ARCHITECTURE.md; product/DOMAIN_MODEL.md; product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md; product/STAGE_2_VERTICAL_SLICE.md; ux/UX_FOUNDATION.md; ux/INTERFACE_FOUNDATION.md; ux/journeys/J-001..J-004; ux/wireframes/*.png; ux/reference/interface/INTERFACE_REFERENCE_SET.md and renders/"
       },
       {
         "code": "STAGE_2",
@@ -471,6 +471,24 @@
       "status": "RECOMMENDED",
       "summary": "Success measures: work-detail open rate; direct-contact action from eligible work or gallery; active makers with current published work; inventory freshness and status reconfirmation; return visits and private saves without public counts; workshop and commission contact intent; failed publish/contact rate; report rate and operator resolution time; first-attempt completion of the decisive maker publishing chain. Never scroll time, posts per day, reactions, follower growth or GMV.",
       "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §18; THE_GALLERY_CONCEPT_NOTE_v0.1.docx §07"
+    },
+    {
+      "id": "GAL-PR-01",
+      "status": "RECOMMENDED",
+      "summary": "A gallery may publish without a contact route; contact is not advertised until a route exists and Studio shows the task. GAL-03 holds because no path is offered before a route exists.",
+      "source": "Stage 1 design (product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md §B)"
+    },
+    {
+      "id": "GAL-PR-02",
+      "status": "RECOMMENDED",
+      "summary": "Sold and on-view works stay visible with their status; only retirement removes a work from public surfaces.",
+      "source": "Stage 1 design (§B)"
+    },
+    {
+      "id": "GAL-PR-03",
+      "status": "RECOMMENDED",
+      "summary": "A status unconfirmed for 90 days is labelled publicly and prompts the maker to reconfirm; nothing is auto-retired.",
+      "source": "Stage 1 design (§B)"
     }
   ],
   "refusal_register": [
@@ -660,7 +678,7 @@
       "boundary": "Do not scatter alternate names through code or copy.",
       "classification": "STRATEGIC_RATIFY",
       "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; PLANBELLA_TO_THE_GALLERY_RESEARCH_BRIEF.docx (2026-09-03) §11",
-      "stage_1_resolution": null
+      "stage_1_resolution": "Recommendation A in product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md; awaiting the governor's ruling before Stage 2."
     },
     {
       "id": "GAL-OD-02",
@@ -670,7 +688,7 @@
       "boundary": "No retailer/reseller expansion without a product decision.",
       "classification": "STRATEGIC",
       "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; PLANBELLA_TO_THE_GALLERY_RESEARCH_BRIEF.docx (2026-09-03) §10 D1; THE_GALLERY_CONCEPT_NOTE_v0.1.docx §07",
-      "stage_1_resolution": null
+      "stage_1_resolution": "Recommendation A in product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md; awaiting the governor's ruling before Stage 2."
     },
     {
       "id": "GAL-OD-03",
@@ -680,7 +698,7 @@
       "boundary": "No pre-publication taste or quality gate; no verification claim.",
       "classification": "STRATEGIC",
       "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §5",
-      "stage_1_resolution": null
+      "stage_1_resolution": "Recommendation A in product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md; awaiting the governor's ruling before Stage 2."
     },
     {
       "id": "GAL-OD-04",
@@ -690,17 +708,17 @@
       "boundary": "Do not claim a Bengaluru-only or India-wide launch until ruled.",
       "classification": "STRATEGIC",
       "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; THE_GALLERY_CONCEPT_NOTE_v0.1.docx §07",
-      "stage_1_resolution": null
+      "stage_1_resolution": "Recommendation A in product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md; awaiting the governor's ruling before Stage 2."
     },
     {
       "id": "GAL-OD-05",
-      "status": "OPEN",
+      "status": "DECIDED_AT_STAGE_1_REVERSIBLE",
       "question": "Public entrance composition.",
       "current_recommendation": "Transparent rotating foyer: recent work, neutral rotation, material/place filters and upcoming workshops (research brief D5 option B).",
       "boundary": "No engagement-personalised or paid ranking.",
       "classification": "PRODUCT_RECOMMENDATION",
       "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; PLANBELLA_TO_THE_GALLERY_RESEARCH_BRIEF.docx (2026-09-03) §10 D5",
-      "stage_1_resolution": null
+      "stage_1_resolution": "Decided at Stage 1 (reversible): deterministic daily rotation of a recent work, then newest-first interleaved by maker; rendered on R-1 with the mechanism named."
     },
     {
       "id": "GAL-OD-06",
@@ -710,27 +728,27 @@
       "boundary": "Account email remains private; no in-app chat.",
       "classification": "STRATEGIC",
       "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; THE_GALLERY_CONCEPT_NOTE_v0.1.docx §07",
-      "stage_1_resolution": null
+      "stage_1_resolution": "Recommendation A in product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md; awaiting the governor's ruling before Stage 2."
     },
     {
       "id": "GAL-OD-07",
-      "status": "OPEN",
+      "status": "DECIDED_AT_STAGE_1_REVERSIBLE",
       "question": "Price rule for works, commissions and editions.",
       "current_recommendation": "Allow exact price, 'enquire' and made-to-order context; never require false precision; display makes the maker-authored nature and current status clear.",
       "boundary": "Display must make the maker-authored nature and current status clear.",
       "classification": "PRODUCT_RECOMMENDATION",
       "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; THE_GALLERY_CONCEPT_NOTE_v0.1.docx §07",
-      "stage_1_resolution": null
+      "stage_1_resolution": "Decided at Stage 1 (reversible): price modes exact · enquire · made to order; amount only for exact; rendered on R-3."
     },
     {
       "id": "GAL-OD-08",
-      "status": "OPEN",
+      "status": "DECIDED_AT_STAGE_1_REVERSIBLE",
       "question": "Visitor saves storage.",
       "current_recommendation": "Device-local private saves for the first complete build.",
       "boundary": "No public counts; cross-device sync requires an optional visitor-identity decision.",
       "classification": "PRODUCT_RECOMMENDATION",
       "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17",
-      "stage_1_resolution": null
+      "stage_1_resolution": "Decided at Stage 1 (reversible): device-local saves; no server table."
     },
     {
       "id": "GAL-OD-09",
@@ -740,27 +758,27 @@
       "boundary": "No comments, reactions or popularity feed.",
       "classification": "STRATEGIC",
       "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; PLANBELLA_TO_THE_GALLERY_RESEARCH_BRIEF.docx (2026-09-03) §10 D2",
-      "stage_1_resolution": null
+      "stage_1_resolution": "Recommendation A in product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md; awaiting the governor's ruling before Stage 2."
     },
     {
       "id": "GAL-OD-10",
-      "status": "OPEN",
+      "status": "DECIDED_AT_STAGE_1_REVERSIBLE",
       "question": "Gallery customisation.",
       "current_recommendation": "One excellent Gallery system; architecture capable of three to five tightly designed modes later (research brief D3 option B).",
       "boundary": "No free-form page builder; no premium work before the core chain is reliable.",
       "classification": "PRODUCT_RECOMMENDATION",
       "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; PLANBELLA_TO_THE_GALLERY_RESEARCH_BRIEF.docx (2026-09-03) §10 D3",
-      "stage_1_resolution": null
+      "stage_1_resolution": "Decided at Stage 1 (reversible): one Gallery system; galleries entity separate from makers for later modes."
     },
     {
       "id": "GAL-OD-11",
-      "status": "OPEN",
+      "status": "DECIDED_AT_STAGE_1_REVERSIBLE",
       "question": "Workshop handoff.",
       "current_recommendation": "Direct maker contact or a maker-supplied external registration link.",
       "boundary": "No platform ticketing or payment.",
       "classification": "PRODUCT_RECOMMENDATION",
       "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; THE_GALLERY_CONCEPT_NOTE_v0.1.docx §07",
-      "stage_1_resolution": null
+      "stage_1_resolution": "Decided at Stage 1 (reversible): contact route or external registration URL; rendered on I-3."
     },
     {
       "id": "GAL-OD-12",
@@ -770,7 +788,7 @@
       "boundary": "If reopened it confirms identity only and never affects rank.",
       "classification": "STRATEGIC",
       "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; PLANBELLA_TO_THE_GALLERY_RESEARCH_BRIEF.docx (2026-09-03) §7",
-      "stage_1_resolution": null
+      "stage_1_resolution": "Recommendation A in product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md; awaiting the governor's ruling before Stage 2."
     },
     {
       "id": "GAL-OD-13",
@@ -780,17 +798,17 @@
       "boundary": "No percentage of transactions, advertising or pay-to-rank.",
       "classification": "STRATEGIC",
       "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; THE_GALLERY_CONCEPT_NOTE_v0.1.docx §07",
-      "stage_1_resolution": null
+      "stage_1_resolution": "Recommendation A in product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md; awaiting the governor's ruling before Stage 2."
     },
     {
       "id": "GAL-OD-14",
-      "status": "OPEN",
+      "status": "DECIDED_AT_STAGE_1_REVERSIBLE",
       "question": "Delivery surface.",
       "current_recommendation": "Mobile-first responsive public web experience with durable deep links; installability optional.",
       "boundary": "Public value may not require installation.",
       "classification": "ORDINARY_IMPLEMENTATION",
       "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17",
-      "stage_1_resolution": null
+      "stage_1_resolution": "Decided (ordinary): mobile-first responsive web, no service-worker fetch handler."
     },
     {
       "id": "GAL-OD-15",
@@ -800,17 +818,17 @@
       "boundary": "Moderation of the space, never curation of taste or arbitration of sales.",
       "classification": "STRATEGIC",
       "source": "THE_GALLERY_CONCEPT_NOTE_v0.1.docx §07; THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §5, §6",
-      "stage_1_resolution": null
+      "stage_1_resolution": "Recommendation A in product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md; awaiting the governor's ruling before Stage 2."
     },
     {
       "id": "GAL-OD-16",
-      "status": "OPEN",
+      "status": "DECIDED_AT_STAGE_1_REVERSIBLE",
       "question": "Email credential mechanism.",
       "current_recommendation": "Email + password + confirmation + reset (GAL-RC4), with an emailed code as the fallback design if the provider's password flow proves unreliable on the deployed walk.",
       "boundary": "Never magic-link-only without a proven round trip (GAL-R18).",
       "classification": "PRODUCT_RECOMMENDATION",
       "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §12",
-      "stage_1_resolution": null
+      "stage_1_resolution": "Decided at Stage 1 (reversible): email + password + confirmation + reset; emailed code as fallback design; rendered on I-4."
     }
   ],
   "superseded_decisions": [
@@ -828,8 +846,8 @@
       "promise": "You can contact the maker directly from a work, gallery or workshop.",
       "surface": "Contact action on work, maker gallery, commission and workshop surfaces",
       "mechanism": "Enabled maker route opens exactly as selected; publish gate requires ≥1 route (GAL-03)",
-      "proof_state": "INTENDED",
-      "evidence": null,
+      "proof_state": "DESIGNED",
+      "evidence": "R-2, R-2b, I-1, I-3 renders; J-001 contract",
       "walked": {
         "visitor": null,
         "maker": null,
@@ -841,8 +859,8 @@
       "promise": "The Gallery processes no payment, order, shipping, return or dispute.",
       "surface": "Handoff disclosure; absence of any commerce route",
       "mechanism": "No commerce objects or routes exist; vocabulary sweep (GAL-04)",
-      "proof_state": "INTENDED",
-      "evidence": null,
+      "proof_state": "DESIGNED",
+      "evidence": "product/PRODUCT_ARCHITECTURE.md §4 route inventory holds no commerce route; R-2b disclosure",
       "walked": {
         "visitor": null,
         "maker": null,
@@ -854,8 +872,8 @@
       "promise": "The Gallery takes no percentage of your sale, commission or workshop fee.",
       "surface": "For Makers participation copy",
       "mechanism": "No fee field linked to sales; refusal GAL-R03 (GAL-05)",
-      "proof_state": "INTENDED",
-      "evidence": null,
+      "proof_state": "DESIGNED",
+      "evidence": "I-4 create-account copy; product/decisions GAL-OD-13",
       "walked": {
         "visitor": null,
         "maker": null,
@@ -867,8 +885,8 @@
       "promise": "There are no public likes, ratings, reviews, comments or follower counts.",
       "surface": "Every public surface by structure",
       "mechanism": "Schema and UI contain no public counters (GAL-08)",
-      "proof_state": "INTENDED",
-      "evidence": null,
+      "proof_state": "DESIGNED",
+      "evidence": "no counter on any rendered surface; DOMAIN_MODEL has no public counter",
       "walked": {
         "visitor": null,
         "maker": null,
@@ -880,8 +898,8 @@
       "promise": "Work information is written and maintained by the maker and shown as such.",
       "surface": "Work detail label; maker gallery",
       "mechanism": "Claim fields owned by the maker; maker-authored attribution rendered (GAL-06)",
-      "proof_state": "INTENDED",
-      "evidence": null,
+      "proof_state": "DESIGNED",
+      "evidence": "R-2 'in the maker's words' attribution; R-3 'your statement to visitors'",
       "walked": {
         "visitor": null,
         "maker": null,
@@ -893,8 +911,8 @@
       "promise": "You can browse, open work, open galleries and share without an account.",
       "surface": "All public routes",
       "mechanism": "Anonymous route probes (GAL-11)",
-      "proof_state": "INTENDED",
-      "evidence": null,
+      "proof_state": "DESIGNED",
+      "evidence": "R-1, R-2, I-1, I-2, I-3 need no session",
       "walked": {
         "visitor": null,
         "maker": null,
@@ -906,8 +924,8 @@
       "promise": "Makers create an account and sign in with email; you can confirm, reset, sign out and close the account.",
       "surface": "For Makers door",
       "mechanism": "Complete deployed email door walked with a real test email (GAL-12)",
-      "proof_state": "INTENDED",
-      "evidence": null,
+      "proof_state": "DESIGNED",
+      "evidence": "I-4 door frames; J-002 and J-005 contracts",
       "walked": {
         "visitor": null,
         "maker": null,
@@ -919,8 +937,8 @@
       "promise": "Your sign-in email stays private unless you publish it as a contact route.",
       "surface": "Maker contact settings; public maker gallery",
       "mechanism": "Account email absent from public payloads (GAL-P1)",
-      "proof_state": "INTENDED",
-      "evidence": null,
+      "proof_state": "DESIGNED",
+      "evidence": "I-4 'stays private' help; DOMAIN_MODEL public views omit account email",
       "walked": {
         "visitor": null,
         "maker": null,
@@ -945,8 +963,8 @@
       "promise": "A shared link returns to the exact work, gallery or workshop.",
       "surface": "Share action; deep links; share previews",
       "mechanism": "Durable public routes with truthful titles and previews; private, draft and retired content excluded",
-      "proof_state": "INTENDED",
-      "evidence": null,
+      "proof_state": "DESIGNED",
+      "evidence": "R-2 Share action; PRODUCT_ARCHITECTURE §4 canonical URLs and previews",
       "walked": {
         "visitor": null,
         "maker": null,
@@ -958,8 +976,8 @@
       "promise": "The status you see (available, made to order, enquire, sold, on view) is the maker's current statement.",
       "surface": "Work detail; Browse; maker gallery; collections; saved references",
       "mechanism": "One status home propagated to every surface; staleness detectable and reconfirmation prompted (GAL-RC3)",
-      "proof_state": "INTENDED",
-      "evidence": null,
+      "proof_state": "DESIGNED",
+      "evidence": "J-003 contract and wireframe; R-3 status help; I-1 tiles",
       "walked": {
         "visitor": null,
         "maker": null,
@@ -984,8 +1002,8 @@
       "promise": "Workshops shown are current; past, cancelled or changed workshops do not render as current.",
       "surface": "Workshops tab; workshop detail",
       "mechanism": "Structured dates and lifecycle states; past-dated and cancelled states rendered truthfully",
-      "proof_state": "INTENDED",
-      "evidence": null,
+      "proof_state": "DESIGNED",
+      "evidence": "I-3 cancelled and past treatment",
       "walked": {
         "visitor": null,
         "maker": null,
@@ -997,8 +1015,8 @@
       "promise": "A report reaches an ending, and a suspension can be lifted.",
       "surface": "Report route; operator surface",
       "mechanism": "Report lifecycle submitted → under review → actioned/dismissed → closed; every sanction has a release path; append-only operator record",
-      "proof_state": "INTENDED",
-      "evidence": null,
+      "proof_state": "DESIGNED",
+      "evidence": "J-004 contract; I-6 required-reason dialog",
       "walked": {
         "visitor": null,
         "maker": null,
@@ -1010,8 +1028,8 @@
       "promise": "Before you leave to contact a maker, you are told that payment, delivery, returns and disputes are arranged with them.",
       "surface": "Contact handoff surface",
       "mechanism": "Governed disclosure copy rendered before external navigation (GAL-15, GAL-C1)",
-      "proof_state": "INTENDED",
-      "evidence": null,
+      "proof_state": "DESIGNED",
+      "evidence": "R-2b disclosure before routes",
       "walked": {
         "visitor": null,
         "maker": null,
@@ -1023,8 +1041,8 @@
       "promise": "The Gallery never says a maker or work is verified, vetted, certified, safe or authentic.",
       "surface": "All copy",
       "mechanism": "Banned-claim regex over the governed copy home (GAL-07)",
-      "proof_state": "INTENDED",
-      "evidence": null,
+      "proof_state": "DESIGNED",
+      "evidence": "copy across all renders; Foundation copy rules",
       "walked": {
         "visitor": null,
         "maker": null,
@@ -1036,8 +1054,8 @@
       "promise": "Your images keep their orientation, crop, order and usable quality.",
       "surface": "Maker upload and preview; public work views",
       "mechanism": "Non-destructive variants; focal-crop control; portrait/landscape/square supported; inspected uploads",
-      "proof_state": "INTENDED",
-      "evidence": null,
+      "proof_state": "DESIGNED",
+      "evidence": "R-3 upload states; DOMAIN_MODEL work images",
       "walked": {
         "visitor": null,
         "maker": null,
@@ -1062,8 +1080,8 @@
       "promise": "Discovery order is explainable and is never bought or engagement-ranked.",
       "surface": "Browse",
       "mechanism": "Documented deterministic ordering; no paid or engagement input (GAL-09, GAL-10)",
-      "proof_state": "INTENDED",
-      "evidence": null,
+      "proof_state": "DESIGNED",
+      "evidence": "R-1 'Rotates daily' and 'newest first'; PRODUCT_ARCHITECTURE §6",
       "walked": {
         "visitor": null,
         "maker": null,
@@ -1089,7 +1107,7 @@
       "id": "OBL-GAL-001",
       "state": "OPEN",
       "owner": "GOVERNOR",
-      "summary": "Stage 1 direction (product, journey, domain and access architecture; UX_READY journey contracts; INTERFACE_FOUNDATION; rendered key-screen set) must be reviewed and the strategic open decisions ruled before Stage 2 implementation begins.",
+      "summary": "Stage 1 artefacts are complete and awaiting the governor's review: the nine strategic decisions in product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md need a ruling and the interface reference set needs acceptance before Stage 2 implementation begins.",
       "evidence_path": "product/ and ux/ after Stage 1"
     },
     {
@@ -1176,9 +1194,17 @@
   "human_surface_state": {
     "module": "ux-design-assurance 1.1.0 (bound through DOCTRINE_BINDING.json)",
     "manifest": "ux/UX_MANIFEST.yaml",
-    "interface_reference_set": "NOT_ESTABLISHED"
+    "interface_reference_set": "DRAFT — R-1, R-2, R-3 rendered and reviewed; awaiting governor acceptance (ux/reference/interface/INTERFACE_REFERENCE_SET.md)",
+    "journeys": {
+      "J-001": "INTERFACE_DESIGNING",
+      "J-002": "INTERFACE_DESIGNING",
+      "J-003": "UX_READY",
+      "J-004": "INTERFACE_DESIGNING",
+      "J-005": "IDENTIFIED",
+      "J-006": "IDENTIFIED"
+    }
   },
   "learning_ledger": "doctrine/BUILD_LEARNING_LEDGER.md",
-  "updated_at": "2026-09-04T04:45:14+00:00",
-  "update_reason": "Stage 0: initial governed product state assimilated from THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md, THE_GALLERY_CONCEPT_NOTE_v0.1.docx and PLANBELLA_TO_THE_GALLERY_RESEARCH_BRIEF.docx (handoff v1.1, sha256 db781afa096c8c72763b5be49ebb580bf2fc75d73c2d50b290de3fa475f5c6f0)."
+  "updated_at": "2026-09-04T06:24:11+00:00",
+  "update_reason": "Stage 1 complete: product, journey, domain and access architecture; four journey contracts at UX_READY with wireframes; Interface Foundation and a three-surface reference set with six inheritance demonstrations rendered and reviewed; strategic decisions instrumented for the governor; Stage 2 slice proposed. Promise proof states advanced to DESIGNED where a rendered or architected surface exists."
 }

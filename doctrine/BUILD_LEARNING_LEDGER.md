@@ -65,6 +65,46 @@ A product that ran the bootstrap directly would accept a tampered bootstrap, a c
 
 ---
 
+### GAL-L0004
+**Date:** 2026-09-04  
+**Observed event:**  
+Full-page captures of the reference surfaces showed the sticky bottom bar and the Studio action bar in the middle of the page, covering the "View maker's gallery" row and two form fields. The viewport captures of the same surfaces were correct.
+
+**Evidence:**  
+First renders of `R-1-entrance-full.png`, `R-2-work-detail.png`, `R-3-studio-add-work.png` (superseded; not retained). Cause: a `position: sticky` element is captured at the viewport's bottom edge when the page is expanded for a full-page screenshot.
+
+**Why it mattered:**  
+A capture defect looked like a design defect. Rendered evidence must state what it is evidence of (Audit Protocol L-A25); a render whose mode changes what is seen can produce both false findings and false reassurance.
+
+**What changed:**  
+Full-page renders now pass `?full=1`, which sets the bars static at the end of the page; every artifact in `INTERFACE_REFERENCE_SET.md` records its capture mode (viewport or full page).
+
+**Status:** RESOLVED  
+**Related finding / decision IDs:** L-A25  
+**Harvest status:** UNHARVESTED
+
+---
+
+### GAL-L0005
+**Date:** 2026-09-04  
+**Observed event:**  
+The first work-detail render carried icon-only Save and Share buttons, contradicting the Interface Foundation rule that only Back, Close and Search may be icon-only. The same pattern had been copied to the workshop detail.
+
+**Evidence:**  
+First render of `R-2-work-detail.png` and `I-3-workshops.png` (superseded); Foundation §6 "icon-only rule".
+
+**Why it mattered:**  
+A rule written the same day was broken the same day by the person who wrote it; the fresh-eye review, not the rule, caught it. The Canon's class rule applied: the defect was swept across every surface, not fixed on one.
+
+**What changed:**  
+Secondary actions are now icon plus underlined label on a second row on both surfaces; the review matrix records the correction under Affordance. Candidate product gate for Stage 2: an icon-only-button sweep over the component source (allowlist: back, close, search).
+
+**Status:** RESOLVED  
+**Related finding / decision IDs:** Foundation §6; L-A24  
+**Harvest status:** UNHARVESTED
+
+---
+
 ## Ledger rules
 
 - Capture the event in the governed change that fixes or formally records it where feasible.
