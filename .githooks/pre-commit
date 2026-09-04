@@ -1,0 +1,23 @@
+#!/bin/sh
+# The Gallery — downstream consequence gate (Builders' Playbook §3): orientation must be
+# valid before a commit. Installed by `git config core.hooksPath .githooks` (the SessionStart
+# hook does this automatically). This is the layer that remains when the Claude hook guard
+# does not match the route; it is bypassable with --no-verify and is therefore ARMED-as-
+# configured, never proof on its own.
+ROOT="$(git rev-parse --show-toplevel 2>/dev/null)" || exit 0
+BRANCH="$(git rev-parse --abbrev-ref HEAD 2>/dev/null)"
+if [ "$BRANCH" = "main" ] || [ "$BRANCH" = "master" ]; then
+  if [ "$DOCTRINE_ALLOW_MAIN" != "1" ]; then
+    echo "doctrine gate: direct commit on '$BRANCH' refused (Canon Day Zero #6). Work on a branch; DOCTRINE_ALLOW_MAIN=1 only under an explicit Governor instruction." >&2
+    exit 1
+  fi
+fi
+if ! command -v python3 >/dev/null 2>&1; then
+  echo "doctrine gate: python3 unavailable — FAIL-OPEN (Governor ruling 2026-08-09: do not lock the operator out); orient when python3 is available." >&2
+  exit 0
+fi
+if ! python3 -B "$ROOT/scripts/doctrine-orient.py" check --quiet; then
+  echo "doctrine gate: orientation invalid — commit refused. Run: python3 scripts/doctrine-orient.py orient" >&2
+  exit 1
+fi
+exit 0

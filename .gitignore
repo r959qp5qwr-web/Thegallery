@@ -1,0 +1,19 @@
+# Derived orientation evidence is never committed; every blank session regenerates it.
+.doctrine/runtime/
+
+# Secrets never enter git (Canon Day Zero #6). Committed templates use *.example only.
+.env
+.env.*
+!.env.example
+
+# Toolchain
+node_modules/
+.next/
+dist/
+build/
+coverage/
+__pycache__/
+*.pyc
+.DS_Store
+*.log
+.playwright/

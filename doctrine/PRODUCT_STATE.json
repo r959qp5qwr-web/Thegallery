@@ -1,0 +1,1184 @@
+{
+  "schema_version": "1.0",
+  "_authority": "Local product authority under the central Builders' Doctrine (doctrine/DOCTRINE_BINDING.json). Governor-ratified meaning is FIXED; RECOMMENDED/CANDIDATE awaits or carries limited approval; OPEN is unresolved; REFUSED carries reason and reopen condition; SUPERSEDED keeps history; proof_state follows the ladder below. The orientation receipt is derived evidence, never authority.",
+  "_enforcement_vocabulary": {
+    "ARMED": "a real executable protection runs and has been drilled",
+    "ARMED_AS_CONFIGURED": "protection is wired and drilled in-repo, but its runtime liveness cannot be proven from inside the repository (hooks)",
+    "MANUAL": "human judgement with a named evidence path",
+    "UNARMED": "the obligation exists and nothing yet protects it",
+    "NOT_APPLICABLE": "does not apply to this product or state"
+  },
+  "product_identity": {
+    "id": "thegallery",
+    "name": "The Gallery",
+    "repository": "https://github.com/r959qp5qwr-web/Thegallery"
+  },
+  "product_sentence": "The Gallery is a maker-led digital gallery for art and craft objects: makers present their own work with the dignity of an exhibition; visitors discover the object, understand who made it, and approach the maker directly to buy, commission or learn; payment, delivery, returns and disputes stay outside the product.",
+  "governing_line": "The Gallery hosts the encounter. The maker owns the transaction.",
+  "current_product_phase": {
+    "code": "PRE_H1",
+    "label": "Architecture being settled. Doctrine bound at Stage 0; Stage 1 product and interface architecture in progress; no application source, schema, deployment or harvest exists. The H1 harvest (architecture settled) follows Stage 1 acceptance.",
+    "since": "2026-09-04"
+  },
+  "active_stage": {
+    "code": "STAGE_1",
+    "label": "Product and interface architecture (Build Commission v1.1 §15)",
+    "entered_at": "2026-09-04T04:45:14+00:00",
+    "authorised_by": "Stage 0 orientation VALID in the binding session; receipt recorded at doctrine/receipts/STAGE0-ORIENTATION-2026-09-04.md",
+    "next_acceptance_condition": "The governor reviews the Stage 1 artefacts (product/PRODUCT_ARCHITECTURE.md, product/DOMAIN_MODEL.md, ux/journeys/*, ux/INTERFACE_FOUNDATION.md, ux/reference/interface/*) and rules on the STRATEGIC open decisions in open_governor_decisions; only that ruling authorises Stage 2 (the vertical slice). Until then application source, schema and deployment configuration are not created.",
+    "blocked_until_acceptance": [
+      "application source",
+      "database schema and migrations",
+      "deployment and hosting configuration",
+      "feature commits"
+    ],
+    "stages": [
+      {
+        "code": "STAGE_0",
+        "label": "Central Doctrine assimilation",
+        "state": "DONE",
+        "gate": "exact inspected Doctrine commit bound; orientation valid; guards run; drill reported honestly",
+        "evidence": "doctrine/receipts/STAGE0-ORIENTATION-2026-09-04.md"
+      },
+      {
+        "code": "STAGE_1",
+        "label": "Product and interface architecture",
+        "state": "ACTIVE",
+        "gate": "the governor can see what the product is, how it moves, how the maker publishes and how the operator acts; direction accepted",
+        "evidence": null
+      },
+      {
+        "code": "STAGE_2",
+        "label": "Complete vertical slice",
+        "state": "NOT_STARTED",
+        "gate": "the whole chain works on the deployed product at phone width; Maker A cannot alter Maker B; anonymous sees only published material",
+        "evidence": null
+      },
+      {
+        "code": "STAGE_3",
+        "label": "Complete MVP",
+        "state": "NOT_STARTED",
+        "gate": "every MVP capability is part of a complete journey with state, data, permissions, copy and recovery",
+        "evidence": null
+      },
+      {
+        "code": "STAGE_4",
+        "label": "Closure proof",
+        "state": "NOT_STARTED",
+        "gate": "SEEN / NOT SEEN / OPEN DEFECTS / UNKNOWN / RELEASE DECISION on deployed walks",
+        "evidence": null
+      }
+    ]
+  },
+  "current_doctrine_binding": {
+    "path": "doctrine/DOCTRINE_BINDING.json",
+    "doctrine_version": "1.1.0",
+    "doctrine_commit": "dfdecb651df8cef5387487fee21d8ee2f798db95",
+    "bound_at": "2026-09-04T04:41:52+00:00"
+  },
+  "proof_ladder": [
+    "INTENDED",
+    "DESIGNED",
+    "IMPLEMENTED",
+    "TESTED",
+    "DEPLOYED",
+    "OBSERVED"
+  ],
+  "fixed_product_decisions": [
+    {
+      "id": "GAL-T1",
+      "summary": "Product thesis: The Gallery is a maker-led digital gallery for art and craft objects. Makers present their own work with the dignity of an exhibition. Visitors discover the object, understand who made it, and approach the maker directly to buy, commission or learn.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §4; THE_GALLERY_CONCEPT_NOTE_v0.1.docx §01",
+      "decided_at": "2026-09-04",
+      "status": "FIXED",
+      "enforcement_locus": "MANUAL: every stage gate compares intended journey and interface against this thesis (Audit Protocol L-A24)",
+      "enforcement_state": "MANUAL",
+      "proof_state": "INTENDED"
+    },
+    {
+      "id": "GAL-T2",
+      "summary": "Governing distinction and line: a marketplace asks how to complete the sale; a social network asks how to keep a person scrolling; The Gallery asks how to let the work be seen and make it easy to reach the person who made it. The Gallery hosts the encounter; the maker owns the transaction.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §4; THE_GALLERY_CONCEPT_NOTE_v0.1.docx §01",
+      "decided_at": "2026-09-04",
+      "status": "FIXED",
+      "enforcement_locus": "MANUAL: design review lens; structural promises checked by GAL-04/GAL-08/GAL-09 loci",
+      "enforcement_state": "MANUAL",
+      "proof_state": "INTENDED"
+    },
+    {
+      "id": "GAL-01",
+      "summary": "Work first.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §4 invariant register",
+      "decided_at": "2026-09-04",
+      "status": "FIXED",
+      "enforcement_locus": "Public entrance route renders one published work at substantial scale before any feature tile; entrance render read at phone width (L-A6) plus a DOM-order assertion",
+      "enforcement_state": "UNARMED",
+      "proof_state": "INTENDED",
+      "required_consequence": "The public entrance begins with real work, not feature tiles, promotions or creator performance."
+    },
+    {
+      "id": "GAL-02",
+      "summary": "Maker-owned presentation.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §4",
+      "decided_at": "2026-09-04",
+      "status": "FIXED",
+      "enforcement_locus": "Server-side ownership rule: only the owning maker writes presentation, order, availability and retirement of their work; cross-maker denial probe under ordinary credentials",
+      "enforcement_state": "UNARMED",
+      "proof_state": "INTENDED",
+      "required_consequence": "Each maker controls the truthful presentation, order, availability and retirement of their own work."
+    },
+    {
+      "id": "GAL-03",
+      "summary": "Direct contact.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §4",
+      "decided_at": "2026-09-04",
+      "status": "FIXED",
+      "enforcement_locus": "Publish gate: a gallery advertises contact only with at least one enabled public route; contact action resolves to the exact enabled route; disabled/malformed routes never render as active",
+      "enforcement_state": "UNARMED",
+      "proof_state": "INTENDED",
+      "required_consequence": "Every eligible work, commission and workshop path reaches a maker-approved external contact or registration route."
+    },
+    {
+      "id": "GAL-04",
+      "summary": "No platform transaction.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §4",
+      "decided_at": "2026-09-04",
+      "status": "FIXED",
+      "enforcement_locus": "Route inventory and schema contain no cart/checkout/wallet/escrow/order/shipping/refund/dispute objects; banned-vocabulary sweep over source, schema and copy",
+      "enforcement_state": "UNARMED",
+      "proof_state": "INTENDED",
+      "required_consequence": "No cart, checkout, wallet, escrow, order, shipping, refund or commercial-dispute workflow exists."
+    },
+    {
+      "id": "GAL-05",
+      "summary": "No transaction cut.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §4; THE_GALLERY_CONCEPT_NOTE_v0.1.docx §06",
+      "decided_at": "2026-09-04",
+      "status": "FIXED",
+      "enforcement_locus": "No fee, commission or revenue field is linked to any sale, commission or workshop; refusal register GAL-R03; vocabulary sweep",
+      "enforcement_state": "UNARMED",
+      "proof_state": "INTENDED",
+      "required_consequence": "The Gallery receives no percentage of a private sale, commission or workshop fee."
+    },
+    {
+      "id": "GAL-06",
+      "summary": "Maker-authored claims.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §4",
+      "decided_at": "2026-09-04",
+      "status": "FIXED",
+      "enforcement_locus": "All claim fields (work, process, price, availability, practice) are writable only by the owning maker and rendered as maker-authored; no operator or system edit of claim text",
+      "enforcement_state": "UNARMED",
+      "proof_state": "INTENDED",
+      "required_consequence": "Claims about work, process, price, availability and practice are supplied and maintained by the maker."
+    },
+    {
+      "id": "GAL-07",
+      "summary": "No quality or reliability certification.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §4, §9 copy discipline",
+      "decided_at": "2026-09-04",
+      "status": "FIXED",
+      "enforcement_locus": "Build-failing banned-claim regex over the governed copy home: verified|vetted|certified|safe|guaranteed|authentic (per-audience sets)",
+      "enforcement_state": "UNARMED",
+      "proof_state": "INTENDED",
+      "required_consequence": "The platform does not claim that work is authentic, handmade, high quality, safe to buy, or that a maker is commercially reliable."
+    },
+    {
+      "id": "GAL-08",
+      "summary": "No public popularity economy.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §4",
+      "decided_at": "2026-09-04",
+      "status": "FIXED",
+      "enforcement_locus": "Schema holds no public counters; no like/rating/review/comment/repost/follower-count/streak/leaderboard object or copy; vocabulary sweep",
+      "enforcement_state": "UNARMED",
+      "proof_state": "INTENDED",
+      "required_consequence": "No public likes, ratings, reviews, follower counts, comments, reposts, streaks, leaderboards or popularity badges."
+    },
+    {
+      "id": "GAL-09",
+      "summary": "No engagement-ranked feed.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §4, §13 search and discovery",
+      "decided_at": "2026-09-04",
+      "status": "FIXED",
+      "enforcement_locus": "Browse ordering is a documented, deterministic function of recency, neutral rotation and explicit filters; test asserts its inputs contain no engagement signal",
+      "enforcement_state": "UNARMED",
+      "proof_state": "INTENDED",
+      "required_consequence": "Discovery is understandable and may not be driven by opaque engagement optimisation."
+    },
+    {
+      "id": "GAL-10",
+      "summary": "No paid discovery rank.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §4",
+      "decided_at": "2026-09-04",
+      "status": "FIXED",
+      "enforcement_locus": "No paid or sponsored attribute exists on any discovery input; refusal register GAL-R09",
+      "enforcement_state": "UNARMED",
+      "proof_state": "INTENDED",
+      "required_consequence": "Payment may not buy ordinary discovery position or masquerade as merit."
+    },
+    {
+      "id": "GAL-11",
+      "summary": "Public value before identity.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §4, §12 visitor access",
+      "decided_at": "2026-09-04",
+      "status": "FIXED",
+      "enforcement_locus": "Anonymous probe of every public route (Browse, search, material, work, maker gallery, collection, workshop, contact handoff) returns the surface without a session",
+      "enforcement_state": "UNARMED",
+      "proof_state": "INTENDED",
+      "required_consequence": "Visitors can encounter, browse and share work without an account wall."
+    },
+    {
+      "id": "GAL-12",
+      "summary": "Maker email door.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §4, §12",
+      "decided_at": "2026-09-04",
+      "status": "FIXED",
+      "enforcement_locus": "Auth configuration allows email only; the complete door (create, confirm, sign in, non-enumerating denial, resend, reset, session persistence, expiry, sign out, resume, closure, suspension/reinstatement) walked on the deployed product with a real test email",
+      "enforcement_state": "UNARMED",
+      "proof_state": "INTENDED",
+      "required_consequence": "Makers create an account and sign in through email. Phone-number and social-login doors are not part of the MVP."
+    },
+    {
+      "id": "GAL-13",
+      "summary": "Maker-led does not mean ownerless.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §4, §5",
+      "decided_at": "2026-09-04",
+      "status": "FIXED",
+      "enforcement_locus": "Operator surface with report, takedown/restore, suspend/reinstate and category management, each recorded append-only with actor, time and reason",
+      "enforcement_state": "UNARMED",
+      "proof_state": "INTENDED",
+      "required_consequence": "The platform owns reliable access, publishing, search, privacy, reporting, blocking, takedown, suspension and reinstatement."
+    },
+    {
+      "id": "GAL-14",
+      "summary": "Moderation is not curation.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §4, §5",
+      "decided_at": "2026-09-04",
+      "status": "FIXED",
+      "enforcement_locus": "Operator actions are an enumerated set (takedown, restore, suspend, reinstate, dismiss, close, category vocabulary); no ranking, featuring-by-taste or claim-editing action exists",
+      "enforcement_state": "UNARMED",
+      "proof_state": "INTENDED",
+      "required_consequence": "The operator may act on misuse, impersonation, spam and prohibited content, but does not rank or approve artistic taste."
+    },
+    {
+      "id": "GAL-15",
+      "summary": "Truth at the handoff.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §4",
+      "decided_at": "2026-09-04",
+      "status": "FIXED",
+      "enforcement_locus": "The contact handoff surface renders the governed disclosure (GAL-C1) before any external navigation; test asserts by role/test-id, never literal copy",
+      "enforcement_state": "UNARMED",
+      "proof_state": "INTENDED",
+      "required_consequence": "Before leaving for direct contact, the visitor can understand that payment, delivery, returns and disputes are arranged with the maker."
+    },
+    {
+      "id": "GAL-16",
+      "summary": "No false knowledge of private commerce.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §4, §13 data behaviour",
+      "decided_at": "2026-09-04",
+      "status": "FIXED",
+      "enforcement_locus": "Schema records contact intent only; no sale, fulfilment or resolution status exists; copy sweep for claims of completed transactions",
+      "enforcement_state": "UNARMED",
+      "proof_state": "INTENDED",
+      "required_consequence": "The product may record contact intent, but may not claim a sale, fulfilment or resolution it cannot observe."
+    },
+    {
+      "id": "GAL-D1",
+      "summary": "Opening-screen law: the first meaningful public screen opens on one real work at substantial visual scale; the visitor is already inside The Gallery. It may carry institutional identity, search, location/context, availability and navigation, but never becomes a dashboard or promotional menu that makes the work secondary.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §9; THE_GALLERY_CONCEPT_NOTE_v0.1.docx §04",
+      "decided_at": "2026-09-04",
+      "status": "FIXED",
+      "enforcement_locus": "MANUAL: entrance render inspected at phone width against the approved landing reference (L-A6, L-A24); machine part shares GAL-01 locus",
+      "enforcement_state": "MANUAL",
+      "proof_state": "INTENDED"
+    },
+    {
+      "id": "GAL-D2",
+      "summary": "Launch material vocabulary: CLAY · TEXTILE · WOOD · METAL · PAPER. These are material categories; NEW and NEARBY are browse filters, never peers in the material taxonomy. The taxonomy grows only from actual inventory and governed category decisions.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §9; THE_GALLERY_CONCEPT_NOTE_v0.1.docx §03",
+      "decided_at": "2026-09-04",
+      "status": "FIXED",
+      "enforcement_locus": "Material enum is the single configured source; the category rail renders only that enum; NEW/NEARBY live in the filter component; NEARBY is absent until location data and distance semantics exist (GAL-R14)",
+      "enforcement_state": "UNARMED",
+      "proof_state": "INTENDED"
+    },
+    {
+      "id": "GAL-C1",
+      "summary": "Required handoff disclosure, fixed in meaning: 'You are contacting the maker directly. Payment, delivery, returns and any dispute are arranged with them; The Gallery does not process the transaction.' Wording may be refined for clarity, never in meaning; calm, readable, present at the consequential handoff, not legal theatre.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §4; THE_GALLERY_CONCEPT_NOTE_v0.1.docx §05",
+      "decided_at": "2026-09-04",
+      "status": "FIXED",
+      "enforcement_locus": "Single governed copy entry rendered by the handoff surface (shares GAL-15 locus)",
+      "enforcement_state": "UNARMED",
+      "proof_state": "INTENDED"
+    },
+    {
+      "id": "GAL-P1",
+      "summary": "Public contact is not account identity: the maker's sign-in email never becomes public automatically; public routes are explicitly supplied and enabled by the maker; the maker sees what will be public before publishing.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §12",
+      "decided_at": "2026-09-04",
+      "status": "FIXED",
+      "enforcement_locus": "Account email column is never selected into any public view or payload; payload-absence assertion under the anonymous persona; separate public_contact_routes records",
+      "enforcement_state": "UNARMED",
+      "proof_state": "INTENDED"
+    },
+    {
+      "id": "GAL-P2",
+      "summary": "Public place information follows the same rule: city or broad locality may support discovery; an exact studio, home or workshop address appears only when the maker supplies it for that purpose; precise location is never inferred or exposed from account, device or upload metadata.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §12",
+      "decided_at": "2026-09-04",
+      "status": "FIXED",
+      "enforcement_locus": "EXIF/location metadata stripped at upload; location fields are explicit structured maker input with a public/private flag",
+      "enforcement_state": "UNARMED",
+      "proof_state": "INTENDED"
+    },
+    {
+      "id": "GAL-A1",
+      "summary": "Authorisation proof required: anonymous reads only public published material; a maker changes only their own records; Maker A cannot read Maker B's drafts or change Maker B's profile, work, collections, workshops or contact routes; a suspended maker cannot publish or exercise maker privileges; operator authority is separate, minimal and auditable; sensitive fields are absent from unauthorised responses; server-side or data-layer controls enforce these rules; two synthetic makers exist from the first meaningful data layer.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §12",
+      "decided_at": "2026-09-04",
+      "status": "FIXED",
+      "enforcement_locus": "Adversarial live probes per persona per table under ordinary credentials (Playbook Stage 6); grants probed separately from row policies",
+      "enforcement_state": "UNARMED",
+      "proof_state": "INTENDED"
+    },
+    {
+      "id": "GAL-G1",
+      "summary": "Repository roles: Thegallery is the only writable product repository and base branch; builders-doctrine is the read-only central Doctrine authority and is never committed to, pushed to or edited from a product session.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §3 (FIXED)",
+      "decided_at": "2026-09-04",
+      "status": "FIXED",
+      "enforcement_locus": "scripts/doctrine-hook.py GUARD-1 (pre-act denial of any mutating command targeting the Doctrine checkout) and .githooks/pre-push (refuses a builders-doctrine remote); drilled by scripts/doctrine-drill.py D-19/D-20/D-21/D-28",
+      "enforcement_state": "ARMED_AS_CONFIGURED",
+      "proof_state": "IMPLEMENTED"
+    },
+    {
+      "id": "GAL-G2",
+      "summary": "Fail-closed rule: until a valid current orientation receipt exists, reading, inspection and diagnosis are allowed; application source, schema and configuration mutation, deploy, release and completion claims are blocked; missing, contradictory, ambiguous, stale or unavailable authority is BLOCKED with the exact cause.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §3 (FIXED); Playbook §3",
+      "decided_at": "2026-09-04",
+      "status": "FIXED",
+      "enforcement_locus": "scripts/doctrine-orient.py check invoked by scripts/doctrine-hook.py GUARD-2 before consequential Bash acts and by .githooks/pre-commit and pre-push; SessionStart hook orients automatically; drilled D-01..D-18",
+      "enforcement_state": "ARMED_AS_CONFIGURED",
+      "proof_state": "IMPLEMENTED"
+    },
+    {
+      "id": "GAL-G3",
+      "summary": "Authority order. Product meaning: governor's latest explicit decision > product-local authoritative decisions in Thegallery after valid binding > FIXED provisions of the Build Commission > approved Concept Note > archetype research as evidence > Fable's documented recommendation. Process and proof: exact bound Doctrine commit and its verified mechanisms > product-local binding, state and executable gates > packaged snapshots only where they do not conflict.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §1",
+      "decided_at": "2026-09-04",
+      "status": "FIXED",
+      "enforcement_locus": "MANUAL: applied at every decision; the binding fixes which Doctrine commit is authority",
+      "enforcement_state": "MANUAL",
+      "proof_state": "INTENDED"
+    },
+    {
+      "id": "GAL-G4",
+      "summary": "No real person's art, address, phone number or email appears in committed fixtures, screenshots or tests; synthetic makers and visitors only.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §15; Canon 'Screenshots for publication come from the synthetic world'",
+      "decided_at": "2026-09-04",
+      "status": "FIXED",
+      "enforcement_locus": "MANUAL review of fixture provenance now; a no-invented-real-content sweep once fixtures exist",
+      "enforcement_state": "MANUAL",
+      "proof_state": "INTENDED"
+    },
+    {
+      "id": "GAL-G5",
+      "summary": "The product name lives in exactly one machine-readable home (product_identity in this file and the binding); code and copy read it from there and former or alternate names are swept.",
+      "source": "Canon Day Zero #3",
+      "decided_at": "2026-09-04",
+      "status": "FIXED",
+      "enforcement_locus": "Name-sweep gate over source and copy once source exists",
+      "enforcement_state": "UNARMED",
+      "proof_state": "INTENDED"
+    }
+  ],
+  "mandated_outcomes": [
+    {
+      "id": "GAL-M1",
+      "outcome": "Structural model: shared public Gallery → maker-owned gallery → individual work → maker's practice → commission or workshop invitation → direct contact handoff. The shared environment enables discovery and never displaces the maker's gallery as the place where a body of work is understood.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §4"
+    },
+    {
+      "id": "GAL-M2",
+      "outcome": "Visitor journey: enter without signing in; encounter work; open one work at meaningful scale; understand it through restrained factual information; move into the maker's gallery and practice; save privately, share the exact link, or choose a contact intention; see the direct-contact boundary and move to the maker's approved route. No platform checkout after contact.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §7"
+    },
+    {
+      "id": "GAL-M3",
+      "outcome": "Maker journey: For Makers → email account with real deployed verification → maker/studio/collective identity, location, practice note, public contact routes → gallery and first work → deliberate arrangement and optional collections → work status, commission availability, workshops → share → receive enquiries outside the platform → maintain, reorder, unpublish, retire → edit profile, recover access, sign out, close account through complete paths.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §7"
+    },
+    {
+      "id": "GAL-M4",
+      "outcome": "Operator journey, required before public launch and not before the first validated maker-to-visitor chain: protected door; new reports and unresolved operating failures; inspect with context; takedown/restore, suspend/reinstate, dismiss/close; record reason and outcome without rewriting history; manage the material vocabulary; identify failed publishing/contact paths.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §7"
+    },
+    {
+      "id": "GAL-M5",
+      "outcome": "Accessibility and professional behaviour: WCAG 2.2 AA; no low-contrast, colour-only or delicate-type dependence; active categories signalled by more than amber; labelled icons; component-level touch, focus, keyboard and screen-reader design; maker-authored alt text with an honest fallback; reduced-motion respected; every loading, empty, partial, stale, failed and denied state is a designed surface.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §9"
+    },
+    {
+      "id": "GAL-M6",
+      "outcome": "Technical and data integrity standard: durable deep links and truthful share previews; managed email authentication; persistent database; proper object storage with non-destructive image variants; server-side access controls; migration discipline; environment separation with no credentials in source; diagnostic logging; a deployed phone-walkable environment; no service-worker fetch cache. The twelve decisive integrity seams of §13 hold.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §13"
+    },
+    {
+      "id": "GAL-M7",
+      "outcome": "Professional UX completeness: the before, during, success, failure, interruption and return states of every meaningful journey are designed; the state families of §14 are represented; forms ask only for used data, explain public vs private, validate near the field, preserve input, preview before consequential publishing, prevent duplicate submission, and name consequences before destructive acts; excellent behaviour from a WhatsApp link in a mobile browser at small phone, large phone, tablet and desktop widths; observed performance, not inferred.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §14"
+    }
+  ],
+  "recommended_decisions": [
+    {
+      "id": "GAL-RC1",
+      "status": "RECOMMENDED_DEFAULT",
+      "summary": "Artist and artisan boundary without certification: maker self-declaration at gallery creation, clear participation rules, a report route for impersonation, prohibited resale or systematic misuse, operator takedown/suspension with appeal/reinstatement, and no 'verified', 'vetted', 'authentic' or 'safe' claim. No pre-publication quality or taste gate in the MVP. A stricter admission system is a governor decision.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §5"
+    },
+    {
+      "id": "GAL-RC2",
+      "status": "APPROVED_CANDIDATE",
+      "summary": "Navigation: Browse · Saved · Workshops · For Makers, with search globally available. Fable may refine only with a shown comparison that weakens no journey (Stage 1 records the comparison).",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §9; approved landing reference"
+    },
+    {
+      "id": "GAL-RC3",
+      "status": "CANDIDATE_VOCABULARY",
+      "summary": "Work commercial/display status: available · made to order · enquire · sold · on view — separate from the work lifecycle draft → published → retired; stale status is detectable and honestly labelled or prompted for reconfirmation.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §6; THE_GALLERY_CONCEPT_NOTE_v0.1.docx §03"
+    },
+    {
+      "id": "GAL-RC4",
+      "status": "RECOMMENDED",
+      "summary": "Email credential flow: email plus password with email confirmation and password reset is the current recommendation; an emailed one-time code is coherent if supported well; a magic-link-only door is refused without a proven cross-device, real-mail-client round trip.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §12; Canon 'Identity & the door'"
+    },
+    {
+      "id": "GAL-RC5",
+      "status": "DEFERRED_CANDIDATE",
+      "summary": "Optional paid identity confirmation is not in the MVP. If opened, it confirms only that the person or studio controlling an account matches the displayed identity; it never implies authorship of every work, quality, handmade authenticity, transaction safety or higher rank; no badge before review, privacy, renewal, appeal and revocation mechanisms exist.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §5; PLANBELLA_TO_THE_GALLERY_RESEARCH_BRIEF.docx (2026-09-03) §7"
+    },
+    {
+      "id": "GAL-RC6",
+      "status": "CANDIDATE",
+      "summary": "Revenue direction: maker-funded presentation infrastructure (free gallery; subscription studio plan; institutional plan) — never a transaction percentage, advertising or pay-to-rank. Monetisation implementation is deferred; the presentation architecture stays subscription-ready.",
+      "source": "THE_GALLERY_CONCEPT_NOTE_v0.1.docx §06; PLANBELLA_TO_THE_GALLERY_RESEARCH_BRIEF.docx (2026-09-03) §8; THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17"
+    },
+    {
+      "id": "GAL-RC7",
+      "status": "RECOMMENDED",
+      "summary": "Success measures: work-detail open rate; direct-contact action from eligible work or gallery; active makers with current published work; inventory freshness and status reconfirmation; return visits and private saves without public counts; workshop and commission contact intent; failed publish/contact rate; report rate and operator resolution time; first-attempt completion of the decisive maker publishing chain. Never scroll time, posts per day, reactions, follower growth or GMV.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §18; THE_GALLERY_CONCEPT_NOTE_v0.1.docx §07"
+    }
+  ],
+  "refusal_register": [
+    {
+      "id": "GAL-R01",
+      "status": "REFUSED",
+      "refused": "Cart, checkout, payment provider, wallet, escrow, order history or any in-product payment.",
+      "reason": "The Gallery hosts the encounter; the maker owns the transaction (GAL-04). A checkout turns the platform into the merchant.",
+      "reopen_condition": "Only a governor decision that changes GAL-04 and the product's meaning; no implementation convenience reopens it.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §11 'Deliberately excluded from the MVP' and §4"
+    },
+    {
+      "id": "GAL-R02",
+      "status": "REFUSED",
+      "refused": "Platform-managed shipping, delivery tracking, returns, refunds, warranties or dispute resolution.",
+      "reason": "The platform cannot observe or guarantee private fulfilment (GAL-04, GAL-16).",
+      "reopen_condition": "Governor decision changing GAL-04.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §11 'Deliberately excluded from the MVP' and §4"
+    },
+    {
+      "id": "GAL-R03",
+      "status": "REFUSED",
+      "refused": "Any percentage of a sale, commission or workshop fee; transaction-linked platform commission.",
+      "reason": "Fixed revenue principle GAL-05: earn from presentation, not the sale.",
+      "reopen_condition": "Governor decision changing GAL-05.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §11 'Deliberately excluded from the MVP' and §4"
+    },
+    {
+      "id": "GAL-R04",
+      "status": "REFUSED",
+      "refused": "In-app buyer–maker chat or enquiry relay.",
+      "reason": "Contact is a handoff to the maker's own route (GAL-03); an in-app channel makes the platform the intermediary and creates a moderation and privacy duty it does not own.",
+      "reopen_condition": "Governor decision after Stage 3 evidence that external routes fail visitors; would require a moderation and privacy design first.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §11 'Deliberately excluded from the MVP' and §4; THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17 contact routes"
+    },
+    {
+      "id": "GAL-R05",
+      "status": "REFUSED",
+      "refused": "Managed commission proposals, contracts, deposits, milestones or delivery tracking.",
+      "reason": "Commission availability is an invitation to enquire, not a managed job (GAL-04).",
+      "reopen_condition": "Governor decision changing GAL-04.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §11 'Deliberately excluded from the MVP' and §4"
+    },
+    {
+      "id": "GAL-R06",
+      "status": "REFUSED",
+      "refused": "In-app workshop ticketing or payment.",
+      "reason": "Workshops hand off to direct contact or an external registration route (GAL-04).",
+      "reopen_condition": "Governor decision changing GAL-04.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §11 'Deliberately excluded from the MVP' and §4"
+    },
+    {
+      "id": "GAL-R07",
+      "status": "REFUSED",
+      "refused": "Public likes, ratings, reviews, comments, reposts, follower counts, streaks, leaderboards or popularity badges.",
+      "reason": "No public popularity economy (GAL-08); makers must not perform for reactions.",
+      "reopen_condition": "Governor decision changing GAL-08.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §11 'Deliberately excluded from the MVP' and §4"
+    },
+    {
+      "id": "GAL-R08",
+      "status": "REFUSED",
+      "refused": "Personalised engagement-ranked or infinite feed.",
+      "reason": "Discovery must be explainable (GAL-09).",
+      "reopen_condition": "Governor decision changing GAL-09.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §11 'Deliberately excluded from the MVP' and §4"
+    },
+    {
+      "id": "GAL-R09",
+      "status": "REFUSED",
+      "refused": "Advertising, sponsored works in ordinary discovery, paid placement or pay-to-rank.",
+      "reason": "No paid discovery rank (GAL-10).",
+      "reopen_condition": "Governor decision changing GAL-10.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §11 'Deliberately excluded from the MVP' and §4"
+    },
+    {
+      "id": "GAL-R10",
+      "status": "REFUSED",
+      "refused": "Platform judgement of artistic merit, craft quality, handmade authenticity or commercial reliability, and the vocabulary verified · vetted · certified · safe · guaranteed · authentic.",
+      "reason": "A claim creates a verification duty the platform does not perform (GAL-07, GAL-14).",
+      "reopen_condition": "Only a narrow implemented mechanism that earns the exact statement, ruled by the governor.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §11 'Deliberately excluded from the MVP' and §4; THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §9 copy discipline"
+    },
+    {
+      "id": "GAL-R11",
+      "status": "REFUSED",
+      "refused": "Identity-confirmation badge in the MVP.",
+      "reason": "No badge before review, privacy, renewal, appeal and revocation mechanisms exist (GAL-RC5).",
+      "reopen_condition": "Governor reopens with an operating mechanism, price and exact narrow claim; never tied to rank.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §5"
+    },
+    {
+      "id": "GAL-R12",
+      "status": "REFUSED",
+      "refused": "Phone-number and social-login doors.",
+      "reason": "Maker email door is fixed for the MVP (GAL-12).",
+      "reopen_condition": "Governor decision after the email door is proven and evidence shows a need.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §4 GAL-12"
+    },
+    {
+      "id": "GAL-R13",
+      "status": "REFUSED",
+      "refused": "A public sign-in wall or mandatory visitor registration.",
+      "reason": "Public value before identity (GAL-11).",
+      "reopen_condition": "Never for browsing or contact; an optional visitor account only for cross-device saves, following or notices, by governor decision.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §12"
+    },
+    {
+      "id": "GAL-R14",
+      "status": "REFUSED",
+      "refused": "A Nearby filter before real location data and distance semantics exist.",
+      "reason": "A filter must name what it does; a fake Nearby is a promise without a mechanism.",
+      "reopen_condition": "Structured maker location with public/private flag and a defined distance origin exist and are probed live.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §13"
+    },
+    {
+      "id": "GAL-R15",
+      "status": "REFUSED",
+      "refused": "A service-worker fetch cache or offline app shell.",
+      "reason": "The product reads live data on every screen; a shell cache strands stale clients (Canon, deploy & caching, superseded law).",
+      "reopen_condition": "A deliberately designed useful offline behaviour ruled by the governor.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §13; Canon"
+    },
+    {
+      "id": "GAL-R16",
+      "status": "REFUSED",
+      "refused": "Dormant UI, empty navigation or placeholders for excluded features.",
+      "reason": "Structure makes claims by position; a tab or button promises a capability.",
+      "reopen_condition": "Never; excluded features are absent, not disabled.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §11"
+    },
+    {
+      "id": "GAL-R17",
+      "status": "REFUSED",
+      "refused": "Decorative or vague interface copy (e.g. 'Enter today's rooms') and manufactured artisanal mood copy (e.g. 'made slowly, altered by hand').",
+      "reason": "Copy is an interface to mechanisms; unsupported atmosphere is a claim without an artifact.",
+      "reopen_condition": "Never as platform copy; a maker's own attributed note may appear.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §9; THE_GALLERY_CONCEPT_NOTE_v0.1.docx §04"
+    },
+    {
+      "id": "GAL-R18",
+      "status": "REFUSED",
+      "refused": "A magic-link-only sign-in door without a proven real-mail-client, cross-device round trip.",
+      "reason": "Magic links failed in the field on a prior build (Canon, identity & the door; Audit Protocol E1).",
+      "reopen_condition": "A deployed round-trip walk on a phone with a real email proves it.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §12"
+    },
+    {
+      "id": "GAL-R19",
+      "status": "REFUSED",
+      "refused": "A free-form gallery page builder, and premium presentation work before the core publishing and contact chain is reliable.",
+      "reason": "Beauty cannot substitute for reliability at the decisive seam (research brief §3).",
+      "reopen_condition": "Core chain proven (Stage 2 gate) and a governor decision on the 3–5 gallery modes.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; PLANBELLA_TO_THE_GALLERY_RESEARCH_BRIEF.docx (2026-09-03) §4"
+    },
+    {
+      "id": "GAL-R20",
+      "status": "REFUSED",
+      "refused": "Writing to builders-doctrine from a product session; treating copied Canon/Audit snapshots or a manual read-first ritual as assimilation or binding.",
+      "reason": "Doctrine is central; binding is local; copies are not authority.",
+      "reopen_condition": "Never.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §3"
+    },
+    {
+      "id": "GAL-R21",
+      "status": "REFUSED",
+      "refused": "Any real person's art, address, phone number or email in committed fixtures, screenshots or tests.",
+      "reason": "GAL-G4; Canon publication rule.",
+      "reopen_condition": "Never.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §15"
+    },
+    {
+      "id": "GAL-R22",
+      "status": "REFUSED",
+      "refused": "Inferring or exposing precise location from account, device or upload metadata.",
+      "reason": "GAL-P2 privacy rule.",
+      "reopen_condition": "Never.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §12"
+    }
+  ],
+  "open_governor_decisions": [
+    {
+      "id": "GAL-OD-01",
+      "status": "OPEN",
+      "question": "Working name.",
+      "current_recommendation": "Use 'The Gallery' throughout the build.",
+      "boundary": "Do not scatter alternate names through code or copy.",
+      "classification": "STRATEGIC_RATIFY",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; PLANBELLA_TO_THE_GALLERY_RESEARCH_BRIEF.docx (2026-09-03) §11",
+      "stage_1_resolution": null
+    },
+    {
+      "id": "GAL-OD-02",
+      "status": "OPEN",
+      "question": "Account boundary: who may hold a maker gallery?",
+      "current_recommendation": "Makers, studios and collectives presenting work they created or materially produced (research brief D1 option B).",
+      "boundary": "No retailer/reseller expansion without a product decision.",
+      "classification": "STRATEGIC",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; PLANBELLA_TO_THE_GALLERY_RESEARCH_BRIEF.docx (2026-09-03) §10 D1; THE_GALLERY_CONCEPT_NOTE_v0.1.docx §07",
+      "stage_1_resolution": null
+    },
+    {
+      "id": "GAL-OD-03",
+      "status": "OPEN",
+      "question": "Admission mechanism.",
+      "current_recommendation": "Open maker email creation with self-declaration and post-publication moderation (GAL-RC1).",
+      "boundary": "No pre-publication taste or quality gate; no verification claim.",
+      "classification": "STRATEGIC",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §5",
+      "stage_1_resolution": null
+    },
+    {
+      "id": "GAL-OD-04",
+      "status": "OPEN",
+      "question": "Launch geography and how location shapes discovery.",
+      "current_recommendation": "Use Bengaluru as realistic demonstration content while keeping geography configurable; no launch-scope claim until ruled.",
+      "boundary": "Do not claim a Bengaluru-only or India-wide launch until ruled.",
+      "classification": "STRATEGIC",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; THE_GALLERY_CONCEPT_NOTE_v0.1.docx §07",
+      "stage_1_resolution": null
+    },
+    {
+      "id": "GAL-OD-05",
+      "status": "OPEN",
+      "question": "Public entrance composition.",
+      "current_recommendation": "Transparent rotating foyer: recent work, neutral rotation, material/place filters and upcoming workshops (research brief D5 option B).",
+      "boundary": "No engagement-personalised or paid ranking.",
+      "classification": "PRODUCT_RECOMMENDATION",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; PLANBELLA_TO_THE_GALLERY_RESEARCH_BRIEF.docx (2026-09-03) §10 D5",
+      "stage_1_resolution": null
+    },
+    {
+      "id": "GAL-OD-06",
+      "status": "OPEN",
+      "question": "Contact routes: which routes, how many required, and no in-app chat.",
+      "current_recommendation": "Maker chooses from public WhatsApp, public email, phone, website or external form; at least one required before contact is advertised; account email private unless separately supplied; no in-app chat.",
+      "boundary": "Account email remains private; no in-app chat.",
+      "classification": "STRATEGIC",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; THE_GALLERY_CONCEPT_NOTE_v0.1.docx §07",
+      "stage_1_resolution": null
+    },
+    {
+      "id": "GAL-OD-07",
+      "status": "OPEN",
+      "question": "Price rule for works, commissions and editions.",
+      "current_recommendation": "Allow exact price, 'enquire' and made-to-order context; never require false precision; display makes the maker-authored nature and current status clear.",
+      "boundary": "Display must make the maker-authored nature and current status clear.",
+      "classification": "PRODUCT_RECOMMENDATION",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; THE_GALLERY_CONCEPT_NOTE_v0.1.docx §07",
+      "stage_1_resolution": null
+    },
+    {
+      "id": "GAL-OD-08",
+      "status": "OPEN",
+      "question": "Visitor saves storage.",
+      "current_recommendation": "Device-local private saves for the first complete build.",
+      "boundary": "No public counts; cross-device sync requires an optional visitor-identity decision.",
+      "classification": "PRODUCT_RECOMMENDATION",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17",
+      "stage_1_resolution": null
+    },
+    {
+      "id": "GAL-OD-09",
+      "status": "OPEN",
+      "question": "Social depth at launch.",
+      "current_recommendation": "Private saves first; count-free following and low-volume notices later (research brief D2 option B) — following is not in the MVP.",
+      "boundary": "No comments, reactions or popularity feed.",
+      "classification": "STRATEGIC",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; PLANBELLA_TO_THE_GALLERY_RESEARCH_BRIEF.docx (2026-09-03) §10 D2",
+      "stage_1_resolution": null
+    },
+    {
+      "id": "GAL-OD-10",
+      "status": "OPEN",
+      "question": "Gallery customisation.",
+      "current_recommendation": "One excellent Gallery system; architecture capable of three to five tightly designed modes later (research brief D3 option B).",
+      "boundary": "No free-form page builder; no premium work before the core chain is reliable.",
+      "classification": "PRODUCT_RECOMMENDATION",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; PLANBELLA_TO_THE_GALLERY_RESEARCH_BRIEF.docx (2026-09-03) §10 D3",
+      "stage_1_resolution": null
+    },
+    {
+      "id": "GAL-OD-11",
+      "status": "OPEN",
+      "question": "Workshop handoff.",
+      "current_recommendation": "Direct maker contact or a maker-supplied external registration link.",
+      "boundary": "No platform ticketing or payment.",
+      "classification": "PRODUCT_RECOMMENDATION",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; THE_GALLERY_CONCEPT_NOTE_v0.1.docx §07",
+      "stage_1_resolution": null
+    },
+    {
+      "id": "GAL-OD-12",
+      "status": "OPEN",
+      "question": "Identity confirmation.",
+      "current_recommendation": "Defer beyond the MVP (GAL-RC5).",
+      "boundary": "If reopened it confirms identity only and never affects rank.",
+      "classification": "STRATEGIC",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; PLANBELLA_TO_THE_GALLERY_RESEARCH_BRIEF.docx (2026-09-03) §7",
+      "stage_1_resolution": null
+    },
+    {
+      "id": "GAL-OD-13",
+      "status": "OPEN",
+      "question": "Revenue and maker plan limits.",
+      "current_recommendation": "Defer monetisation implementation; preserve subscription-ready presentation architecture; plan limits decided with monetisation.",
+      "boundary": "No percentage of transactions, advertising or pay-to-rank.",
+      "classification": "STRATEGIC",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; THE_GALLERY_CONCEPT_NOTE_v0.1.docx §07",
+      "stage_1_resolution": null
+    },
+    {
+      "id": "GAL-OD-14",
+      "status": "OPEN",
+      "question": "Delivery surface.",
+      "current_recommendation": "Mobile-first responsive public web experience with durable deep links; installability optional.",
+      "boundary": "Public value may not require installation.",
+      "classification": "ORDINARY_IMPLEMENTATION",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17",
+      "stage_1_resolution": null
+    },
+    {
+      "id": "GAL-OD-15",
+      "status": "OPEN",
+      "question": "Moderation standard: report categories, response expectations, prohibited content, appeal and reinstatement rules.",
+      "current_recommendation": "A minimal published standard: report categories (impersonation, prohibited or unlawful content, spam or systematic misuse, prohibited resale, safety concern); operator response target stated as an intent, not a promise; every sanction reversible with a recorded reason; one appeal route by email.",
+      "boundary": "Moderation of the space, never curation of taste or arbitration of sales.",
+      "classification": "STRATEGIC",
+      "source": "THE_GALLERY_CONCEPT_NOTE_v0.1.docx §07; THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §5, §6",
+      "stage_1_resolution": null
+    },
+    {
+      "id": "GAL-OD-16",
+      "status": "OPEN",
+      "question": "Email credential mechanism.",
+      "current_recommendation": "Email + password + confirmation + reset (GAL-RC4), with an emailed code as the fallback design if the provider's password flow proves unreliable on the deployed walk.",
+      "boundary": "Never magic-link-only without a proven round trip (GAL-R18).",
+      "classification": "PRODUCT_RECOMMENDATION",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §12",
+      "stage_1_resolution": null
+    }
+  ],
+  "superseded_decisions": [
+    {
+      "id": "GAL-S01",
+      "status": "SUPERSEDED",
+      "summary": "Handoff package v1.0 (did not bind the product repository to the live Builders' Doctrine) is superseded in full by handoff v1.1.",
+      "superseded_by": "THE_GALLERY_FABLE_5_HANDOFF_v1.1 (2026-09-04)",
+      "source": "00-START-HERE.md"
+    }
+  ],
+  "promise_table": [
+    {
+      "id": "P-01",
+      "promise": "You can contact the maker directly from a work, gallery or workshop.",
+      "surface": "Contact action on work, maker gallery, commission and workshop surfaces",
+      "mechanism": "Enabled maker route opens exactly as selected; publish gate requires ≥1 route (GAL-03)",
+      "proof_state": "INTENDED",
+      "evidence": null,
+      "walked": {
+        "visitor": null,
+        "maker": null,
+        "operator": null
+      }
+    },
+    {
+      "id": "P-02",
+      "promise": "The Gallery processes no payment, order, shipping, return or dispute.",
+      "surface": "Handoff disclosure; absence of any commerce route",
+      "mechanism": "No commerce objects or routes exist; vocabulary sweep (GAL-04)",
+      "proof_state": "INTENDED",
+      "evidence": null,
+      "walked": {
+        "visitor": null,
+        "maker": null,
+        "operator": null
+      }
+    },
+    {
+      "id": "P-03",
+      "promise": "The Gallery takes no percentage of your sale, commission or workshop fee.",
+      "surface": "For Makers participation copy",
+      "mechanism": "No fee field linked to sales; refusal GAL-R03 (GAL-05)",
+      "proof_state": "INTENDED",
+      "evidence": null,
+      "walked": {
+        "visitor": null,
+        "maker": null,
+        "operator": null
+      }
+    },
+    {
+      "id": "P-04",
+      "promise": "There are no public likes, ratings, reviews, comments or follower counts.",
+      "surface": "Every public surface by structure",
+      "mechanism": "Schema and UI contain no public counters (GAL-08)",
+      "proof_state": "INTENDED",
+      "evidence": null,
+      "walked": {
+        "visitor": null,
+        "maker": null,
+        "operator": null
+      }
+    },
+    {
+      "id": "P-05",
+      "promise": "Work information is written and maintained by the maker and shown as such.",
+      "surface": "Work detail label; maker gallery",
+      "mechanism": "Claim fields owned by the maker; maker-authored attribution rendered (GAL-06)",
+      "proof_state": "INTENDED",
+      "evidence": null,
+      "walked": {
+        "visitor": null,
+        "maker": null,
+        "operator": null
+      }
+    },
+    {
+      "id": "P-06",
+      "promise": "You can browse, open work, open galleries and share without an account.",
+      "surface": "All public routes",
+      "mechanism": "Anonymous route probes (GAL-11)",
+      "proof_state": "INTENDED",
+      "evidence": null,
+      "walked": {
+        "visitor": null,
+        "maker": null,
+        "operator": null
+      }
+    },
+    {
+      "id": "P-07",
+      "promise": "Makers create an account and sign in with email; you can confirm, reset, sign out and close the account.",
+      "surface": "For Makers door",
+      "mechanism": "Complete deployed email door walked with a real test email (GAL-12)",
+      "proof_state": "INTENDED",
+      "evidence": null,
+      "walked": {
+        "visitor": null,
+        "maker": null,
+        "operator": null
+      }
+    },
+    {
+      "id": "P-08",
+      "promise": "Your sign-in email stays private unless you publish it as a contact route.",
+      "surface": "Maker contact settings; public maker gallery",
+      "mechanism": "Account email absent from public payloads (GAL-P1)",
+      "proof_state": "INTENDED",
+      "evidence": null,
+      "walked": {
+        "visitor": null,
+        "maker": null,
+        "operator": null
+      }
+    },
+    {
+      "id": "P-09",
+      "promise": "Saves are private and never become a public count.",
+      "surface": "Saved tab",
+      "mechanism": "Device-local storage; no server counter (GAL-08, GAL-OD-08)",
+      "proof_state": "INTENDED",
+      "evidence": null,
+      "walked": {
+        "visitor": null,
+        "maker": null,
+        "operator": null
+      }
+    },
+    {
+      "id": "P-10",
+      "promise": "A shared link returns to the exact work, gallery or workshop.",
+      "surface": "Share action; deep links; share previews",
+      "mechanism": "Durable public routes with truthful titles and previews; private, draft and retired content excluded",
+      "proof_state": "INTENDED",
+      "evidence": null,
+      "walked": {
+        "visitor": null,
+        "maker": null,
+        "operator": null
+      }
+    },
+    {
+      "id": "P-11",
+      "promise": "The status you see (available, made to order, enquire, sold, on view) is the maker's current statement.",
+      "surface": "Work detail; Browse; maker gallery; collections; saved references",
+      "mechanism": "One status home propagated to every surface; staleness detectable and reconfirmation prompted (GAL-RC3)",
+      "proof_state": "INTENDED",
+      "evidence": null,
+      "walked": {
+        "visitor": null,
+        "maker": null,
+        "operator": null
+      }
+    },
+    {
+      "id": "P-12",
+      "promise": "Draft, retired, taken-down or suspended work is not public.",
+      "surface": "Every public surface and payload",
+      "mechanism": "Server-side visibility rules; payload absence under anonymous persona",
+      "proof_state": "INTENDED",
+      "evidence": null,
+      "walked": {
+        "visitor": null,
+        "maker": null,
+        "operator": null
+      }
+    },
+    {
+      "id": "P-13",
+      "promise": "Workshops shown are current; past, cancelled or changed workshops do not render as current.",
+      "surface": "Workshops tab; workshop detail",
+      "mechanism": "Structured dates and lifecycle states; past-dated and cancelled states rendered truthfully",
+      "proof_state": "INTENDED",
+      "evidence": null,
+      "walked": {
+        "visitor": null,
+        "maker": null,
+        "operator": null
+      }
+    },
+    {
+      "id": "P-14",
+      "promise": "A report reaches an ending, and a suspension can be lifted.",
+      "surface": "Report route; operator surface",
+      "mechanism": "Report lifecycle submitted → under review → actioned/dismissed → closed; every sanction has a release path; append-only operator record",
+      "proof_state": "INTENDED",
+      "evidence": null,
+      "walked": {
+        "visitor": null,
+        "maker": null,
+        "operator": null
+      }
+    },
+    {
+      "id": "P-15",
+      "promise": "Before you leave to contact a maker, you are told that payment, delivery, returns and disputes are arranged with them.",
+      "surface": "Contact handoff surface",
+      "mechanism": "Governed disclosure copy rendered before external navigation (GAL-15, GAL-C1)",
+      "proof_state": "INTENDED",
+      "evidence": null,
+      "walked": {
+        "visitor": null,
+        "maker": null,
+        "operator": null
+      }
+    },
+    {
+      "id": "P-16",
+      "promise": "The Gallery never says a maker or work is verified, vetted, certified, safe or authentic.",
+      "surface": "All copy",
+      "mechanism": "Banned-claim regex over the governed copy home (GAL-07)",
+      "proof_state": "INTENDED",
+      "evidence": null,
+      "walked": {
+        "visitor": null,
+        "maker": null,
+        "operator": null
+      }
+    },
+    {
+      "id": "P-17",
+      "promise": "Your images keep their orientation, crop, order and usable quality.",
+      "surface": "Maker upload and preview; public work views",
+      "mechanism": "Non-destructive variants; focal-crop control; portrait/landscape/square supported; inspected uploads",
+      "proof_state": "INTENDED",
+      "evidence": null,
+      "walked": {
+        "visitor": null,
+        "maker": null,
+        "operator": null
+      }
+    },
+    {
+      "id": "P-18",
+      "promise": "Only you can change your gallery, work, collections, workshops and contact routes.",
+      "surface": "Maker dashboard",
+      "mechanism": "Server-side ownership enforcement probed adversarially with two synthetic makers (GAL-A1)",
+      "proof_state": "INTENDED",
+      "evidence": null,
+      "walked": {
+        "visitor": null,
+        "maker": null,
+        "operator": null
+      }
+    },
+    {
+      "id": "P-19",
+      "promise": "Discovery order is explainable and is never bought or engagement-ranked.",
+      "surface": "Browse",
+      "mechanism": "Documented deterministic ordering; no paid or engagement input (GAL-09, GAL-10)",
+      "proof_state": "INTENDED",
+      "evidence": null,
+      "walked": {
+        "visitor": null,
+        "maker": null,
+        "operator": null
+      }
+    },
+    {
+      "id": "P-20",
+      "promise": "Your exact address is shown only if you enter it for that purpose.",
+      "surface": "Maker location settings; public gallery",
+      "mechanism": "Explicit structured location with a public flag; metadata stripped (GAL-P2)",
+      "proof_state": "INTENDED",
+      "evidence": null,
+      "walked": {
+        "visitor": null,
+        "maker": null,
+        "operator": null
+      }
+    }
+  ],
+  "unresolved_material_findings_or_obligations": [
+    {
+      "id": "OBL-GAL-001",
+      "state": "OPEN",
+      "owner": "GOVERNOR",
+      "summary": "Stage 1 direction (product, journey, domain and access architecture; UX_READY journey contracts; INTERFACE_FOUNDATION; rendered key-screen set) must be reviewed and the strategic open decisions ruled before Stage 2 implementation begins.",
+      "evidence_path": "product/ and ux/ after Stage 1"
+    },
+    {
+      "id": "OBL-GAL-002",
+      "state": "NOT_SEEN",
+      "owner": "BUILDER",
+      "summary": "Runtime hook liveness: .claude/settings.json registers the SessionStart and PreToolUse hooks and the drill proves the guard's decisions, but whether Claude Code executes project hooks in a given session cannot be proven from inside the repository (Canon, 'The hook surface'). Hook enforcement is ARMED-as-configured at most; the git hooks and the explicit check command are the downstream layers.",
+      "evidence_path": "SessionStart output at the start of a later session"
+    },
+    {
+      "id": "OBL-GAL-003",
+      "state": "UNARMED",
+      "owner": "BUILDER+GOVERNOR",
+      "summary": "No CI exists. The orientation check cannot run at the pull-request chokepoint until CI can read the builders-doctrine repository (a read-only deploy key or token provisioned by the governor). Until then the trunk layer is UNARMED and branch protection state is UNKNOWN (dashboard-only fact).",
+      "evidence_path": ".github/workflows once created"
+    },
+    {
+      "id": "OBL-GAL-004",
+      "state": "STANDING",
+      "owner": "BUILDER",
+      "summary": "Doctrine 1.1.0 is ACTIVE_PENDING_REPIN, not FROZEN. Any advance of builders-doctrine's default branch makes this binding stale and every session will refuse orientation until the binding is re-pinned in a governed change that re-derives all fingerprints and re-orients. Re-pinning is a deliberate act, never an implementation convenience.",
+      "evidence_path": "doctrine/DOCTRINE_BINDING.json history"
+    },
+    {
+      "id": "OBL-GAL-005",
+      "state": "OPEN",
+      "owner": "GOVERNOR",
+      "summary": "Thegallery had no commits and no main branch at binding. The first governed commits are on the designated branch claude/the-gallery-foundation-7plo1e; the governor's merge establishes main. Branch protection on main is a GitHub setting this session cannot see or set (UNKNOWN until observed).",
+      "evidence_path": "GitHub repository settings"
+    },
+    {
+      "id": "OBL-GAL-006",
+      "state": "UNARMED",
+      "owner": "BUILDER",
+      "summary": "Audit Protocol L-A22 receipt machinery (numeric or green claims in commit messages bound to real suite exit status) is UNARMED until test suites exist in Stage 2; until then commit messages carry no numeric test claims.",
+      "evidence_path": "scripts/ once suites exist"
+    },
+    {
+      "id": "OBL-GAL-007",
+      "state": "UNARMED",
+      "owner": "BUILDER",
+      "summary": "C-0006-class gate over binding documents (a machine parsing hard-obligation clauses of CLAUDE.md and this file against a floor of armed loci) does not exist here; C-0006 remains OPEN centrally.",
+      "evidence_path": "none"
+    },
+    {
+      "id": "OBL-GAL-008",
+      "state": "OPEN",
+      "owner": "GOVERNOR",
+      "summary": "Stage 2 deployed proof needs provisioning that does not exist in the build environment: a database/auth/storage project, a hosting project, a transactional email sender and domain, and DNS. None of these credentials is present. They are batched in product/STAGE_2_VERTICAL_SLICE.md so they can be provisioned ahead of dependence.",
+      "evidence_path": "product/STAGE_2_VERTICAL_SLICE.md"
+    },
+    {
+      "id": "UNK-GAL-001",
+      "state": "UNKNOWN",
+      "owner": "GOVERNOR",
+      "summary": "Whether the central obligation OBL-UXDA-001 (re-pin and verified orientation of maa.se, Ustaad and Ahoy against Doctrine 1.1.0) has been discharged is unknown from this session; those repositories are outside its scope. It does not affect this binding, which pins the authoritative default-branch commit.",
+      "evidence_path": "builders-doctrine VERSION.json OPEN_OBLIGATION"
+    },
+    {
+      "id": "OBS-GAL-001",
+      "state": "OBSERVED",
+      "owner": "GOVERNOR",
+      "summary": "builders-doctrine tracks operating/__pycache__/doctrine_bootstrap.cpython-311.pyc, a compiled shadow of the fingerprinted executable (already recorded centrally in the assimilation report §10.7). It is not pinned here; the seam executes the .py source with bytecode writing disabled. No action is possible from this read-only product.",
+      "evidence_path": "builders-doctrine git ls-files"
+    }
+  ],
+  "most_recent_accepted_product_harvest": {
+    "id": null,
+    "path": null,
+    "accepted_at": null,
+    "next_boundary": "H1 — architecture settled, after Stage 1 acceptance (Playbook §17)"
+  },
+  "release_verification_status": {
+    "state": "UNKNOWN",
+    "basis": "Nothing is implemented or deployed and no release has been claimed.",
+    "last_verified_at": null,
+    "known_unknowns": [
+      "deployment environment and provider capabilities (none provisioned)",
+      "real email round trip",
+      "image pipeline behaviour",
+      "GitHub branch protection state"
+    ]
+  },
+  "human_surface_state": {
+    "module": "ux-design-assurance 1.1.0 (bound through DOCTRINE_BINDING.json)",
+    "manifest": "ux/UX_MANIFEST.yaml",
+    "interface_reference_set": "NOT_ESTABLISHED"
+  },
+  "learning_ledger": "doctrine/BUILD_LEARNING_LEDGER.md",
+  "updated_at": "2026-09-04T04:45:14+00:00",
+  "update_reason": "Stage 0: initial governed product state assimilated from THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md, THE_GALLERY_CONCEPT_NOTE_v0.1.docx and PLANBELLA_TO_THE_GALLERY_RESEARCH_BRIEF.docx (handoff v1.1, sha256 db781afa096c8c72763b5be49ebb580bf2fc75d73c2d50b290de3fa475f5c6f0)."
+}

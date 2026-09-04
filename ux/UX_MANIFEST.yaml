@@ -1,0 +1,118 @@
+module:
+  id: ux-design-assurance
+  version: 1.1.0
+
+product:
+  id: thegallery
+  name: The Gallery
+  target_platforms:
+    - mobile web (primary; opened from a WhatsApp link in a phone browser)
+    - tablet web
+    - desktop web
+
+foundations:
+  ux: ux/UX_FOUNDATION.md
+  interface: ux/INTERFACE_FOUNDATION.md
+
+interface_reference_set:
+  path: ux/reference/interface/INTERFACE_REFERENCE_SET.md
+  status: NOT_ESTABLISHED
+
+active_journey: J-001
+
+# Critical journeys (Playbook §5A classification by consequence). Statuses are the module's
+# legal statuses; a status changes only with the evidence the gate names.
+journeys:
+  - id: J-001
+    name: Visitor encounters a work and reaches the maker
+    criticality: CRITICAL
+    reason: delivers core value; crosses roles; ends at the trust-bearing direct-contact handoff
+    status: IDENTIFIED
+    contract: ux/journeys/J-001-visitor-encounter-to-contact.md
+    wireframes: []
+    interface_references: []
+    last_verified_build: ""
+    verification_report: ""
+    deferred_reason: ""
+    reopen_condition: ""
+    superseded_by: ""
+  - id: J-002
+    name: Maker enters by email, creates a gallery and publishes a first work
+    criticality: CRITICAL
+    reason: sign-in and admission door; creates a consequential public commitment; privacy of the account email
+    status: IDENTIFIED
+    contract: ux/journeys/J-002-maker-door-and-first-publish.md
+    wireframes: []
+    interface_references: []
+    last_verified_build: ""
+    verification_report: ""
+    deferred_reason: ""
+    reopen_condition: ""
+    superseded_by: ""
+  - id: J-003
+    name: Maker changes work status and every public surface follows
+    criticality: CRITICAL
+    reason: high-frequency routine act; truthfulness promise P-11 depends on it
+    status: IDENTIFIED
+    contract: ux/journeys/J-003-status-change-propagates.md
+    wireframes: []
+    interface_references: []
+    last_verified_build: ""
+    verification_report: ""
+    deferred_reason: ""
+    reopen_condition: ""
+    superseded_by: ""
+  - id: J-004
+    name: Operator resolves a report, suspends and reinstates a maker
+    criticality: CRITICAL
+    reason: operator journey holding up user-facing promises P-14; irreversible-feeling sanction with a release path
+    status: IDENTIFIED
+    contract: ux/journeys/J-004-operator-report-to-reinstatement.md
+    wireframes: []
+    interface_references: []
+    last_verified_build: ""
+    verification_report: ""
+    deferred_reason: ""
+    reopen_condition: ""
+    superseded_by: ""
+  - id: J-005
+    name: Maker recovers access, signs out and closes the account
+    criticality: CRITICAL
+    reason: recovery and closure door (Playbook §6 foundation journeys); consequence of closure on public work
+    status: IDENTIFIED
+    contract: ""
+    wireframes: []
+    interface_references: []
+    last_verified_build: ""
+    verification_report: ""
+    deferred_reason: "Designed in Stage 2 alongside the door it belongs to; identified now so it cannot be forgotten"
+    reopen_condition: ""
+    superseded_by: ""
+  - id: J-006
+    name: Visitor discovers, saves and shares by material, search and workshops
+    criticality: CRITICAL
+    reason: high-frequency discovery; share links travel through WhatsApp and must return to the exact object
+    status: IDENTIFIED
+    contract: ""
+    wireframes: []
+    interface_references: []
+    last_verified_build: ""
+    verification_report: ""
+    deferred_reason: "Stage 3 journey; entrance and discovery surfaces are established at Stage 1 through J-001's inheritance demonstrations"
+    reopen_condition: ""
+    superseded_by: ""
+
+legal_statuses:
+  - IDENTIFIED
+  - UX_DESIGNING
+  - UX_READY
+  - INTERFACE_DESIGNING
+  - INTERFACE_READY
+  - IMPLEMENTING
+  - VERIFY_REQUIRED
+  - VERIFYING
+  - VERIFIED
+  - DEFECT
+  - UNKNOWN
+  - DEFERRED
+  - SUPERSEDED

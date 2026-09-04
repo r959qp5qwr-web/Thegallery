@@ -1,0 +1,66 @@
+{
+  "schema_version": "1.0",
+  "product": {
+    "id": "thegallery",
+    "name": "The Gallery",
+    "repository": "https://github.com/r959qp5qwr-web/Thegallery"
+  },
+  "doctrine": {
+    "repository": "https://github.com/r959qp5qwr-web/builders-doctrine",
+    "branch": "main",
+    "commit": "dfdecb651df8cef5387487fee21d8ee2f798db95",
+    "version": "1.1.0",
+    "status_at_binding": "ACTIVE_PENDING_REPIN",
+    "commit_derivation": "git rev-parse origin/main in the live builders-doctrine checkout inspected in the binding session (local HEAD identical); not copied from any other product's binding.",
+    "artifacts": {
+      "canon": {
+        "path": "THE-BUILDERS-CANON-v1.0.md",
+        "sha256": "8ed6b57a940c2ddb0c8fad57a4cf3d2ce54ff08de552323135c7529870004164"
+      },
+      "playbook": {
+        "path": "THE-BUILDERS-PLAYBOOK-v1.0.md",
+        "sha256": "2730b3cf7b87a4399fa529d0107bb433cbc818b690f9d2c2453b026a327bdccc"
+      },
+      "audit_protocol": {
+        "path": "THE-AUDIT-PROTOCOL-v1.0.md",
+        "sha256": "f73ba14bf2cda97a84fdcc115df879f3abfd5e9f8c4bb146cdc259ff26f4d69e"
+      },
+      "candidate_register": {
+        "path": "DOCTRINE_CANDIDATE_REGISTER.csv",
+        "sha256": "cf1b2d857111ab972694b7cfb8da35d7a3587e81a37fe87b64c3e33263010f38",
+        "_why": "Central Doctrine authority per the Doctrine README; every artifact named here is validated by doctrine_bootstrap.py (trial defect B6)."
+      },
+      "bootstrap": {
+        "path": "operating/doctrine_bootstrap.py",
+        "sha256": "08f2986c5e3c4f9b94e4087ce3684b796e7cd5361cfab4b3a07803ae2e729090",
+        "_why": "The orientation executable itself. scripts/doctrine-orient.py fingerprints this file against the value below BEFORE executing it, so a tampered copy on the pinned commit cannot forge a VALID receipt."
+      },
+      "version_manifest": {
+        "path": "VERSION.json",
+        "sha256": "4acbc7016ed7431e81edecd583652f43eeaa2c57c578ed1aca60a5b505cfb3cd",
+        "_why": "The Doctrine's own declaration of version, status and core fingerprints. Pinned so the version and status inspected at binding (1.1.0, ACTIVE_PENDING_REPIN) cannot drift silently; scripts/doctrine-orient.py cross-checks it against the disk and this binding and refuses a contradiction."
+      },
+      "ux_design_assurance_manifest": {
+        "path": "modules/ux-design-assurance/v1.1/MODULE_MANIFEST.yaml",
+        "sha256": "110e926e2d7ba7a4c7fccc00fda60775ee54595004c3bce4265a99ff83bc67a4",
+        "_why": "The Gallery is governed by Playbook Stage 2A and Audit Protocol §11, which invoke the ux-design-assurance module. This manifest carries the SHA-256 and byte count of each of the module's 19 other files; scripts/doctrine-orient.py expands and verifies that list at orientation (derived, never hand-listed), so the whole module is fingerprint-checked without a hand-maintained copy of the manifest here."
+      }
+    },
+    "modules": {
+      "ux-design-assurance": {
+        "version": "1.1.0",
+        "path": "modules/ux-design-assurance/v1.1/",
+        "verification": "manifest expansion by scripts/doctrine-orient.py at every orient/check"
+      }
+    }
+  },
+  "bound_at": "2026-09-04T04:41:52+00:00",
+  "bound_by": {
+    "authority": "GOVERNOR",
+    "decision_id": "GAL-GOV-2026-09-04-STAGE0",
+    "decision_source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §3 (Stage 0: bind to the exact current Doctrine commit actually inspected in this session) and the governor's session instruction of 2026-09-04; handoff package THE_GALLERY_FABLE_5_HANDOFF_v1.1.zip sha256 db781afa096c8c72763b5be49ebb580bf2fc75d73c2d50b290de3fa475f5c6f0."
+  },
+  "status": "ACTIVE",
+  "repin_rule": "This binding pins a commit. Any advance of builders-doctrine's default branch makes it stale and orientation refuses until it is re-pinned in a governed change that re-derives every fingerprint (Doctrine VERSION.json freeze_note; product obligation OBL-GAL-004).",
+  "seam": "scripts/doctrine-orient.py"
+}
