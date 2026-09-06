@@ -31,14 +31,35 @@ export type Ingested = { storageKey: string; width: number; height: number; vari
 // bearing, and Node and Workers compile the identical module — one image path, not two.
 const decodeB64 = (b64: string) => Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
 
+/**
+ * Where the compiled codecs come from.
+ *
+ * A Worker isolate refuses `WebAssembly.compile` anywhere but module evaluation — "Wasm code
+ * generation disallowed by embedder" — and the Next server bundle is evaluated inside a
+ * request, so nothing here may compile on Cloudflare. The Worker entry (`worker-entry.ts`)
+ * imports the same three `.wasm` files directly, which wrangler compiles at deploy time, and
+ * leaves the compiled modules here. Under Node, where there is no such rule, they are compiled
+ * on first use from the bytes carried as base64.
+ *
+ * Either way these are the same codecs over the same bytes, written by one generator. The
+ * runtime decides where compilation happens, not what a maker's photograph looks like.
+ */
+type Codecs = { dec: WebAssembly.Module; enc: WebAssembly.Module; rsz: WebAssembly.Module };
+
+function compiledCodecs(): Codecs {
+  const handedOver = (globalThis as { __GALLERY_CODECS__?: Codecs }).__GALLERY_CODECS__;
+  if (handedOver) return handedOver;
+  return {
+    dec: new WebAssembly.Module(decodeB64(DEC_WASM_B64)),
+    enc: new WebAssembly.Module(decodeB64(ENC_WASM_B64)),
+    rsz: new WebAssembly.Module(decodeB64(RESIZE_WASM_B64)),
+  };
+}
+
 let codecs: Promise<void> | undefined;
 function initCodecs(): Promise<void> {
   return (codecs ??= (async () => {
-    const [dec, enc, rsz] = await Promise.all([
-      WebAssembly.compile(decodeB64(DEC_WASM_B64)),
-      WebAssembly.compile(decodeB64(ENC_WASM_B64)),
-      WebAssembly.compile(decodeB64(RESIZE_WASM_B64)),
-    ]);
+    const { dec, enc, rsz } = compiledCodecs();
     await Promise.all([initJpegDecode(dec), initJpegEncode(enc), initResize(rsz)]);
   })().catch((cause) => {
     codecs = undefined;   // let a later request try again rather than caching a failure

@@ -1,13 +1,18 @@
-// Generate the embedded codec modules.
+// Generate the codec payloads, in the two shapes the two builders will take.
 //
 // The WASM here is emscripten and wasm-bindgen output: it imports its glue functions from
-// modules named `a` and `wbg`, which a bundler tries and fails to resolve as JavaScript. That
-// is why neither Turbopack nor webpack can take these as WebAssembly modules, and why they are
-// carried as bytes instead. Base64 costs about a third in source size and buys a codec path
-// with no bundler feature behind it, identical in Node and on Workers.
+// modules named `a` and `wbg`, which a bundler tries and fails to resolve as JavaScript.
+// Neither Turbopack nor webpack can take these as WebAssembly modules, so the Next build gets
+// them as base64 and compiles them itself. That works under Node and does NOT work on
+// Cloudflare: a Worker isolate refuses WebAssembly compilation outside module evaluation, and
+// the Next server bundle is evaluated inside a request. So the Worker entry gets the same
+// bytes as real `.wasm` files, which wrangler compiles at deploy time and workerd hands over
+// already compiled.
+//
+// Same bytes, same codecs, one generator — the two shapes cannot drift apart.
 //
 // Run: npm run build:wasm
-import { readFileSync, writeFileSync } from "node:fs";
+import { copyFileSync, readFileSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
 
 const require = createRequire(import.meta.url);
@@ -25,5 +30,7 @@ for (const [name, spec] of Object.entries(CODECS)) {
     `// ${(bytes.length / 1024).toFixed(0)} KB of WebAssembly, carried as base64 so no bundler\n` +
     `// needs to understand .wasm — see the generator for why that matters.\n` +
     `export default "${b64}";\n`);
+  copyFileSync(require.resolve(spec), `src/lib/wasm/${name}.wasm`);
   console.log(`  src/lib/wasm/${name}.ts  ${(bytes.length / 1024).toFixed(0)} KB -> ${(b64.length / 1024).toFixed(0)} KB base64`);
+  console.log(`  src/lib/wasm/${name}.wasm  ${(bytes.length / 1024).toFixed(0)} KB, for the Worker entry`);
 }

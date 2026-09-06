@@ -1,7 +1,9 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "thegallery",
-  "main": ".open-next/worker.js",
+  // Not OpenNext's worker directly: worker-entry.ts wraps it to compile the image codecs
+  // at startup, which a Worker isolate allows and refuses to do inside a request.
+  "main": "worker-entry.ts",
   "compatibility_date": "2025-09-01",
   // nodejs_compat gives the Worker `node:crypto`, `node:buffer` and the pieces `pg` needs.
   // The image codecs need none of it — they are WASM compiled from bytes.

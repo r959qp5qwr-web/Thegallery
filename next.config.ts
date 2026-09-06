@@ -9,6 +9,15 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   experimental: { serverActions: { bodySizeLimit: "12mb" } },
+
+  // `pg` reaches for pg-cloudflare's socket when it detects a Worker, and that package
+  // publishes its real implementation only under the `workerd` export condition. The file
+  // tracer resolves under the default condition, so it copies the empty stub and the Worker
+  // bundler then cannot resolve the module it is told to use. Naming the files keeps both
+  // in the traced output; nothing else in the build knows the difference.
+  outputFileTracingIncludes: {
+    "**": ["./node_modules/pg-cloudflare/dist/**", "./node_modules/pg-cloudflare/esm/**"],
+  },
 };
 
 export default nextConfig;

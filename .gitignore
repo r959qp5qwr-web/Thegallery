@@ -29,3 +29,4 @@ playwright-report/
 tsconfig.tsbuildinfo
 .wrangler/
 .open-next/
+.dev.vars
