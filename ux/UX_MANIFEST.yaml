@@ -22,6 +22,18 @@ interface_reference_set:
   acceptance_receipt: doctrine/receipts/STAGE1-GOVERNOR-RULING-2026-09-06.md
   surfaces: [R-1, R-2, R-3]
   inheritance_demonstrations: [I-1, I-2, I-3, I-4, I-5, I-6]
+  # 2026-09-06, later the same day: version 2 at the governor's direction. Palette, rules,
+  # type registers, actions, hero composition and empty states recomposed; the plates in
+  # renders/ are re-rendered from the revised system and ux/reference/implemented/ holds the
+  # running product's surfaces. Grammar, hierarchy and imagery treatment inherit from version 1.
+  # The rendered result awaits the governor's acceptance; the status above is version 1's.
+  revision:
+    version: 2
+    directed_by: GOVERNOR
+    directed_at: "2026-09-06"
+    acceptance: PENDING
+    receipt: doctrine/receipts/VISUAL-SYSTEM-REVISION-2026-09-06.md
+    implemented_surfaces: ux/reference/implemented/
   # What acceptance fixes, and what it deliberately does not.
   approved: >
     The visual grammar, hierarchy, typography, palette, imagery treatment and interaction

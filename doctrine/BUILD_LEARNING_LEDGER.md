@@ -304,6 +304,27 @@ Compilation and instantiation were separated. `worker-entry.ts` imports the thre
 
 ---
 
+### GAL-L0016
+
+**Date:** 2026-09-06  
+**Observed event:**  
+The first deployed build was seen on the governor's phone and judged dull: "the colours for the website don't look very appealing. Is this what we agreed on." It was not what was agreed. The accepted reference plate R-1 read as a gallery because of one photograph — the governor's approved vessel on limestone. The implemented build carried that photograph and, for every other object, a flat procedural gradient; and it had inherited from the reference the faults the reference itself carried: black full-width rules, mono uppercase as the voice of every label and lead, a black filled block for the primary action, a grey-beige ground.
+
+**Evidence:**  
+Two phone screenshots from the governor; before/after captures of eighteen surfaces at 390 × 844 @2x in `ux/reference/implemented/`; the receipt `doctrine/receipts/VISUAL-SYSTEM-REVISION-2026-09-06.md`.
+
+**Why it mattered:**  
+"Matches the accepted reference" was treated as the finish line for the visual system, and the reference had been accepted on the strength of a single photograph that the synthetic fixtures did not reproduce. A reference set proves a grammar; it does not prove that the grammar survives ordinary content. The comparison that would have caught this — the running product beside the reference, with the reference's photograph swapped for a drawn one — was never made, and the interface reached the governor's hand before anyone in the build had looked at it as a room rather than a layout.
+
+**What changed:**  
+The system was recomposed under the governor's mandate (the work supplies the colour; the interface supplies the room) and the accepted plates re-rendered from the revised tokens so the reference and the build cannot diverge on palette again. The synthetic objects were restaged in the approved photograph's room so the fixtures exercise the system the way real work will. The version 1 acceptance clause — a material change of character returns for governor review — is honoured by recording version 2 as pending acceptance rather than as accepted.
+
+**Status:** RESOLVED (pending the governor's acceptance of the rendered result)  
+**Related finding / decision IDs:** GAL-L0015, human_surface_state.interface_reference_set_revision  
+**Harvest status:** UNHARVESTED
+
+---
+
 ## Ledger rules
 
 - Capture the event in the governed change that fixes or formally records it where feasible.

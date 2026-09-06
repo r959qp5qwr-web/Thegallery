@@ -6,7 +6,7 @@ import { Icon } from "./Icon";
 // PRODUCT_ARCHITECTURE §5: Browse · Saved · Workshops · For Makers, with the fourth slot
 // reading Studio for a signed-in maker. The maker and the visitor share one grammar.
 const ITEMS = [
-  { href: "/", label: "Browse", icon: "browse", match: (p: string) => p === "/" || p.startsWith("/browse") || p.startsWith("/work") || p.startsWith("/m/") },
+  { href: "/", label: "Browse", icon: "browse", match: (p: string) => p === "/" || p.startsWith("/browse") || p.startsWith("/work/") || p.startsWith("/m/") },
   { href: "/saved", label: "Saved", icon: "bookmark", match: (p: string) => p.startsWith("/saved") },
   { href: "/workshops", label: "Workshops", icon: "workshops", match: (p: string) => p.startsWith("/workshops") },
 ];

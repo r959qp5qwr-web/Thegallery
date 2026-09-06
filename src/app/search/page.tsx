@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { search, imagesFor, type PublicImage } from "@/lib/queries";
-import { Header, WorkTile, Footer } from "@/components/Chrome";
+import { Header, WorkTile, Footer, EmptyPlinth, Action } from "@/components/Chrome";
 import { KIND_LABEL } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
@@ -30,11 +30,9 @@ export default async function Search({ searchParams }: { searchParams: Promise<{
       {!q ? (
         <div className="hint">Search looks at titles, makers, materials and medium.</div>
       ) : works.length === 0 && makers.length === 0 ? (
-        <div className="empty">
-          <h2>Nothing found for &ldquo;{q}&rdquo;</h2>
-          <p>No work or maker matches that. Try a shorter term, or browse by material.</p>
-          <Link className="btn" href="/">Back to the entrance</Link>
-        </div>
+        <EmptyPlinth title={`Nothing found for “${q}”`} action={<Action href="/browse/clay">Browse by material</Action>}>
+          No work or maker matches that. Try a shorter term, or browse by material.
+        </EmptyPlinth>
       ) : (
         <>
           {makers.length ? (

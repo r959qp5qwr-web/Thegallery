@@ -1,4 +1,4 @@
-import { Header, Footer } from "@/components/Chrome";
+import { Header, Footer, EmptyPlinth, Action } from "@/components/Chrome";
 
 export const dynamic = "force-dynamic";
 
@@ -9,11 +9,11 @@ export default function Workshops() {
   return (
     <>
       <Header place="Workshops" />
-      <div className="empty">
-        <h2>No workshops yet</h2>
-        <p>Makers will publish workshops here — dates, place and how to register. Nothing is
-          scheduled at the moment.</p>
-      </div>
+      <div className="context"><span>Programme</span><span className="accent">Nothing scheduled</span></div>
+      <EmptyPlinth title="No workshops yet" action={<Action href="/">Back to the entrance</Action>}>
+        Makers will publish workshops here — dates, place and how to register. Nothing is
+        scheduled at the moment.
+      </EmptyPlinth>
       <Footer />
     </>
   );

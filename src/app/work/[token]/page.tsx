@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getWork, getWorkEnding, imagesFor, routesFor, listWorksByMaker } from "@/lib/queries";
-import { Header, Band, Footer, imgSrc } from "@/components/Chrome";
+import { Header, Band, Footer, Mark, imgSrc } from "@/components/Chrome";
 import { Icon } from "@/components/Icon";
 import { SaveButton } from "@/components/SaveButton";
 import { STATUS_LABEL, price, dimensions, statusIsStale, routeHref, routeDisplay, ROUTE_LABEL } from "@/lib/format";
@@ -54,7 +54,7 @@ export default async function WorkDetail(
 
       {/* Each image keeps its own proportion. Nothing is cropped to a common shape: the
           maker framed the object, and a gallery that re-crops is editing the work. */}
-      <div className="imgstrip" style={{ paddingTop: 12 }}>
+      <div className="imgstrip">
         {images.length ? images.map((im) => (
           <figure className="shot" key={im.id} style={{ margin: 0 }}>
             <img src={imgSrc(im, "w1280") ?? undefined} alt={im.alt_text ?? `${work.title}, image ${im.position + 1}`}
@@ -62,23 +62,25 @@ export default async function WorkDetail(
           </figure>
         )) : <div className="frame r45" style={{ width: "100%" }}><span className="notice">No image yet</span></div>}
       </div>
+      <div className="hero" aria-hidden><div className="ledge" /></div>
+      {images.length > 1 ? <div className="context" style={{ paddingTop: 10, paddingBottom: 0 }}><span>{images.length} views · swipe</span></div> : null}
 
       <div className="label">
         <div className={`status ${sold ? "sold" : "available"}`}>
-          {STATUS_LABEL[work.status]}
+          <span><Mark muted={sold} />{STATUS_LABEL[work.status]}</span>
           {work.price_mode === "exact" && !sold
-            ? <span className="price">· {price(work.price_mode, work.price_amount)}</span>
-            : work.price_mode !== "exact" ? <span className="price">· {price(work.price_mode, null)}</span> : null}
+            ? <span className="price">{price(work.price_mode, work.price_amount)}</span>
+            : work.price_mode !== "exact" ? <span className="price">{price(work.price_mode, null)}</span> : null}
           {stale ? <span className="stale">Status last confirmed some time ago</span> : null}
         </div>
         <h1 className="title">{work.title}</h1>
-        <div className="meta">{work.maker_display_name} · {work.medium ?? work.material}</div>
+        <div className="makerline">{work.maker_display_name} <em>· {work.medium ?? work.material}</em></div>
         {dims ? <div className="dims">{dims}{work.year ? ` · ${work.year}` : ""}</div> : null}
       </div>
 
       <div className="actions">
         <Link className="btn block" href={`/work/${work.public_token}?contact=1`}>
-          <Icon name="chat" /> Contact {work.maker_display_name.split(" ")[0]}
+          <Icon name="chat" /> Contact {work.maker_display_name.split(" ")[0]} <span className="arrow" aria-hidden>→</span>
         </Link>
       </div>
       <div className="actions secondary">
@@ -94,10 +96,11 @@ export default async function WorkDetail(
 
       <div className="section">
         <div className="lead">The maker</div>
-        <p className="body">{work.maker_display_name} · {work.maker_city}</p>
-        <div className="inline-actions" style={{ padding: "12px 0 0" }}>
+        <h2 style={{ margin: "0 0 4px" }}>{work.maker_display_name}</h2>
+        <div className="makerline"><em>{work.maker_city}</em></div>
+        <div className="inline-actions" style={{ padding: "14px 0 0" }}>
           <Link className="textlink" href={`/m/${work.maker_handle}`}>
-            View the gallery ({siblings.length} work{siblings.length === 1 ? "" : "s"})
+            The gallery, {siblings.length} work{siblings.length === 1 ? "" : "s"} <span className="arrow" aria-hidden>→</span>
           </Link>
         </div>
       </div>

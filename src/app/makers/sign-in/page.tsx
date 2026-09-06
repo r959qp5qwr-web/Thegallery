@@ -12,6 +12,7 @@ export default async function SignIn(
   return (
     <>
       <StudioHeader title="Sign in" back="/makers" />
+      <div className="context"><span>Your Studio</span><span className="accent">Makers only</span></div>
       {reset ? <Band label="Password set">Your new password is in place. Sign in with it.</Band> : null}
       {expired ? <Band label="Session ended">You were signed out because the session expired. Sign in to carry on where you were.</Band> : null}
       <ActionForm action={signInAction} submitLabel="Sign in" busyLabel="Signing in…" hidden={{ next }}>

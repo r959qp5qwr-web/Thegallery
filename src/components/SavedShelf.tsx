@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { readSaved } from "./SaveButton";
+import { EmptyPlinth, Action } from "./Chrome";
 
 type Row = { public_token: string; title: string; maker_display_name: string; status: string; gone: boolean };
 
@@ -22,11 +23,9 @@ export function SavedShelf() {
   if (rows === null) return <div className="hint">Reading your shelf…</div>;
   if (!rows.length) {
     return (
-      <div className="empty">
-        <h2>Nothing saved yet</h2>
-        <p>Save a work and it waits here. The list stays on this device and is not sent anywhere.</p>
-        <Link className="btn" href="/">Back to the entrance</Link>
-      </div>
+      <EmptyPlinth material="paper" title="Nothing saved yet" action={<Action href="/">Back to the entrance</Action>}>
+        Save a work and it waits here. The list stays on this device and is not sent anywhere.
+      </EmptyPlinth>
     );
   }
   return (

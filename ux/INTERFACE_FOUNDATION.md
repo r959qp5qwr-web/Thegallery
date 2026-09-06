@@ -6,7 +6,7 @@
 **Reference set:** `ux/reference/interface/INTERFACE_REFERENCE_SET.md`
 
 ## 1. Interface proposition
-The interface behaves like a contemporary exhibition space rendered as a precise application. A warm paper ground and near-black rules give the work room; photography supplies the colour; one burnt amber accent marks availability and the active place. Three typographic registers do the work of hierarchy — an editorial serif for the object and the maker, a small typewriter mono for the institution's labels, categories and states, and a plain sans for anything the person must operate. Chrome recedes but stays obvious: every control is labelled, sized for a thumb and drawn from familiar platform grammar. Nothing is boxed that a rule and space can separate.
+The interface behaves like a quiet, well-lit exhibition space rendered as a precise application. The work supplies the colour; the interface supplies the room. A luminous ivory wall and limestone plinths give the work its ground; a softened, warm near-black is the ink; burnt amber is the Gallery's curatorial mark — availability, the active place, the lead's short rule, the primary action's edge — visible and disciplined. Three typographic registers do the work of hierarchy, each with a job and a scale of its own: an editorial serif for the object, the maker and the curatorial voice (the lead and the maker line are serif italic); a small typewriter mono for the institution's labels — material, status, place, the wordmark — and only those; a plain sans for anything the person must operate. Actions are a line and a label with an amber edge, never a filled block. Rules are hairlines, and few. Chrome recedes but stays obvious: every control is labelled, sized for a thumb and drawn from familiar platform grammar. Nothing is boxed that light, a plinth and space can separate.
 
 ## 2. Target platforms / form factors
 Mobile web first (compact, 360–599 px, opened from a WhatsApp link); tablet (medium, 600–899 px); desktop (expanded, ≥ 900 px). Web only in the MVP; installability optional.
@@ -22,24 +22,28 @@ Newsreader (variable, optical sizes). Work titles, maker names as headings, sect
 ### Semantic roles
 | Role | Size/token | Weight | Line height | Use |
 |---|---|---|---|---|
-| wordmark | 15 px mono, tracking 0.18em, uppercase | 500 | 1 | THE GALLERY |
-| display | 34 px serif (44 px expanded), opsz 36 | 300 | 1.1 | work title on entrance and detail |
-| heading | 26 px serif | 400 | 1.15 | maker name as page heading |
-| subheading | 20 px serif | 400 | 1.25 | section titles (Collections, Workshops, Practice) |
-| grid-title | 17 px serif | 400 | 1.25 | work title in grids |
-| meta | 13 px mono, tracking 0.06em | 400 | 1.4 | maker line, dimensions, place, timestamps |
-| label | 12 px mono, tracking 0.12em, uppercase | 500 | 1.2 | categories, statuses, section labels, bar labels |
-| body | 16 px sans | 400 | 1.5 | explanatory copy, disclosure, notes |
-| body-small | 14 px sans | 400 | 1.45 | help text, secondary explanation |
-| action | 15 px sans | 500 | 1 | buttons |
+| wordmark | 14 px mono, tracking 0.2em, uppercase | 500 | 1 | THE GALLERY |
+| display | 40 px serif (48 px medium, 56 px expanded), weight 350 | 350 | 1.04 | work title on entrance and detail; the door's headline |
+| heading | 30 px serif (34 px medium) | 400 | 1.1 | maker name as page heading; empty-state title |
+| subheading | 22 px serif | 400 | 1.2 | section titles (Collections, Workshops, Practice); the maker's name on a work page |
+| grid-title | 18 px serif | 400 | 1.22 | work title in grids and rows |
+| lead | 17 px serif italic | 400 | 1.3 | the curatorial voice: context line, section leads (with the short amber rule), the place in the header, a Studio page's title |
+| maker | 17 px serif italic | 400 | 1.35 | the maker line under a title; the maker and city under a grid tile at 14 px |
+| meta | 13 px mono, tracking 0.04em | 400 | 1.45 | dimensions, year, timestamps, the price beside a status |
+| label | 11.5 px mono, tracking 0.14em, uppercase | 500 | 1.2 | the institution's labels only: material rail, status word, route kind, chips |
+| nav | 10.5 px sans, tracking 0.1em, uppercase | 500 | 1 | bottom bar labels |
+| body | 16 px sans | 400 | 1.55 | explanatory copy, disclosure, notes |
+| body-small | 14 px sans | 400 | 1.5 | help text, secondary explanation |
+| action | 15 px sans | 500 | 1 | the editorial action's label |
 | field | 16 px sans | 400 | 1.4 | inputs (never smaller, to prevent zoom on focus) |
-| note | 18 px serif italic | 400 | 1.45 | maker-authored notes, attributed |
+| field-label | 13 px sans | 500 | 1.3 | a field's label — a word, not signage |
+| note | 19 px serif italic | 400 | 1.45 | maker-authored notes, attributed |
 
 ### Scaling rules
 Body and fields never below 16 px; metadata never below 12 px and only in mono, which reads larger; the display size steps 34 → 40 → 44 across form factors; text resizes to 200 % with reflow, no clipping.
 
 ### Forbidden / limited expressive use
-Serif never for buttons, labels, fields, statuses, errors or navigation. Italic only for attributed maker notes. No handwritten or decorative faces anywhere.
+Serif never for buttons, fields, statuses, errors or navigation. Serif italic carries the curatorial voice — the lead, the maker line, the context line, attributed notes — and nothing operational. Mono uppercase is confined to the institution's labels listed above; it is a gallery label, not the product's voice, and it must not appear on a body-text surface as a heading. No handwritten or decorative faces anywhere.
 
 ## 4. Spacing / layout rhythm
 - base unit: 4 px
@@ -49,19 +53,31 @@ Serif never for buttons, labels, fields, statuses, errors or navigation. Italic 
 - max content width: 720 px for text, 1200 px for grids; two-column work detail from 900 px
 
 ## 5. Colour roles
-| Role | Token | Purpose | Contrast requirement |
+
+Revised 2026-09-06 under the governor's visual mandate (receipt `doctrine/receipts/VISUAL-SYSTEM-REVISION-2026-09-06.md`). The governing idea is unchanged and now enforced more literally: **the work supplies the colour; the interface supplies the room.** The ground became luminous ivory and limestone rather than grey-beige; ink softened and warmed; amber became the Gallery's curatorial mark rather than a technical indicator; the five materials gained tones that appear only as fragments, never as surfaces.
+
+| Role | Value | Where | Contrast |
 |---|---|---|---|
-| paper | `#F3EEE6` | canvas | ground |
-| paper-deep | `#EAE3D8` | skeletons, image frames while loading, sheet handle, disabled fills | ground |
-| stone | `#D8CFC2` | soft dividers inside lists, sheet handle | decorative; adjacent text identifies rows |
-| stone-strong | `#857D73` | field borders, chip borders — anything a person must perceive as a control boundary | non-text ≥ 3:1 on paper (measured 3.4:1) |
-| ink | `#1B1917` | text, strong rules, icons, primary button fill | ≥ 4.5:1 on paper (measured 15.2:1) |
-| ink-muted | `#5C5751` | secondary metadata, timestamps, sold/retired labels | ≥ 4.5:1 on paper (measured 6.2:1) |
-| amber | `#A04A1B` | available status, active category text + underline, active bar dot, focus of attention | ≥ 4.5:1 on paper for 12–13 px text (measured 5.2:1) |
-| amber-tint | `#F4E1D4` | warning notice band ground with ink text | text on it is ink |
-| alarm | `#7E2A17` | the irreversible act's confirm button fill (close account, take down) with paper text | ≥ 4.5:1 paper on alarm (measured 8.2:1) |
-| scrim | ink at 40 % | behind sheets and dialogs | — |
-Meaning is never colour alone: statuses are words; the active category is underlined; the active bar item carries a dot and a bolder label; errors carry text and an icon.
+| paper | `#F8F3EA` | the wall: page ground | ground |
+| paper-deep | `#F0E9DC` | sunken fields, notice bands, loading frames | ground |
+| limestone | `#E7DECF` | plinths; the ground a work stands on in the hero and image strip | ground |
+| stone | `#D5CAB8` | row dividers, soft rules | non-text |
+| stone-strong | `#9A9082` | field and chip borders — anything a person must perceive as a control boundary | non-text ≥ 3:1 on paper (3.2:1) |
+| ink | `#221E1A` | titles, body text, the editorial action's line | ≥ 4.5:1 on paper (15.6:1) |
+| ink-soft | `#3D3630` | structural rules (used sparingly), secondary headings, icons at rest | ≥ 4.5:1 (10.4:1) |
+| ink-muted | `#675F56` | metadata, help, the curatorial lead | ≥ 4.5:1 (5.4:1) |
+| amber | `#A5501F` | the mark: availability, the active material and place, the lead's short rule, the primary action's left rule, focus | ≥ 4.5:1 for 12 px+ (5.0:1) |
+| amber-deep | `#8A3F14` | amber as small text, where 4.5:1 must hold with margin | ≥ 4.5:1 (6.6:1) |
+| amber-tint | `#F2E1D2` | warning band ground with ink text | text on it is ink |
+| alarm | `#7E2A17` | the irreversible act's confirm fill with paper text; failure text | ≥ 4.5:1 paper on alarm (8.2:1) |
+| m-clay · m-textile · m-wood · m-metal · m-paper | `#9B5E3A` · `#34466B` · `#7B5334` · `#8B8170` · `#CFC4B0` | material fragments in empty states only — never a surface, never behind text | — |
+| scrim | ink at 42 % | behind sheets and dialogs | — |
+
+Rules: three kinds and no more. The **hairline** (`ink` at 16 %) under the header and above the bar; the **soft rule** (`stone`) between rows; the **structural rule** (`ink-soft`), reserved. The black full-width rule that previously framed the header, the rail and the bar is gone.
+
+Texture: one paper grain over the whole ground, multiplied in at 4.5 % — felt rather than seen. No texture behind fields, no gradients on surfaces, no shadow on a photograph. Light and shadow appear only where they are compositional: the ledge under a hero, the plinth's cast shadow, the lit wall of an empty state.
+
+Meaning is never colour alone: statuses are words; the active material is underlined; the active bar item carries a rule above it and a bolder label; errors carry text and an icon.
 
 ## 6. Iconography
 - family: a single 24 px line family, 1.5 px stroke, round caps, drawn once as inline SVG symbols (search, back, close, bookmark, share, chevron, plus, image, check, warning, and route kinds: chat bubble for WhatsApp, envelope, handset, globe, form)
@@ -73,10 +89,10 @@ Meaning is never colour alone: statuses are words; the active category is underl
 ## 7. Component grammar
 
 ### Navigation
-Header: 56 px, wordmark left, search right, hairline ink rule below. Bottom bar: 64 px plus safe area, four items with icon over label, hairline rule above, active item has a bolder label and an amber dot. Expanded: the four items sit in the header beside search.
+Header: 60 px, wordmark left, the place in the lead voice centre, search right, one hairline below and no other rule. Bottom bar: 66 px plus safe area, four items with icon over a sans nav label, one hairline above; the active item is amber — icon and label — with a short amber rule above it. Expanded: the four items sit in the header beside search.
 
 ### Buttons
-Primary: ink fill, paper text, 48 px tall, 2 px radius, full width on compact in forms and sheets; inline width elsewhere. Secondary: text button, ink, underlined, 44 px hit area. Destructive confirm: alarm fill, paper text, the verb as label. Disabled: paper-deep fill, ink-muted text, reason beside it.
+Editorial action (primary): a 1 px ink line, paper ground, ink label, 50 px tall, 2 px radius, an arrow in amber after the label and a 3 px amber rule on the left edge; fills ink on hover. Full width on compact in forms and sheets; inline width elsewhere. Never a filled ink block — a black block on this ground reads as a marketplace button and is refused. Secondary: text button, ink, underlined in stone, 44 px hit area. Destructive confirm: alarm fill, paper text, the verb as label — the one filled button, because the act is the one that cannot be undone. Disabled: stone line, ink-muted text, reason beside it.
 
 ### Lists
 Rows 56 px minimum, hairline stone divider, leading icon optional, trailing chevron for navigation rows, trailing status chip for work rows.

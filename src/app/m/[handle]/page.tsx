@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getMaker, listWorksByMaker, imagesFor, routesFor, type PublicImage } from "@/lib/queries";
-import { Header, WorkTile, Footer } from "@/components/Chrome";
+import { Header, WorkTile, Footer, Mark, EmptyPlinth, orientation } from "@/components/Chrome";
 import { Icon } from "@/components/Icon";
 import { KIND_LABEL, ROUTE_LABEL, routeHref, routeDisplay } from "@/lib/format";
 
@@ -36,9 +36,9 @@ export default async function MakerGallery({ params }: { params: Promise<{ handl
     <>
       <Header place={maker.city} back="/" />
       <div className="label">
-        <div className="status"><span>{KIND_LABEL[maker.kind]}</span></div>
+        <div className="status"><span><Mark muted />{KIND_LABEL[maker.kind]}</span></div>
         <h1 className="title">{maker.display_name}</h1>
-        <div className="meta">{maker.city}{maker.region ? `, ${maker.region}` : ""} · {maker.country}</div>
+        <div className="makerline"><em>{maker.city}{maker.region ? `, ${maker.region}` : ""} · {maker.country}</em></div>
         {maker.exact_address ? <div className="dims">{maker.exact_address}</div> : null}
       </div>
 
@@ -58,10 +58,17 @@ export default async function MakerGallery({ params }: { params: Promise<{ handl
         <div className="lead">{works.length ? `${works.length} work${works.length === 1 ? "" : "s"}` : "Works"}</div>
         {works.length ? (
           <div className="grid" style={{ padding: 0 }}>
-            {works.map((w) => <WorkTile key={w.id} work={w} image={byWork.get(w.id)} />)}
+            {works.map((w) => (
+              <WorkTile key={w.id} work={w} image={byWork.get(w.id)}
+                        wide={orientation(byWork.get(w.id)) === "landscape"} />
+            ))}
           </div>
         ) : (
-          <p className="body">Nothing is on view in this gallery yet.</p>
+          <div style={{ margin: "0 calc(-1 * var(--pad-x))" }}>
+            <EmptyPlinth title="Nothing on view yet">
+              {maker.display_name} has a gallery and has not hung anything in it yet.
+            </EmptyPlinth>
+          </div>
         )}
       </div>
 
