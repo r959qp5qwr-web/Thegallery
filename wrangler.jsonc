@@ -20,10 +20,15 @@
   // row-level security, held by the thing serving public requests, would make every policy in
   // this product advisory.
 
+  // All non-secret. The publishable key is meant to reach a browser; there is no service-role
+  // key here, so nothing in this file needs hiding. GALLERY_BASE_URL is what confirmation and
+  // recovery links point at, so it must be the address people actually visit.
   "vars": {
     "GALLERY_SCHEMA": "gallery",
-    "GALLERY_STORAGE": "supabase",
-    "SUPABASE_STORAGE_BUCKET": "gallery-images"
+    "SUPABASE_URL": "https://ljbsrrctpynyarmlqkba.supabase.co",
+    "SUPABASE_PUBLISHABLE_KEY": "sb_publishable_5jiOM-fepTP1aV4d1YdgHQ_iVNqrIjr",
+    "SUPABASE_STORAGE_BUCKET": "gallery-images",
+    "GALLERY_BASE_URL": "https://atthegallery.in"
   },
 
   "observability": { "enabled": true }
