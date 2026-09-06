@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
-import { publicImageByIdAny } from "@/lib/queries";
 import { readVariant } from "@/lib/storage";
-import { asAuthStore } from "@/lib/db";
+import { asAnon, asAccount } from "@/lib/db";
 import { currentAccount } from "@/lib/auth";
 
 // Pixels are a permission surface, not a static asset.
@@ -14,22 +13,21 @@ export async function GET(_req: Request, ctx: { params: Promise<{ id: string; va
   const { id, variant } = await ctx.params;
   if (!/^[0-9a-f-]{36}$/i.test(id)) return new NextResponse("Not found", { status: 404 });
 
-  let storageKey: string | null = null;
-  const pub = await publicImageByIdAny(id);
-  if (pub) {
-    storageKey = await asAuthStore(async (db) =>
-      (await db.query<{ storage_key: string }>("SELECT storage_key FROM work_images WHERE id = $1", [id]))
-        .rows[0]?.storage_key ?? null);
-  } else {
+  // Published: ask the database for the key of an image it already considers public. The
+  // visibility predicate is not restated here — the function reads the same view every other
+  // public surface reads.
+  let storageKey = await asAnon(async (db) =>
+    (await db.query<{ key: string | null }>(
+      "SELECT storage_key_for_public_image($1) AS key", [id])).rows[0]?.key ?? null);
+
+  // Not published: a maker may still see their own draft's images. This runs as that maker,
+  // so row-level security decides — no privileged connection is involved anywhere in the route.
+  if (!storageKey) {
     const account = await currentAccount();
     if (!account) return new NextResponse("Not found", { status: 404 });
-    storageKey = await asAuthStore(async (db) =>
+    storageKey = await asAccount(account.id, async (db) =>
       (await db.query<{ storage_key: string }>(
-        `SELECT i.storage_key FROM work_images i
-           JOIN works w     ON w.id = i.work_id
-           JOIN galleries g ON g.id = w.gallery_id
-           JOIN makers m    ON m.id = g.maker_id
-          WHERE i.id = $1 AND m.account_id = $2`, [id, account.id])).rows[0]?.storage_key ?? null);
+        "SELECT storage_key FROM work_images WHERE id = $1", [id])).rows[0]?.storage_key ?? null);
   }
   if (!storageKey) return new NextResponse("Not found", { status: 404 });
 

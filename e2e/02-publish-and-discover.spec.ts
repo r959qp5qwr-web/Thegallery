@@ -30,15 +30,22 @@ test.describe("publish a work and meet it as a visitor", () => {
     await expect(page.getByText(MAKER_A.email)).toBeVisible();
     await expect(page.getByText("is not one of them and never becomes one")).toBeVisible();
 
+    // Each add is settled on the list, not on the notice. The notice from the previous add is
+    // still on screen when the next one is typed, so waiting for it proves nothing; the row
+    // appears only after the server has answered and the form has reset.
+    const rows = page.locator("ul.rowlist li");
+
     await page.getByLabel("Kind").selectOption("whatsapp");
     await page.getByLabel("The route").fill(ROUTE_WHATSAPP);
     await page.getByRole("button", { name: "Add route" }).click();
     await expect(page.getByTestId("form-notice")).toContainText("Route added");
+    await expect(rows).toHaveCount(1);
 
     await page.getByLabel("Kind").selectOption("email");
     await page.getByLabel("The route").fill(ROUTE_EMAIL);
     await page.getByRole("button", { name: "Add route" }).click();
-    await expect(page.getByTestId("form-notice")).toContainText("Route added");
+    await expect(rows).toHaveCount(2);
+    await expect(rows.nth(1)).toContainText(ROUTE_EMAIL);
 
     // A malformed route is refused with a sentence that says how to fix it.
     await page.getByLabel("Kind").selectOption("whatsapp");

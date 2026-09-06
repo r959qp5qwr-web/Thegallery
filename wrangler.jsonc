@@ -1,0 +1,37 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "thegallery",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2025-09-01",
+  // nodejs_compat gives the Worker `node:crypto`, `node:buffer` and the pieces `pg` needs.
+  // The image codecs need none of it — they are WASM compiled from bytes.
+  "compatibility_flags": ["nodejs_compat"],
+
+  "assets": { "directory": ".open-next/assets", "binding": "ASSETS" },
+
+  // Postgres from a V8 isolate. Hyperdrive holds the pool on Cloudflare's side and hands the
+  // Worker a connection string; the Worker opens ONE client per request and closes it, because
+  // an isolate has no long-lived process to keep a pool warm in.
+  //
+  // `id` is yours and is created with:
+  //   npx wrangler hyperdrive create thegallery-db \
+  //     --connection-string='postgres://gallery_app.<ref>:<password>@aws-N-<region>.pooler.supabase.com:5432/postgres'
+  //
+  // `localConnectionString` is what `wrangler dev` uses instead, so the journeys can run
+  // against a local cluster without touching the hosted database.
+  "hyperdrive": [
+    {
+      "binding": "HYPERDRIVE",
+      "id": "REPLACE_WITH_HYPERDRIVE_ID",
+      "localConnectionString": "postgres://gallery_app:gallery_local_dev@127.0.0.1:5432/gallery"
+    }
+  ],
+
+  "vars": {
+    "GALLERY_SCHEMA": "gallery",
+    "GALLERY_STORAGE": "supabase",
+    "SUPABASE_STORAGE_BUCKET": "gallery-images"
+  },
+
+  "observability": { "enabled": true }
+}

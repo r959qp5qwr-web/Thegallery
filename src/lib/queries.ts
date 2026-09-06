@@ -99,11 +99,6 @@ export async function search(q: string) {
   });
 }
 
-/** The image route uses this: pixels are reachable only while the work is publicly visible. */
-export const publicImageByIdAny = (imageId: string) =>
-  asAnon(async (db) => (await db.query<{ id: string; variants: Record<string, string> }>(
-    "SELECT id, variants FROM public_work_images WHERE id = $1", [imageId])).rows[0] ?? null);
-
 // ------------------------------------------------------------------- signed-in maker reads
 export type StudioWork = PublicWork & { lifecycle: string; taken_down: boolean; gallery_id: string };
 
