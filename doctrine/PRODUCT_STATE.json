@@ -1445,8 +1445,8 @@
     "stage_2_note": "J-001, J-002 and J-003 are implemented in full and J-004 minimally (suspend, reinstate, recorded reasons). All four were walked end to end in the running product at phone and desktop width on 2026-09-06. They read VERIFYING rather than VERIFIED because verification is not complete: no deployed build, no real email round trip and no walk on a physical phone. J-005's doors (sign out, sign in, recovery, expired session, account closure) were walked inside J-002's spec; J-006 enters through material browse, search and private saves."
   },
   "learning_ledger": "doctrine/BUILD_LEARNING_LEDGER.md",
-  "updated_at": "2026-09-06T12:00:00+00:00",
-  "update_reason": "Record GAL-SUPA-1: the governor returned the data and auth path to Supabase-native, restoring PRODUCT_ARCHITECTURE.md §9 after the Stage 2 build's environment substitution was surfaced rather than left to harden. Three co-tenancy consequences were stated before the decision and accepted. The existing local proof does not transfer to the rewritten path and the ledger now says so.",
+  "updated_at": "2026-09-06T13:00:00+00:00",
+  "update_reason": "Record the Supabase-native schema applied to the hosted project: teardown of the previous schema and its four roles, then migrations 001-003, then 12 of 12 structural checks PASS. Behaviour there is still unproved — the policies are proved locally at 28 of 28 probes and no client has connected. Receipt doctrine/receipts/SUPABASE-NATIVE-SCHEMA-APPLIED-2026-09-06.md.",
   "stage_2_proof_ledger": {
     "_what": "What the Stage 2 slice actually proved, and by which instrument. Local proof and deployed proof are separate columns on purpose: a browser walk against localhost is not a deployed walk, and this ledger exists so no later session can read one as the other.",
     "receipt": "doctrine/receipts/STAGE2-VERTICAL-SLICE-2026-09-06.md",
@@ -1497,19 +1497,18 @@
       "the CI check and branch protection, which have never run",
       "Hyperdrive against the hosted database — the binding was exercised only through its localConnectionString, and no Hyperdrive configuration has been created",
       "Supabase Storage — the Worker's storage path was proved against a local stand-in on 127.0.0.1; no bucket exists and no key for one has been held here",
-      "migrations 005 and 006 on the hosted database — 001–004 are applied there, and db/supabase-delta.sql renders the two that remain",
       "anything about the Supabase-native path decided as GAL-SUPA-1 — it is being written, and no journey or probe has run against it"
     ],
     "co_tenancy": "The Gallery is to be hosted inside the governor's existing Supabase project, which already carries Ustaad. Every object this product owns lives in one schema named by GALLERY_SCHEMA (default `gallery`) and nothing is created in `public`, enforced by the migration runner refusing GALLERY_SCHEMA=public and by probes P-21 and P-22 — P-21 fails if any of this product's tables appear in `public`, P-22 fails if they are not in the named schema, so P-21 cannot pass by the product having built nothing. Runbook: db/SUPABASE.md.",
     "hosted_substrate": {
-      "state": "SCHEMA APPLIED AND STRUCTURALLY VERIFIED; NO APPLICATION HAS CONNECTED",
+      "state": "SUPABASE-NATIVE SCHEMA APPLIED AND STRUCTURALLY VERIFIED; NO APPLICATION HAS CONNECTED",
       "date": "2026-09-06",
       "project": "the governor's existing Supabase project, shared with Ustaad",
-      "applied_by": "the governor, through the SQL editor, from db/supabase-schema.sql",
-      "verified_by": "db/supabase-verify.sql — 10 of 10 PASS on the hosted database, output recorded in the receipt; the query has since grown to 13 checks, and the three added for migrations 005 and 006 have passed locally only",
-      "receipt": "doctrine/receipts/SUPABASE-SCHEMA-APPLIED-2026-09-06.md",
-      "isolation": "gallery: 18 objects; public: 9, all Ustaad's — C1 confirms none of ours is among them, C2 confirms ours are in gallery, so C1 cannot pass vacuously",
-      "not_established": "that the product works against it. No application has connected; the 31 journeys and 22 probes have run only against the local cluster."
+      "applied_by": "the governor, through the SQL editor, one statement group at a time, with each result returned into the session",
+      "verified_by": "db/supabase-verify.sql — 12 of 12 PASS, every row recorded in the receipt",
+      "receipt": "doctrine/receipts/SUPABASE-NATIVE-SCHEMA-APPLIED-2026-09-06.md",
+      "supersedes": "the pre-GAL-SUPA-1 schema and its four database roles, all removed from the project and verified gone (C11)",
+      "not_established": "that the product works against it. No client has connected, PostgREST does not yet expose the schema, and no probe has run there — the policies are proved locally only."
     },
     "worker_runtime": {
       "state": "BUILT AND WALKED UNDER workerd; NOT DEPLOYED",
