@@ -4,9 +4,9 @@
 -- dumps and restores as one schema, and a migration run against the wrong database cannot
 -- touch tables it does not own.
 --
--- @schema@ is substituted by the migration runner (db/cli.ts, GALLERY_SCHEMA, default
--- `gallery`). A plain token rather than a psql variable, so the same file runs through psql
--- and through the Node runner without one of them choking on meta-commands.
+-- The schema name is a plain @schema@ token substituted by the migration runner (db/cli.ts,
+-- GALLERY_SCHEMA, default `gallery`), rather than a psql variable, so the same file runs
+-- through psql and through the Node runner without one of them choking on meta-commands.
 CREATE SCHEMA IF NOT EXISTS "@schema@";
 SET search_path = "@schema@";
 
