@@ -12,7 +12,9 @@ the things a check can actually decide inside this repository:
       TWO-SIDED ratchet so honesty-by-surrender fails as loudly as a silent regression.
   G2  the hook wiring covers the declared mutation surface, references scripts that exist,
       and does not discard its output.
-  G3  the git hooks are present, executable and fail CLOSED on every failure path.
+  G3  the git hooks are present, executable, fail CLOSED on every failure path, AND this
+      checkout's effective core.hooksPath actually resolves to them — a fail-closed hook that
+      git never runs enforces nothing (OBL-GAL-013).
   G4  product state is structurally honest: legal enforcement vocabulary, and every UNARMED
       or NOT SEEN obligation carries an activation condition and a future acceptance test.
   G5  the rendered product copy carries no banned platform claim and no real-person contact.
@@ -24,7 +26,9 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -169,6 +173,41 @@ def g2_hook_wiring() -> int:
     return 0 if not problems else 1
 
 
+def git_config_hooks_path() -> tuple[str, str]:
+    """This checkout's effective hook path, decided independently of the seam.
+
+    G3 must not ask scripts/doctrine-orient.py whether scripts/doctrine-orient.py did its job,
+    so this reads git directly. Returns (status, detail); every status but ARMED is red.
+    """
+    governed = (REPO / ".githooks").resolve()
+
+    def git(*args) -> tuple[int, str]:
+        cp = subprocess.run(["git", "-C", str(REPO), *args], capture_output=True, text=True,
+                            env=dict(os.environ, GIT_OPTIONAL_LOCKS="0"))
+        return cp.returncode, cp.stdout.strip()
+
+    rc, top = git("rev-parse", "--show-toplevel")
+    if rc != 0 or not top:
+        return "NOT_A_GIT_WORKTREE", (f"{REPO} is not inside a git worktree, so .githooks runs on no commit path "
+                                      "and the compulsory layer does not exist in this checkout")
+    if Path(top).resolve() != REPO.resolve():
+        return "DISPLACED_WORKTREE", (f"the governed hooks live in {REPO} but the git worktree root is {top}; "
+                                      "they would belong to another repository's commit path")
+    rc, configured = git("config", "--get", "core.hooksPath")
+    if rc != 0 or not configured:
+        return "UNARMED", ("core.hooksPath is not configured in this checkout, so .githooks/pre-commit and "
+                           "pre-push never run — repair: python3 scripts/doctrine-orient.py orient")
+    candidate = Path(configured).expanduser()
+    effective = (candidate if candidate.is_absolute() else (REPO / candidate)).resolve()
+    if effective != governed:
+        return "DISPLACED_HOOKS_PATH", (f"core.hooksPath is '{configured}', which resolves to {effective} and not to "
+                                        f"the governed {governed} — the hooks git would run are not these hooks")
+    absent = [n for n in ("pre-commit", "pre-push") if not os.access(effective / n, os.X_OK)]
+    if absent:
+        return "INCOMPLETE", f"core.hooksPath resolves to {effective}, which carries no executable {', '.join(absent)}"
+    return "ARMED", f"core.hooksPath resolves to {effective}"
+
+
 def g3_git_hooks() -> int:
     problems = []
     for name in ("pre-commit", "pre-push"):
@@ -176,7 +215,6 @@ def g3_git_hooks() -> int:
         text = anchor(p, "G3")
         if text is None:
             return 1
-        import os
         if not os.access(p, os.X_OK):
             problems.append(f".githooks/{name} is not executable")
         if "doctrine-orient.py" not in text:
@@ -187,10 +225,14 @@ def g3_git_hooks() -> int:
             problems.append(f".githooks/{name} exits 0 when python3 is unavailable — that is a fail-open path")
         if re.search(r"check --quiet[^\n]*\n(?:[^\n]*\n){0,3}?\s*exit 0", text):
             problems.append(f".githooks/{name} exits 0 on a failed orientation check")
+    status, detail = git_config_hooks_path()
+    if status != "ARMED":
+        problems.append(f"the governed hook path is not in force [{status}]: {detail}")
     for p in problems:
         record("G3", False, p)
     if not problems:
-        record("G3", True, "pre-commit and pre-push present, executable, invoke the seam and the gates, and carry no fail-open path")
+        record("G3", True, f"pre-commit and pre-push present, executable, invoke the seam and the gates, carry no "
+                           f"fail-open path, and git runs them — {detail}")
     return 0 if not problems else 1
 
 

@@ -205,6 +205,26 @@ The verification procedure gained two preconditions beside the freshness check t
 
 ---
 
+### GAL-L0011
+**Date:** 2026-09-06  
+**Observed event:**  
+The repair of GAL-L0010, and the point at which the multi-repository limitation stopped being investigated and became a recorded disposition. Two layers that the binding documents counted as independent were one: `core.hooksPath` was set only inside `session_start` in `scripts/doctrine-hook.py`, so the compulsory git layer was armed by the as-configured harness layer, and in the topology this product actually runs in the harness layer arms nothing.
+
+**Evidence:**  
+`doctrine/receipts/GIT_LAYER_INDEPENDENCE-2026-09-06.md`. Fifteen new drill cases, D-73 through D-87, against an isolated fresh checkout with no inherited local git configuration: it begins with no `core.hooksPath`; it reports itself unarmed and names its repair; gate G3 is red; `scripts/doctrine-orient.py orient` establishes the configuration; G3 passes; a real `git commit` with a foreign session receipt is refused *through* `core.hooksPath`; a legitimate feature-branch commit lands; a commit on the default branch is refused; pushes to `refs/heads/main` and at a `builders-doctrine` remote are refused; a push to a feature ref is allowed; `--no-verify` still bypasses; unsetting the path turns G3 red; displacing it to a directory of permissive hooks turns G3 red; re-running orientation repairs it. Drill totals 73 → 88, 0 red.
+
+**Why it mattered:**  
+Two things, and the second is the more durable lesson. First, a fail-closed hook that git never runs enforces nothing, and the gate that held the hooks checked their *contents* — present, executable, no `exit 0` on a failure path — without ever checking that git was configured to run them. Existence is not execution, which this repository had already written down as L-A17 and had still not applied to itself. Second, the harness-layer limitation had been investigated twice, each time producing a truthful negative and each time leaving the same obligation open. A limitation that cannot be closed from inside the product is a disposition to record, not an experiment to repeat; repeating it consumes sessions and produces no new enforcement.
+
+**What changed:**  
+Both complementary mechanisms, adopted together. `scripts/doctrine-orient.py orient` became a coherent six-step sequence — validate the repository root, validate the live Doctrine binding and fingerprints, configure the governed hook path, verify the *effective* configuration git would use rather than the value just written, establish the receipt, run the repository gates — with the arming deliberately placed **before** the gating so that a fresh checkout can be repaired by the command whose absence G3 refuses. `scripts/doctrine-gate.py` G3 gained an independent reading of git configuration; it does not ask the seam whether the seam did its job. The arming in `scripts/doctrine-hook.py session_start` is retained as a convenience and is no longer the only place it happens. `README.md`'s claim that the seam sets `core.hooksPath` became true. GAL-G7's clause names the arming and the gate that holds it; the hook-layer clauses carry a topology qualifier; `armed_fixed_decisions` did **not** move, because this change made a standing claim true rather than arming a new one.
+
+**Status:** RESOLVED for the git layer (OBL-GAL-013); the host-topology limitation is DISPOSITIONED (OBL-GAL-002) rather than closed  
+**Related finding / decision IDs:** OBL-GAL-013, OBL-GAL-002, OBL-GAL-003, GAL-G7, GAL-L0010, L-A17  
+**Harvest status:** UNHARVESTED
+
+---
+
 ## Ledger rules
 
 - Capture the event in the governed change that fixes or formally records it where feasible.

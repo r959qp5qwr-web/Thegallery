@@ -126,8 +126,15 @@ def clone_doctrine(root: Path, dest: Path, rev: str | None = None) -> Path:
     return dest
 
 
-def scratch_project(dest: Path) -> Path:
-    """A copy of the governed parts of this repository, for tests that must tamper with it."""
+def scratch_project(dest: Path, arm: bool = True) -> Path:
+    """A copy of the governed parts of this repository, for tests that must tamper with it.
+
+    `arm=True` models an ORIENTED checkout: core.hooksPath points at the governed .githooks,
+    exactly as `scripts/doctrine-orient.py orient` leaves it. Without that, gate G3 would be
+    red in every fixture and a case expecting "repository gates failed" would pass whether or
+    not its own planted violation fired — a vacuous pass. `arm=False` models a FRESH checkout
+    that has never been oriented, which is what the OBL-GAL-013 sequence needs.
+    """
     dest.mkdir(parents=True, exist_ok=True)
     for d in GOVERNANCE:
         if (REPO / d).is_dir():
@@ -142,6 +149,16 @@ def scratch_project(dest: Path) -> Path:
         run(["git", "init", "-q", "-b", "drill-branch"], e=e, cwd=str(dest))
         run(["git", "add", "-A"], e=e, cwd=str(dest))
         run(["git", "commit", "-q", "-m", "drill fixture"], e=e, cwd=str(dest))
+    if arm:
+        run(["git", "-C", str(dest), "config", "core.hooksPath", ".githooks"], e=env())
+    return dest
+
+
+def bare_remote(dest: Path) -> Path:
+    """A local bare repository to push at, so the push route is drilled without a network."""
+    rc, out = run(["git", "init", "-q", "--bare", str(dest)])
+    if rc != 0:
+        raise RuntimeError("bare init failed: " + out)
     return dest
 
 
@@ -586,6 +603,144 @@ def build_cases(root: Path, tmp: Path):
               and got["journeys"] == [{"id": "J-001", "status": "UX_READY"}, {"id": "J-002", "status": "IDENTIFIED"}])
         return (0 if ok else 1), out
     case("D-71", "the standing assessment reports exactly the counts planted in a fixture", "L-A20 anti-vacuous derivation self-test", d71, green())
+
+
+    # -- OBL-GAL-013: the git layer must stand without the harness hook -------------------
+    #
+    # One ORDERED sequence against a single fresh checkout that has never been oriented and
+    # carries no inherited local git configuration. Every case drives the REAL door: git
+    # itself runs the hook through core.hooksPath, rather than the drill executing the hook
+    # file, which is what D-52 … D-58 already do for hook CONTENT. Content and invocation are
+    # different claims and this repository has now been wrong about the difference once.
+    fc: dict = {}
+    fc_rt = rt("fresh-checkout")
+    FC = "drill-fresh-checkout"
+
+    def fc_env(**extra):
+        base = {"DOCTRINE_ROOT": str(root), "DOCTRINE_RUNTIME_DIR": str(fc_rt), "DOCTRINE_SESSION_ID": FC,
+                "GIT_AUTHOR_NAME": "drill", "GIT_AUTHOR_EMAIL": "drill@example.invalid",
+                "GIT_COMMITTER_NAME": "drill", "GIT_COMMITTER_EMAIL": "drill@example.invalid"}
+        base.update(extra)
+        return env(**base)
+
+    def fc_repo() -> Path:
+        if "path" not in fc:
+            fc["path"] = scratch_project(tmp / "fresh-checkout", arm=False)
+        return fc["path"]
+
+    def fc_seam(*args, **extra):
+        p = fc_repo()
+        return run([sys.executable, "-B", str(p / "scripts" / "doctrine-orient.py"), *args],
+                   e=fc_env(**extra), cwd=str(p))
+
+    def fc_config():
+        rc, out = run(["git", "-C", str(fc_repo()), "config", "--get", "core.hooksPath"], e=fc_env())
+        return out.strip()
+
+    def fc_stage(text):
+        p = fc_repo()
+        (p / "product").mkdir(parents=True, exist_ok=True)
+        (p / "product" / "DRILL_PROBE.md").write_text(text + "\n", encoding="utf-8")
+        run(["git", "-C", str(p), "add", "-A"], e=fc_env())
+
+    def d73():
+        got = fc_config()
+        return (0 if got == "" else 1), f"core.hooksPath in a fresh checkout: {got!r} — expected empty"
+    case("D-73", "a fresh checkout carries no core.hooksPath (the state the repair must handle)", "OBL-GAL-013 precondition", d73, green())
+
+    def d74():
+        rc, out = fc_seam("status")
+        ok = "git hooks: UNARMED" in out and "repair: python3 scripts/doctrine-orient.py orient" in out
+        return (0 if rc == 0 and ok else 1), out
+    case("D-74", "an unarmed checkout is TRUTHFULLY REPORTED as unarmed, with its repair named", "a layer that is not in force must say so before anything relies on it", d74, green())
+
+    case("D-75", "gate G3 before orientation → RED naming core.hooksPath", "a fail-closed hook git never runs enforces nothing",
+         lambda: gate(fc_repo(), "G3"), fails("core.hooksPath is not configured"))
+
+    def d76():
+        rc, out = fc_seam("orient", "--quiet")
+        if rc != 0:
+            return rc, out
+        got = fc_config()
+        return (0 if got == ".githooks" else 1), f"orient exit {rc}; core.hooksPath is now {got!r}\n{out}"
+    case("D-76", "the canonical orientation command establishes core.hooksPath in the fresh checkout", "OBL-GAL-013 repair: the seam arms the git layer, not the harness hook", d76, green())
+
+    case("D-77", "gate G3 after orientation → PASS (anti-vacuous: the repair is what changed)", "the same gate that was red is now green for the stated reason",
+         lambda: gate(fc_repo(), "G3"), green())
+
+    def d78():
+        fc_stage("probe")
+        return run(["git", "-C", str(fc_repo()), "commit", "-m", "drill probe"], e=fc_env(DOCTRINE_SESSION_ID="foreign-session"))
+    case("D-78", "REAL `git commit` with a foreign session receipt → refused through core.hooksPath", "the compulsory layer fires by git's own invocation, not the drill's", d78, fails("orientation invalid"))
+
+    def d79():
+        p = fc_repo()
+        before = run(["git", "-C", str(p), "rev-list", "--count", "HEAD"], e=fc_env())[1].strip()
+        rc, out = run(["git", "-C", str(p), "commit", "-m", "drill probe"], e=fc_env())
+        after = run(["git", "-C", str(p), "rev-list", "--count", "HEAD"], e=fc_env())[1].strip()
+        return (0 if rc == 0 and after != before else 1), f"commit exit {rc}; HEAD count {before} -> {after}\n{out}"
+    case("D-79", "REAL `git commit` on a feature branch with valid orientation and green gates → allowed", "anti-vacuous: the legitimate commit still lands", d79, green())
+
+    def d80():
+        p = fc_repo()
+        run(["git", "-C", str(p), "branch", "-M", "main"], e=fc_env())
+        fc_stage("on main")
+        return run(["git", "-C", str(p), "commit", "-m", "on main"], e=fc_env())
+    case("D-80", "REAL `git commit` on the default branch → refused", "Canon Day Zero #6 on the compulsory commit path", d80, fails("direct commit on 'main'"))
+
+    def d81():
+        remote = bare_remote(tmp / "fc-remote.git")
+        return run(["git", "-C", str(fc_repo()), "push", str(remote), "HEAD:refs/heads/main"], e=fc_env())
+    case("D-81", "REAL `git push` to refs/heads/main → refused", "the default branch is reached through review", d81, fails("refs/heads/main"))
+
+    def d82():
+        remote = bare_remote(tmp / "builders-doctrine.git")
+        return run(["git", "-C", str(fc_repo()), "push", str(remote), "HEAD:refs/heads/x"], e=fc_env())
+    case("D-82", "REAL `git push` at a builders-doctrine remote → refused", "Commission v1.1 §3: the central Doctrine is read-only from here", d82, fails("read-only"))
+
+    def d83():
+        remote = bare_remote(tmp / "fc-remote.git")
+        return run(["git", "-C", str(fc_repo()), "push", str(remote), "HEAD:refs/heads/feature"], e=fc_env())
+    case("D-83", "REAL `git push` to a feature ref on an ordinary remote → allowed (anti-vacuous)", "prove ordinary work still reaches its branch", d83, green())
+
+    def d84():
+        p = fc_repo()
+        fc_stage("deliberate bypass")
+        before = run(["git", "-C", str(p), "rev-list", "--count", "HEAD"], e=fc_env())[1].strip()
+        rc, out = run(["git", "-C", str(p), "commit", "--no-verify", "-m", "deliberate bypass"], e=fc_env())
+        after = run(["git", "-C", str(p), "rev-list", "--count", "HEAD"], e=fc_env())[1].strip()
+        landed = rc == 0 and after != before
+        named = all("--no-verify" in (REPO / f).read_text(encoding="utf-8")
+                    for f in (".github/workflows/doctrine.yml", "doctrine/EXTERNAL_ENABLEMENT.md"))
+        return (0 if landed and named else 1), (
+            f"--no-verify on the default branch landed={landed} (HEAD count {before} -> {after}); "
+            f"named as a residue by the CI workflow and the external-enablement instrument={named}\n{out}")
+    case("D-84", "`--no-verify` still bypasses the git layer, and the repository says so", "L-A16: a residue that is not written down is a claim that is not true", d84, green())
+
+    def d85():
+        p = fc_repo()
+        run(["git", "-C", str(p), "config", "--unset", "core.hooksPath"], e=fc_env())
+        return gate(p, "G3")
+    case("D-85", "core.hooksPath removed after orientation → gate G3 goes RED", "the gate holds the live configuration, not a memory of it", d85, fails("core.hooksPath is not configured"))
+
+    def d86():
+        p = fc_repo()
+        other = p / ".other-hooks"
+        other.mkdir(exist_ok=True)
+        for n in ("pre-commit", "pre-push"):
+            t = other / n
+            t.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
+            t.chmod(0o755)
+        run(["git", "-C", str(p), "config", "core.hooksPath", ".other-hooks"], e=fc_env())
+        return gate(p, "G3")
+    case("D-86", "core.hooksPath displaced to a directory of permissive hooks → gate G3 goes RED", "contradictory configuration is not permission; present-and-executable is not the test", d86, fails("not to the governed"))
+
+    def d87():
+        rc, out = fc_seam("orient", "--quiet")
+        if rc != 0:
+            return rc, out
+        return gate(fc_repo(), "G3")
+    case("D-87", "re-running orientation repairs the displaced configuration and G3 returns green", "the repair path survives the absence it exists to repair", d87, green())
 
     return cases, prepare
 

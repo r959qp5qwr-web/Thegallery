@@ -9,10 +9,31 @@ verify that the checkout actually sits on the bound commit with every bound arti
 unmodified. A git-HEAD pin cannot see a working-tree edit; this seam can.
 
 Commands
-  orient   verify the checkout, run the central `orient`, print the derived assessment.
+  orient   the whole orientation sequence, in this order and failing closed at any step:
+             1. identify and validate the Gallery repository root (it must be the root of its
+                own git worktree, so that what is armed below is this checkout and not a host);
+             2. validate the live Doctrine binding — bootstrap fingerprint, bound commit,
+                bound artifacts, version manifest, module manifests;
+             3. configure the governed git-hook path (core.hooksPath -> .githooks) locally;
+             4. verify the EFFECTIVE configuration, not the value just written;
+             5. establish the orientation receipt for this session;
+             6. run the repository gates.
   check    re-verify and run the central `check` for the current session (consequence gate).
   assess   print the standing assessment derived from doctrine/PRODUCT_STATE.json.
   status   print what the seam can see, without failing (diagnosis only).
+
+STEPS 3 AND 4 EXIST BECAUSE OF OBL-GAL-013 (2026-09-06). Until then the only place that set
+core.hooksPath was `session_start` in scripts/doctrine-hook.py — the harness hook. So the layer
+described as compulsory was armed by the layer described as as-configured, and in a checkout
+where the harness never loaded this project's configuration, .githooks ran on nothing: a
+deliberate empty commit reached a branch with no refusal from any layer
+(doctrine/receipts/HOOK_LIVENESS_ATTEMPT-2026-09-06.md §6). The seam arms it now, so the git
+layer stands on its own and every route into this checkout — a session, a human terminal, a CI
+job — arms it by running the one command it must run anyway.
+
+The repair path is preserved deliberately: arming happens BEFORE the gates run, so `orient` in
+a fresh clone establishes the configuration whose absence gate G3 refuses, rather than being
+blocked by the very absence it exists to repair.
 
 Fail-closed: any missing, stale, mismatched or contradictory input exits 2 with its cause.
 Read-only towards the Doctrine checkout: git is invoked with optional locks disabled and
@@ -41,6 +62,9 @@ RECEIPT_NAME = "DOCTRINE_ORIENTATION_RECEIPT.json"
 SEAM_RECEIPT_NAME = "SEAM_RECEIPT.json"
 SESSION_FILE_NAME = "SESSION_ID"
 GIT_ENV = dict(os.environ, GIT_OPTIONAL_LOCKS="0")
+GOVERNED_HOOKS_DIRNAME = ".githooks"
+GOVERNED_HOOKS = ("pre-commit", "pre-push")
+GATE_SCRIPT = REPO_ROOT / "scripts" / "doctrine-gate.py"
 
 
 def fail(msg: str, code: int = 2):
@@ -172,6 +196,104 @@ def verify_module_manifests(root: Path, binding: dict) -> dict:
     return verified
 
 
+# --- the governed git-hook path (OBL-GAL-013) -------------------------------------------
+#
+# Two functions, deliberately separate. `inspect_git_hooks` never writes and is what `status`
+# and step 4 of `orient` read; `arm_git_hooks` writes once and then calls the inspector, so
+# what is verified is the EFFECTIVE configuration git would use, never the value this process
+# just wrote. scripts/doctrine-gate.py G3 implements the same check independently: a gate that
+# asked this module whether this module had done its job would be verifying nothing.
+
+
+def git_worktree_root(path: Path) -> Path | None:
+    """The root of the git worktree containing `path`, or None when there is no worktree."""
+    cp = subprocess.run(["git", "-C", str(path), "rev-parse", "--show-toplevel"],
+                        capture_output=True, text=True, env=GIT_ENV)
+    if cp.returncode != 0 or not cp.stdout.strip():
+        return None
+    return Path(cp.stdout.strip()).resolve()
+
+
+def resolve_hooks_path(repo_root: Path, configured: str) -> Path:
+    """git resolves a relative core.hooksPath against the worktree root, so this does too."""
+    candidate = Path(configured).expanduser()
+    return (candidate if candidate.is_absolute() else (repo_root / candidate)).resolve()
+
+
+def inspect_git_hooks(repo_root: Path) -> dict:
+    """Report this checkout's effective hook path. Never writes, never raises."""
+    governed = (repo_root / GOVERNED_HOOKS_DIRNAME).resolve()
+    out = {"governed_path": str(governed), "worktree_root": None, "configured": None, "effective": None}
+    top = git_worktree_root(repo_root)
+    if top is None:
+        return dict(out, status="NOT_A_GIT_WORKTREE",
+                    detail=f"{repo_root} is not inside a git worktree, so no git hook can run from it")
+    out["worktree_root"] = str(top)
+    if top != repo_root.resolve():
+        return dict(out, status="DISPLACED_WORKTREE",
+                    detail=f"the Gallery root {repo_root} is not the root of its git worktree ({top}); "
+                           "the governed hooks would belong to another repository's commit path")
+    cp = subprocess.run(["git", "-C", str(repo_root), "config", "--get", "core.hooksPath"],
+                        capture_output=True, text=True, env=GIT_ENV)
+    configured = cp.stdout.strip() if cp.returncode == 0 else ""
+    if not configured:
+        return dict(out, status="UNARMED",
+                    detail="core.hooksPath is not configured, so .githooks/pre-commit and pre-push run on nothing")
+    out["configured"] = configured
+    effective = resolve_hooks_path(repo_root, configured)
+    out["effective"] = str(effective)
+    if effective != governed:
+        return dict(out, status="DISPLACED_HOOKS_PATH",
+                    detail=f"core.hooksPath resolves to {effective}, not the governed {governed}")
+    missing = [n for n in GOVERNED_HOOKS if not os.access(effective / n, os.X_OK)]
+    if missing:
+        return dict(out, status="INCOMPLETE",
+                    detail=f"the configured hook path carries no executable {', '.join(missing)}")
+    return dict(out, status="ARMED", detail=f"core.hooksPath resolves to {effective}")
+
+
+def arm_git_hooks(repo_root: Path) -> dict:
+    """Configure this checkout to run the repository's governed hooks, then verify it.
+
+    Local repository configuration only — never --global, never another repository. Fails
+    closed: an unverifiable hook path is not permission to continue orienting.
+    """
+    before = inspect_git_hooks(repo_root)
+    if before["status"] in ("NOT_A_GIT_WORKTREE", "DISPLACED_WORKTREE"):
+        fail(f"the governed git-hook path cannot be armed — {before['detail']}")
+    cp = subprocess.run(["git", "-C", str(repo_root), "config", "core.hooksPath", GOVERNED_HOOKS_DIRNAME],
+                        capture_output=True, text=True, env=GIT_ENV)
+    if cp.returncode != 0:
+        fail(f"git refused to set core.hooksPath in {repo_root}: {cp.stderr.strip() or cp.stdout.strip()}")
+    after = inspect_git_hooks(repo_root)
+    if after["status"] != "ARMED":
+        fail(f"the governed git-hook path was written and did not take effect — {after['detail']}")
+    after["was"] = before["status"]
+    return after
+
+
+def run_gates(quiet: bool) -> int:
+    """Step 6. The gates run last, so that steps 3 and 4 can repair what G3 refuses."""
+    if not GATE_SCRIPT.is_file():
+        fail(f"the repository gates are missing at {GATE_SCRIPT}; an unverifiable repository is not permission")
+    cmd = [sys.executable, "-B", str(GATE_SCRIPT)]
+    if quiet:
+        cmd.append("--quiet")
+    cp = subprocess.run(cmd, capture_output=True, text=True, cwd=str(REPO_ROOT),
+                        env=dict(GIT_ENV, PYTHONDONTWRITEBYTECODE="1"))
+    sys.stdout.write(cp.stdout)
+    sys.stderr.write(cp.stderr)
+    return cp.returncode
+
+
+def validated_repo_root() -> Path:
+    """Step 1. The seam governs the checkout it lives in, and says which one that is."""
+    if not (REPO_ROOT / "doctrine").is_dir() or not (REPO_ROOT / GOVERNED_HOOKS_DIRNAME).is_dir():
+        fail(f"{REPO_ROOT} does not look like the Gallery repository root "
+             f"(no doctrine/ or {GOVERNED_HOOKS_DIRNAME}/ beside scripts/)")
+    return REPO_ROOT
+
+
 def preflight(args):
     root = resolve_doctrine_root(args.doctrine_root)
     binding = load_json(args.binding, "Doctrine binding")
@@ -273,25 +395,32 @@ def read_ux(path: Path) -> str | None:
 # --- commands ---------------------------------------------------------------------------
 
 def cmd_orient(args) -> int:
-    root, binding, bootstrap, checkout, version, modules = preflight(args)
+    repo = validated_repo_root()                                            # 1
+    root, binding, bootstrap, checkout, version, modules = preflight(args)  # 2
+    hooks = arm_git_hooks(repo)                                             # 3 and 4
     session_id = session_for_orient(args)
     args.runtime_dir.mkdir(parents=True, exist_ok=True)
-    rc = run_bootstrap(bootstrap, "orient", root, args, session_id)
+    rc = run_bootstrap(bootstrap, "orient", root, args, session_id)         # 5
     if rc != 0:
         return rc
     (args.runtime_dir / SESSION_FILE_NAME).write_text(session_id + "\n", encoding="utf-8")
     seam = {
         "status": "VALID", "session_id": session_id, "generated_at": datetime.now(timezone.utc).isoformat(),
+        "repo_root": str(repo), "git_hooks": hooks,
         "doctrine_root": str(root), "doctrine_commit": checkout["head"], "doctrine_branch": checkout["branch"],
         "doctrine_remote": checkout["remote"], "doctrine_version": version, "module_files_verified": modules,
         "bootstrap_sha256": sha256(bootstrap), "note": "Seam evidence only; the central receipt and governing files remain authority.",
     }
     (args.runtime_dir / SEAM_RECEIPT_NAME).write_text(json.dumps(seam, indent=2) + "\n", encoding="utf-8")
+    if run_gates(args.quiet) != 0:                                          # 6
+        fail("the repository gates are red, so this checkout is not oriented "
+             "(run: python3 scripts/doctrine-gate.py for the failing check)")
     if not args.quiet:
         state = load_json(args.state, "product state")
         print_assessment(derive_assessment(state, read_ux(args.ux_manifest)), {
             "doctrine": f"{checkout['head'][:12]} on {checkout['branch']} · version {version['version'] if version else 'unpinned'} ({version['status'] if version else '-'})",
             "module files verified": modules, "session": session_id,
+            "git hooks": f"{hooks['status']} — core.hooksPath -> {hooks['effective']} (was {hooks['was']})",
         })
     return 0
 
@@ -320,6 +449,10 @@ def cmd_status(args) -> int:
     print(f"state: {args.state} ({'present' if args.state.is_file() else 'MISSING'})")
     receipt = args.runtime_dir / RECEIPT_NAME
     print(f"receipt: {receipt} ({'present' if receipt.is_file() else 'absent'})")
+    h = inspect_git_hooks(REPO_ROOT)
+    print(f"git hooks: {h['status']} — {h['detail']}")
+    if h["status"] != "ARMED":
+        print("  repair: python3 scripts/doctrine-orient.py orient")
     try:
         root = resolve_doctrine_root(args.doctrine_root)
         print(f"doctrine root: {root} HEAD={git(root, 'rev-parse', 'HEAD').stdout.strip()[:12]} branch={git(root, 'rev-parse', '--abbrev-ref', 'HEAD').stdout.strip()}")
