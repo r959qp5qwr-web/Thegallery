@@ -2,7 +2,7 @@
   "name": "thegallery",
   "version": "0.2.0",
   "private": true,
-  "description": "The Gallery \u2014 maker-led digital gallery. Stage 2 vertical slice.",
+  "description": "The Gallery — maker-led digital gallery. Stage 2 vertical slice.",
   "scripts": {
     "dev": "next dev -p 3100",
     "build": "next build",
@@ -13,14 +13,17 @@
     "db:seed": "node --experimental-strip-types db/seed.ts",
     "test:policy": "node --experimental-strip-types tests/policy/run.ts",
     "test:e2e": "playwright test",
-    "db:sqlfile": "node --experimental-strip-types db/sqlfile.ts"
+    "db:sqlfile": "node --experimental-strip-types db/sqlfile.ts",
+    "build:wasm": "node src/lib/wasm/embed.mjs"
   },
   "dependencies": {
+    "@jsquash/jpeg": "^1.6.0",
+    "@jsquash/resize": "^2.1.1",
+    "@opennextjs/cloudflare": "^1.20.6",
     "next": "16.3.4",
+    "pg": "8.16.3",
     "react": "19.2.0",
     "react-dom": "19.2.0",
-    "pg": "8.16.3",
-    "sharp": "0.34.4",
     "zod": "4.1.12"
   },
   "devDependencies": {
@@ -29,6 +32,8 @@
     "@types/pg": "8.11.10",
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.1",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "wrangler": "^4.129.0",
+    "sharp": "0.34.4"
   }
 }
