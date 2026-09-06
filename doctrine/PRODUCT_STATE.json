@@ -1445,8 +1445,8 @@
     "stage_2_note": "J-001, J-002 and J-003 are implemented in full and J-004 minimally (suspend, reinstate, recorded reasons). All four were walked end to end in the running product at phone and desktop width on 2026-09-06. They read VERIFYING rather than VERIFIED because verification is not complete: no deployed build, no real email round trip and no walk on a physical phone. J-005's doors (sign out, sign in, recovery, expired session, account closure) were walked inside J-002's spec; J-006 enters through material browse, search and private saves."
   },
   "learning_ledger": "doctrine/BUILD_LEARNING_LEDGER.md",
-  "updated_at": "2026-09-06T14:00:00+00:00",
-  "update_reason": "The gallery schema is exposed to PostgREST and the anonymous half of the permission model is now proved on the hosted project itself: base tables and five of six functions refused at grant level, views and vocabulary readable. The authenticated half remains proved locally only.",
+  "updated_at": "2026-09-06T15:00:00+00:00",
+  "update_reason": "The Supabase-native chain has been walked in a browser against the hosted project: Supabase Auth, row-level security, a real upload into the private bucket, publish, and an anonymous visitor receiving real image bytes. First byte this product has written to an object store. Still not deployed, and email remains unwalked.",
   "stage_2_proof_ledger": {
     "_what": "What the Stage 2 slice actually proved, and by which instrument. Local proof and deployed proof are separate columns on purpose: a browser walk against localhost is not a deployed walk, and this ledger exists so no later session can read one as the other.",
     "receipt": "doctrine/receipts/STAGE2-VERTICAL-SLICE-2026-09-06.md",
@@ -1495,9 +1495,7 @@
       "a real email round trip — GALLERY_MAIL=resend is implemented and UNTESTED; the local outbox records messages and sends none",
       "the handoff opening a real WhatsApp or mail client on a physical phone",
       "the CI check and branch protection, which have never run",
-      "Hyperdrive against the hosted database — the binding was exercised only through its localConnectionString, and no Hyperdrive configuration has been created",
-      "Supabase Storage — the Worker's storage path was proved against a local stand-in on 127.0.0.1; no bucket exists and no key for one has been held here",
-      "anything about the Supabase-native path decided as GAL-SUPA-1 — it is being written, and no journey or probe has run against it"
+      "Hyperdrive against the hosted database — the binding was exercised only through its localConnectionString, and no Hyperdrive configuration has been created"
     ],
     "co_tenancy": "The Gallery is to be hosted inside the governor's existing Supabase project, which already carries Ustaad. Every object this product owns lives in one schema named by GALLERY_SCHEMA (default `gallery`) and nothing is created in `public`, enforced by the migration runner refusing GALLERY_SCHEMA=public and by probes P-21 and P-22 — P-21 fails if any of this product's tables appear in `public`, P-22 fails if they are not in the named schema, so P-21 cannot pass by the product having built nothing. Runbook: db/SUPABASE.md.",
     "hosted_substrate": {
@@ -1523,6 +1521,17 @@
       "runtime_finding": "A Worker isolate permits WebAssembly compilation only while modules are evaluated, and OpenNext evaluates the Next server bundle inside a request. Established by direct measurement under workerd before any code changed, not inferred. The Worker entry now compiles the codecs at startup and the request path only instantiates.",
       "not_established": "that any of this runs on Cloudflare. Nothing is deployed, no Hyperdrive configuration exists, no bucket exists, and no hosted database has been connected to."
     },
-    "superseded_note": "The local proof recorded in this ledger — 62 journeys, 22 probes — was obtained against the hand-built authentication store and the raw Postgres path, both of which GAL-SUPA-1 removes. It stands as an honest record of what was proved on 2026-09-06 and it does NOT transfer to the rewritten path. A later session must not read it as evidence for the Supabase-native build."
+    "superseded_note": "The local proof recorded in this ledger — 62 journeys, 22 probes — was obtained against the hand-built authentication store and the raw Postgres path, both of which GAL-SUPA-1 removes. It stands as an honest record of what was proved on 2026-09-06 and it does NOT transfer to the rewritten path. A later session must not read it as evidence for the Supabase-native build.",
+    "supabase_native_walk": {
+      "state": "THE CHAIN WALKED IN A BROWSER AGAINST THE HOSTED PROJECT; NOT DEPLOYED",
+      "date": "2026-09-06",
+      "receipt": "doctrine/receipts/SUPABASE-NATIVE-WALK-2026-09-06.md",
+      "seen": "account creation and sign-in through Supabase Auth; maker identity and work written under row-level security as that person; an image decoded, resized and accepted into the private bucket under the maker's own token; publish through the RPC; an anonymous visitor meeting the work at the entrance and receiving 9,358 bytes of real JPEG through /img",
+      "first_real_upload": "yes — this is the first byte this product has written to an object store",
+      "wall_with_data_behind_it": "public_works returns the published work to a stranger holding only the publishable key; the makers base table still returns 401. The earlier anonymous probes ran against an empty schema and could not establish this.",
+      "not_seen": "email of any kind (the project is on mailer_autoconfirm); the operator surfaces, suspension, reinstatement, closure, the saved shelf and the endings; any deployed build",
+      "defect_found": "An empty price passed validation because Number(\"\") is 0, then failed at the database as an unreadable refusal. Fixed. The journeys never caught it because they always typed a price.",
+      "left_on_the_project": "synthetic makers under reserved .example addresses and one published work, visible at the entrance until cleared"
+    }
   }
 }
