@@ -52,16 +52,18 @@ BEGIN
   END LOOP;
 END $$;
 
--- Per-role outcome, including the exact refusal where there was one.
-SELECT outcome AS result, role_name AS what, detail FROM teardown_log ORDER BY role_name;
-
--- And the overall verdict.
-SELECT CASE WHEN count(*) = 0 THEN 'PASS' ELSE 'FAIL' END AS result,
-       'the previous schema and its roles are gone' AS what,
-       coalesce(string_agg(name, ', '), 'clean') AS detail
-FROM (
-  SELECT nspname AS name FROM pg_namespace WHERE nspname = 'gallery'
+-- ONE result set. The SQL editor shows only the last one when a script returns several, so a
+-- teardown that reported in two tables reported its diagnosis into the void.
+SELECT result, what, detail FROM (
+  SELECT 0 AS ord, outcome AS result, role_name AS what, detail FROM teardown_log
   UNION ALL
-  SELECT rolname FROM pg_roles
-   WHERE rolname IN ('gallery_app','gallery_anon','gallery_auth','gallery_authstore')
-) x;
+  SELECT 1, CASE WHEN count(*) = 0 THEN 'PASS' ELSE 'FAIL' END,
+         'the previous schema and its roles are gone',
+         coalesce(string_agg(name, ', '), 'clean')
+    FROM (
+      SELECT nspname AS name FROM pg_namespace WHERE nspname = 'gallery'
+      UNION ALL
+      SELECT rolname FROM pg_roles
+       WHERE rolname IN ('gallery_app','gallery_anon','gallery_auth','gallery_authstore')
+    ) x
+) report ORDER BY ord, what;
