@@ -1,8 +1,7 @@
 import Link from "next/link";
 import { redirect, notFound } from "next/navigation";
-import { randomUUID } from "node:crypto";
 import { currentAccount } from "@/lib/auth";
-import { asAccount } from "@/lib/db";
+import { client } from "@/lib/supabase";
 import { StudioHeader, Band } from "@/components/Chrome";
 import { ActionForm, Field } from "@/components/ActionForm";
 import { PublishButton } from "@/components/PublishButton";
@@ -27,17 +26,17 @@ export default async function EditWork(
   const { id } = await params;
   const { created } = await searchParams;
 
-  const data = await asAccount(account.id, async (db) => {
-    const w = (await db.query<Row>(
-      `SELECT id, title, material, medium, process, height_mm, width_mm, depth_mm, year,
-              price_mode, price_amount, status, lifecycle, public_token, taken_down
-         FROM works WHERE id = $1`, [id])).rows[0] ?? null;
-    if (!w) return null;
-    const images = (await db.query<Img>(
-      "SELECT id, position, width, height, alt_text, state FROM work_images WHERE work_id = $1 ORDER BY position",
-      [id])).rows;
-    return { work: w, images };
-  });
+  const db = await client();
+  const { data: workRows } = await db.from("works")
+    .select("id,title,material,medium,process,height_mm,width_mm,depth_mm,year," +
+            "price_mode,price_amount,status,lifecycle,public_token,taken_down")
+    .eq("id", id).limit(1);
+  const w = (workRows?.[0] as unknown as Row | undefined) ?? null;
+  const { data: imageRows } = w
+    ? await db.from("work_images").select("id,position,width,height,alt_text,state")
+        .eq("work_id", id).order("position")
+    : { data: [] };
+  const data = w ? { work: w, images: (imageRows ?? []) as unknown as Img[] } : null;
   if (!data) notFound();
   const { work, images } = data;
 
@@ -48,7 +47,7 @@ export default async function EditWork(
   // A fresh idempotency key per render of the page. Two presses of Publish in the same page
   // carry the same key and cannot publish twice; a reload issues a new key, which the
   // transition function then answers with "already published" rather than a second write.
-  const intentKey = `publish:${work.id}:${randomUUID()}`;
+  const intentKey = `publish:${work.id}:${crypto.randomUUID()}`;   // Web Crypto: a Worker has no node:crypto
 
   return (
     <>

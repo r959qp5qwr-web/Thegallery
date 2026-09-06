@@ -1,9 +1,8 @@
 "use server";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { randomBytes } from "node:crypto";
 import { currentAccount } from "@/lib/auth";
-import { asAccount } from "@/lib/db";
+import { client } from "@/lib/supabase";
 import { ingestImage } from "@/lib/storage";
 import { validateRoute } from "@/lib/format";
 
@@ -15,7 +14,20 @@ async function requireActiveMaker() {
   return account;
 }
 
-const token = () => randomBytes(5).toString("base64url").toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 8);
+// A short, unguessable public token. crypto.getRandomValues rather than node:crypto so the
+// same code runs in a Worker isolate, which has no node:crypto by default.
+function token(): string {
+  const bytes = new Uint8Array(8);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes, (b) => "abcdefghijklmnopqrstuvwxyz0123456789"[b % 36]).join("");
+}
+
+/** The next position in a maker-owned list. Read then write, because PostgREST has no
+ *  expression-valued insert; the unique index is what actually prevents a collision. */
+async function nextPosition(rows: { position: number }[] | null): Promise<number> {
+  if (!rows?.length) return 0;
+  return Math.max(...rows.map((r) => r.position)) + 1;
+}
 
 // ------------------------------------------------------------------ identity and gallery
 export async function saveProfileAction(_prev: FormState, form: FormData): Promise<FormState> {
@@ -36,35 +48,33 @@ export async function saveProfileAction(_prev: FormState, form: FormData): Promi
   }
   if (!["individual", "studio", "collective"].includes(kind)) return { error: "Choose how you work." };
 
-  try {
-    await asAccount(account.id, async (db) => {
-      const existing = await db.query<{ id: string }>("SELECT id FROM makers WHERE account_id = $1", [account.id]);
-      if (existing.rowCount) {
-        await db.query(
-          `UPDATE makers SET handle = $2, display_name = $3, kind = $4, city = $5, practice_note = $6,
-                             commissions_open = $7, commissions_note = $8, updated_at = now()
-             WHERE account_id = $1`,
-          [account.id, handle, display_name, kind, city, practice_note, commissions_open, commissions_note]);
-      } else {
-        const maker = await db.query<{ id: string }>(
-          `INSERT INTO makers (account_id, handle, display_name, kind, city, practice_note,
-                               commissions_open, commissions_note)
-           VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id`,
-          [account.id, handle, display_name, kind, city, practice_note, commissions_open, commissions_note]);
-        await db.query("INSERT INTO galleries (maker_id, intro) VALUES ($1, $2)", [maker.rows[0].id, intro]);
-      }
-      if (intro !== null) {
-        await db.query(
-          `UPDATE galleries SET intro = $2 WHERE maker_id = (SELECT id FROM makers WHERE account_id = $1)`,
-          [account.id, intro]);
-      }
-    });
-  } catch (e) {
-    const msg = e instanceof Error ? e.message : "";
-    if (msg.includes("makers_handle_key")) {
-      return { error: "That gallery address is taken. Try another." };
+  const db = await client();
+  const fields = { handle, display_name, kind, city, practice_note, commissions_open, commissions_note };
+
+  // Row-level security scopes this to the caller's own maker row, so there is no `where` on
+  // identity here and there must not be one: a filter written here would be a second opinion
+  // about who is calling.
+  const { data: mine } = await db.from("makers").select("id").limit(1);
+  const existing = mine?.[0] as { id: string } | undefined;
+
+  if (existing) {
+    const { error } = await db.from("makers")
+      .update({ ...fields, updated_at: new Date().toISOString() }).eq("id", existing.id);
+    if (error) {
+      if (error.code === "23505") return { error: "That gallery address is taken. Try another." };
+      return { error: "We could not save that just now. Nothing was changed." };
     }
-    return { error: "We could not save that just now. Nothing was changed." };
+    if (intro !== null) await db.from("galleries").update({ intro }).eq("maker_id", existing.id);
+  } else {
+    const { data: created, error } = await db.from("makers")
+      .insert({ ...fields, user_id: account.id }).select("id").limit(1);
+    if (error || !created?.length) {
+      if (error?.code === "23505") return { error: "That gallery address is taken. Try another." };
+      return { error: "We could not save that just now. Nothing was changed." };
+    }
+    const makerId = (created[0] as { id: string }).id;
+    const { error: gErr } = await db.from("galleries").insert({ maker_id: makerId, intro });
+    if (gErr) return { error: "We could not save that just now. Nothing was changed." };
   }
   revalidatePath("/studio");
   redirect("/studio?saved=profile");
@@ -72,47 +82,55 @@ export async function saveProfileAction(_prev: FormState, form: FormData): Promi
 
 // ------------------------------------------------------------------------- contact routes
 export async function saveRouteAction(_prev: FormState, form: FormData): Promise<FormState> {
-  const account = await requireActiveMaker();
+  await requireActiveMaker();
   const kind = String(form.get("kind") ?? "");
   const value = String(form.get("value") ?? "").trim();
   const label = String(form.get("label") ?? "").trim() || null;
   const problem = validateRoute(kind, value);
   if (problem) return { error: problem };
 
-  await asAccount(account.id, async (db) => {
-    const maker = await db.query<{ id: string }>("SELECT id FROM makers WHERE account_id = $1", [account.id]);
-    if (!maker.rowCount) return;
-    // validated = true because the format was checked here; enabled = true because a maker
-    // who typed a route means it to be used. Both stay separate columns so a route can be
-    // turned off without being deleted (DOMAIN_MODEL §2.7).
-    await db.query(
-      `INSERT INTO contact_routes (maker_id, kind, value, label, enabled, validated, position)
-       VALUES ($1, $2, $3, $4, true, true,
-               COALESCE((SELECT max(position) + 1 FROM contact_routes WHERE maker_id = $1), 0))`,
-      [maker.rows[0].id, kind, value, label]);
+  const db = await client();
+  const { data: mine } = await db.from("makers").select("id").limit(1);
+  const maker = mine?.[0] as { id: string } | undefined;
+  if (!maker) return { error: "Set up your maker identity first." };
+
+  const { data: existing } = await db.from("contact_routes").select("position").eq("maker_id", maker.id);
+  // validated = true because the format was checked here; enabled = true because a maker who
+  // typed a route means it to be used. Both stay separate columns so a route can be turned off
+  // without being deleted (DOMAIN_MODEL §2.7).
+  const { error } = await db.from("contact_routes").insert({
+    maker_id: maker.id, kind, value, label, enabled: true, validated: true,
+    position: await nextPosition(existing as { position: number }[] | null),
   });
+  if (error) return { error: "We could not add that route. Nothing was changed." };
+
   revalidatePath("/studio/contact-routes");
   return { notice: "Route added. It becomes an action on your gallery straight away." };
 }
 
 export async function toggleRouteAction(form: FormData): Promise<void> {
-  const account = await requireActiveMaker();
+  await requireActiveMaker();
   const id = String(form.get("id") ?? "");
-  await asAccount(account.id, (db) =>
-    db.query("UPDATE contact_routes SET enabled = NOT enabled WHERE id = $1", [id]));
+  const db = await client();
+  // Read then write: PostgREST cannot negate a column in place. The read is itself scoped by
+  // row-level security, so a route belonging to someone else is simply not found.
+  const { data } = await db.from("contact_routes").select("enabled").eq("id", id).limit(1);
+  const row = data?.[0] as { enabled: boolean } | undefined;
+  if (row) await db.from("contact_routes").update({ enabled: !row.enabled }).eq("id", id);
   revalidatePath("/studio/contact-routes");
 }
 
 export async function deleteRouteAction(form: FormData): Promise<void> {
-  const account = await requireActiveMaker();
+  await requireActiveMaker();
   const id = String(form.get("id") ?? "");
-  await asAccount(account.id, (db) => db.query("DELETE FROM contact_routes WHERE id = $1", [id]));
+  const db = await client();
+  await db.from("contact_routes").delete().eq("id", id);
   revalidatePath("/studio/contact-routes");
 }
 
 // -------------------------------------------------------------------------------- works
 export async function createWorkAction(_prev: FormState, form: FormData): Promise<FormState> {
-  const account = await requireActiveMaker();
+  await requireActiveMaker();
   const title = String(form.get("title") ?? "").trim();
   const material = String(form.get("material") ?? "");
   const medium = String(form.get("medium") ?? "").trim() || null;
@@ -134,65 +152,57 @@ export async function createWorkAction(_prev: FormState, form: FormData): Promis
     return { error: "Enter the price, or choose price on enquiry." };
   }
 
-  let workId = "";
-  try {
-    workId = await asAccount(account.id, async (db) => {
-      const gallery = await db.query<{ id: string }>(
-        "SELECT g.id FROM galleries g JOIN makers m ON m.id = g.maker_id WHERE m.account_id = $1", [account.id]);
-      if (!gallery.rowCount) throw new Error("no gallery");
-      const r = await db.query<{ id: string }>(
-        `INSERT INTO works (public_token, gallery_id, title, material, medium, process,
-                            height_mm, width_mm, depth_mm, year, price_mode, price_amount, status)
-         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13) RETURNING id`,
-        [token(), gallery.rows[0].id, title, material, medium, process,
-         mm("height_cm"), mm("width_cm"), mm("depth_cm"),
-         year ? Number(year) : null, price_mode, price_mode === "exact" ? rawPrice : null, status]);
-      return r.rows[0].id;
-    });
-  } catch (e) {
-    if (e instanceof Error && e.message === "no gallery") {
-      return { error: "Set up your maker identity first — that is what a work belongs to." };
-    }
-    return { error: "We could not save that work. Nothing was created." };
-  }
-  redirect(`/studio/works/${workId}?created=1`);
+  const db = await client();
+  const { data: galleries } = await db.from("galleries").select("id").limit(1);
+  const gallery = galleries?.[0] as { id: string } | undefined;
+  if (!gallery) return { error: "Set up your maker identity first — that is what a work belongs to." };
+
+  const { data, error } = await db.from("works").insert({
+    public_token: token(), gallery_id: gallery.id, title, material, medium, process,
+    height_mm: mm("height_cm"), width_mm: mm("width_cm"), depth_mm: mm("depth_cm"),
+    year: year ? Number(year) : null, price_mode,
+    price_amount: price_mode === "exact" ? rawPrice : null, status,
+  }).select("id").limit(1);
+
+  if (error || !data?.length) return { error: "We could not save that work. Nothing was created." };
+  redirect(`/studio/works/${(data[0] as { id: string }).id}?created=1`);
 }
 
 export async function addImageAction(_prev: FormState, form: FormData): Promise<FormState> {
-  const account = await requireActiveMaker();
+  await requireActiveMaker();
   const workId = String(form.get("work_id") ?? "");
   const alt = String(form.get("alt_text") ?? "").trim() || null;
   const file = form.get("image");
   if (!(file instanceof File) || file.size === 0) return { error: "Choose an image file." };
   if (file.size > 12 * 1024 * 1024) return { error: "That image is larger than 12 MB. Export it smaller." };
 
-  // The row is written first in `uploading`, then moved to `ready` once the bytes are on
-  // disk, and left at `failed` if they are not. A half-finished upload is therefore visible
-  // as itself and never blocks the other images (DOMAIN_MODEL §2.4).
-  let imageId = "";
-  try {
-    imageId = await asAccount(account.id, async (db) => {
-      const r = await db.query<{ id: string }>(
-        `INSERT INTO work_images (work_id, position, storage_key, width, height, alt_text, state)
-         VALUES ($1, COALESCE((SELECT max(position) + 1 FROM work_images WHERE work_id = $1), 0),
-                 '', 0, 0, $2, 'uploading') RETURNING id`, [workId, alt]);
-      return r.rows[0].id;
-    });
-  } catch {
-    return { error: "That work is not yours to add images to." };
-  }
+  const db = await client();
+
+  // The row is written first in `uploading`, then moved to `ready` once the bytes are stored,
+  // and left at `failed` if they are not. A half-finished upload is therefore visible as
+  // itself and never blocks the other images (DOMAIN_MODEL §2.4).
+  // The storage key is chosen HERE and written before a single byte is uploaded. The storage
+  // policy that decides whether an object is this maker's own looks the key up in this table,
+  // so a key written afterwards would make the maker's own upload unauthorised.
+  const storageKey = crypto.randomUUID();
+  const { data: siblings } = await db.from("work_images").select("position").eq("work_id", workId);
+  const { data: created, error: insertError } = await db.from("work_images").insert({
+    work_id: workId, position: await nextPosition(siblings as { position: number }[] | null),
+    storage_key: storageKey, width: 0, height: 0, alt_text: alt, state: "uploading",
+  }).select("id").limit(1);
+
+  if (insertError || !created?.length) return { error: "That work is not yours to add images to." };
+  const imageId = (created[0] as { id: string }).id;
 
   try {
-    const bytes = Buffer.from(await file.arrayBuffer());
-    const ingested = await ingestImage(bytes);
-    await asAccount(account.id, (db) =>
-      db.query(
-        `UPDATE work_images SET storage_key = $2, width = $3, height = $4, variants = $5, state = 'ready'
-          WHERE id = $1`,
-        [imageId, ingested.storageKey, ingested.width, ingested.height, JSON.stringify(ingested.variants)]));
+    const bytes = new Uint8Array(await file.arrayBuffer());
+    const ingested = await ingestImage(bytes, db, storageKey);
+    await db.from("work_images").update({
+      width: ingested.width, height: ingested.height,
+      variants: ingested.variants, state: "ready",
+    }).eq("id", imageId);
   } catch (e) {
-    await asAccount(account.id, (db) =>
-      db.query("UPDATE work_images SET state = 'failed' WHERE id = $1", [imageId]));
+    await db.from("work_images").update({ state: "failed" }).eq("id", imageId);
     const why = e instanceof Error ? e.message : "we could not read that file";
     return { error: `That image did not go up — ${why}. The other images are untouched; try again.` };
   }
@@ -201,57 +211,59 @@ export async function addImageAction(_prev: FormState, form: FormData): Promise<
 }
 
 export async function removeImageAction(form: FormData): Promise<void> {
-  const account = await requireActiveMaker();
+  await requireActiveMaker();
   const id = String(form.get("id") ?? "");
   const workId = String(form.get("work_id") ?? "");
-  await asAccount(account.id, (db) => db.query("DELETE FROM work_images WHERE id = $1", [id]));
+  const db = await client();
+  await db.from("work_images").delete().eq("id", id);
   revalidatePath(`/studio/works/${workId}`);
 }
 
 export async function publishWorkAction(_prev: FormState, form: FormData): Promise<FormState> {
-  const account = await requireActiveMaker();
+  await requireActiveMaker();
   const workId = String(form.get("work_id") ?? "");
   const intent = String(form.get("intent_key") ?? "");
   if (!intent) return { error: "This form went stale. Reload the page and publish again." };
 
-  try {
-    const outcome = await asAccount(account.id, async (db) => {
-      const r = await db.query<{ outcome: string; public_token: string }>(
-        "SELECT * FROM publish_work($1, $2)", [workId, intent]);
-      return r.rows[0];
-    });
-    revalidatePath("/"); revalidatePath(`/studio/works/${workId}`);
-    // A second press of the same button carries the same intent key and cannot publish twice.
-    return { notice: outcome.outcome === "published" ? "Published." : "Already published — nothing changed." };
-  } catch (e) {
-    const msg = e instanceof Error ? e.message : "";
-    if (msg.includes("ready image")) return { error: "Add at least one image that finished uploading, then publish." };
-    if (msg.includes("not yours")) return { error: "That work is not yours." };
+  const db = await client();
+  const { data, error } = await db.rpc("publish_work", { p_work_id: workId, p_intent_key: intent });
+
+  if (error) {
+    if (error.message.includes("ready image")) {
+      return { error: "Add at least one image that finished uploading, then publish." };
+    }
+    if (error.message.includes("not yours")) return { error: "That work is not yours." };
     return { error: "Publishing did not complete. Nothing was changed — your work is still here." };
   }
+  revalidatePath("/"); revalidatePath(`/studio/works/${workId}`);
+  const outcome = (data as { outcome: string }[] | null)?.[0]?.outcome;
+  // A second press of the same button carries the same intent key and cannot publish twice.
+  return { notice: outcome === "published" ? "Published." : "Already published — nothing changed." };
 }
 
 export async function setStatusAction(form: FormData): Promise<void> {
-  const account = await requireActiveMaker();
-  const workId = String(form.get("work_id") ?? "");
-  const status = String(form.get("status") ?? "");
-  await asAccount(account.id, (db) => db.query("SELECT set_work_status($1, $2)", [workId, status]));
+  await requireActiveMaker();
+  const db = await client();
+  await db.rpc("set_work_status", {
+    p_work_id: String(form.get("work_id") ?? ""), p_status: String(form.get("status") ?? ""),
+  });
   // Every public surface reads one column, so one revalidation is the whole propagation.
   revalidatePath("/", "layout");
 }
 
 export async function retireWorkAction(form: FormData): Promise<void> {
-  const account = await requireActiveMaker();
-  const workId = String(form.get("work_id") ?? "");
-  await asAccount(account.id, (db) => db.query("SELECT retire_work($1)", [workId]));
+  await requireActiveMaker();
+  const db = await client();
+  await db.rpc("retire_work", { p_work_id: String(form.get("work_id") ?? "") });
   revalidatePath("/", "layout");
 }
 
 export async function publishGalleryAction(form: FormData): Promise<void> {
-  const account = await requireActiveMaker();
+  await requireActiveMaker();
   const galleryId = String(form.get("gallery_id") ?? "");
-  await asAccount(account.id, (db) =>
-    db.query(`UPDATE galleries SET lifecycle = 'published', published_at = now()
-               WHERE id = $1 AND lifecycle IN ('draft','hidden')`, [galleryId]));
+  const db = await client();
+  await db.from("galleries")
+    .update({ lifecycle: "published", published_at: new Date().toISOString() })
+    .eq("id", galleryId).in("lifecycle", ["draft", "hidden"]);
   revalidatePath("/", "layout");
 }

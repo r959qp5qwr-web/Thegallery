@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect, notFound } from "next/navigation";
 import { currentAccount } from "@/lib/auth";
-import { asAccount } from "@/lib/db";
+import { client } from "@/lib/supabase";
 import { StudioHeader, Band } from "@/components/Chrome";
 import { ActionForm, Field } from "@/components/ActionForm";
 import { setMakerAccessAction } from "@/app/actions/operator";
@@ -14,18 +14,18 @@ export default async function OperatorMaker({ params }: { params: Promise<{ id: 
   if (!account.is_operator) redirect("/operator");
   const { id } = await params;
 
-  const data = await asAccount(account.id, async (db) => {
-    const maker = (await db.query<{ id: string; handle: string; display_name: string; status: string;
-                                    status_reason: string | null; city: string; kind: string }>(
-      "SELECT id, handle, display_name, status, status_reason, city, kind FROM makers WHERE id = $1", [id])).rows[0];
-    if (!maker) return null;
-    const history = (await db.query<{ id: string; action: string; reason: string; created_at: string }>(
-      `SELECT id, action, reason, created_at FROM operator_actions
-        WHERE subject_type = 'maker' AND subject_id = $1 ORDER BY created_at DESC`, [id])).rows;
-    return { maker, history };
-  });
-  if (!data) notFound();
-  const { maker, history } = data;
+  const db = await client();
+  const { data: makerRows } = await db.from("makers")
+    .select("id,handle,display_name,status,status_reason,city,kind").eq("id", id).limit(1);
+  const maker = (makerRows?.[0] as unknown as { id: string; handle: string; display_name: string;
+    status: string; status_reason: string | null; city: string; kind: string } | undefined) ?? null;
+  if (!maker) notFound();
+
+  const { data: historyRows } = await db.from("operator_actions")
+    .select("id,action,reason,created_at")
+    .eq("subject_type", "maker").eq("subject_id", id).order("created_at", { ascending: false });
+  const history = (historyRows ?? []) as unknown as
+    { id: string; action: string; reason: string; created_at: string }[];
   const suspended = maker.status === "suspended";
 
   return (

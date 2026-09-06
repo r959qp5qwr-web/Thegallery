@@ -1,20 +1,24 @@
-import { randomBytes, createHash } from "node:crypto";
-import { cookies } from "next/headers";
-import { asAuthStore } from "./db";
-import { deliver } from "./mail";
-import { hashPassword, verifyPassword } from "./password";
+import { client } from "./supabase";
 
-export { hashPassword, verifyPassword };
-const SESSION_COOKIE = "gallery_session";
-const SESSION_DAYS = 14;
-const CONFIRM_HOURS = 24;
-const RESET_HOURS = 2;
+/**
+ * The maker door, on Supabase Auth (decision GAL-SUPA-1).
+ *
+ * This module used to hash passwords, mint session tokens and expire single-use links. None of
+ * that is here now, and none of it is this product's to own: GoTrue issues the token, and
+ * PostgREST turns it into a database role. What remains is the product's own vocabulary — what
+ * a refusal says, and which states a maker can be in.
+ *
+ * NON-ENUMERATION (PRODUCT_ARCHITECTURE §4.2). The caller is told the same thing whether or
+ * not an address is registered, on both the sign-up and the recovery door. Supabase's sign-up
+ * behaves this way already when email confirmation is on — it returns a user with no
+ * identities rather than an error — but this module does not rely on that: it returns nothing
+ * either way, so a change in that behaviour cannot turn this door into an oracle.
+ */
 
 export type Account = {
   id: string; email: string; access_state: string;
   email_confirmed_at: string | null; is_operator: boolean;
 };
-
 
 // Passwords are checked for length and for not being one of the handful of strings that
 // make a credential meaningless. No composition rules: they push people to "Password1!".
@@ -34,106 +38,51 @@ export function emailProblem(email: string): string | null {
   return null;
 }
 
-const digest = (raw: string) => createHash("sha256").update(raw).digest("hex");
-const secret = () => randomBytes(32).toString("base64url");
+const base = () => process.env.GALLERY_BASE_URL ?? "http://127.0.0.1:3100";
 
 // --- accounts ---------------------------------------------------------------------------
-/**
- * Create an account and send a confirmation link.
- *
- * The caller is told the same thing whether or not the address is already registered
- * (PRODUCT_ARCHITECTURE §4.2: "duplicate email — same wording as success path"). An account
- * door that answers "this email is taken" is an account-enumeration oracle.
- */
 export async function createAccount(email: string, password: string): Promise<void> {
-  const hash = await hashPassword(password);
-  await asAuthStore(async (db) => {
-    const existing = await db.query<{ id: string; access_state: string }>(
-      "SELECT id, access_state FROM auth_accounts WHERE email_normalised = lower(btrim($1))", [email]);
-    if (existing.rowCount) {
-      const acct = existing.rows[0];
-      if (acct.access_state === "awaiting_email_confirmation") await issueConfirm(db, acct.id, email);
-      return;
-    }
-    const created = await db.query<{ id: string }>(
-      "INSERT INTO auth_accounts (email, password_hash) VALUES ($1, $2) RETURNING id", [email.trim(), hash]);
-    await issueConfirm(db, created.rows[0].id, email);
+  const sb = await client();
+  await sb.auth.signUp({
+    email: email.trim(),
+    password,
+    options: { emailRedirectTo: `${base()}/makers/confirm` },
   });
-}
-
-async function issueConfirm(db: import("./db").Db, accountId: string, email: string) {
-  const raw = secret();
-  await db.query(
-    `INSERT INTO auth_tokens (account_id, purpose, token_hash, expires_at)
-     VALUES ($1, 'confirm_email', $2, now() + ($3 || ' hours')::interval)`,
-    [accountId, digest(raw), String(CONFIRM_HOURS)]);
-  const base = process.env.GALLERY_BASE_URL ?? "http://127.0.0.1:3100";
-  await deliver(db, {
-    to: email,
-    subject: "Confirm your email for The Gallery",
-    body: "Confirm this address to open your Studio. The link is good for 24 hours.",
-    link: `${base}/makers/confirm/${raw}`,
-  });
+  // The result is deliberately not inspected. Whatever it says about whether this address was
+  // already registered is exactly what must not reach the caller.
 }
 
 export async function resendConfirm(email: string): Promise<void> {
-  await asAuthStore(async (db) => {
-    const r = await db.query<{ id: string }>(
-      `SELECT id FROM auth_accounts
-        WHERE email_normalised = lower(btrim($1)) AND access_state = 'awaiting_email_confirmation'`, [email]);
-    if (r.rowCount) await issueConfirm(db, r.rows[0].id, email);
-  });
+  const sb = await client();
+  await sb.auth.resend({ type: "signup", email: email.trim(),
+                         options: { emailRedirectTo: `${base()}/makers/confirm` } });
 }
 
-export async function confirmEmail(rawToken: string): Promise<"confirmed" | "expired"> {
-  return asAuthStore(async (db) => {
-    const r = await db.query<{ id: string; account_id: string }>(
-      `SELECT id, account_id FROM auth_tokens
-        WHERE token_hash = $1 AND purpose = 'confirm_email'
-          AND consumed_at IS NULL AND expires_at > now() FOR UPDATE`, [digest(rawToken)]);
-    if (!r.rowCount) return "expired";
-    await db.query("UPDATE auth_tokens SET consumed_at = now() WHERE id = $1", [r.rows[0].id]);
-    await db.query(
-      `UPDATE auth_accounts SET access_state = 'active', email_confirmed_at = now()
-        WHERE id = $1 AND access_state = 'awaiting_email_confirmation'`, [r.rows[0].account_id]);
-    return "confirmed";
-  });
+/**
+ * Confirm an address from the link in the email.
+ *
+ * The link carries a single-use hash minted by GoTrue. Consuming it also signs the person in,
+ * which is why this returns after the client has written its cookies.
+ */
+export async function confirmEmail(tokenHash: string): Promise<"confirmed" | "expired"> {
+  const sb = await client();
+  const { error } = await sb.auth.verifyOtp({ type: "email", token_hash: tokenHash });
+  return error ? "expired" : "confirmed";
 }
 
 export async function startRecovery(email: string): Promise<void> {
-  await asAuthStore(async (db) => {
-    const r = await db.query<{ id: string }>(
-      "SELECT id FROM auth_accounts WHERE email_normalised = lower(btrim($1)) AND access_state <> 'closed'", [email]);
-    if (!r.rowCount) return; // same wording is returned to the caller either way
-    const raw = secret();
-    await db.query(
-      `INSERT INTO auth_tokens (account_id, purpose, token_hash, expires_at)
-       VALUES ($1, 'reset_password', $2, now() + ($3 || ' hours')::interval)`,
-      [r.rows[0].id, digest(raw), String(RESET_HOURS)]);
-    const base = process.env.GALLERY_BASE_URL ?? "http://127.0.0.1:3100";
-    await deliver(db, {
-      to: email, subject: "Set a new password for The Gallery",
-      body: "Use this link within 2 hours to set a new password. If you did not ask, nothing has changed.",
-      link: `${base}/makers/reset/${raw}`,
-    });
-  });
+  const sb = await client();
+  await sb.auth.resetPasswordForEmail(email.trim(), { redirectTo: `${base()}/makers/reset` });
+  // Same: the outcome is not reported, because "no such account" is not a thing to tell a
+  // stranger who typed someone else's address.
 }
 
-export async function completeRecovery(rawToken: string, password: string): Promise<"ok" | "expired"> {
-  const hash = await hashPassword(password);
-  return asAuthStore(async (db) => {
-    const r = await db.query<{ id: string; account_id: string }>(
-      `SELECT id, account_id FROM auth_tokens
-        WHERE token_hash = $1 AND purpose = 'reset_password'
-          AND consumed_at IS NULL AND expires_at > now() FOR UPDATE`, [digest(rawToken)]);
-    if (!r.rowCount) return "expired";
-    await db.query("UPDATE auth_tokens SET consumed_at = now() WHERE id = $1", [r.rows[0].id]);
-    await db.query("UPDATE auth_accounts SET password_hash = $2 WHERE id = $1", [r.rows[0].account_id, hash]);
-    // Every existing session ends: recovery is also the door someone uses after losing control.
-    await db.query("UPDATE auth_sessions SET revoked_at = now() WHERE account_id = $1 AND revoked_at IS NULL",
-      [r.rows[0].account_id]);
-    return "ok";
-  });
+export async function completeRecovery(tokenHash: string, password: string): Promise<"ok" | "expired"> {
+  const sb = await client();
+  const { error } = await sb.auth.verifyOtp({ type: "recovery", token_hash: tokenHash });
+  if (error) return "expired";
+  const { error: setError } = await sb.auth.updateUser({ password });
+  return setError ? "expired" : "ok";
 }
 
 // --- sessions ---------------------------------------------------------------------------
@@ -142,63 +91,55 @@ export type SignInResult =
   | { ok: false; reason: "denied" | "unconfirmed" | "closed" };
 
 export async function signIn(email: string, password: string): Promise<SignInResult> {
-  const outcome = await asAuthStore(async (db) => {
-    const r = await db.query<{ id: string; password_hash: string; access_state: string }>(
-      "SELECT id, password_hash, access_state FROM auth_accounts WHERE email_normalised = lower(btrim($1))", [email]);
-    if (!r.rowCount) {
-      // Spend comparable time so a missing address is not distinguishable by timing.
-      await verifyPassword(password, "scrypt$00$00");
-      return { kind: "denied" as const };
-    }
-    const a = r.rows[0];
-    if (!(await verifyPassword(password, a.password_hash))) return { kind: "denied" as const };
-    if (a.access_state === "awaiting_email_confirmation") return { kind: "unconfirmed" as const };
-    if (a.access_state === "closed") return { kind: "closed" as const };
-    const raw = secret();
-    await db.query(
-      `INSERT INTO auth_sessions (account_id, token_hash, expires_at)
-       VALUES ($1, $2, now() + ($3 || ' days')::interval)`,
-      [a.id, digest(raw), String(SESSION_DAYS)]);
-    return { kind: "ok" as const, raw };
-  });
+  const sb = await client();
+  const { data, error } = await sb.auth.signInWithPassword({ email: email.trim(), password });
+  if (error) {
+    // GoTrue distinguishes an unconfirmed address from a wrong password. The unconfirmed case
+    // is safe to name — the person already proved they hold the address by receiving nothing
+    // yet — but a wrong password and an unknown address must remain one answer.
+    if (/confirm/i.test(error.message)) return { ok: false, reason: "unconfirmed" };
+    return { ok: false, reason: "denied" };
+  }
+  if (!data.user) return { ok: false, reason: "denied" };
 
-  if (outcome.kind !== "ok") return { ok: false, reason: outcome.kind };
-  const jar = await cookies();
-  jar.set(SESSION_COOKIE, outcome.raw, {
-    httpOnly: true, sameSite: "lax", path: "/", secure: process.env.NODE_ENV === "production",
-    maxAge: SESSION_DAYS * 86_400,
-  });
+  // A closed account has a valid credential and no product left. Ending the session here is
+  // what makes closure mean something, rather than leaving the person signed in to nothing.
+  const { data: closed } = await sb.from("account_closures").select("user_id").limit(1);
+  if (closed && closed.length > 0) {
+    await sb.auth.signOut();
+    return { ok: false, reason: "closed" };
+  }
   return { ok: true };
 }
 
 export async function signOut(): Promise<void> {
-  const jar = await cookies();
-  const raw = jar.get(SESSION_COOKIE)?.value;
-  if (raw) {
-    await asAuthStore((db) =>
-      db.query("UPDATE auth_sessions SET revoked_at = now() WHERE token_hash = $1", [digest(raw)]));
-  }
-  jar.delete(SESSION_COOKIE);
+  const sb = await client();
+  await sb.auth.signOut();
 }
 
-/** The account behind this request, or null. A suspended account still resolves: the Studio
- *  must be able to state the suspension and its appeal route rather than silently sign out. */
+/**
+ * The account behind this request, or null.
+ *
+ * A SUSPENDED maker still resolves: the Studio must be able to state the suspension and its
+ * appeal route rather than silently sign the person out. A CLOSED one does not.
+ *
+ * getUser() asks GoTrue rather than trusting the cookie, which is the difference between
+ * knowing who is calling and believing what the caller wrote down.
+ */
 export async function currentAccount(): Promise<Account | null> {
-  const jar = await cookies();
-  const raw = jar.get(SESSION_COOKIE)?.value;
-  if (!raw) return null;
-  return asAuthStore(async (db) => {
-    const r = await db.query<Account>(
-      `SELECT a.id, a.email, a.access_state, a.email_confirmed_at, a.is_operator
-         FROM auth_sessions s JOIN auth_accounts a ON a.id = s.account_id
-        WHERE s.token_hash = $1 AND s.revoked_at IS NULL AND s.expires_at > now()`, [digest(raw)]);
-    if (!r.rowCount) return null;
-    const acct = r.rows[0];
-    return acct.access_state === "closed" ? null : acct;
-  });
-}
+  const sb = await client();
+  const { data: { user }, error } = await sb.auth.getUser();
+  if (error || !user) return null;
 
-export async function expireSessionsForTest(accountId: string): Promise<void> {
-  await asAuthStore((db) =>
-    db.query("UPDATE auth_sessions SET expires_at = now() - interval '1 minute' WHERE account_id = $1", [accountId]));
+  const { data: closed } = await sb.from("account_closures").select("user_id").limit(1);
+  if (closed && closed.length > 0) return null;
+
+  const { data: op } = await sb.rpc("is_operator");
+  return {
+    id: user.id,
+    email: user.email ?? "",
+    access_state: "active",
+    email_confirmed_at: user.email_confirmed_at ?? null,
+    is_operator: op === true,
+  };
 }

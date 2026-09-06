@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { currentAccount } from "@/lib/auth";
-import { asAccount } from "@/lib/db";
+import { client } from "@/lib/supabase";
 import { StudioHeader } from "@/components/Chrome";
 
 export const dynamic = "force-dynamic";
@@ -26,15 +26,19 @@ export default async function OperatorHome() {
     );
   }
 
-  const { makers, actions } = await asAccount(account.id, async (db) => {
-    const makers = (await db.query<{ id: string; handle: string; display_name: string; status: string;
-                                     status_reason: string | null; city: string }>(
-      "SELECT id, handle, display_name, status, status_reason, city FROM makers ORDER BY display_name")).rows;
-    const actions = (await db.query<{ id: string; action: string; subject_id: string; reason: string;
-                                      created_at: string }>(
-      "SELECT id, action, subject_id, reason, created_at FROM operator_actions ORDER BY created_at DESC LIMIT 20")).rows;
-    return { makers, actions };
-  });
+  // No operator filter here, and none is needed: the policy on `makers` widens to every row
+  // only for a caller is_operator() accepts, and `operator_actions` is readable by nobody
+  // else at all. An ordinary maker running this same code sees their own row and no history.
+  const db = await client();
+  const { data: makerRows } = await db.from("makers")
+    .select("id,handle,display_name,status,status_reason,city").order("display_name");
+  const { data: actionRows } = await db.from("operator_actions")
+    .select("id,action,subject_id,reason,created_at").order("created_at", { ascending: false }).limit(20);
+
+  const makers = (makerRows ?? []) as unknown as { id: string; handle: string; display_name: string;
+    status: string; status_reason: string | null; city: string }[];
+  const actions = (actionRows ?? []) as unknown as { id: string; action: string; subject_id: string;
+    reason: string; created_at: string }[];
 
   return (
     <>

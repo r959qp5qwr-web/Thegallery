@@ -5,7 +5,7 @@ import {
   createAccount, resendConfirm, signIn, signOut, startRecovery, completeRecovery,
   emailProblem, passwordProblem, currentAccount,
 } from "@/lib/auth";
-import { asAccount } from "@/lib/db";
+import { client } from "@/lib/supabase";
 
 export type FormState = { error?: string; notice?: string };
 
@@ -77,11 +77,10 @@ export async function closeAccountAction(_prev: FormState, form: FormData): Prom
   if (String(form.get("confirm") ?? "") !== "close") {
     return { error: "Type close to confirm. Nothing has been changed." };
   }
-  try {
-    await asAccount(account.id, (db) => db.query("SELECT close_account()"));
-  } catch (e) {
-    const message = e instanceof Error ? e.message : "";
-    if (message.includes("suspended")) {
+  const db = await client();
+  const { error } = await db.rpc("close_account");
+  if (error) {
+    if (error.message.includes("suspended")) {
       return { error: "A suspended account cannot be closed here. Reply to the notice you were sent." };
     }
     return { error: "We could not close the account just now. Nothing was changed." };

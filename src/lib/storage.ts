@@ -1,3 +1,4 @@
+import type { Db } from "./supabase";
 // Explicit .js paths: @jsquash ships no export map, so Node's strict ESM resolver needs the
 // extension. Bundlers accept it too, which keeps one spelling that works in both runtimes.
 import decodeJpeg, { init as initJpegDecode } from "@jsquash/jpeg/decode.js";
@@ -67,7 +68,7 @@ function initCodecs(): Promise<void> {
   }));
 }
 
-export async function ingestImage(bytes: Uint8Array): Promise<Ingested> {
+export async function ingestImage(bytes: Uint8Array, db: Db, storageKey: string): Promise<Ingested> {
   await initCodecs();
   let image: ImageData;
   try {
@@ -79,9 +80,8 @@ export async function ingestImage(bytes: Uint8Array): Promise<Ingested> {
     throw new Error("that image is too small to show at gallery scale");
   }
 
-  const storageKey = crypto.randomUUID();
   const original = await encodeJpeg(image, { quality: 92 });
-  await put(`${storageKey}/original.jpg`, new Uint8Array(original));
+  await put(db, `${storageKey}/original.jpg`, new Uint8Array(original));
 
   const variants: VariantMap = {};
   for (const width of VARIANT_WIDTHS) {
@@ -91,7 +91,7 @@ export async function ingestImage(bytes: Uint8Array): Promise<Ingested> {
     const height = Math.max(1, Math.round((image.height / image.width) * target));
     const scaled = await resize(image, { width: target, height });
     const jpeg = await encodeJpeg(scaled, { quality: 82 });
-    await put(`${storageKey}/w${width}.jpg`, new Uint8Array(jpeg));
+    await put(db, `${storageKey}/w${width}.jpg`, new Uint8Array(jpeg));
     variants[`w${width}`] = `w${width}.jpg`;
   }
 
@@ -102,13 +102,13 @@ export async function ingestImage(bytes: Uint8Array): Promise<Ingested> {
  * Read a stored variant, falling back to what exists. Variants are only made up to the image's
  * own width, so a request for one that was never made is answered with the next largest.
  */
-export async function readVariant(storageKey: string, name: string): Promise<Uint8Array> {
+export async function readVariant(db: Db, storageKey: string, name: string): Promise<Uint8Array> {
   const requested = /^(original|w320|w640|w1280|w1920)$/.test(name) ? name : "w640";
   const order = requested === "original"
     ? ["original"]
     : [requested, ...[...VARIANT_WIDTHS].reverse().map((w) => `w${w}`).filter((v) => v !== requested), "original"];
   for (const candidate of order) {
-    const bytes = await get(`${storageKey}/${candidate === "original" ? "original.jpg" : `${candidate}.jpg`}`);
+    const bytes = await get(db, `${storageKey}/${candidate === "original" ? "original.jpg" : `${candidate}.jpg`}`);
     if (bytes) return bytes;
   }
   throw new Error(`no stored bytes for ${storageKey}`);
@@ -116,63 +116,24 @@ export async function readVariant(storageKey: string, name: string): Promise<Uin
 
 // ------------------------------------------------------------------ the object store
 //
-// Two backends behind one pair of functions. `supabase` is the deployed one; `disk` exists so
-// the journeys can run locally without a bucket credential. The interface is deliberately two
-// functions wide, so the thing that could drift between them is as small as possible.
+// Supabase Storage, reached through whichever client the caller holds — which means through
+// whichever identity that client carries. There is no service-role key here and no separate
+// storage credential: a maker uploads as themselves and a visitor reads as `anon`, and the
+// policies in db/migrations/004 decide both. The bucket is PRIVATE; if it were public, an
+// object URL would keep working after the work behind it was retired, taken down or
+// suspended, and /img — which re-checks visibility on every request — would be routed around.
 
-const backend = () => process.env.GALLERY_STORAGE ?? "disk";
+const BUCKET = () => process.env.SUPABASE_STORAGE_BUCKET ?? "gallery-images";
 
-async function put(path: string, bytes: Uint8Array): Promise<void> {
-  if (backend() === "supabase") return supabasePut(path, bytes);
-  const { mkdir, writeFile } = await import("node:fs/promises");
-  const { join, dirname } = await import("node:path");
-  const file = join(process.env.GALLERY_STORAGE_DIR ?? "./var/storage", path);
-  await mkdir(dirname(file), { recursive: true });
-  await writeFile(file, bytes);
-}
-
-async function get(path: string): Promise<Uint8Array | null> {
-  if (backend() === "supabase") return supabaseGet(path);
-  try {
-    const { readFile } = await import("node:fs/promises");
-    const { join } = await import("node:path");
-    return new Uint8Array(await readFile(join(process.env.GALLERY_STORAGE_DIR ?? "./var/storage", path)));
-  } catch {
-    return null;
-  }
-}
-
-function supabaseConfig() {
-  const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_STORAGE_KEY;
-  const bucket = process.env.SUPABASE_STORAGE_BUCKET ?? "gallery-images";
-  if (!url || !key) {
-    throw new Error("GALLERY_STORAGE=supabase needs SUPABASE_URL and SUPABASE_STORAGE_KEY");
-  }
-  return { url: url.replace(/\/+$/, ""), key, bucket };
-}
-
-async function supabasePut(path: string, bytes: Uint8Array): Promise<void> {
-  const { url, key, bucket } = supabaseConfig();
-  const res = await fetch(`${url}/storage/v1/object/${bucket}/${path}`, {
-    method: "POST",
-    headers: {
-      authorization: `Bearer ${key}`, apikey: key,
-      "content-type": "image/jpeg", "cache-control": "3600", "x-upsert": "true",
-    },
-    body: bytes as BodyInit,
+async function put(db: Db, path: string, bytes: Uint8Array): Promise<void> {
+  const { error } = await db.storage.from(BUCKET()).upload(path, bytes as unknown as ArrayBuffer, {
+    contentType: "image/jpeg", cacheControl: "3600", upsert: true,
   });
-  if (!res.ok) throw new Error(`storage refused ${path} (${res.status}): ${await res.text()}`);
+  if (error) throw new Error(`storage refused ${path}: ${error.message}`);
 }
 
-async function supabaseGet(path: string): Promise<Uint8Array | null> {
-  const { url, key, bucket } = supabaseConfig();
-  // The bucket is private. Bytes are read server-side and served through /img, which re-checks
-  // public visibility, so a draft's images are not reachable by URL.
-  const res = await fetch(`${url}/storage/v1/object/${bucket}/${path}`, {
-    headers: { authorization: `Bearer ${key}`, apikey: key },
-  });
-  if (res.status === 404 || res.status === 400) return null;
-  if (!res.ok) throw new Error(`storage refused to read ${path} (${res.status})`);
-  return new Uint8Array(await res.arrayBuffer());
+async function get(db: Db, path: string): Promise<Uint8Array | null> {
+  const { data, error } = await db.storage.from(BUCKET()).download(path);
+  if (error || !data) return null;
+  return new Uint8Array(await data.arrayBuffer());
 }

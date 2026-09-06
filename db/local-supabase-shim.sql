@@ -50,3 +50,21 @@ DO $$ BEGIN
 END $$;
 GRANT anon, authenticated TO authenticator;
 GRANT USAGE ON SCHEMA auth TO anon, authenticated;
+
+-- Storage. Supabase's storage.objects is a real table with a great deal more in it than this;
+-- what the product's policies touch is `bucket_id` and `name`, so that is what stands in here.
+-- It lets migration 004's policies be created and exercised locally. It stores no bytes and
+-- proves nothing about Supabase Storage — the first real upload is proved when it happens.
+CREATE SCHEMA IF NOT EXISTS storage;
+
+CREATE TABLE IF NOT EXISTS storage.objects (
+  id         uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  bucket_id  text NOT NULL,
+  name       text NOT NULL,
+  owner      uuid,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
+
+GRANT USAGE ON SCHEMA storage TO anon, authenticated;
+GRANT SELECT, INSERT, UPDATE, DELETE ON storage.objects TO anon, authenticated;

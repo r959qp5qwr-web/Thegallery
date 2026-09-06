@@ -1,7 +1,7 @@
 "use server";
 import { revalidatePath } from "next/cache";
 import { currentAccount } from "@/lib/auth";
-import { asAccount } from "@/lib/db";
+import { client } from "@/lib/supabase";
 
 export type FormState = { error?: string; notice?: string };
 
@@ -21,21 +21,19 @@ export async function setMakerAccessAction(_prev: FormState, form: FormData): Pr
   const reason = String(form.get("reason") ?? "").trim();
   if (!reason) return { error: "A sanction needs a written reason. Nothing has been changed." };
 
-  try {
-    const outcome = await asAccount(account.id, async (db) => {
-      const r = await db.query<{ set_maker_access: string }>(
-        "SELECT set_maker_access($1, $2, $3)", [makerId, action, reason]);
-      return r.rows[0].set_maker_access;
-    });
-    revalidatePath("/", "layout");
-    if (outcome === "unchanged") return { notice: "That maker was already in this state. Nothing changed." };
-    return { notice: outcome === "suspended"
-      ? "Suspended. Their gallery and work are no longer public, and the reason is recorded."
-      : "Reinstated. Their gallery and work are public again, exactly as they were." };
-  } catch (e) {
-    const msg = e instanceof Error ? e.message : "";
-    if (msg.includes("operator authority")) return { error: "You do not have operator authority." };
-    if (msg.includes("recorded reason")) return { error: "A sanction needs a written reason." };
+  const db = await client();
+  const { data, error } = await db.rpc("set_maker_access", {
+    p_maker_id: makerId, p_action: action, p_reason: reason,
+  });
+  if (error) {
+    if (error.message.includes("operator authority")) return { error: "You do not have operator authority." };
+    if (error.message.includes("recorded reason")) return { error: "A sanction needs a written reason." };
     return { error: "That action did not complete. Nothing was changed." };
   }
+  revalidatePath("/", "layout");
+  const outcome = data as string | null;
+  if (outcome === "unchanged") return { notice: "That maker was already in this state. Nothing changed." };
+  return { notice: outcome === "suspended"
+    ? "Suspended. Their gallery and work are no longer public, and the reason is recorded."
+    : "Reinstated. Their gallery and work are public again, exactly as they were." };
 }

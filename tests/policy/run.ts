@@ -236,6 +236,60 @@ async function main() {
     "a suspension nobody can read is a suspension nobody can appeal");
   await owner.query("UPDATE makers SET status = 'active', status_reason = NULL WHERE id = $1", [B.maker_id]);
 
+  // ---------------------------------------------------------------- the image bytes
+  // The storage policies are the second wall behind /img. The route decides which key to look
+  // up; these decide whether the bytes come back. Probed here as rows in storage.objects,
+  // which is what those policies actually gate.
+  const keys = await owner.query<{ storage_key: string; lifecycle: string }>(
+    `SELECT i.storage_key, w.lifecycle FROM work_images i JOIN works w ON w.id = i.work_id
+      JOIN galleries g ON g.id = w.gallery_id JOIN makers m ON m.id = g.maker_id
+      WHERE m.handle = 'anika-rao'`);
+  const publishedKey = keys.rows.find((k) => k.lifecycle === "published")?.storage_key;
+  const draftKey = keys.rows.find((k) => k.lifecycle === "draft")?.storage_key;
+
+  if (publishedKey && draftKey) {
+    await owner.query(
+      `INSERT INTO storage.objects (bucket_id, name) VALUES
+         ('gallery-images', $1), ('gallery-images', $2)
+       ON CONFLICT DO NOTHING`,
+      [`${publishedKey}/w640.jpg`, `${draftKey}/w640.jpg`]);
+
+    const anonSeesPublished = await asRole("anon", null, (c) =>
+      c.query<{ n: number }>(
+        "SELECT count(*)::int AS n FROM storage.objects WHERE name = $1", [`${publishedKey}/w640.jpg`]));
+    record("P-29", "a published work's image bytes are readable anonymously (anti-vacuous)",
+      (anonSeesPublished.rows[0].n as number) === 1,
+      "if this fails no visitor sees a picture, and the refusals below prove nothing");
+
+    const anonSeesDraft = await asRole("anon", null, (c) =>
+      c.query<{ n: number }>(
+        "SELECT count(*)::int AS n FROM storage.objects WHERE name = $1", [`${draftKey}/w640.jpg`]));
+    record("P-30", "a draft work's image bytes are not readable anonymously",
+      (anonSeesDraft.rows[0].n as number) === 0,
+      `anon reached ${anonSeesDraft.rows[0].n} draft objects`);
+
+    const bWritesAsA = await refused("authenticated", B.user_id,
+      "INSERT INTO storage.objects (bucket_id, name) VALUES ('gallery-images', $1)",
+      [`${publishedKey}/forged.jpg`]);
+    record("P-31", "Maker B cannot write bytes under Maker A's storage key",
+      bWritesAsA.denied && bWritesAsA.code === "42501",
+      `expected a refusal, got ${bWritesAsA.denied ? bWritesAsA.code : "it succeeded"}`);
+
+    const unclaimed = await refused("authenticated", B.user_id,
+      "INSERT INTO storage.objects (bucket_id, name) VALUES ('gallery-images', $1)",
+      ["00000000-0000-0000-0000-000000000000/anything.jpg"]);
+    record("P-32", "nobody can write bytes under a key no image row claims",
+      unclaimed.denied && unclaimed.code === "42501",
+      `expected a refusal, got ${unclaimed.denied ? unclaimed.code : "it succeeded"}`);
+  } else {
+    for (const [id, title] of [["P-29", "published image bytes readable"],
+                               ["P-30", "draft image bytes not readable"],
+                               ["P-31", "no writing under another maker's key"],
+                               ["P-32", "no writing under an unclaimed key"]] as const) {
+      record(id, title, false, "no seeded images — run: npm run db:seed");
+    }
+  }
+
   // ---------------------------------------------------------------- account email privacy
   const emails = await owner.query<{ email: string }>("SELECT email FROM auth.users WHERE email IS NOT NULL");
   const views = ["public_works", "public_makers", "public_work_images", "public_contact_routes",

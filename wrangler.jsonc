@@ -11,23 +11,14 @@
 
   "assets": { "directory": ".open-next/assets", "binding": "ASSETS" },
 
-  // Postgres from a V8 isolate. Hyperdrive holds the pool on Cloudflare's side and hands the
-  // Worker a connection string; the Worker opens ONE client per request and closes it, because
-  // an isolate has no long-lived process to keep a pool warm in.
+  // No Hyperdrive, and none needed since GAL-SUPA-1: this Worker holds no database
+  // connection. It talks to PostgREST, GoTrue and Storage over HTTPS like any other Supabase
+  // client, and the identity it sends is the caller's own.
   //
-  // `id` is yours and is created with:
-  //   npx wrangler hyperdrive create thegallery-db \
-  //     --connection-string='postgres://gallery_app.<ref>:<password>@aws-N-<region>.pooler.supabase.com:5432/postgres'
-  //
-  // `localConnectionString` is what `wrangler dev` uses instead, so the journeys can run
-  // against a local cluster without touching the hosted database.
-  "hyperdrive": [
-    {
-      "binding": "HYPERDRIVE",
-      "id": "REPLACE_WITH_HYPERDRIVE_ID",
-      "localConnectionString": "postgres://gallery_app:gallery_local_dev@127.0.0.1:5432/gallery"
-    }
-  ],
+  // SUPABASE_URL and SUPABASE_PUBLISHABLE_KEY are vars, not secrets — the publishable key is
+  // meant to reach a browser. There is no service-role key here at all: a key that bypasses
+  // row-level security, held by the thing serving public requests, would make every policy in
+  // this product advisory.
 
   "vars": {
     "GALLERY_SCHEMA": "gallery",
