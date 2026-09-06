@@ -1316,7 +1316,7 @@
       "id": "OBL-GAL-008",
       "state": "OPEN",
       "owner": "GOVERNOR",
-      "summary": "Stage 2 deployed proof needs provisioning that does not exist in the build environment. As of 2026-09-06 the governor has named a Supabase project (shared with Ustaad) and the domain atthegallery.in. Neither is usable from a build session: the project's database is unreachable from this environment by every route tried, and the publishable key the governor supplied cannot run DDL and is not used by this build at all, which talks to Postgres directly with its own roles and session auth. What remains outstanding is a database password or owner connection string over the session-mode pooler, a hosting project, a DNS record for the domain, a transactional sender on that domain with SPF and DKIM, and durable image storage. Exact procedure: db/SUPABASE.md. Nothing here is provisioned and no deployed claim is made.",
+      "summary": "Stage 2 deployed proof needs provisioning that does not exist in the build environment. As of 2026-09-06 the governor has named a Supabase project (shared with Ustaad) and the domain atthegallery.in. Neither is usable from a build session: the project's database is unreachable from this environment by every route tried, and the publishable key the governor supplied cannot run DDL and is not used by this build at all, which talks to Postgres directly with its own roles and session auth. What remains outstanding is a database password or owner connection string over the session-mode pooler, a hosting project, a DNS record for the domain, a transactional sender on that domain with SPF and DKIM, and durable image storage. Exact procedure: db/SUPABASE.md. Nothing here is provisioned and no deployed claim is made. PARTIAL PROGRESS 2026-09-06: the governor applied db/supabase-schema.sql to the named project by hand and returned db/supabase-verify.sql at 10 of 10 PASS, so the database half of this obligation is provisioned and structurally verified, with Ustaad's public schema untouched. Outstanding: a hosting project, DNS for atthegallery.in, a transactional sender on that domain, durable image storage, and the runtime connection string. Receipt: doctrine/receipts/SUPABASE-SCHEMA-APPLIED-2026-09-06.md.",
       "evidence_path": "db/SUPABASE.md; product/STAGE_2_VERTICAL_SLICE.md §4; doctrine/EXTERNAL_ENABLEMENT.md item 5",
       "activation_condition": "The governor supplies the database owner connection string for the named Supabase project over its session-mode pooler, a hosting project connected to the repository, a DNS record for atthegallery.in, and a transactional sender on that domain.",
       "future_acceptance_test": "The migrations create the gallery schema in that project with `public` untouched (probes P-21 and P-22 green against it), the 31 journeys run green against the deployed URL, and one account is created on a phone with a confirmation email actually received."
@@ -1429,7 +1429,7 @@
   },
   "learning_ledger": "doctrine/BUILD_LEARNING_LEDGER.md",
   "updated_at": "2026-09-06",
-  "update_reason": "Schema isolation for co-tenancy, and the Supabase runbook. The governor named an existing Supabase project shared with Ustaad and the domain atthegallery.in; the whole product now lives in one schema and never `public`, so it cannot collide with the other product, and two new probes (P-21, P-22) hold that from both sides. Probes 20 to 22, all green; the 31 journeys were re-proved against the isolated schema. A Resend sender is implemented and marked UNTESTED. Nothing was deployed and nothing could be: the project's database is unreachable from this environment by every route tried, which is recorded in the proof ledger rather than worked around. OBL-GAL-008 now names exactly what is still missing. No obligation closed; no enforcement claim upgraded; armed_fixed_decisions unchanged at 8.",
+  "update_reason": "The Stage 2 schema is applied and structurally verified on the hosted Supabase project shared with Ustaad, 10 of 10 checks PASS, with C1 and C2 together establishing that nothing of this product's landed in `public` and that its own tables really are in `gallery`. C9 passed, so the runtime role can log in and must SET ROLE, and the permission model transfers without the fallback that would have needed re-proving. This is substrate evidence only: no application has connected to that database and no journey has run against it, which the proof ledger now records as its own NOT SEEN line rather than letting a green schema read as a working product. OBL-GAL-008 records the partial progress and what remains.",
   "stage_2_proof_ledger": {
     "_what": "What the Stage 2 slice actually proved, and by which instrument. Local proof and deployed proof are separate columns on purpose: a browser walk against localhost is not a deployed walk, and this ledger exists so no later session can read one as the other.",
     "receipt": "doctrine/receipts/STAGE2-VERTICAL-SLICE-2026-09-06.md",
@@ -1472,12 +1472,23 @@
     ],
     "not_seen": [
       "any deployed build — nothing is deployed and no deployed claim is made",
+      "the product running against the hosted database — the schema is verified structurally there, but no application has connected to it and no journey has run against it",
       "any connection to the Supabase project: its direct database host is IPv6-only and this environment has no IPv6, the pooler's Postgres ports are blocked, and api.supabase.com is refused by egress policy, so no migration has been run there and no Supabase schema exists",
       "a real email round trip — GALLERY_MAIL=resend is implemented and UNTESTED; the local outbox records messages and sends none",
       "the handoff opening a real WhatsApp or mail client on a physical phone",
       "image storage surviving a serverless host — the adapter writes to local disk and needs a volume or a private bucket before deployment",
       "the CI check and branch protection, which have never run"
     ],
-    "co_tenancy": "The Gallery is to be hosted inside the governor's existing Supabase project, which already carries Ustaad. Every object this product owns lives in one schema named by GALLERY_SCHEMA (default `gallery`) and nothing is created in `public`, enforced by the migration runner refusing GALLERY_SCHEMA=public and by probes P-21 and P-22 — P-21 fails if any of this product's tables appear in `public`, P-22 fails if they are not in the named schema, so P-21 cannot pass by the product having built nothing. Runbook: db/SUPABASE.md."
+    "co_tenancy": "The Gallery is to be hosted inside the governor's existing Supabase project, which already carries Ustaad. Every object this product owns lives in one schema named by GALLERY_SCHEMA (default `gallery`) and nothing is created in `public`, enforced by the migration runner refusing GALLERY_SCHEMA=public and by probes P-21 and P-22 — P-21 fails if any of this product's tables appear in `public`, P-22 fails if they are not in the named schema, so P-21 cannot pass by the product having built nothing. Runbook: db/SUPABASE.md.",
+    "hosted_substrate": {
+      "state": "SCHEMA APPLIED AND STRUCTURALLY VERIFIED; NO APPLICATION HAS CONNECTED",
+      "date": "2026-09-06",
+      "project": "the governor's existing Supabase project, shared with Ustaad",
+      "applied_by": "the governor, through the SQL editor, from db/supabase-schema.sql",
+      "verified_by": "db/supabase-verify.sql — 10 of 10 PASS, output recorded in the receipt",
+      "receipt": "doctrine/receipts/SUPABASE-SCHEMA-APPLIED-2026-09-06.md",
+      "isolation": "gallery: 18 objects; public: 9, all Ustaad's — C1 confirms none of ours is among them, C2 confirms ours are in gallery, so C1 cannot pass vacuously",
+      "not_established": "that the product works against it. No application has connected; the 31 journeys and 22 probes have run only against the local cluster."
+    }
   }
 }
