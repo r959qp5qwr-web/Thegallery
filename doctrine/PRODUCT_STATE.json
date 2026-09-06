@@ -1164,10 +1164,10 @@
       "id": "OBL-GAL-002",
       "state": "NOT_SEEN",
       "owner": "BUILDER",
-      "summary": "Host invocation of this project's hooks is unproven. Attempt 1 (2026-09-04, receipt doctrine/receipts/HOOK_LIVENESS_ATTEMPT-2026-09-04.md) tested nothing because the harness continued the session that had created .claude/settings.json rather than starting a fresh one; in that session the project hooks demonstrably did not fire — a default-branch commit and a stage-blocked application-source Write both executed, while the guard script denied the same payloads with GUARD-3 and GUARD-4. The cause is host snapshot timing: the harness ran the hooks present at session start and not the project file that appeared later. Settings discovery, matcher behaviour and guard logic are each ruled out by that evidence.",
-      "evidence_path": "SessionStart output at the start of a later session",
-      "activation_condition": "The governor starts a session from the client with this branch already checked out, so that .claude/settings.json exists before the session begins, and step 0 of the procedure confirms the session id differs from every id recorded in the attempt receipts.",
-      "future_acceptance_test": "The SessionStart output of that session contains the standing assessment and the line 'DOCTRINE GUARD: pre-act enforcement live for this session', and a deliberate denial attempt in that session returns a GUARD-rule denial. Procedure and expected evidence: doctrine/receipts/HOOK_LIVENESS_VERIFICATION.md."
+      "summary": "Host invocation of this project's hooks is unproven after two attempts, which failed on two different preconditions. Attempt 1 (2026-09-04, receipt doctrine/receipts/HOOK_LIVENESS_ATTEMPT-2026-09-04.md) tested nothing: the harness continued the session that had created .claude/settings.json rather than starting a fresh one. Attempt 2 (2026-09-06, receipt doctrine/receipts/HOOK_LIVENESS_ATTEMPT-2026-09-06.md) was a genuinely fresh session with the file tracked in the checked-out commit and on disk 1.87 seconds before the harness's first settings load, and still not one hook spawned: the harness's own diagnostics record exactly one hook spawn in the whole session, its own git-identity SessionStart hook, and zero PreToolUse spawns against 14 Bash calls and 1 Write call that the matcher covers. The cause is project-settings discovery, not snapshot timing: the session's project root was /home/user, the parent directory holding this repository and the Doctrine checkout as siblings, and the harness looks for project settings at <project root>/.claude/ only, so .claude/settings.json one level deeper was never a discovery candidate. Snapshot timing, matcher behaviour and guard logic are each ruled out by that evidence; the hook door itself works here, since a settings file at the project root did fire.",
+      "evidence_path": "SessionStart output at the start of a later session; the harness diagnostics file named by CLAUDE_CODE_DIAGNOSTICS_FILE",
+      "activation_condition": "The governor opens a session whose working directory and project root ARE this repository, not a parent that also holds the Doctrine checkout, with the Doctrine checkout supplied through DOCTRINE_ROOT; and steps 0a, 0b and 0c of doctrine/receipts/HOOK_LIVENESS_VERIFICATION.md confirm session freshness, project-root identity and the harness's own hook-spawn record before any probe runs.",
+      "future_acceptance_test": "The SessionStart output of that session contains the standing assessment and the line 'DOCTRINE GUARD: pre-act enforcement live for this session', the harness diagnostics record a PreToolUse hook_spawn for a covered tool call, and a deliberate reversible denial attempt in that session returns a GUARD-rule denial. Procedure and expected evidence: doctrine/receipts/HOOK_LIVENESS_VERIFICATION.md."
     },
     {
       "id": "OBL-GAL-003",
@@ -1263,7 +1263,7 @@
       "id": "UNK-GAL-002",
       "state": "UNKNOWN",
       "owner": "BUILDER",
-      "summary": "Whether this project's PreToolUse hooks are applied to tool calls made inside a subagent started through Agent, Task or Workflow is not provable from inside the repository. Delegation is itself a guarded act, so an unoriented session cannot start one. Not probed on 2026-09-04: in a session with no hooks loaded, a subagent probe cannot distinguish an ungoverned delegation route from an absent hook configuration, so it would not be evidence.",
+      "summary": "Whether this project's PreToolUse hooks are applied to tool calls made inside a subagent started through Agent, Task or Workflow is not provable from inside the repository. Delegation is itself a guarded act, so an unoriented session cannot start one. Not probed on 2026-09-04 and not probed again on 2026-09-06, for the same reason both times: in a session with no hooks loaded, a subagent probe cannot distinguish an ungoverned delegation route from an absent hook configuration, so it would not be evidence. It is retained rather than closed at the cost of expanding a bounded verification.",
       "activation_condition": "A fresh session with hooks live runs a delegated agent that attempts a denied act.",
       "future_acceptance_test": "The subagent's attempt returns a GUARD-rule denial, or the absence of one is recorded and the delegation class is declared UNARMED.",
       "evidence_path": "doctrine/MUTATION_SURFACE.json uncovered_routes_declared"
@@ -1285,6 +1285,15 @@
       "activation_condition": "Stage 2 creates the first application source file or committed fixture.",
       "future_acceptance_test": "G5's root set is derived from the tracked corpus rather than one directory, the drill plants a violation in application source and the gate goes red.",
       "evidence_path": "scripts/doctrine-gate.py G5"
+    },
+    {
+      "id": "OBL-GAL-013",
+      "state": "NOT_SEEN",
+      "owner": "BUILDER",
+      "summary": "The compulsory git layer is armed by the as-configured hook layer, so the two are not independent and neither was live in the container of 2026-09-06. .githooks/pre-commit and pre-push run only when core.hooksPath names .githooks, and the single place in this repository that sets it is scripts/doctrine-hook.py line 379, inside session_start — the SessionStart hook. In a fresh clone where that hook does not fire, git config core.hooksPath is empty and the hook files are inert however fail-closed their contents are. Observed directly: a deliberate git commit --allow-empty reached the branch with no refusal from any layer, and was reset (doctrine/receipts/HOOK_LIVENESS_ATTEMPT-2026-09-06.md probe C and section 6). Gate G3 checks that the hook files exist, are executable and carry no fail-open path, all true; it does not check that git is configured to run them. README.md states 'core.hooksPath is set by the seam', which is inaccurate — scripts/doctrine-orient.py never touches it. This puts GAL-G7's ARMED classification in question. It is deliberately NOT reclassified here and armed_fixed_decisions is not moved: that is a recorded governed movement, and the session that found this was bounded to hook-liveness verification. Two candidate repairs, for the governor to choose between: arm core.hooksPath in scripts/doctrine-orient.py orient so the seam does what README already claims and the git layer stops depending on the harness; or extend gate G3 to fail when core.hooksPath does not name .githooks, so an unarmed clone is red rather than silently inert. Either needs its own drill case and its own ratchet movement.",
+      "evidence_path": "scripts/doctrine-hook.py session_start; scripts/doctrine-gate.py G3; doctrine/receipts/HOOK_LIVENESS_ATTEMPT-2026-09-06.md",
+      "activation_condition": "The governor rules on which of the two named repairs to make, or directs that GAL-G7 be reclassified to reflect that its arming depends on the harness hook layer.",
+      "future_acceptance_test": "In a clone where no harness hook has run, a commit that violates the gates is refused; a drill case asserts that refusal with core.hooksPath unset at the start of the case; and doctrine/RATCHETS.json records the resulting movement of armed_fixed_decisions in the same change."
     }
   ],
   "most_recent_accepted_product_harvest": {
@@ -1318,6 +1327,6 @@
     }
   },
   "learning_ledger": "doctrine/BUILD_LEARNING_LEDGER.md",
-  "updated_at": "2026-09-06T05:12:17+00:00",
-  "update_reason": "Hook-liveness attempt 1 recorded: NOT PROVABLE. The session was not fresh, the project hooks did not fire, and the cause is host snapshot timing. No enforcement claim changed; OBL-GAL-002 and UNK-GAL-002 both remain open."
+  "updated_at": "2026-09-06",
+  "update_reason": "Hook-liveness attempt 2 recorded: FAILED. The session was fresh and .claude/settings.json predated the harness's settings load, and no project hook spawned at all. The cause is project-settings discovery — the session's project root was the parent directory of this repository — which supersedes attempt 1's snapshot-timing diagnosis; OBL-GAL-002 is rewritten accordingly and stays NOT_SEEN. UNK-GAL-002 is retained unprobed for the same reason as before. OBL-GAL-013 is added for a second finding: core.hooksPath is armed only by the SessionStart hook, so the compulsory git layer was inert in the same container and GAL-G7's ARMED classification is in question. No enforcement claim is upgraded, no ratchet is moved, and no product decision is touched."
 }

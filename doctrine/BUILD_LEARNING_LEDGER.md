@@ -185,6 +185,26 @@ The disarming vocabulary was narrowed to the tokens that actually admit an unbui
 
 ---
 
+### GAL-L0010
+**Date:** 2026-09-06  
+**Observed event:**  
+A hook-liveness verification in a genuinely fresh session found that this project's hooks still do not execute, and found in passing that the compulsory git layer was inert in the same clone. A deliberate `git commit --allow-empty` reached the branch with no refusal from any layer, and was reset. Two distinct defects, both of which had been reasoned about rather than observed.
+
+**Evidence:**  
+`doctrine/receipts/HOOK_LIVENESS_ATTEMPT-2026-09-06.md`. The harness's own diagnostics recorded exactly one `hook_spawn` in the whole session — its own git-identity SessionStart hook, 58 ms, from a settings file at the project root — and zero `PreToolUse` spawns against 14 `Bash` calls and one `Write` call that the matcher covers. Session working directory `/home/user`; the only `settings.json` on the machine at `/home/user/Thegallery/.claude/settings.json`, one level deeper; `/home/user/.claude/` absent. `git config core.hooksPath` returned nothing.
+
+**Why it mattered:**  
+Attempt 1 named host snapshot timing as the cause and explicitly ruled out settings discovery, because the file sits at the standard project path and passes gate G2. Both halves of that were true and the conclusion was still wrong: the path is standard *relative to the repository*, and the harness resolves it relative to the session's project root, which was the parent directory. A cause ruled out from inside the repository, using only facts about the repository, is a cause that was never tested. The second defect is worse in kind — `core.hooksPath` is set only inside `scripts/doctrine-hook.py session_start`, so the layer described as compulsory is armed by the layer described as as-configured. Two layers that were counted as independent are one, and `README.md` attributes the arming to the seam, which never touches it. The honest description of that container is that no enforcement layer was live in it.
+
+**What changed:**  
+The verification procedure gained two preconditions beside the freshness check that attempt 1 added: 0b requires `pwd` to be the repository root with `.claude/` directly inside it, and 0c requires reading the harness's own `hook_spawn` records before trusting any probe, since a probe that appears to pass and a dead hook look identical from inside. Step 6 requires `git config core.hooksPath` to print `.githooks`. The git-layer defect is recorded as OBL-GAL-013 with two candidate repairs named; `GAL-G7` is deliberately not reclassified and `armed_fixed_decisions` is deliberately not moved, because that is a recorded governed movement and the session that found this was bounded to verification. No enforcement script was changed and the drill was not weakened.
+
+**Status:** OPEN — OBL-GAL-002 needs an external session-shape change; OBL-GAL-013 needs a governor ruling  
+**Related finding / decision IDs:** OBL-GAL-002, OBL-GAL-013, OBL-GAL-010, GAL-G7, UNK-GAL-002  
+**Harvest status:** UNHARVESTED
+
+---
+
 ## Ledger rules
 
 - Capture the event in the governed change that fixes or formally records it where feasible.
