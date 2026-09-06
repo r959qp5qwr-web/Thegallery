@@ -16,22 +16,44 @@ foundations:
 
 interface_reference_set:
   path: ux/reference/interface/INTERFACE_REFERENCE_SET.md
-  status: DRAFT_AWAITING_GOVERNOR_ACCEPTANCE
+  status: ACCEPTED
+  accepted_by: GOVERNOR
+  accepted_at: "2026-09-06"
+  acceptance_receipt: doctrine/receipts/STAGE1-GOVERNOR-RULING-2026-09-06.md
   surfaces: [R-1, R-2, R-3]
   inheritance_demonstrations: [I-1, I-2, I-3, I-4, I-5, I-6]
+  # What acceptance fixes, and what it deliberately does not.
+  approved: >
+    The visual grammar, hierarchy, typography, palette, imagery treatment and interaction
+    direction are the authoritative design direction for implementation.
+  remains_the_builders: >
+    Ordinary responsive, accessibility and implementation refinement. Acceptance freezes no
+    defect and does not prevent evidence-based improvement.
+  boundary: >
+    The interface may not drift into a generic marketplace, social feed or administrative
+    template. Any later change that materially alters the approved product character returns
+    for governor review before it is built.
+
+# The nine strategic decisions behind these surfaces were ratified in the same ruling; they are
+# recorded as governor-ratified FIXED decisions in doctrine/PRODUCT_STATE.json (GAL-OD-01,
+# GAL-OD-02, GAL-OD-03, GAL-OD-04, GAL-OD-06, GAL-OD-09, GAL-OD-12, GAL-OD-13, GAL-OD-15).
 
 active_journey: J-001
 
 # Critical journeys (Playbook §5A classification by consequence). Statuses are the module's
 # legal statuses; a status changes only with the evidence the gate names.
-# INTERFACE_DESIGNING here means: UX section frozen at UX_READY, interface section complete,
-# INTERFACE_READY withheld until the governor accepts the reference set (G-IF1).
+# INTERFACE_READY was withheld from J-001, J-002 and J-004 until the governor accepted the
+# reference set (G-IF1). That acceptance is dated 2026-09-06 and those three journeys now carry
+# it. J-003 stays UX_READY: it has no interface references of its own and its surfaces are
+# inherited, so there is nothing accepted to raise it on. J-005 and J-006 stay IDENTIFIED.
+# INTERFACE_READY is a design status, not authorisation to implement: the active stage in
+# doctrine/PRODUCT_STATE.json is the pre-Stage-2 platform-enablement gate.
 journeys:
   - id: J-001
     name: Visitor encounters a work and reaches the maker
     criticality: CRITICAL
     reason: delivers core value; crosses roles; ends at the trust-bearing direct-contact handoff
-    status: INTERFACE_DESIGNING
+    status: INTERFACE_READY
     contract: ux/journeys/J-001-visitor-encounter-to-contact.md
     wireframes: [ux/wireframes/J-001-flow.png]
     interface_references: [ux/reference/interface/renders/R-1-entrance.png, ux/reference/interface/renders/R-2-work-detail.png, ux/reference/interface/renders/R-2b-handoff-sheet.png, ux/reference/interface/renders/I-1-maker-gallery.png]
@@ -44,7 +66,7 @@ journeys:
     name: Maker enters by email, creates a gallery and publishes a first work
     criticality: CRITICAL
     reason: sign-in and admission door; creates a consequential public commitment; privacy of the account email
-    status: INTERFACE_DESIGNING
+    status: INTERFACE_READY
     contract: ux/journeys/J-002-maker-door-and-first-publish.md
     wireframes: [ux/wireframes/J-002-flow.png]
     interface_references: [ux/reference/interface/renders/R-3-studio-add-work.png, ux/reference/interface/renders/I-4-maker-door.png, ux/reference/interface/renders/I-5-states.png]
@@ -70,7 +92,7 @@ journeys:
     name: Operator resolves a report, suspends and reinstates a maker
     criticality: CRITICAL
     reason: operator journey holding up user-facing promises P-14; irreversible-feeling sanction with a release path
-    status: INTERFACE_DESIGNING
+    status: INTERFACE_READY
     contract: ux/journeys/J-004-operator-report-to-reinstatement.md
     wireframes: [ux/wireframes/J-004-flow.png]
     interface_references: [ux/reference/interface/renders/I-6-operator-report.png]

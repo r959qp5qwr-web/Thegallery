@@ -225,6 +225,26 @@ Both complementary mechanisms, adopted together. `scripts/doctrine-orient.py ori
 
 ---
 
+### GAL-L0012
+**Date:** 2026-09-06  
+**Observed event:**  
+Recording the governor's Stage 1 ruling put pressure on the enforcement vocabulary in a way the earlier passes had not. Nine decisions arrived ratified by the highest authority the product has, and the obvious move — writing them into `fixed_product_decisions` as settled and therefore enforced — would have added nine ARMED claims resting on mechanisms that are Stage 2 code and do not exist.
+
+**Evidence:**  
+`doctrine/receipts/STAGE1-GOVERNOR-RULING-2026-09-06.md` §2.2. All nine are recorded MANUAL or UNARMED; `armed_fixed_decisions` stays at 8 and `doctrine/RATCHETS.json` is untouched. Gate G1 would have caught the alternative: it refuses an ARMED claim whose locus names nothing that executes.
+
+**Why it mattered:**  
+A ruling is authority, not enforcement, and the two are easy to conflate precisely when the authority is strongest. The same conflation appears in the sentence "Stage 1 accepted", which reads as "Stage 2 may begin" and is not. Both were handled the same way: name the thing that is true, and name the mechanism that is still missing, in the same record.
+
+**What changed:**  
+The nine ratified decisions carry `enforcement_locus` describing the mechanism that will hold each one and an honest `enforcement_state` of MANUAL or UNARMED. The active stage became `PLATFORM_ENABLEMENT_GATE` rather than `STAGE_2`, with `blocked_until_acceptance` unchanged so `GAL-G9` denies exactly what it denied before, and with an explicit `not_authorised_by_this_stage` field. `ux/UX_MANIFEST.yaml` states in the file that `INTERFACE_READY` is a design status and not authorisation to implement. J-003 stayed `UX_READY` rather than being raised with the others, because it carries no interface references of its own and a status without evidence is the same defect in a smaller place.
+
+**Status:** RESOLVED  
+**Related finding / decision IDs:** OBL-GAL-001, GAL-OD-01 … GAL-OD-15, GAL-G9, C-0005  
+**Harvest status:** UNHARVESTED
+
+---
+
 ## Ledger rules
 
 - Capture the event in the governed change that fixes or formally records it where feasible.

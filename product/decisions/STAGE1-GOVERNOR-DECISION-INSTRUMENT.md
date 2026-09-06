@@ -2,7 +2,43 @@
 
 Lettered options, one recommendation each, and the consequence of rejecting it (Canon: never an open question). Only the **STRATEGIC** items need the governor's ruling before Stage 2. Product recommendations and ordinary decisions are recorded as decided and are reversible; they are listed so nothing is settled silently. IDs refer to `doctrine/PRODUCT_STATE.json`.
 
-## A. Strategic decisions — ruling required
+## A. Strategic decisions — **RULED 2026-09-06**
+
+The governor ratified **all nine** as recommended. Each is now a governor-ratified FIXED decision
+in `doctrine/PRODUCT_STATE.json` carrying its reason, its consequence of rejection and its reopen
+condition; the ruling receipt is `doctrine/receipts/STAGE1-GOVERNOR-RULING-2026-09-06.md`. The
+options below are kept verbatim, unedited, because a ruling that erases what was rejected leaves
+no way to judge it later.
+
+| Decision | Ruling |
+|---|---|
+| GAL-OD-01 Working name | **A ratified** — The Gallery, used consistently |
+| GAL-OD-02 Account boundary | **B ratified** — individual makers, studios and collectives presenting work they created or materially produced; retailers and ordinary resellers excluded |
+| GAL-OD-03 Admission | **A ratified** — open email account creation, self-declaration, post-publication moderation; no pre-publication taste or quality gate |
+| GAL-OD-04 Geography | **A ratified** — Bengaluru for demonstration content, geography configurable, no Bengaluru-only or India-wide launch claim |
+| GAL-OD-06 Direct contact | **A ratified** — maker chooses WhatsApp, public email, phone, website or external form; one route required before contact is advertised, not before publishing; account email stays private; no in-app chat |
+| GAL-OD-09 Social depth | **A ratified** — private device-local saves in the MVP; public counts, comments, reactions and popularity ranking refused; count-free following and low-volume notices reconsidered later as a separate candidate |
+| GAL-OD-12 Identity confirmation | **A ratified** — deferred beyond the MVP; no verification claim at launch |
+| GAL-OD-13 Revenue | **A ratified** — no monetisation in the MVP; architecture stays subscription-capable; no transaction percentage, advertising or paid ranking |
+| GAL-OD-15 Moderation standard | **A ratified** — the minimal published standard, five report categories, recorded reasons, reversible where appropriate, appeal by email; protects access and safety, does not curate taste or certify maker claims |
+
+**The interface reference set is accepted** in the same ruling as the authoritative design
+direction for implementation. The approved grammar, hierarchy, typography, palette, imagery
+treatment and interaction direction are fixed; ordinary responsive, accessibility and
+implementation refinement remains the builder's, and acceptance freezes no defect. The interface
+may not drift into a generic marketplace, social feed or administrative template, and any later
+change that materially alters the approved product character returns for governor review.
+`ux/UX_MANIFEST.yaml` carries the acceptance and moves J-001, J-002 and J-004 to
+`INTERFACE_READY`.
+
+**Acceptance does not authorise Stage 2.** The active stage is the pre-Stage-2
+platform-enablement gate: `main` created from `claude/gallery-hook-liveness-verify-bzn5c6` and
+protected, GitHub Actions enabled with the read-only Doctrine credential, and the check
+`Doctrine / Orientation, gates and drill` green on a pull request and required on `main`. Until
+those are observed, application source, database schema and deployment configuration are not
+created.
+
+### The options as they stood
 
 ### GAL-OD-01 · Working name
 - A. Ratify **The Gallery** as the product name and machine-readable identity (`thegallery`). **RECOMMENDED**
@@ -57,6 +93,12 @@ Lettered options, one recommendation each, and the consequence of rejecting it (
 **Consequence of rejecting A:** B leaves the operator's authority unbounded and unexplained (GAL-14 needs a named standard); C makes promises the founder cannot keep alone.
 
 ## B. Product recommendations — decided and recorded, reversible
+
+Seven decisions remain open and reversible by design and none of them gates Stage 2:
+GAL-OD-05, GAL-OD-07, GAL-OD-08, GAL-OD-10, GAL-OD-11 and GAL-OD-16 as product
+recommendations, GAL-OD-14 as ordinary implementation. They stay in
+`open_governor_decisions` so nothing is settled silently.
+
 
 | ID | Decision taken at Stage 1 | Reason | Reversal cost |
 |---|---|---|---|

@@ -17,15 +17,15 @@
   "governing_line": "The Gallery hosts the encounter. The maker owns the transaction.",
   "current_product_phase": {
     "code": "PRE_H1",
-    "label": "Architecture being settled. Doctrine bound at Stage 0; Stage 1 product and interface architecture in progress; no application source, schema, deployment or harvest exists. The H1 harvest (architecture settled) follows Stage 1 acceptance.",
-    "since": "2026-09-04"
+    "label": "Architecture settled. Doctrine bound at Stage 0; Stage 1 product and interface architecture accepted by the governor on 2026-09-06 with nine strategic decisions ratified and the interface reference set accepted; the pre-Stage-2 platform-enablement gate is the active stage. No application source, schema, deployment or harvest exists. The H1 harvest — architecture settled — is now due and is not yet taken.",
+    "since": "2026-09-06"
   },
   "active_stage": {
-    "code": "STAGE_1",
-    "label": "Product and interface architecture (Build Commission v1.1 §15) — artefacts complete; awaiting the governor's review",
-    "entered_at": "2026-09-04T04:45:14+00:00",
-    "authorised_by": "Stage 0 orientation VALID in the binding session; receipt recorded at doctrine/receipts/STAGE0-ORIENTATION-2026-09-04.md",
-    "next_acceptance_condition": "The governor reviews the Stage 1 artefacts (product/PRODUCT_ARCHITECTURE.md, product/DOMAIN_MODEL.md, ux/journeys/*, ux/INTERFACE_FOUNDATION.md, ux/reference/interface/*) and rules on the STRATEGIC open decisions in open_governor_decisions; only that ruling authorises Stage 2 (the vertical slice). Until then application source, schema and deployment configuration are not created.",
+    "code": "PLATFORM_ENABLEMENT_GATE",
+    "label": "Pre-Stage-2 platform-enablement gate. Stage 1 was accepted by the governor on 2026-09-06 — the nine strategic decisions ratified and the interface reference set accepted as the authoritative design direction — and Stage 2 is NOT authorised by that acceptance alone. It is authorised when the repository and platform enforcement boundary is live.",
+    "entered_at": "2026-09-06T00:00:00+00:00",
+    "authorised_by": "Governor's Stage 1 ruling of 2026-09-06; receipt at doctrine/receipts/STAGE1-GOVERNOR-RULING-2026-09-06.md. Stage 1 artefacts accepted; OBL-GAL-001 discharged.",
+    "next_acceptance_condition": "The repository and platform enforcement boundary is live, and only then is Stage 2 authorised: main exists, created from claude/gallery-hook-liveness-verify-bzn5c6 and protected so the default branch is reached through review (OBL-GAL-005, OBL-GAL-011); GitHub Actions is enabled and the repository secret DOCTRINE_READ_TOKEN grants read-only access to builders-doctrine (OBL-GAL-003); and the check named 'Doctrine / Orientation, gates and drill' from .github/workflows/doctrine.yml completes green on a pull request and is a required status check on main. Until every one of those is observed, application source, database schema and deployment configuration are not created and no session claims Stage 2 is authorised.",
     "blocked_until_acceptance": [
       "application source",
       "database schema and migrations",
@@ -43,9 +43,16 @@
       {
         "code": "STAGE_1",
         "label": "Product and interface architecture",
-        "state": "COMPLETE_AWAITING_GOVERNOR_REVIEW",
-        "gate": "the governor can see what the product is, how it moves, how the maker publishes and how the operator acts; direction accepted",
-        "evidence": "product/PRODUCT_ARCHITECTURE.md; product/DOMAIN_MODEL.md; product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md; product/STAGE_2_VERTICAL_SLICE.md; ux/UX_FOUNDATION.md; ux/INTERFACE_FOUNDATION.md; ux/journeys/J-001..J-004; ux/wireframes/*.png; ux/reference/interface/INTERFACE_REFERENCE_SET.md and renders/"
+        "state": "ACCEPTED",
+        "gate": "the governor can see what the product is, how it moves, how the maker publishes and how the operator acts; direction accepted — ruled 2026-09-06",
+        "evidence": "product/PRODUCT_ARCHITECTURE.md; product/DOMAIN_MODEL.md; product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md; product/STAGE_2_VERTICAL_SLICE.md; ux/UX_FOUNDATION.md; ux/INTERFACE_FOUNDATION.md; ux/journeys/J-001..J-004; ux/wireframes/*.png; ux/reference/interface/INTERFACE_REFERENCE_SET.md and renders/; doctrine/receipts/STAGE1-GOVERNOR-RULING-2026-09-06.md"
+      },
+      {
+        "code": "PLATFORM_ENABLEMENT_GATE",
+        "label": "Repository and platform enforcement boundary",
+        "state": "IN_PROGRESS",
+        "gate": "main exists and is protected; the Doctrine CI check runs green on a pull request and is required; the read-only Doctrine credential exists. Every one of these is a governor or platform act and none of them is reachable from a build session.",
+        "evidence": "doctrine/EXTERNAL_ENABLEMENT.md items 1-3; observation of the branch-protection state"
       },
       {
         "code": "STAGE_2",
@@ -68,7 +75,8 @@
         "gate": "SEEN / NOT SEEN / OPEN DEFECTS / UNKNOWN / RELEASE DECISION on deployed walks",
         "evidence": null
       }
-    ]
+    ],
+    "not_authorised_by_this_stage": "Stage 1 acceptance is a design and decision ruling. It does not authorise implementation. The trunk and CI boundary named in the acceptance condition is what authorises Stage 2, and it is a governor and platform act."
   },
   "current_doctrine_binding": {
     "path": "doctrine/DOCTRINE_BINDING.json",
@@ -438,6 +446,168 @@
       "enforcement_state": "ARMED_AS_CONFIGURED",
       "proof_state": "IMPLEMENTED",
       "layer_note": "As-configured at the hook layer; the compulsory layer is that such files would have to reach a commit, where GAL-G7's gates run. HOST TOPOLOGY QUALIFIER (2026-09-06, governed disposition): this reads ARMED_AS_CONFIGURED only in a session whose host project root IS this repository. Where the host opens this repository beneath a parent directory that it treats as the project root — the multi-repository shape in which the product and the Doctrine checkout sit as siblings — the harness never discovers .claude/settings.json and this layer executes nothing at all. That is a platform topology fact, carried by OBL-GAL-002. It is not a compulsory enforcement layer in the present topology and it is not a blocker to product development, because the commit and push routes are held compulsorily by GAL-G7 and GAL-G8 and the trunk boundary by CI."
+    },
+    {
+      "id": "GAL-OD-01",
+      "summary": "Working name: use The Gallery consistently as the product name and machine-readable identity (thegallery). Option A of the Stage 1 instrument, ratified.",
+      "question": "Working name.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; PLANBELLA_TO_THE_GALLERY_RESEARCH_BRIEF.docx (2026-09-03) §11",
+      "decided_at": "2026-09-06",
+      "status": "FIXED",
+      "ratified_by": "GOVERNOR",
+      "ratified_at": "2026-09-06",
+      "ratification_receipt": "doctrine/receipts/STAGE1-GOVERNOR-RULING-2026-09-06.md",
+      "stage_1_instrument": "product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md §A",
+      "reason": "The product wears the name in every surface already; leaving it a working title costs nothing now and costs a sweep of copy, routes and fixtures after launch.",
+      "consequence_of_rejection": "Rejecting A means renaming before Stage 2 (option B) or carrying an unlocked name the product uses anyway (option C).",
+      "reopen_condition": "A governor decision to rename, executed as a single governed sweep across copy, routes, fixtures and renders in one change.",
+      "enforcement_locus": "Every render, route, copy string and fixture carries the single name; each stage gate compares rendered copy and route inventory against it, and a rename is a governed sweep rather than an edit.",
+      "enforcement_state": "MANUAL",
+      "proof_state": "INTENDED"
+    },
+    {
+      "id": "GAL-OD-02",
+      "summary": "Account boundary: a maker gallery may be held by an individual maker, a studio or a collective presenting work they created or materially produced. Retailers and ordinary resellers are excluded. Option B of the Stage 1 instrument, ratified.",
+      "question": "Account boundary: who may hold a maker gallery?",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; PLANBELLA_TO_THE_GALLERY_RESEARCH_BRIEF.docx (2026-09-03) §10 D1; THE_GALLERY_CONCEPT_NOTE_v0.1.docx §07",
+      "decided_at": "2026-09-06",
+      "status": "FIXED",
+      "ratified_by": "GOVERNOR",
+      "ratified_at": "2026-09-06",
+      "ratification_receipt": "doctrine/receipts/STAGE1-GOVERNOR-RULING-2026-09-06.md",
+      "stage_1_instrument": "product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md §A",
+      "reason": "Collective and studio craft is common in the target context, so individual-only would exclude real makers; admitting retailers and resellers would turn a gallery into a listing platform and contradict the product thesis GAL-T1.",
+      "consequence_of_rejection": "Option A excludes collective craft; option C admits resale and changes what the product is.",
+      "reopen_condition": "A governor decision that changes GAL-T1's thesis, since the boundary is what keeps the product a gallery rather than a marketplace.",
+      "enforcement_locus": "The domain model carries maker kind (individual, studio, collective); the published participation rules state the boundary; prohibited resale is one of the five report categories in the moderation standard, which is the post-publication path when the boundary is crossed.",
+      "enforcement_state": "UNARMED",
+      "proof_state": "INTENDED"
+    },
+    {
+      "id": "GAL-OD-03",
+      "summary": "Admission: open maker account creation by email, with self-declaration at gallery creation, published participation rules and post-publication moderation. There is no pre-publication taste or quality gate and no verification claim. Option A of the Stage 1 instrument, ratified.",
+      "question": "Admission mechanism.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §5",
+      "decided_at": "2026-09-06",
+      "status": "FIXED",
+      "ratified_by": "GOVERNOR",
+      "ratified_at": "2026-09-06",
+      "ratification_receipt": "doctrine/receipts/STAGE1-GOVERNOR-RULING-2026-09-06.md",
+      "stage_1_instrument": "product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md §A",
+      "reason": "A pre-publication review installs the taste gate the operator is forbidden to hold under GAL-14 and makes the founder a blocking step in every first publish. An invitation cohort can be layered on later without changing the mechanism.",
+      "consequence_of_rejection": "Option B installs a forbidden taste gate; option C is compatible with A and needs no decision now.",
+      "reopen_condition": "A governor decision that changes GAL-14's limit on operator authority.",
+      "enforcement_locus": "The publish path contains no operator review step; the operator's authority is the report queue, takedown, suspension and reinstatement, each with a recorded reason and an appeal route.",
+      "enforcement_state": "UNARMED",
+      "proof_state": "INTENDED"
+    },
+    {
+      "id": "GAL-OD-04",
+      "summary": "Launch geography: Bengaluru is used for realistic demonstration content and the first real makers, while geography stays a configurable field. The product makes no Bengaluru-only and no India-wide launch claim. Option A of the Stage 1 instrument, ratified.",
+      "question": "Launch geography and how location shapes discovery.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; THE_GALLERY_CONCEPT_NOTE_v0.1.docx §07",
+      "decided_at": "2026-09-06",
+      "status": "FIXED",
+      "ratified_by": "GOVERNOR",
+      "ratified_at": "2026-09-06",
+      "ratification_receipt": "doctrine/receipts/STAGE1-GOVERNOR-RULING-2026-09-06.md",
+      "stage_1_instrument": "product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md §A",
+      "reason": "India-wide from day one dilutes the first cohort and raises the Nearby question before any location data exists; a city-locked product hard-codes a boundary the domain model would then have to enforce.",
+      "consequence_of_rejection": "Option B dilutes the cohort; option C hard-codes a boundary that is expensive to remove.",
+      "reopen_condition": "A governor decision to make a public geographic claim, which requires the discovery behaviour that would make the claim true.",
+      "enforcement_locus": "Location is a configurable field rather than a hard-coded boundary in the domain model; rendered copy carries no geographic launch claim, and the claim sweep over rendered surfaces is the check that holds it.",
+      "enforcement_state": "UNARMED",
+      "proof_state": "INTENDED"
+    },
+    {
+      "id": "GAL-OD-06",
+      "summary": "Direct contact: a maker may choose any of public WhatsApp, public email, phone, website or an external form. At least one route is required before direct contact is advertised, and not before work can be published. The private account email stays private unless separately supplied as a public route. There is no in-app chat. Option A of the Stage 1 instrument, ratified.",
+      "question": "Contact routes: which routes, how many required, and no in-app chat.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; THE_GALLERY_CONCEPT_NOTE_v0.1.docx §07",
+      "decided_at": "2026-09-06",
+      "status": "FIXED",
+      "ratified_by": "GOVERNOR",
+      "ratified_at": "2026-09-06",
+      "ratification_receipt": "doctrine/receipts/STAGE1-GOVERNOR-RULING-2026-09-06.md",
+      "stage_1_instrument": "product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md §A",
+      "reason": "Requiring a route to publish at all blocks the one-sitting first publish that J-002 is built around; a platform-relayed enquiry form makes the product the intermediary and creates the moderation and privacy duty refused in GAL-R04.",
+      "consequence_of_rejection": "Option B blocks the first publish; option C creates a duty the product has refused.",
+      "reopen_condition": "Stage 3 evidence that external routes fail visitors, ruled by the governor, which would also reopen GAL-R04.",
+      "enforcement_locus": "The publish gate advertises contact only when at least one public route is enabled; the contact action resolves to the exact enabled route; the account email is a separate private field that no public surface reads; the route inventory contains no messaging or chat object.",
+      "enforcement_state": "UNARMED",
+      "proof_state": "INTENDED"
+    },
+    {
+      "id": "GAL-OD-09",
+      "summary": "Social depth: private, device-local saves only in the MVP. Public counts, comments, reactions and popularity ranking stay refused. Count-free following and low-volume notices may be reconsidered later as a separate candidate. Option A of the Stage 1 instrument, ratified.",
+      "question": "Social depth at launch.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; PLANBELLA_TO_THE_GALLERY_RESEARCH_BRIEF.docx (2026-09-03) §10 D2",
+      "decided_at": "2026-09-06",
+      "status": "FIXED",
+      "ratified_by": "GOVERNOR",
+      "ratified_at": "2026-09-06",
+      "ratification_receipt": "doctrine/receipts/STAGE1-GOVERNOR-RULING-2026-09-06.md",
+      "stage_1_instrument": "product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md §A",
+      "reason": "Following in the MVP introduces a visitor identity, a notification substrate and a privacy surface before the core maker-to-visitor chain is proven; removing saves altogether takes away the visitor's only memory and weakens return visits.",
+      "consequence_of_rejection": "Option B builds identity infrastructure before the core chain works; option C removes the visitor's memory.",
+      "reopen_condition": "A separate governor candidate for count-free following and low-volume notices, which requires an optional visitor identity decision first; public counts and popularity ranking stay refused independently of it.",
+      "enforcement_locus": "Saves are held on the visitor's device with no server record and no visitor identity; no public surface renders a count, a comment, a reaction or a popularity order; the refusal register carries the standing refusals and their reopen conditions.",
+      "enforcement_state": "UNARMED",
+      "proof_state": "INTENDED"
+    },
+    {
+      "id": "GAL-OD-12",
+      "summary": "Identity confirmation: deferred beyond the MVP. The Gallery makes no verification claim at launch, and carries no badge and no verification vocabulary. Option A of the Stage 1 instrument, ratified.",
+      "question": "Identity confirmation.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; PLANBELLA_TO_THE_GALLERY_RESEARCH_BRIEF.docx (2026-09-03) §7",
+      "decided_at": "2026-09-06",
+      "status": "FIXED",
+      "ratified_by": "GOVERNOR",
+      "ratified_at": "2026-09-06",
+      "ratification_receipt": "doctrine/receipts/STAGE1-GOVERNOR-RULING-2026-09-06.md",
+      "stage_1_instrument": "product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md §A",
+      "reason": "A badge needs review, privacy, renewal, appeal and revocation mechanisms before it may appear; none exist, so a badge at launch would be a promise without a mechanism.",
+      "consequence_of_rejection": "Option B requires building all five mechanisms in the MVP.",
+      "reopen_condition": "A narrow implemented mechanism that earns the exact statement made, ruled by the governor under the constraints in GAL-RC5.",
+      "enforcement_locus": "No surface renders a verification badge or verification vocabulary; the claim sweep over rendered surfaces holds the vocabulary; the constraints recorded in GAL-RC5 bind any reopening.",
+      "enforcement_state": "UNARMED",
+      "proof_state": "INTENDED"
+    },
+    {
+      "id": "GAL-OD-13",
+      "summary": "Revenue: no monetisation is implemented in the MVP. The presentation architecture stays capable of supporting subscription plans later. There is no transaction percentage, no advertising and no paid ranking. Option A of the Stage 1 instrument, ratified.",
+      "question": "Revenue and maker plan limits.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; THE_GALLERY_CONCEPT_NOTE_v0.1.docx §07",
+      "decided_at": "2026-09-06",
+      "status": "FIXED",
+      "ratified_by": "GOVERNOR",
+      "ratified_at": "2026-09-06",
+      "ratification_receipt": "doctrine/receipts/STAGE1-GOVERNOR-RULING-2026-09-06.md",
+      "stage_1_instrument": "product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md §A",
+      "reason": "Plans in the MVP add billing, entitlements and limit enforcement before a single maker-to-visitor chain is proven, which is the admin-before-value scar the Doctrine records.",
+      "consequence_of_rejection": "Option B builds the billing surface first.",
+      "reopen_condition": "A governor decision to introduce subscription plans, taken with the plan limits in the same ruling; a transaction percentage, advertising and paid ranking stay refused.",
+      "enforcement_locus": "The route inventory and schema contain no billing, entitlement, plan-limit, advertising or paid-ranking object; presentation limits are configurable values rather than plan-bound ones, so a later subscription needs no change to the presentation model.",
+      "enforcement_state": "UNARMED",
+      "proof_state": "INTENDED"
+    },
+    {
+      "id": "GAL-OD-15",
+      "summary": "Moderation standard: publish a minimal standard before launch covering impersonation, prohibited or unlawful content, spam or systematic misuse, prohibited resale and safety concerns. Every sanction carries a recorded reason, is reversible where appropriate, and supports appeal by email to a published address. Moderation protects access and safety; it does not curate taste and does not certify maker claims. Option A of the Stage 1 instrument, ratified.",
+      "question": "Moderation standard: report categories, response expectations, prohibited content, appeal and reinstatement rules.",
+      "source": "THE_GALLERY_CONCEPT_NOTE_v0.1.docx §07; THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §5, §6",
+      "decided_at": "2026-09-06",
+      "status": "FIXED",
+      "ratified_by": "GOVERNOR",
+      "ratified_at": "2026-09-06",
+      "ratification_receipt": "doctrine/receipts/STAGE1-GOVERNOR-RULING-2026-09-06.md",
+      "stage_1_instrument": "product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md §A",
+      "reason": "Without a named standard the operator's authority is unbounded and unexplained, which GAL-14 forbids; a full policy document with response-time guarantees makes promises a single founder cannot keep.",
+      "consequence_of_rejection": "Option B leaves operator authority unbounded; option C makes unkeepable promises.",
+      "reopen_condition": "A governor decision to widen or narrow the categories, or to convert the response-time intent into a guarantee, which requires the capacity to keep it.",
+      "enforcement_locus": "The published standard names the five report categories and the appeal address; every sanction writes a reason and a reversal path; the operator surface offers takedown, suspension and reinstatement and offers no quality or taste judgement.",
+      "enforcement_state": "MANUAL",
+      "proof_state": "INTENDED"
     }
   ],
   "mandated_outcomes": [
@@ -719,46 +889,6 @@
   ],
   "open_governor_decisions": [
     {
-      "id": "GAL-OD-01",
-      "status": "OPEN",
-      "question": "Working name.",
-      "current_recommendation": "Use 'The Gallery' throughout the build.",
-      "boundary": "Do not scatter alternate names through code or copy.",
-      "classification": "STRATEGIC_RATIFY",
-      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; PLANBELLA_TO_THE_GALLERY_RESEARCH_BRIEF.docx (2026-09-03) §11",
-      "stage_1_resolution": "Recommendation A in product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md; awaiting the governor's ruling before Stage 2."
-    },
-    {
-      "id": "GAL-OD-02",
-      "status": "OPEN",
-      "question": "Account boundary: who may hold a maker gallery?",
-      "current_recommendation": "Makers, studios and collectives presenting work they created or materially produced (research brief D1 option B).",
-      "boundary": "No retailer/reseller expansion without a product decision.",
-      "classification": "STRATEGIC",
-      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; PLANBELLA_TO_THE_GALLERY_RESEARCH_BRIEF.docx (2026-09-03) §10 D1; THE_GALLERY_CONCEPT_NOTE_v0.1.docx §07",
-      "stage_1_resolution": "Recommendation A in product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md; awaiting the governor's ruling before Stage 2."
-    },
-    {
-      "id": "GAL-OD-03",
-      "status": "OPEN",
-      "question": "Admission mechanism.",
-      "current_recommendation": "Open maker email creation with self-declaration and post-publication moderation (GAL-RC1).",
-      "boundary": "No pre-publication taste or quality gate; no verification claim.",
-      "classification": "STRATEGIC",
-      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §5",
-      "stage_1_resolution": "Recommendation A in product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md; awaiting the governor's ruling before Stage 2."
-    },
-    {
-      "id": "GAL-OD-04",
-      "status": "OPEN",
-      "question": "Launch geography and how location shapes discovery.",
-      "current_recommendation": "Use Bengaluru as realistic demonstration content while keeping geography configurable; no launch-scope claim until ruled.",
-      "boundary": "Do not claim a Bengaluru-only or India-wide launch until ruled.",
-      "classification": "STRATEGIC",
-      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; THE_GALLERY_CONCEPT_NOTE_v0.1.docx §07",
-      "stage_1_resolution": "Recommendation A in product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md; awaiting the governor's ruling before Stage 2."
-    },
-    {
       "id": "GAL-OD-05",
       "status": "DECIDED_AT_STAGE_1_REVERSIBLE",
       "question": "Public entrance composition.",
@@ -767,16 +897,6 @@
       "classification": "PRODUCT_RECOMMENDATION",
       "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; PLANBELLA_TO_THE_GALLERY_RESEARCH_BRIEF.docx (2026-09-03) §10 D5",
       "stage_1_resolution": "Decided at Stage 1 (reversible): deterministic daily rotation of a recent work, then newest-first interleaved by maker; rendered on R-1 with the mechanism named."
-    },
-    {
-      "id": "GAL-OD-06",
-      "status": "OPEN",
-      "question": "Contact routes: which routes, how many required, and no in-app chat.",
-      "current_recommendation": "Maker chooses from public WhatsApp, public email, phone, website or external form; at least one required before contact is advertised; account email private unless separately supplied; no in-app chat.",
-      "boundary": "Account email remains private; no in-app chat.",
-      "classification": "STRATEGIC",
-      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; THE_GALLERY_CONCEPT_NOTE_v0.1.docx §07",
-      "stage_1_resolution": "Recommendation A in product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md; awaiting the governor's ruling before Stage 2."
     },
     {
       "id": "GAL-OD-07",
@@ -799,16 +919,6 @@
       "stage_1_resolution": "Decided at Stage 1 (reversible): device-local saves; no server table."
     },
     {
-      "id": "GAL-OD-09",
-      "status": "OPEN",
-      "question": "Social depth at launch.",
-      "current_recommendation": "Private saves first; count-free following and low-volume notices later (research brief D2 option B) — following is not in the MVP.",
-      "boundary": "No comments, reactions or popularity feed.",
-      "classification": "STRATEGIC",
-      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; PLANBELLA_TO_THE_GALLERY_RESEARCH_BRIEF.docx (2026-09-03) §10 D2",
-      "stage_1_resolution": "Recommendation A in product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md; awaiting the governor's ruling before Stage 2."
-    },
-    {
       "id": "GAL-OD-10",
       "status": "DECIDED_AT_STAGE_1_REVERSIBLE",
       "question": "Gallery customisation.",
@@ -829,26 +939,6 @@
       "stage_1_resolution": "Decided at Stage 1 (reversible): contact route or external registration URL; rendered on I-3."
     },
     {
-      "id": "GAL-OD-12",
-      "status": "OPEN",
-      "question": "Identity confirmation.",
-      "current_recommendation": "Defer beyond the MVP (GAL-RC5).",
-      "boundary": "If reopened it confirms identity only and never affects rank.",
-      "classification": "STRATEGIC",
-      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; PLANBELLA_TO_THE_GALLERY_RESEARCH_BRIEF.docx (2026-09-03) §7",
-      "stage_1_resolution": "Recommendation A in product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md; awaiting the governor's ruling before Stage 2."
-    },
-    {
-      "id": "GAL-OD-13",
-      "status": "OPEN",
-      "question": "Revenue and maker plan limits.",
-      "current_recommendation": "Defer monetisation implementation; preserve subscription-ready presentation architecture; plan limits decided with monetisation.",
-      "boundary": "No percentage of transactions, advertising or pay-to-rank.",
-      "classification": "STRATEGIC",
-      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; THE_GALLERY_CONCEPT_NOTE_v0.1.docx §07",
-      "stage_1_resolution": "Recommendation A in product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md; awaiting the governor's ruling before Stage 2."
-    },
-    {
       "id": "GAL-OD-14",
       "status": "DECIDED_AT_STAGE_1_REVERSIBLE",
       "question": "Delivery surface.",
@@ -857,16 +947,6 @@
       "classification": "ORDINARY_IMPLEMENTATION",
       "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17",
       "stage_1_resolution": "Decided (ordinary): mobile-first responsive web, no service-worker fetch handler."
-    },
-    {
-      "id": "GAL-OD-15",
-      "status": "OPEN",
-      "question": "Moderation standard: report categories, response expectations, prohibited content, appeal and reinstatement rules.",
-      "current_recommendation": "A minimal published standard: report categories (impersonation, prohibited or unlawful content, spam or systematic misuse, prohibited resale, safety concern); operator response target stated as an intent, not a promise; every sanction reversible with a recorded reason; one appeal route by email.",
-      "boundary": "Moderation of the space, never curation of taste or arbitration of sales.",
-      "classification": "STRATEGIC",
-      "source": "THE_GALLERY_CONCEPT_NOTE_v0.1.docx §07; THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §5, §6",
-      "stage_1_resolution": "Recommendation A in product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md; awaiting the governor's ruling before Stage 2."
     },
     {
       "id": "GAL-OD-16",
@@ -1153,12 +1233,12 @@
   "unresolved_material_findings_or_obligations": [
     {
       "id": "OBL-GAL-001",
-      "state": "OPEN",
+      "state": "RESOLVED",
       "owner": "GOVERNOR",
-      "summary": "Stage 1 artefacts are complete and awaiting the governor's review: the nine strategic decisions in product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md need a ruling and the interface reference set needs acceptance before Stage 2 implementation begins.",
-      "evidence_path": "product/ and ux/ after Stage 1",
-      "activation_condition": "The governor reviews the Stage 1 artefacts and rules on the strategic decisions in product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md.",
-      "future_acceptance_test": "doctrine/PRODUCT_STATE.json records each strategic decision's ruling with its date, ux/UX_MANIFEST.yaml moves the affected journeys to INTERFACE_READY, and active_stage advances to STAGE_2 with its own blocked list."
+      "summary": "RESOLVED 2026-09-06 by the governor's Stage 1 ruling. All nine strategic decisions are ratified as recommended and recorded as governor-ratified FIXED decisions with their reasons, consequences of rejection and reopen conditions retained: GAL-OD-01 working name, GAL-OD-02 account boundary, GAL-OD-03 admission, GAL-OD-04 geography, GAL-OD-06 direct contact, GAL-OD-09 social depth, GAL-OD-12 identity confirmation, GAL-OD-13 revenue, GAL-OD-15 moderation standard. The interface reference set is accepted as the authoritative design direction and J-001, J-002 and J-004 are INTERFACE_READY. Seven PRODUCT_RECOMMENDATION and ORDINARY_IMPLEMENTATION decisions remain open and reversible by design; none of them gates Stage 2. Stage 1 acceptance does NOT authorise Stage 2: the active stage is the pre-Stage-2 platform-enablement gate.",
+      "evidence_path": "doctrine/receipts/STAGE1-GOVERNOR-RULING-2026-09-06.md; product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md §A",
+      "activation_condition": "This obligation is discharged. The governor reviewed the Stage 1 artefacts on 2026-09-06 and ruled on every strategic decision.",
+      "future_acceptance_test": "doctrine/PRODUCT_STATE.json records each ratified decision with its ruling date and reopen condition, ux/UX_MANIFEST.yaml carries the reference set as accepted with J-001, J-002 and J-004 at INTERFACE_READY, and active_stage names the platform-enablement gate rather than Stage 2."
     },
     {
       "id": "OBL-GAL-002",
@@ -1173,7 +1253,7 @@
       "id": "OBL-GAL-003",
       "state": "UNARMED",
       "owner": "BUILDER+GOVERNOR",
-      "summary": "No CI exists. The orientation check cannot run at the pull-request chokepoint until CI can read the builders-doctrine repository (a read-only deploy key or token provisioned by the governor). Until then the trunk layer is UNARMED and branch protection state is UNKNOWN (dashboard-only fact). Two local residues sit behind this same boundary and are held by nothing else: a commit made with --no-verify, and a commit made in a checkout that has never oriented, since the seam that arms core.hooksPath and the hook it arms are reached by the same command. Both are visible acts and both are caught at the pull-request chokepoint once this obligation is discharged.",
+      "summary": "No CI exists. The orientation check cannot run at the pull-request chokepoint until CI can read the builders-doctrine repository (a read-only deploy key or token provisioned by the governor). Until then the trunk layer is UNARMED and branch protection state is UNKNOWN (dashboard-only fact). Two local residues sit behind this same boundary and are held by nothing else: a commit made with --no-verify, and a commit made in a checkout that has never oriented, since the seam that arms core.hooksPath and the hook it arms are reached by the same command. Both are visible acts and both are caught at the pull-request chokepoint once this obligation is discharged. Since the Stage 1 ruling of 2026-09-06 this obligation is part of the active stage's acceptance condition: the Doctrine workflow must run green on a pull request before Stage 2 is authorised.",
       "evidence_path": ".github/workflows once created",
       "activation_condition": "GitHub Actions is enabled for the repository and a read credential for builders-doctrine is stored as the repository secret named in doctrine/EXTERNAL_ENABLEMENT.md.",
       "future_acceptance_test": "A run of the workflow .github/workflows/doctrine.yml on a pull request completes green, and the same workflow is a required status check on the default branch."
@@ -1191,7 +1271,7 @@
       "id": "OBL-GAL-005",
       "state": "OPEN",
       "owner": "GOVERNOR",
-      "summary": "Thegallery had no commits and no main branch at binding. The first governed commits are on the designated branch claude/the-gallery-foundation-7plo1e; the governor's merge establishes main. Branch protection on main is a GitHub setting this session cannot see or set (UNKNOWN until observed).",
+      "summary": "Thegallery had no commits and no main branch at binding. The first governed commits are on the designated branch claude/the-gallery-foundation-7plo1e; the governor's merge establishes main. Branch protection on main is a GitHub setting this session cannot see or set (UNKNOWN until observed). Since the Stage 1 ruling of 2026-09-06 this obligation is part of the active stage's acceptance condition: main is created from claude/gallery-hook-liveness-verify-bzn5c6 and Stage 2 is not authorised until it exists and is protected.",
       "evidence_path": "GitHub repository settings",
       "activation_condition": "The governor merges this branch, creating main.",
       "future_acceptance_test": "git ls-remote origin shows refs/heads/main, and the branch-protection state required by doctrine/EXTERNAL_ENABLEMENT.md is observed."
@@ -1272,7 +1352,7 @@
       "id": "OBL-GAL-011",
       "state": "OPEN",
       "owner": "GOVERNOR",
-      "summary": "Branch protection on the default branch, and the Doctrine status check as a required check, are platform settings this session can neither read nor set.",
+      "summary": "Branch protection on the default branch, and the Doctrine status check as a required check, are platform settings this session can neither read nor set. Since the Stage 1 ruling of 2026-09-06 this obligation is part of the active stage's acceptance condition: the check named 'Doctrine / Orientation, gates and drill' must be a required status check on main before Stage 2 is authorised.",
       "activation_condition": "main exists and GitHub Actions is enabled.",
       "future_acceptance_test": "The repository's branch-protection state shows the Doctrine check required and direct pushes refused; recorded by observation, since dashboard-only facts are otherwise UNKNOWN.",
       "evidence_path": "doctrine/EXTERNAL_ENABLEMENT.md"
@@ -1316,17 +1396,17 @@
   "human_surface_state": {
     "module": "ux-design-assurance 1.1.0 (bound through DOCTRINE_BINDING.json)",
     "manifest": "ux/UX_MANIFEST.yaml",
-    "interface_reference_set": "DRAFT — R-1, R-2, R-3 rendered and reviewed; awaiting governor acceptance (ux/reference/interface/INTERFACE_REFERENCE_SET.md)",
+    "interface_reference_set": "ACCEPTED by the governor 2026-09-06 as the authoritative design direction for implementation — R-1, R-2, R-3 rendered, reviewed and accepted (ux/reference/interface/INTERFACE_REFERENCE_SET.md). The approved grammar, hierarchy, typography, palette, imagery treatment and interaction direction are fixed; ordinary responsive, accessibility and implementation refinement remains the builder's, and acceptance freezes no defect. The interface may not drift into a generic marketplace, social feed or administrative template, and any later change that materially alters the approved product character returns for governor review.",
     "journeys": {
-      "J-001": "INTERFACE_DESIGNING",
-      "J-002": "INTERFACE_DESIGNING",
+      "J-001": "INTERFACE_READY",
+      "J-002": "INTERFACE_READY",
       "J-003": "UX_READY",
-      "J-004": "INTERFACE_DESIGNING",
+      "J-004": "INTERFACE_READY",
       "J-005": "IDENTIFIED",
       "J-006": "IDENTIFIED"
     }
   },
   "learning_ledger": "doctrine/BUILD_LEARNING_LEDGER.md",
   "updated_at": "2026-09-06",
-  "update_reason": "OBL-GAL-013 repaired and resolved: scripts/doctrine-orient.py orient now arms and verifies the governed core.hooksPath as steps 3 and 4 of a coherent orientation sequence, and scripts/doctrine-gate.py G3 verifies the effective configuration independently, so the compulsory git layer no longer depends on the harness hook. Proved against an isolated fresh checkout by 15 new drill cases (73 to 88, 0 red). OBL-GAL-002 is dispositioned rather than reopened: the host hook is ARMED_AS_CONFIGURED only where this repository is the host project root, is not a compulsory layer in the present multi-repository topology, and is not a blocker. GAL-G7's clause now names the arming and the gate that holds it; the hook-layer clauses GAL-G1, GAL-G2, GAL-G6 and GAL-G9 carry the topology qualifier. armed_fixed_decisions is unchanged at 8 — this change made a standing claim true rather than arming a new one. OBL-GAL-003, OBL-GAL-010 and OBL-GAL-011 are preserved with their activation conditions. No product decision, interface artefact or Stage boundary was touched."
+  "update_reason": "Governor's Stage 1 ruling of 2026-09-06 recorded. Nine strategic decisions ratified as recommended and moved from open_governor_decisions to governor-ratified FIXED decisions, each retaining its question, reason, consequence of rejection and reopen condition; all nine are honestly disarmed (MANUAL or UNARMED) because the mechanisms that hold them are Stage 2 code, so armed_fixed_decisions is unchanged at 8 and RATCHETS.json is untouched. The interface reference set is accepted as the authoritative design direction with its boundary conditions recorded, and J-001, J-002 and J-004 move to INTERFACE_READY. OBL-GAL-001 is discharged. The active stage becomes the pre-Stage-2 platform-enablement gate: Stage 1 acceptance does not authorise Stage 2, and the same blocked list stands, so GAL-G9 still denies application source, schema and deployment configuration. OBL-GAL-003, OBL-GAL-005 and OBL-GAL-011 stay open and unarmed and now name their place in that acceptance condition; OBL-GAL-002, OBL-GAL-008, OBL-GAL-009, OBL-GAL-010 and OBL-GAL-012 are unchanged. No approved screen, product architecture document or application functionality was altered."
 }
