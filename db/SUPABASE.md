@@ -44,7 +44,25 @@ makes the twenty-two permission probes real, and no Supabase client library is i
 
 ---
 
-## 2. Run the migrations
+## 2. Apply the schema
+
+### The short way — paste it into the SQL editor
+
+`db/supabase-schema.sql` is the four migrations flattened into one file. Open Supabase →
+**SQL Editor**, paste it, replace the three `CHANGE_ME` occurrences with a password you
+generate, and run it. Nothing to clone, nothing to install, and no database password needed —
+the SQL editor already runs as the owner.
+
+Keep the password you chose: it is what the application connects with at runtime
+(`DATABASE_URL_APP`), and it is not your database password.
+
+Regenerate the file after any migration change:
+
+```bash
+npm run db:sqlfile
+```
+
+### The other way — run the migrations
 
 The roles are created by the migrations themselves — `gallery_anon` and `gallery_auth` in 001,
 `gallery_app` in 004 — so there is nothing to paste into the SQL editor first.
