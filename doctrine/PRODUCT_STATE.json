@@ -21,16 +21,16 @@
     "since": "2026-09-06"
   },
   "active_stage": {
-    "code": "PLATFORM_ENABLEMENT_GATE",
-    "label": "Pre-Stage-2 platform-enablement gate. Stage 1 was accepted by the governor on 2026-09-06 — the nine strategic decisions ratified and the interface reference set accepted as the authoritative design direction — and Stage 2 is NOT authorised by that acceptance alone. It is authorised when the repository and platform enforcement boundary is live.",
+    "code": "STAGE_2",
+    "label": "Complete vertical slice. Authorised by the governor's sequencing decision of 2026-09-06: Stage 2 implementation proceeds on the development branch against the proved repository-local orientation, gates and git-hook mechanism. The platform-enablement gate is DEFERRED, not abandoned, and now bounds production release and authoritative trunk integration rather than implementation.",
     "entered_at": "2026-09-06T00:00:00+00:00",
-    "authorised_by": "Governor's Stage 1 ruling of 2026-09-06; receipt at doctrine/receipts/STAGE1-GOVERNOR-RULING-2026-09-06.md. Stage 1 artefacts accepted; OBL-GAL-001 discharged.",
-    "next_acceptance_condition": "The repository and platform enforcement boundary is live, and only then is Stage 2 authorised: main exists, created from claude/gallery-hook-liveness-verify-bzn5c6 and protected so the default branch is reached through review (OBL-GAL-005, OBL-GAL-011); GitHub Actions is enabled and the repository secret DOCTRINE_READ_TOKEN grants read-only access to builders-doctrine (OBL-GAL-003); and the check named 'Doctrine / Orientation, gates and drill' from .github/workflows/doctrine.yml completes green on a pull request and is a required status check on main. Until every one of those is observed, application source, database schema and deployment configuration are not created and no session claims Stage 2 is authorised.",
+    "authorised_by": "Governor's sequencing decision 2026-09-06 (GAL-SEQ-1), recorded at doctrine/receipts/STAGE2-AUTHORISATION-2026-09-06.md, on top of the Stage 1 ruling of the same date and the repository-local enforcement proved at b8e890e (88 drill cases, gates 5 of 5).",
+    "next_acceptance_condition": "The complete vertical slice works through the running product: a maker creates an account by email, confirms it, signs in and out and can begin recovery, creates a maker identity and Gallery, supplies public contact routes separate from the private account email, creates a work with three differently shaped images, previews and publishes it; an anonymous visitor reaches that work through the public entrance and through search, opens the maker's wider Gallery and uses the maker-selected contact route; the maker moves the work to sold and every public surface follows; an operator suspends and reinstates a synthetic maker with recorded reasons; a second maker cannot read or alter the first's material; draft, retired, taken-down and suspended material is absent from anonymous responses; the account email appears in no public page or payload; and account closure has a truthful consequence. Proved by browser journeys entering the same doors the product exposes, plus permission tests at the data layer — neither standing in for the other.",
     "blocked_until_acceptance": [
-      "application source",
-      "database schema and migrations",
-      "deployment and hosting configuration",
-      "feature commits"
+      "production release",
+      "authoritative trunk integration",
+      "merge to the default branch",
+      "any claim of deployed proof"
     ],
     "stages": [
       {
@@ -49,15 +49,15 @@
       },
       {
         "code": "PLATFORM_ENABLEMENT_GATE",
-        "label": "Repository and platform enforcement boundary",
-        "state": "IN_PROGRESS",
-        "gate": "main exists and is protected; the Doctrine CI check runs green on a pull request and is required; the read-only Doctrine credential exists. Every one of these is a governor or platform act and none of them is reachable from a build session.",
+        "label": "Repository and platform enforcement boundary (deferred, not abandoned)",
+        "state": "DEFERRED",
+        "gate": "main exists and is protected; the Doctrine CI check runs green on a pull request and is required; the read-only Doctrine credential exists. Every one of these is a governor or platform act and none of them is reachable from a build session. Deferred by the governor's sequencing decision of 2026-09-06: it no longer gates Stage 2 implementation and still gates production release and authoritative trunk integration.",
         "evidence": "doctrine/EXTERNAL_ENABLEMENT.md items 1-3; observation of the branch-protection state"
       },
       {
         "code": "STAGE_2",
         "label": "Complete vertical slice",
-        "state": "NOT_STARTED",
+        "state": "IN_PROGRESS",
         "gate": "the whole chain works on the deployed product at phone width; Maker A cannot alter Maker B; anonymous sees only published material",
         "evidence": null
       },
@@ -76,7 +76,8 @@
         "evidence": null
       }
     ],
-    "not_authorised_by_this_stage": "Stage 1 acceptance is a design and decision ruling. It does not authorise implementation. The trunk and CI boundary named in the acceptance condition is what authorises Stage 2, and it is a governor and platform act."
+    "not_authorised_by_this_stage": "Stage 2 authorisation covers building and locally proving the vertical slice. It does not authorise a production release, a merge to the default branch, or any claim that the product is deployed or observed in production. The platform obligations OBL-GAL-003, OBL-GAL-005 and OBL-GAL-011 remain OPEN and UNARMED and bound that boundary; they are deferred, not discharged.",
+    "deferred_protections_visible": "Absent and required before production release or authoritative trunk integration: main does not exist; branch protection is unset and its state is UNKNOWN; GitHub Actions is not enabled; DOCTRINE_READ_TOKEN does not exist; the check 'Doctrine / Orientation, gates and drill' has never run. Local enforcement in force meanwhile: the seam arms and verifies core.hooksPath on every orientation, gate G3 holds it, and .githooks/pre-commit and pre-push run the seam and the gates on every commit and push in this checkout."
   },
   "current_doctrine_binding": {
     "path": "doctrine/DOCTRINE_BINDING.json",
@@ -606,6 +607,22 @@
       "consequence_of_rejection": "Option B leaves operator authority unbounded; option C makes unkeepable promises.",
       "reopen_condition": "A governor decision to widen or narrow the categories, or to convert the response-time intent into a guarantee, which requires the capacity to keep it.",
       "enforcement_locus": "The published standard names the five report categories and the appeal address; every sanction writes a reason and a reversal path; the operator surface offers takedown, suspension and reinstatement and offers no quality or taste judgement.",
+      "enforcement_state": "MANUAL",
+      "proof_state": "INTENDED"
+    },
+    {
+      "id": "GAL-SEQ-1",
+      "summary": "Sequencing: Stage 2 implementation is authorised on the development branch using the proved repository-local orientation, gates and git-hook mechanism. Creation of main, GitHub Actions, DOCTRINE_READ_TOKEN, required status checks and branch protection remain mandatory before production release or authoritative trunk integration. Those protections are deferred, not abandoned, and their absence stays visible in the product state and every proof report.",
+      "source": "Governor sequencing decision 2026-09-06",
+      "decided_at": "2026-09-06",
+      "status": "FIXED",
+      "ratified_by": "GOVERNOR",
+      "ratified_at": "2026-09-06",
+      "ratification_receipt": "doctrine/receipts/STAGE2-AUTHORISATION-2026-09-06.md",
+      "reason": "The repository-local layer is armed, independent of the harness, and drilled end to end through git's own invocation, so a commit on this branch already meets orientation, the gates and the hooks. The trunk and CI boundary protects release and integration, which is a later act than building and locally proving a slice.",
+      "consequence_of_rejection": "Holding Stage 2 behind platform acts that only the governor and GitHub can perform stalls the build indefinitely while the layer that actually guards this checkout is already in force.",
+      "reopen_condition": "A governor decision that re-couples implementation to the platform boundary, or evidence that the repository-local layer does not hold on this branch.",
+      "enforcement_locus": "doctrine/PRODUCT_STATE.json active_stage records the authorisation, the blocked list that still refuses production release and trunk integration, and the deferred protections that stay absent; doctrine/EXTERNAL_ENABLEMENT.md carries the same boundary as governor and platform items.",
       "enforcement_state": "MANUAL",
       "proof_state": "INTENDED"
     }
@@ -1253,7 +1270,7 @@
       "id": "OBL-GAL-003",
       "state": "UNARMED",
       "owner": "BUILDER+GOVERNOR",
-      "summary": "No CI exists. The orientation check cannot run at the pull-request chokepoint until CI can read the builders-doctrine repository (a read-only deploy key or token provisioned by the governor). Until then the trunk layer is UNARMED and branch protection state is UNKNOWN (dashboard-only fact). Two local residues sit behind this same boundary and are held by nothing else: a commit made with --no-verify, and a commit made in a checkout that has never oriented, since the seam that arms core.hooksPath and the hook it arms are reached by the same command. Both are visible acts and both are caught at the pull-request chokepoint once this obligation is discharged. Since the Stage 1 ruling of 2026-09-06 this obligation is part of the active stage's acceptance condition: the Doctrine workflow must run green on a pull request before Stage 2 is authorised.",
+      "summary": "No CI exists. The orientation check cannot run at the pull-request chokepoint until CI can read the builders-doctrine repository (a read-only deploy key or token provisioned by the governor). Until then the trunk layer is UNARMED and branch protection state is UNKNOWN (dashboard-only fact). Two local residues sit behind this same boundary and are held by nothing else: a commit made with --no-verify, and a commit made in a checkout that has never oriented, since the seam that arms core.hooksPath and the hook it arms are reached by the same command. Both are visible acts and both are caught at the pull-request chokepoint once this obligation is discharged. Since the Stage 1 ruling of 2026-09-06 this obligation is part of the active stage's acceptance condition: the Doctrine workflow must run green on a pull request before Stage 2 is authorised. Sequencing decision 2026-09-06 (GAL-SEQ-1): this obligation no longer gates Stage 2 implementation and now bounds production release and authoritative trunk integration. It is DEFERRED, not discharged, and stays OPEN with its activation condition and acceptance test unchanged.",
       "evidence_path": ".github/workflows once created",
       "activation_condition": "GitHub Actions is enabled for the repository and a read credential for builders-doctrine is stored as the repository secret named in doctrine/EXTERNAL_ENABLEMENT.md.",
       "future_acceptance_test": "A run of the workflow .github/workflows/doctrine.yml on a pull request completes green, and the same workflow is a required status check on the default branch."
@@ -1271,7 +1288,7 @@
       "id": "OBL-GAL-005",
       "state": "OPEN",
       "owner": "GOVERNOR",
-      "summary": "Thegallery had no commits and no main branch at binding. The first governed commits are on the designated branch claude/the-gallery-foundation-7plo1e; the governor's merge establishes main. Branch protection on main is a GitHub setting this session cannot see or set (UNKNOWN until observed). Since the Stage 1 ruling of 2026-09-06 this obligation is part of the active stage's acceptance condition: main is created from claude/gallery-hook-liveness-verify-bzn5c6 and Stage 2 is not authorised until it exists and is protected.",
+      "summary": "Thegallery had no commits and no main branch at binding. The first governed commits are on the designated branch claude/the-gallery-foundation-7plo1e; the governor's merge establishes main. Branch protection on main is a GitHub setting this session cannot see or set (UNKNOWN until observed). Since the Stage 1 ruling of 2026-09-06 this obligation is part of the active stage's acceptance condition: main is created from claude/gallery-hook-liveness-verify-bzn5c6 and Stage 2 is not authorised until it exists and is protected. Sequencing decision 2026-09-06 (GAL-SEQ-1): this obligation no longer gates Stage 2 implementation and now bounds production release and authoritative trunk integration. It is DEFERRED, not discharged, and stays OPEN with its activation condition and acceptance test unchanged.",
       "evidence_path": "GitHub repository settings",
       "activation_condition": "The governor merges this branch, creating main.",
       "future_acceptance_test": "git ls-remote origin shows refs/heads/main, and the branch-protection state required by doctrine/EXTERNAL_ENABLEMENT.md is observed."
@@ -1352,7 +1369,7 @@
       "id": "OBL-GAL-011",
       "state": "OPEN",
       "owner": "GOVERNOR",
-      "summary": "Branch protection on the default branch, and the Doctrine status check as a required check, are platform settings this session can neither read nor set. Since the Stage 1 ruling of 2026-09-06 this obligation is part of the active stage's acceptance condition: the check named 'Doctrine / Orientation, gates and drill' must be a required status check on main before Stage 2 is authorised.",
+      "summary": "Branch protection on the default branch, and the Doctrine status check as a required check, are platform settings this session can neither read nor set. Since the Stage 1 ruling of 2026-09-06 this obligation is part of the active stage's acceptance condition: the check named 'Doctrine / Orientation, gates and drill' must be a required status check on main before Stage 2 is authorised. Sequencing decision 2026-09-06 (GAL-SEQ-1): this obligation no longer gates Stage 2 implementation and now bounds production release and authoritative trunk integration. It is DEFERRED, not discharged, and stays OPEN with its activation condition and acceptance test unchanged.",
       "activation_condition": "main exists and GitHub Actions is enabled.",
       "future_acceptance_test": "The repository's branch-protection state shows the Doctrine check required and direct pushes refused; recorded by observation, since dashboard-only facts are otherwise UNKNOWN.",
       "evidence_path": "doctrine/EXTERNAL_ENABLEMENT.md"
@@ -1408,5 +1425,5 @@
   },
   "learning_ledger": "doctrine/BUILD_LEARNING_LEDGER.md",
   "updated_at": "2026-09-06",
-  "update_reason": "Governor's Stage 1 ruling of 2026-09-06 recorded. Nine strategic decisions ratified as recommended and moved from open_governor_decisions to governor-ratified FIXED decisions, each retaining its question, reason, consequence of rejection and reopen condition; all nine are honestly disarmed (MANUAL or UNARMED) because the mechanisms that hold them are Stage 2 code, so armed_fixed_decisions is unchanged at 8 and RATCHETS.json is untouched. The interface reference set is accepted as the authoritative design direction with its boundary conditions recorded, and J-001, J-002 and J-004 move to INTERFACE_READY. OBL-GAL-001 is discharged. The active stage becomes the pre-Stage-2 platform-enablement gate: Stage 1 acceptance does not authorise Stage 2, and the same blocked list stands, so GAL-G9 still denies application source, schema and deployment configuration. OBL-GAL-003, OBL-GAL-005 and OBL-GAL-011 stay open and unarmed and now name their place in that acceptance condition; OBL-GAL-002, OBL-GAL-008, OBL-GAL-009, OBL-GAL-010 and OBL-GAL-012 are unchanged. No approved screen, product architecture document or application functionality was altered."
+  "update_reason": "Governor's sequencing decision of 2026-09-06 recorded as FIXED decision GAL-SEQ-1, and the active stage advanced to STAGE_2. The platform-enablement gate is DEFERRED rather than passed: OBL-GAL-003, OBL-GAL-005 and OBL-GAL-011 stay OPEN and UNARMED with their conditions unchanged, and the stage carries a deferred_protections_visible field naming exactly what is absent. The blocked list no longer refuses application source; it refuses production release, authoritative trunk integration, merging to the default branch and any claim of deployed proof. No obligation was weakened, removed or closed; armed_fixed_decisions is unchanged at 8."
 }
