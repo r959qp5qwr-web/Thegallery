@@ -8,7 +8,7 @@ export type FormState = { error?: string; notice?: string };
 /**
  * Suspend or reinstate a maker.
  *
- * The authority check is in the database, not here: app.set_maker_access refuses a caller
+ * The authority check is in the database, not here: set_maker_access refuses a caller
  * who is not an operator and refuses an empty reason. This action can therefore be wrong
  * without being dangerous — the sanction still cannot happen without authority and a reason,
  * and the append-only record is written in the same transaction as the status change.
@@ -24,7 +24,7 @@ export async function setMakerAccessAction(_prev: FormState, form: FormData): Pr
   try {
     const outcome = await asAccount(account.id, async (db) => {
       const r = await db.query<{ set_maker_access: string }>(
-        "SELECT app.set_maker_access($1, $2, $3)", [makerId, action, reason]);
+        "SELECT set_maker_access($1, $2, $3)", [makerId, action, reason]);
       return r.rows[0].set_maker_access;
     });
     revalidatePath("/", "layout");

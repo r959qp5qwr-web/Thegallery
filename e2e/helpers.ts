@@ -3,10 +3,15 @@ import type { Page } from "@playwright/test";
 
 const OWNER = process.env.DATABASE_URL_OWNER ?? "postgres://postgres@127.0.0.1:5432/gallery";
 
+const SCHEMA = process.env.GALLERY_SCHEMA ?? "gallery";
+
 export async function owner<T>(fn: (c: Client) => Promise<T>): Promise<T> {
   const c = new Client({ connectionString: OWNER });
   await c.connect();
-  try { return await fn(c); } finally { await c.end(); }
+  try {
+    await c.query(`SET search_path = "${SCHEMA}"`);
+    return await fn(c);
+  } finally { await c.end(); }
 }
 
 /**

@@ -11,6 +11,7 @@ import { Client } from "pg";
 import { hashPassword } from "../src/lib/password.ts";
 
 const OWNER = process.env.DATABASE_URL_OWNER ?? "postgres://postgres@127.0.0.1:5432/gallery";
+const SCHEMA = process.env.GALLERY_SCHEMA ?? "gallery";
 
 export const PERSONAS = {
   makerA: { email: "anika.rao@makers.example", password: "kiln-and-monsoon-9", handle: "anika-rao",
@@ -26,6 +27,7 @@ export const PERSONAS = {
 async function main() {
   const db = new Client({ connectionString: OWNER });
   await db.connect();
+  await db.query(`SET search_path = "${SCHEMA}"`);
   try {
     for (const p of [PERSONAS.makerA, PERSONAS.makerB]) {
       const hash = await hashPassword(p.password);

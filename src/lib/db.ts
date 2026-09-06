@@ -24,6 +24,12 @@ function pool(): Pool {
 
 export type Db = PoolClient;
 
+// The product owns one schema and never `public`. Every connection sets it explicitly rather
+// than relying on a role's default search_path, so a shared database cannot resolve one of
+// this product's names to another product's table.
+const SCHEMA = process.env.GALLERY_SCHEMA ?? "gallery";
+if (!/^[a-z_][a-z0-9_]{0,62}$/.test(SCHEMA)) throw new Error(`unsafe GALLERY_SCHEMA: ${SCHEMA}`);
+
 async function inRole<T>(role: "gallery_anon" | "gallery_auth", accountId: string | null,
                          fn: (db: Db) => Promise<T>): Promise<T> {
   const c = await pool().connect();
@@ -32,7 +38,8 @@ async function inRole<T>(role: "gallery_anon" | "gallery_auth", accountId: strin
     // SET LOCAL ROLE is transaction-scoped, so a leaked connection cannot carry elevated
     // rights into the next request.
     await c.query(`SET LOCAL ROLE ${role}`);
-    await c.query("SELECT set_config('app.account_id', $1, true)", [accountId ?? ""]);
+    await c.query(`SET LOCAL search_path = "${SCHEMA}"`);
+    await c.query("SELECT set_config('thegallery.account_id', $1, true)", [accountId ?? ""]);
     const out = await fn(c);
     await c.query("COMMIT");
     return out;
@@ -63,5 +70,8 @@ export async function asAuthStore<T>(fn: (db: Db) => Promise<T>): Promise<T> {
     authPool = new Pool({ connectionString, max: 4, idleTimeoutMillis: 10_000 });
   }
   const c = await authPool.connect();
-  try { return await fn(c); } finally { c.release(); }
+  try {
+    await c.query(`SET search_path = "${SCHEMA}"`);
+    return await fn(c);
+  } finally { c.release(); }
 }

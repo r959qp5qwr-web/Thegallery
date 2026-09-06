@@ -1,3 +1,17 @@
+-- SCHEMA ISOLATION (2026-09-06). Every object this product owns lives in ONE schema, and
+-- nothing is created in `public`. That is what makes it safe to host The Gallery inside a
+-- Supabase project that already carries another product: a name clash is impossible, the whole
+-- product dumps and restores as one schema, and a migration run against the wrong database
+-- cannot touch tables it does not own.
+--
+-- @schema@ is substituted by the migration runner (db/cli.ts, GALLERY_SCHEMA, default
+-- `gallery`). A plain token rather than a psql variable, so the same file runs through psql
+-- and through the Node runner without one of them choking on meta-commands.
+--
+-- search_path is set once here, so every unqualified CREATE below lands in that schema.
+CREATE SCHEMA IF NOT EXISTS "@schema@";
+SET search_path = "@schema@";
+
 -- Seeded vocabulary (DOMAIN_MODEL §1: clay, textile, wood, metal, paper) and executing
 -- VERIFY blocks. A migration that cannot prove its own effect is a hope, not a migration.
 
@@ -20,7 +34,7 @@ BEGIN
   SELECT string_agg(table_name, ', ') INTO leaked
   FROM information_schema.role_table_grants
   WHERE grantee = 'gallery_anon'
-    AND table_schema = 'public'
+    AND table_schema = current_schema()
     AND table_name IN ('auth_accounts','auth_tokens','auth_sessions','makers','galleries','works',
                        'work_images','contact_routes','operator_actions','write_intents','dev_outbox');
   IF leaked IS NOT NULL THEN
@@ -30,7 +44,7 @@ BEGIN
   -- V3 no public view exposes an account email column
   SELECT string_agg(table_name || '.' || column_name, ', ') INTO leaked
   FROM information_schema.columns
-  WHERE table_schema = 'public' AND table_name LIKE 'public\_%'
+  WHERE table_schema = current_schema() AND table_name LIKE 'public\_%'
     AND (column_name ILIKE '%email%' OR column_name ILIKE '%account%' OR column_name ILIKE '%password%');
   IF leaked IS NOT NULL THEN
     RAISE EXCEPTION 'VERIFY V3 failed: a public view exposes private identity columns: %', leaked;
@@ -39,7 +53,7 @@ BEGIN
   -- V4 every governed table has row-level security enabled
   SELECT string_agg(relname, ', ') INTO leaked
   FROM pg_class c JOIN pg_namespace ns ON ns.oid = c.relnamespace
-  WHERE ns.nspname = 'public' AND c.relkind = 'r' AND c.relrowsecurity = false
+  WHERE ns.nspname = current_schema() AND c.relkind = 'r' AND c.relrowsecurity = false
     AND c.relname IN ('auth_accounts','makers','galleries','works','work_images','contact_routes',
                       'operator_actions','write_intents');
   IF leaked IS NOT NULL THEN
@@ -58,7 +72,7 @@ BEGIN
   -- V6 no commerce table reached the schema (GAL-04, refusals GAL-R*)
   SELECT string_agg(table_name, ', ') INTO leaked
   FROM information_schema.tables
-  WHERE table_schema = 'public'
+  WHERE table_schema = current_schema()
     AND table_name ~ '(cart|checkout|order|payment|wallet|escrow|refund|shipping|dispute)';
   IF leaked IS NOT NULL THEN
     RAISE EXCEPTION 'VERIFY V6 failed: transaction tables present: %', leaked;
@@ -67,7 +81,7 @@ BEGIN
   -- V7 no engagement-count column reached the schema (GAL-OD-09)
   SELECT string_agg(table_name || '.' || column_name, ', ') INTO leaked
   FROM information_schema.columns
-  WHERE table_schema = 'public'
+  WHERE table_schema = current_schema()
     AND column_name ~ '(like_count|likes|follower|following|reaction|comment_count|view_count|popularity|rank_score)';
   IF leaked IS NOT NULL THEN
     RAISE EXCEPTION 'VERIFY V7 failed: engagement columns present: %', leaked;

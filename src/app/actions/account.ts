@@ -78,7 +78,7 @@ export async function closeAccountAction(_prev: FormState, form: FormData): Prom
     return { error: "Type close to confirm. Nothing has been changed." };
   }
   try {
-    await asAccount(account.id, (db) => db.query("SELECT app.close_account()"));
+    await asAccount(account.id, (db) => db.query("SELECT close_account()"));
   } catch (e) {
     const message = e instanceof Error ? e.message : "";
     if (message.includes("suspended")) {

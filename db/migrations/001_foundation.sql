@@ -1,3 +1,17 @@
+-- SCHEMA ISOLATION (2026-09-06). Every object this product owns lives in ONE schema, and
+-- nothing is created in `public`. That is what makes it safe to host The Gallery inside a
+-- Supabase project that already carries another product: a name clash is impossible, the whole
+-- product dumps and restores as one schema, and a migration run against the wrong database
+-- cannot touch tables it does not own.
+--
+-- @schema@ is substituted by the migration runner (db/cli.ts, GALLERY_SCHEMA, default
+-- `gallery`). A plain token rather than a psql variable, so the same file runs through psql
+-- and through the Node runner without one of them choking on meta-commands.
+--
+-- search_path is set once here, so every unqualified CREATE below lands in that schema.
+CREATE SCHEMA IF NOT EXISTS "@schema@";
+SET search_path = "@schema@";
+
 -- The Gallery — Stage 2 substrate.
 --
 -- Authority: product/DOMAIN_MODEL.md (entities, state machines, visibility rules, invariants)
@@ -14,7 +28,7 @@
 -- (work published AND gallery published AND maker active) and omit every private column.
 --
 -- Request-scoped identity mirrors the PostgREST/Supabase model: each request runs in a
--- transaction that does SET LOCAL ROLE and SET LOCAL app.account_id, so the database, not
+-- transaction that does SET LOCAL ROLE and SET LOCAL account_id, so the database, not
 -- the application, decides what the request may see.
 
 -- ---------------------------------------------------------------------------- roles
@@ -27,14 +41,13 @@ DO $$ BEGIN
   END IF;
 END $$;
 
-CREATE SCHEMA IF NOT EXISTS app;
-GRANT USAGE ON SCHEMA public TO gallery_anon, gallery_auth;
-GRANT USAGE ON SCHEMA app TO gallery_anon, gallery_auth;
+
+GRANT USAGE ON SCHEMA "@schema@" TO gallery_anon, gallery_auth;
 
 -- ---------------------------------------------------------------- identity of a request
-CREATE OR REPLACE FUNCTION app.account_id() RETURNS uuid
+CREATE OR REPLACE FUNCTION account_id() RETURNS uuid
 LANGUAGE sql STABLE AS $$
-  SELECT NULLIF(current_setting('app.account_id', true), '')::uuid
+  SELECT NULLIF(current_setting('thegallery.account_id', true), '')::uuid
 $$;
 
 -- ---------------------------------------------------------------------------- accounts
@@ -195,15 +208,15 @@ CREATE TABLE operator_actions (
 );
 CREATE INDEX operator_actions_subject_idx ON operator_actions (subject_type, subject_id, created_at DESC);
 
-CREATE OR REPLACE FUNCTION app.refuse_mutation() RETURNS trigger
+CREATE OR REPLACE FUNCTION refuse_mutation() RETURNS trigger
 LANGUAGE plpgsql AS $$
 BEGIN
   RAISE EXCEPTION 'operator_actions is append-only (DOMAIN_MODEL §6)';
 END $$;
 CREATE TRIGGER operator_actions_no_update BEFORE UPDATE ON operator_actions
-  FOR EACH ROW EXECUTE FUNCTION app.refuse_mutation();
+  FOR EACH ROW EXECUTE FUNCTION refuse_mutation();
 CREATE TRIGGER operator_actions_no_delete BEFORE DELETE ON operator_actions
-  FOR EACH ROW EXECUTE FUNCTION app.refuse_mutation();
+  FOR EACH ROW EXECUTE FUNCTION refuse_mutation();
 
 -- Idempotency for consequential writes (publish, and any later one-shot act).
 CREATE TABLE write_intents (
@@ -225,14 +238,14 @@ CREATE TABLE operational_failures (
 );
 
 -- ------------------------------------------- request identity that reads the tables above
-CREATE OR REPLACE FUNCTION app.is_operator() RETURNS boolean
-LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public, app AS $$
-  SELECT COALESCE((SELECT a.is_operator FROM auth_accounts a WHERE a.id = app.account_id()), false)
+CREATE OR REPLACE FUNCTION is_operator() RETURNS boolean
+LANGUAGE sql STABLE SECURITY DEFINER SET search_path = "@schema@" AS $$
+  SELECT COALESCE((SELECT a.is_operator FROM auth_accounts a WHERE a.id = account_id()), false)
 $$;
 
 -- The maker of the current request, or NULL. SECURITY DEFINER so it can be used inside
 -- policies on `makers` itself without recursing through those policies.
-CREATE OR REPLACE FUNCTION app.maker_id() RETURNS uuid
-LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public, app AS $$
-  SELECT m.id FROM makers m WHERE m.account_id = app.account_id()
+CREATE OR REPLACE FUNCTION maker_id() RETURNS uuid
+LANGUAGE sql STABLE SECURITY DEFINER SET search_path = "@schema@" AS $$
+  SELECT m.id FROM makers m WHERE m.account_id = account_id()
 $$;

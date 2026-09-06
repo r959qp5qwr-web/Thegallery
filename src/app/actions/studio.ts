@@ -217,7 +217,7 @@ export async function publishWorkAction(_prev: FormState, form: FormData): Promi
   try {
     const outcome = await asAccount(account.id, async (db) => {
       const r = await db.query<{ outcome: string; public_token: string }>(
-        "SELECT * FROM app.publish_work($1, $2)", [workId, intent]);
+        "SELECT * FROM publish_work($1, $2)", [workId, intent]);
       return r.rows[0];
     });
     revalidatePath("/"); revalidatePath(`/studio/works/${workId}`);
@@ -235,7 +235,7 @@ export async function setStatusAction(form: FormData): Promise<void> {
   const account = await requireActiveMaker();
   const workId = String(form.get("work_id") ?? "");
   const status = String(form.get("status") ?? "");
-  await asAccount(account.id, (db) => db.query("SELECT app.set_work_status($1, $2)", [workId, status]));
+  await asAccount(account.id, (db) => db.query("SELECT set_work_status($1, $2)", [workId, status]));
   // Every public surface reads one column, so one revalidation is the whole propagation.
   revalidatePath("/", "layout");
 }
@@ -243,7 +243,7 @@ export async function setStatusAction(form: FormData): Promise<void> {
 export async function retireWorkAction(form: FormData): Promise<void> {
   const account = await requireActiveMaker();
   const workId = String(form.get("work_id") ?? "");
-  await asAccount(account.id, (db) => db.query("SELECT app.retire_work($1)", [workId]));
+  await asAccount(account.id, (db) => db.query("SELECT retire_work($1)", [workId]));
   revalidatePath("/", "layout");
 }
 

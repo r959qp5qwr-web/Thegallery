@@ -14,6 +14,7 @@ import { Client } from "pg";
 
 const APP = process.env.DATABASE_URL_APP ?? "postgres://gallery_app:gallery_local_dev@127.0.0.1:5432/gallery";
 const OWNER = process.env.DATABASE_URL_OWNER ?? "postgres://postgres@127.0.0.1:5432/gallery";
+const SCHEMA = process.env.GALLERY_SCHEMA ?? "gallery";
 
 type Result = { id: string; title: string; verdict: "PASS" | "FAIL"; detail: string };
 const results: Result[] = [];
@@ -29,7 +30,8 @@ async function withRole<T>(role: string, accountId: string | null, fn: (c: Clien
   try {
     await c.query("BEGIN");
     await c.query(`SET LOCAL ROLE ${role}`);
-    await c.query("SELECT set_config('app.account_id', $1, true)", [accountId ?? ""]);
+    await c.query(`SET LOCAL search_path = "${SCHEMA}"`);
+    await c.query("SELECT set_config('thegallery.account_id', $1, true)", [accountId ?? ""]);
     const out = await fn(c);
     await c.query("COMMIT");
     return out;
@@ -50,6 +52,7 @@ async function refused(role: string, accountId: string | null, sql: string, para
 async function main() {
   const owner = new Client({ connectionString: OWNER });
   await owner.connect();
+  await owner.query(`SET search_path = "${SCHEMA}"`);
 
   const ids = await owner.query<{ handle: string; maker_id: string; account_id: string; gallery_id: string }>(
     `SELECT m.handle, m.id AS maker_id, m.account_id, g.id AS gallery_id
@@ -118,7 +121,7 @@ async function main() {
       `${retireOther.rowCount} rows updated`);
 
     const statusOther = await refused("gallery_auth", B.account_id,
-      "SELECT app.set_work_status($1, 'sold')", [workA.rows[0].id]);
+      "SELECT set_work_status($1, 'sold')", [workA.rows[0].id]);
     record("P-10", "Maker B cannot change the status of Maker A's work through the transition function",
       statusOther.denied && /not yours/.test(statusOther.message),
       `expected "not yours", got ${statusOther.denied ? statusOther.message : "it succeeded"}`);
@@ -145,13 +148,13 @@ async function main() {
 
   // ---------------------------------------------------------------- operator authority
   const makerSuspends = await refused("gallery_auth", B.account_id,
-    "SELECT app.set_maker_access($1, 'suspend', 'because I felt like it')", [A.maker_id]);
+    "SELECT set_maker_access($1, 'suspend', 'because I felt like it')", [A.maker_id]);
   record("P-14", "an ordinary maker cannot suspend another maker",
     makerSuspends.denied && /operator authority/.test(makerSuspends.message),
     `expected "operator authority required", got ${makerSuspends.denied ? makerSuspends.message : "it succeeded"}`);
 
   const noReason = await refused("gallery_auth", op.rows[0].id,
-    "SELECT app.set_maker_access($1, 'suspend', '   ')", [B.maker_id]);
+    "SELECT set_maker_access($1, 'suspend', '   ')", [B.maker_id]);
   record("P-15", "an operator cannot suspend without a written reason",
     noReason.denied && /recorded reason/.test(noReason.message),
     `expected "recorded reason", got ${noReason.denied ? noReason.message : "it succeeded"}`);
@@ -180,17 +183,33 @@ async function main() {
   record("P-18", "no account email appears in any public view", leak === "", leak || "clean");
 
   // ---------------------------------------------------------------- no commerce, no counts
+  // Co-tenancy: this product must own exactly one schema and leave `public` alone, because
+  // the database it runs in may belong to another product as well.
+  const strays = await owner.query<{ table_name: string }>(
+    `SELECT table_name FROM information_schema.tables
+      WHERE table_schema = 'public'
+        AND table_name IN ('auth_accounts','auth_tokens','auth_sessions','dev_outbox','makers',
+                           'galleries','works','work_images','contact_routes','operator_actions',
+                           'write_intents','operational_failures','material_categories')`);
+  record("P-21", "this product created nothing in the public schema", strays.rowCount === 0,
+    `found in public: ${strays.rows.map((r) => r.table_name).join(", ")}`);
+
+  const owned = await owner.query<{ n: number }>(
+    `SELECT count(*)::int AS n FROM information_schema.tables WHERE table_schema = $1`, [SCHEMA]);
+  record("P-22", `the product's tables live in the ${SCHEMA} schema (anti-vacuous)`,
+    (owned.rows[0].n as number) >= 12, `only ${owned.rows[0].n} tables found in ${SCHEMA}`);
+
   const commerce = await owner.query<{ n: number }>(
     `SELECT count(*)::int AS n FROM information_schema.tables
-      WHERE table_schema = 'public'
-        AND table_name ~ '(cart|checkout|order|payment|wallet|escrow|refund|shipping|dispute)'`);
+      WHERE table_schema = $1
+        AND table_name ~ '(cart|checkout|order|payment|wallet|escrow|refund|shipping|dispute)'`, [SCHEMA]);
   record("P-19", "no transaction table exists in the schema", (commerce.rows[0].n as number) === 0,
     `${commerce.rows[0].n} transaction tables found`);
 
   const counts = await owner.query<{ n: number }>(
     `SELECT count(*)::int AS n FROM information_schema.columns
-      WHERE table_schema = 'public'
-        AND column_name ~ '(like_count|likes|follower|following|reaction|comment_count|view_count|popularity)'`);
+      WHERE table_schema = $1
+        AND column_name ~ '(like_count|likes|follower|following|reaction|comment_count|view_count|popularity)'`, [SCHEMA]);
   record("P-20", "no engagement-count column exists in the schema", (counts.rows[0].n as number) === 0,
     `${counts.rows[0].n} engagement columns found`);
 

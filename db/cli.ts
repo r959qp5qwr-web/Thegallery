@@ -10,6 +10,10 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const OWNER = process.env.DATABASE_URL_OWNER ?? "postgres://postgres@127.0.0.1:5432/gallery";
 const ADMIN = process.env.DATABASE_URL_ADMIN ?? "postgres://postgres@127.0.0.1:5432/postgres";
 const DB = process.env.GALLERY_DB ?? "gallery";
+// One product, one schema. Never `public`: this database may belong to another product too.
+const SCHEMA = process.env.GALLERY_SCHEMA ?? "gallery";
+if (!/^[a-z_][a-z0-9_]{0,62}$/.test(SCHEMA)) throw new Error(`unsafe GALLERY_SCHEMA: ${SCHEMA}`);
+if (SCHEMA === "public") throw new Error("GALLERY_SCHEMA must not be `public` — see db/migrations header");
 
 async function run(url: string, sql: string) {
   const c = new Client({ connectionString: url });
@@ -26,10 +30,11 @@ async function runEach(url: string, statements: string[]) {
 }
 
 async function migrate() {
+  console.log(`  schema: ${SCHEMA}`);
   const dir = join(HERE, "migrations");
   for (const f of readdirSync(dir).filter((n) => n.endsWith(".sql")).sort()) {
     process.stdout.write(`  ${f} … `);
-    await run(OWNER, readFileSync(join(dir, f), "utf8"));
+    await run(OWNER, readFileSync(join(dir, f), "utf8").replaceAll("@schema@", SCHEMA));
     process.stdout.write("ok\n");
   }
 }

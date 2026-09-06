@@ -265,6 +265,26 @@ The image path was fixed on both sides — the surface asks for a width the imag
 
 ---
 
+### GAL-L0014
+**Date:** 2026-09-06  
+**Observed event:**  
+Moving the product into an isolated schema was done with a mechanical rewrite — strip the `app.` prefix, since those functions were moving into the product's own schema. The regex also matched inside a string literal, turning `current_setting('app.account_id', true)` into `current_setting('account_id', true)`. Every migration applied cleanly, every VERIFY block passed, and the schema looked correct. The identity of every request had silently become NULL, so row-level security denied every maker their own rows.
+
+**Evidence:**  
+`pg_get_functiondef` on the rewritten function showed the truncated GUC name. The failure surfaced as the first journey failing to find the maker's own Studio, and a direct probe as `gallery_auth` returning `fn_account_id=NULL` while the same probe as the owner returned the right value.
+
+**Why it mattered:**  
+The migrations were green, the VERIFY blocks were green, and the schema was in the right place — every instrument that watches *structure* was satisfied, because the defect was in a string, not in a relation. Only running the product caught it. It is also the failure mode a co-tenanted database makes more likely: the more mechanical the rewrite needed to keep two products apart, the more chances a rewrite has to change something it was not aimed at.
+
+**What changed:**  
+The setting was renamed to a fixed, schema-independent `thegallery.account_id`, so a later change to `GALLERY_SCHEMA` cannot break it and a shared database cannot collide on it. Two probes were added and are the reason the isolation claim is worth anything: **P-21** fails if any of this product's tables appear in `public`, and **P-22** fails if they are not in the named schema — P-21 alone would pass if the product had built nothing at all. Probes 20 to 22; the 31 journeys were re-run against the isolated schema before the claim was made.
+
+**Status:** RESOLVED  
+**Related finding / decision IDs:** OBL-GAL-008, P-18, GAL-L0013  
+**Harvest status:** UNHARVESTED
+
+---
+
 ## Ledger rules
 
 - Capture the event in the governed change that fixes or formally records it where feasible.
