@@ -23,11 +23,27 @@ const head = `-- The Gallery — complete schema, ready to paste into the Supaba
 -- \`public\`, so it cannot collide with anything else in this project.
 `;
 
-const parts = [head];
-for (const f of readdirSync(join(HERE, "migrations")).filter((n) => n.endsWith(".sql")).sort()) {
+// An argument renders only the migrations from that number on, for a database that already
+// carries the earlier ones. `node db/sqlfile.ts 005` writes db/supabase-delta.sql.
+const from = process.argv[2];
+
+const deltaHead = `-- The Gallery — migrations from ${from} on, for a database that already carries the earlier
+-- ones. GENERATED from db/migrations/*.sql by \`npm run db:sqlfile ${from}\`; do not edit.
+--
+-- Each migration is idempotent where it can be and states plainly where it is not. Everything
+-- below touches the \`${SCHEMA}\` schema only.
+`;
+
+const all = readdirSync(join(HERE, "migrations")).filter((n) => n.endsWith(".sql")).sort();
+const chosen = from ? all.filter((n) => n >= from) : all;
+if (from && chosen.length === 0) throw new Error(`no migration at or after ${from}`);
+
+const parts = [from ? deltaHead : head];
+for (const f of chosen) {
   parts.push(`\n-- ============================================================ ${f}\n`);
   parts.push(readFileSync(join(HERE, "migrations", f), "utf8")
     .replaceAll("@schema@", SCHEMA).replaceAll("@app_password@", PASSWORD));
 }
-writeFileSync(join(HERE, "supabase-schema.sql"), parts.join(""));
-console.log(`db/supabase-schema.sql written (schema: ${SCHEMA})`);
+const out = from ? "supabase-delta.sql" : "supabase-schema.sql";
+writeFileSync(join(HERE, out), parts.join(""));
+console.log(`db/${out} written (schema: ${SCHEMA}${from ? `, from ${from}` : ""})`);

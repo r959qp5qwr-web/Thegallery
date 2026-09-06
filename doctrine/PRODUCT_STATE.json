@@ -1428,8 +1428,8 @@
     "stage_2_note": "J-001, J-002 and J-003 are implemented in full and J-004 minimally (suspend, reinstate, recorded reasons). All four were walked end to end in the running product at phone and desktop width on 2026-09-06. They read VERIFYING rather than VERIFIED because verification is not complete: no deployed build, no real email round trip and no walk on a physical phone. J-005's doors (sign out, sign in, recovery, expired session, account closure) were walked inside J-002's spec; J-006 enters through material browse, search and private saves."
   },
   "learning_ledger": "doctrine/BUILD_LEARNING_LEDGER.md",
-  "updated_at": "2026-09-06",
-  "update_reason": "The Stage 2 schema is applied and structurally verified on the hosted Supabase project shared with Ustaad, 10 of 10 checks PASS, with C1 and C2 together establishing that nothing of this product's landed in `public` and that its own tables really are in `gallery`. C9 passed, so the runtime role can log in and must SET ROLE, and the permission model transfers without the fallback that would have needed re-proving. This is substrate evidence only: no application has connected to that database and no journey has run against it, which the proof ledger now records as its own NOT SEEN line rather than letting a green schema read as a working product. OBL-GAL-008 records the partial progress and what remains.",
+  "updated_at": "2026-09-06T11:00:00+00:00",
+  "update_reason": "Record the Stage 2 slice built and walked on Cloudflare's runtime: 62 browser journeys against the built Worker under workerd, Postgres through a Hyperdrive binding, images over HTTP, and the isolate's refusal to compile WebAssembly inside a request — measured, not inferred. Deployed proof is unchanged and still absent: nothing is deployed, no Hyperdrive configuration or bucket exists, and no hosted database has been connected to. Receipt doctrine/receipts/WORKER-RUNTIME-2026-09-06.md.",
   "stage_2_proof_ledger": {
     "_what": "What the Stage 2 slice actually proved, and by which instrument. Local proof and deployed proof are separate columns on purpose: a browser walk against localhost is not a deployed walk, and this ledger exists so no later session can read one as the other.",
     "receipt": "doctrine/receipts/STAGE2-VERTICAL-SLICE-2026-09-06.md",
@@ -1468,7 +1468,8 @@
       "the account email absent from twelve rendered surfaces and from the JSON door",
       "a failed image upload that fails alone, and an interrupted publish that loses nothing",
       "account closure with its consequence stated before the act and carried out after it",
-      "the whole slice re-proved against an isolated schema, with `public` left empty"
+      "the whole slice re-proved against an isolated schema, with `public` left empty",
+      "the whole slice re-proved on Cloudflare's own runtime: 62 journeys against the built Worker under workerd, with Postgres through a Hyperdrive binding and images written and read over HTTP"
     ],
     "not_seen": [
       "any deployed build — nothing is deployed and no deployed claim is made",
@@ -1476,8 +1477,10 @@
       "any connection to the Supabase project: its direct database host is IPv6-only and this environment has no IPv6, the pooler's Postgres ports are blocked, and api.supabase.com is refused by egress policy, so no migration has been run there and no Supabase schema exists",
       "a real email round trip — GALLERY_MAIL=resend is implemented and UNTESTED; the local outbox records messages and sends none",
       "the handoff opening a real WhatsApp or mail client on a physical phone",
-      "image storage surviving a serverless host — the adapter writes to local disk and needs a volume or a private bucket before deployment",
-      "the CI check and branch protection, which have never run"
+      "the CI check and branch protection, which have never run",
+      "Hyperdrive against the hosted database — the binding was exercised only through its localConnectionString, and no Hyperdrive configuration has been created",
+      "Supabase Storage — the Worker's storage path was proved against a local stand-in on 127.0.0.1; no bucket exists and no key for one has been held here",
+      "migrations 005 and 006 on the hosted database — 001–004 are applied there, and db/supabase-delta.sql renders the two that remain"
     ],
     "co_tenancy": "The Gallery is to be hosted inside the governor's existing Supabase project, which already carries Ustaad. Every object this product owns lives in one schema named by GALLERY_SCHEMA (default `gallery`) and nothing is created in `public`, enforced by the migration runner refusing GALLERY_SCHEMA=public and by probes P-21 and P-22 — P-21 fails if any of this product's tables appear in `public`, P-22 fails if they are not in the named schema, so P-21 cannot pass by the product having built nothing. Runbook: db/SUPABASE.md.",
     "hosted_substrate": {
@@ -1485,10 +1488,22 @@
       "date": "2026-09-06",
       "project": "the governor's existing Supabase project, shared with Ustaad",
       "applied_by": "the governor, through the SQL editor, from db/supabase-schema.sql",
-      "verified_by": "db/supabase-verify.sql — 10 of 10 PASS, output recorded in the receipt",
+      "verified_by": "db/supabase-verify.sql — 10 of 10 PASS on the hosted database, output recorded in the receipt; the query has since grown to 13 checks, and the three added for migrations 005 and 006 have passed locally only",
       "receipt": "doctrine/receipts/SUPABASE-SCHEMA-APPLIED-2026-09-06.md",
       "isolation": "gallery: 18 objects; public: 9, all Ustaad's — C1 confirms none of ours is among them, C2 confirms ours are in gallery, so C1 cannot pass vacuously",
       "not_established": "that the product works against it. No application has connected; the 31 journeys and 22 probes have run only against the local cluster."
+    },
+    "worker_runtime": {
+      "state": "BUILT AND WALKED UNDER workerd; NOT DEPLOYED",
+      "date": "2026-09-06",
+      "receipt": "doctrine/receipts/WORKER-RUNTIME-2026-09-06.md",
+      "builder": "@opennextjs/cloudflare 1.20.6; entry worker-entry.ts wraps the generated worker",
+      "bundle": "7.2 MB, 1.57 MB gzipped",
+      "journeys": "31 at phone width and 31 at desktop width, against the Worker under `wrangler dev --local`, all green",
+      "database": "reached through the Hyperdrive binding's localConnectionString — a local cluster, not the hosted one",
+      "storage": "reached over HTTP against tools/local-object-store.mjs, a local stand-in for the bucket; the Worker wrote and read real JPEG bytes, and Supabase Storage was not involved",
+      "runtime_finding": "A Worker isolate permits WebAssembly compilation only while modules are evaluated, and OpenNext evaluates the Next server bundle inside a request. Established by direct measurement under workerd before any code changed, not inferred. The Worker entry now compiles the codecs at startup and the request path only instantiates.",
+      "not_established": "that any of this runs on Cloudflare. Nothing is deployed, no Hyperdrive configuration exists, no bucket exists, and no hosted database has been connected to."
     }
   }
 }

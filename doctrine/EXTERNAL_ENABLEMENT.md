@@ -45,6 +45,16 @@ carries the matching obligations with their activation conditions.
 
 Unchanged from `product/STAGE_2_VERTICAL_SLICE.md` §4 and obligation OBL-GAL-008: a database and auth project, a hosting project, a domain, a transactional email sender with SPF/DKIM records, an operator account, and a phone-reachable test mailbox. None of it is needed for enforcement closure; all of it is needed before any deployed proof.
 
+Now that the host is chosen and the Worker builds, the remainder is specific. `DEPLOY.md` is the runbook; this is the list of things only the governor can create, and each is NOT SEEN until it exists.
+
+| Item | Where | State |
+|---|---|---|
+| Migrations 005 and 006 on the hosted database | Supabase SQL editor, `db/supabase-delta.sql`, then `db/supabase-verify.sql` — all 13 rows must read PASS | 001–004 applied 2026-09-06; these two not applied |
+| A Hyperdrive configuration over the session-pooler string for `gallery_app` | `wrangler hyperdrive create`; its id replaces `REPLACE_WITH_HYPERDRIVE_ID` in `wrangler.jsonc` | not created; the placeholder stands |
+| A **private** Storage bucket `gallery-images` and a `service_role` key as a Worker secret | Supabase Storage; `wrangler secret put SUPABASE_URL` and `SUPABASE_STORAGE_KEY` | not created. A public bucket would route around `/img`, which is the control that keeps a draft's pixels unreachable |
+| A transactional sender and its SPF/DKIM records | Resend or equivalent; `wrangler secret put RESEND_API_KEY` | not created; `GALLERY_MAIL=resend` remains implemented and untested |
+| `atthegallery.in` attached to the Worker, and `GALLERY_BASE_URL` set to it | Cloudflare Workers → Domains & Routes | nameservers updated 2026-09-06; no Worker exists to attach |
+
 ---
 
 ## What remains unenforced while items 1–3 are open

@@ -81,6 +81,34 @@ checks AS (
   UNION ALL
   SELECT 'C10 the vocabulary seeded', count(*) || ' materials', count(*) = 5
     FROM gallery.material_categories WHERE active
+  UNION ALL
+  -- The auth store is the one role that reads account rows before an identity exists. It is
+  -- worth nothing unless it stops there: no grant on a product table, no login of its own.
+  SELECT 'C11 the auth store reaches nothing but auth',
+         coalesce(string_agg(DISTINCT table_name, ', '), 'clean'), count(*) = 0
+    FROM information_schema.role_table_grants
+   WHERE grantee = 'gallery_authstore' AND table_schema = 'gallery'
+     AND table_name IN (SELECT t FROM ours)
+     AND table_name NOT IN ('auth_accounts','auth_tokens','auth_sessions','dev_outbox',
+                            'operational_failures')
+  UNION ALL
+  SELECT 'C12 the auth store cannot log in or bypass RLS',
+         coalesce(string_agg(rolname || ' login=' || rolcanlogin || ' bypassrls=' || rolbypassrls, ''),
+                  'MISSING — migration 005 has not been applied'),
+         count(*) = 1 AND bool_and(NOT rolcanlogin AND NOT rolbypassrls AND NOT rolsuper)
+    FROM pg_roles WHERE rolname = 'gallery_authstore'
+  UNION ALL
+  -- The image route resolves a storage key through this function instead of through a
+  -- privileged connection. It must exist, run as its owner, and be callable by the anonymous
+  -- role — otherwise no visitor sees a picture.
+  SELECT 'C13 the public image key function is in place',
+         coalesce(string_agg(p.proname || ' definer=' || p.prosecdef ||
+                             ' anon=' || has_function_privilege('gallery_anon', p.oid, 'EXECUTE'), ''),
+                  'MISSING — migration 006 has not been applied'),
+         count(*) = 1 AND bool_and(p.prosecdef
+                                   AND has_function_privilege('gallery_anon', p.oid, 'EXECUTE'))
+    FROM pg_proc p JOIN pg_namespace n ON n.oid = p.pronamespace
+   WHERE n.nspname = 'gallery' AND p.proname = 'storage_key_for_public_image'
 )
 SELECT CASE WHEN pass THEN 'PASS' ELSE 'FAIL' END AS result, what, detail
   FROM checks ORDER BY what;

@@ -283,6 +283,25 @@ The setting was renamed to a fixed, schema-independent `thegallery.account_id`, 
 **Related finding / decision IDs:** OBL-GAL-008, P-18, GAL-L0013  
 **Harvest status:** UNHARVESTED
 
+### GAL-L0015
+
+**Date:** 2026-09-06  
+**Observed event:**  
+The image codecs were carried as base64 and compiled on first use — an arrangement chosen precisely because it depended on no bundler feature, and described in the code as "identical in Node and on Workers". It was not identical. On the first run of the journeys against the built Worker, every image upload failed with `CompileError: WebAssembly.compile(): Wasm code generation disallowed by embedder`. A Worker isolate permits WebAssembly compilation only while modules are being evaluated, and OpenNext loads the Next server bundle with a dynamic `import()` from inside `fetch`, so the whole server bundle is evaluated in a request.
+
+**Evidence:**  
+The failure was visible to a maker as a refusal on the upload form, in the product's own words. The rule behind it was then established directly rather than assumed: a four-line Worker run under the same `workerd` reported `startup: OK (sync, top level)`, `inHandler: FAILED: CompileError`, `fromStartup: OK: 42`. Recorded in `doctrine/receipts/WORKER-RUNTIME-2026-09-06.md`.
+
+**Why it mattered:**  
+The design note was not wrong about bundlers; it was wrong about a runtime, and it stated the conclusion — "identical in Node and on Workers" — as though it had been checked. It had been checked in Node. The first move after the failure was the same mistake in miniature: compile eagerly at module scope, on the reasoning that module scope means startup. It does not, when the module is dynamically imported inside a handler, and that attempt failed the same way. Only the measurement settled it. A claim about a runtime is worth what the runtime said, not what the documentation implied.
+
+**What changed:**  
+Compilation and instantiation were separated. `worker-entry.ts` imports the three `.wasm` files directly, so wrangler compiles them at deploy time and workerd hands them over already compiled; the request path only instantiates. Node continues to compile from the base64 the same generator writes, because Node has no such rule — one generator, two shapes, so they cannot drift. The 31 journeys were then re-run against the Worker at each width, and the image bytes were read back out of the object store to confirm they were real.
+
+**Status:** RESOLVED  
+**Related finding / decision IDs:** OBL-GAL-008, P-17, GAL-L0011  
+**Harvest status:** UNHARVESTED
+
 ---
 
 ## Ledger rules
