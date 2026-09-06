@@ -1164,9 +1164,9 @@
       "id": "OBL-GAL-002",
       "state": "NOT_SEEN",
       "owner": "BUILDER",
-      "summary": "Host invocation of this project's hooks is unproven. Evidence gathered 2026-09-04: the harness's own SessionStart and Stop hooks did execute in this session (the transcript carries a stop_hook_summary record and the git-identity hook's effect), so the hook door exists and works in this environment; this project's .claude/settings.json was created after session start and hook configuration is snapshotted then, so no project hook fired. Script behaviour and hook configuration are proven; host invocation is not.",
+      "summary": "Host invocation of this project's hooks is unproven. Attempt 1 (2026-09-04, receipt doctrine/receipts/HOOK_LIVENESS_ATTEMPT-2026-09-04.md) tested nothing because the harness continued the session that had created .claude/settings.json rather than starting a fresh one; in that session the project hooks demonstrably did not fire — a default-branch commit and a stage-blocked application-source Write both executed, while the guard script denied the same payloads with GUARD-3 and GUARD-4. The cause is host snapshot timing: the harness ran the hooks present at session start and not the project file that appeared later. Settings discovery, matcher behaviour and guard logic are each ruled out by that evidence.",
       "evidence_path": "SessionStart output at the start of a later session",
-      "activation_condition": "A fresh harness session starts with this branch checked out and .claude/settings.json present at session start.",
+      "activation_condition": "The governor starts a session from the client with this branch already checked out, so that .claude/settings.json exists before the session begins, and step 0 of the procedure confirms the session id differs from every id recorded in the attempt receipts.",
       "future_acceptance_test": "The SessionStart output of that session contains the standing assessment and the line 'DOCTRINE GUARD: pre-act enforcement live for this session', and a deliberate denial attempt in that session returns a GUARD-rule denial. Procedure and expected evidence: doctrine/receipts/HOOK_LIVENESS_VERIFICATION.md."
     },
     {
@@ -1263,7 +1263,7 @@
       "id": "UNK-GAL-002",
       "state": "UNKNOWN",
       "owner": "BUILDER",
-      "summary": "Whether this project's PreToolUse hooks are applied to tool calls made inside a subagent started through Agent, Task or Workflow is not provable from inside the repository. Delegation is itself a guarded act, so an unoriented session cannot start one.",
+      "summary": "Whether this project's PreToolUse hooks are applied to tool calls made inside a subagent started through Agent, Task or Workflow is not provable from inside the repository. Delegation is itself a guarded act, so an unoriented session cannot start one. Not probed on 2026-09-04: in a session with no hooks loaded, a subagent probe cannot distinguish an ungoverned delegation route from an absent hook configuration, so it would not be evidence.",
       "activation_condition": "A fresh session with hooks live runs a delegated agent that attempts a denied act.",
       "future_acceptance_test": "The subagent's attempt returns a GUARD-rule denial, or the absence of one is recorded and the delegation class is declared UNARMED.",
       "evidence_path": "doctrine/MUTATION_SURFACE.json uncovered_routes_declared"
@@ -1318,6 +1318,6 @@
     }
   },
   "learning_ledger": "doctrine/BUILD_LEARNING_LEDGER.md",
-  "updated_at": "2026-09-04T08:03:24+00:00",
-  "update_reason": "Enforcement closure on the Governor instruction of 2026-09-04: the guard's indeterminate verdict became a denial, the guarded mutation surface was derived from the harness's real tool inventory rather than assumed to be Bash, the git hooks were made fail-closed, a repository gate over the binding documents was added with a two-sided armed-count ratchet, and every obligation now carries an activation condition and a future acceptance test."
+  "updated_at": "2026-09-06T05:12:17+00:00",
+  "update_reason": "Hook-liveness attempt 1 recorded: NOT PROVABLE. The session was not fresh, the project hooks did not fire, and the cause is host snapshot timing. No enforcement claim changed; OBL-GAL-002 and UNK-GAL-002 both remain open."
 }
