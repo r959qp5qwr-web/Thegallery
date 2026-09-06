@@ -148,7 +148,10 @@ export async function createWorkAction(_prev: FormState, form: FormData): Promis
 
   if (!title) return { error: "A work needs a title." };
   if (!material) return { error: "Choose the material." };
-  if (price_mode === "exact" && !(Number(rawPrice) >= 0)) {
+  // Number("") is 0, so a blank price passed the very check that exists to catch it and then
+  // failed at the database as an unreadable "we could not save that work". An empty field is
+  // not a zero price; it is an unanswered question.
+  if (price_mode === "exact" && !(rawPrice !== "" && Number.isFinite(Number(rawPrice)) && Number(rawPrice) >= 0)) {
     return { error: "Enter the price, or choose price on enquiry." };
   }
 
