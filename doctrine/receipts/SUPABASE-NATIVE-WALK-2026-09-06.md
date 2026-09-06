@@ -56,9 +56,19 @@ looked like product failures until they were instrumented.
   hosted project.
 - The Worker. Nothing has been deployed.
 
+## Cleared afterwards, through the product's own door
+
+The one published work was removed by signing in as its maker and calling `close_account()` —
+the same door a maker uses, with no privileged key. `public_works` went from one row to none,
+read back as a stranger.
+
+That is also, incidentally, the first proof of account closure on this path: closure retired
+the published work, closed the gallery, and the work left every public surface, exactly as
+DOMAIN_MODEL §2.1 requires. It was not walked deliberately; it was walked by cleaning up.
+
 ## Left behind on the project
 
-Synthetic makers under `.example` addresses from several attempts, and one published work
-("Monsoon Vessel No. 4", handle `anika-mtpypzm7`). Reserved values only — nothing can reach a
-real person — but it is visible to anyone who opens the entrance, and it should be cleared
-before the product carries a real maker's work.
+Closed synthetic makers and their draft works, the auth.users rows behind them (all under
+reserved `.example` addresses), and the JPEG variants of the one upload sitting in the private
+bucket. None of it is publicly reachable. Removing it needs the SQL editor, since deleting a
+person from GoTrue is an administrative act this product deliberately holds no key for.
