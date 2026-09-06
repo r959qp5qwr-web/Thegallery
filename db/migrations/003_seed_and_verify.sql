@@ -1,14 +1,3 @@
--- SCHEMA ISOLATION (2026-09-06). Every object this product owns lives in ONE schema, and
--- nothing is created in `public`. That is what makes it safe to host The Gallery inside a
--- Supabase project that already carries another product: a name clash is impossible, the whole
--- product dumps and restores as one schema, and a migration run against the wrong database
--- cannot touch tables it does not own.
---
--- @schema@ is substituted by the migration runner (db/cli.ts, GALLERY_SCHEMA, default
--- `gallery`). A plain token rather than a psql variable, so the same file runs through psql
--- and through the Node runner without one of them choking on meta-commands.
---
--- search_path is set once here, so every unqualified CREATE below lands in that schema.
 CREATE SCHEMA IF NOT EXISTS "@schema@";
 SET search_path = "@schema@";
 
@@ -33,29 +22,29 @@ BEGIN
   -- V2 the anonymous role holds no grant on any base table
   SELECT string_agg(table_name, ', ') INTO leaked
   FROM information_schema.role_table_grants
-  WHERE grantee = 'gallery_anon'
+  WHERE grantee = 'anon'
     AND table_schema = current_schema()
-    AND table_name IN ('auth_accounts','auth_tokens','auth_sessions','makers','galleries','works',
-                       'work_images','contact_routes','operator_actions','write_intents','dev_outbox');
+    AND table_name IN ('makers','galleries','works','work_images','contact_routes',
+                       'operator_actions','write_intents','operators','account_closures');
   IF leaked IS NOT NULL THEN
-    RAISE EXCEPTION 'VERIFY V2 failed: gallery_anon holds grants on base tables: %', leaked;
+    RAISE EXCEPTION 'VERIFY V2 failed: anon holds grants on base tables: %', leaked;
   END IF;
 
-  -- V3 no public view exposes an account email column
+  -- V3 no public view exposes an identity column
   SELECT string_agg(table_name || '.' || column_name, ', ') INTO leaked
   FROM information_schema.columns
   WHERE table_schema = current_schema() AND table_name LIKE 'public\_%'
-    AND (column_name ILIKE '%email%' OR column_name ILIKE '%account%' OR column_name ILIKE '%password%');
+    AND (column_name ILIKE '%email%' OR column_name ILIKE '%user_id%' OR column_name ILIKE '%password%');
   IF leaked IS NOT NULL THEN
     RAISE EXCEPTION 'VERIFY V3 failed: a public view exposes private identity columns: %', leaked;
   END IF;
 
-  -- V4 every governed table has row-level security enabled
+  -- V4 every table in the schema has row-level security enabled. Not a named list: in an
+  -- exposed schema a table without RLS is reachable by anyone with the publishable key, so
+  -- the check must catch a table nobody remembered to add to a list.
   SELECT string_agg(relname, ', ') INTO leaked
   FROM pg_class c JOIN pg_namespace ns ON ns.oid = c.relnamespace
-  WHERE ns.nspname = current_schema() AND c.relkind = 'r' AND c.relrowsecurity = false
-    AND c.relname IN ('auth_accounts','makers','galleries','works','work_images','contact_routes',
-                      'operator_actions','write_intents');
+  WHERE ns.nspname = current_schema() AND c.relkind = 'r' AND c.relrowsecurity = false;
   IF leaked IS NOT NULL THEN
     RAISE EXCEPTION 'VERIFY V4 failed: row-level security is off for: %', leaked;
   END IF;
@@ -63,8 +52,9 @@ BEGIN
   -- V5 operator_actions carries no UPDATE or DELETE grant for any application role
   SELECT string_agg(grantee || ':' || privilege_type, ', ') INTO leaked
   FROM information_schema.role_table_grants
-  WHERE table_name = 'operator_actions' AND privilege_type IN ('UPDATE','DELETE')
-    AND grantee IN ('gallery_anon','gallery_auth');
+  WHERE table_schema = current_schema()
+    AND table_name = 'operator_actions' AND privilege_type IN ('UPDATE','DELETE')
+    AND grantee IN ('anon','authenticated');
   IF leaked IS NOT NULL THEN
     RAISE EXCEPTION 'VERIFY V5 failed: operator_actions is not append-only: %', leaked;
   END IF;
@@ -87,5 +77,45 @@ BEGIN
     RAISE EXCEPTION 'VERIFY V7 failed: engagement columns present: %', leaked;
   END IF;
 
-  RAISE NOTICE 'VERIFY V1-V7 passed';
+  -- V8 nobody may execute a function that was never granted deliberately. PostgREST turns
+  -- every executable function in an exposed schema into a callable endpoint, so a default
+  -- EXECUTE to PUBLIC is an open door rather than an untidiness.
+  SELECT string_agg(p.proname, ', ') INTO leaked
+  FROM pg_proc p JOIN pg_namespace ns ON ns.oid = p.pronamespace
+  WHERE ns.nspname = current_schema()
+    AND has_function_privilege('anon', p.oid, 'EXECUTE')
+    AND p.proname NOT IN ('storage_key_for_public_image');
+  IF leaked IS NOT NULL THEN
+    RAISE EXCEPTION 'VERIFY V8 failed: anon can execute functions it was not granted: %', leaked;
+  END IF;
+
+  -- V9 the operator table is reachable by nobody through the API: RLS on, no policy, no grant.
+  SELECT string_agg(x, ', ') INTO leaked FROM (
+    SELECT 'policy ' || polname AS x FROM pg_policy
+     WHERE polrelid = (current_schema() || '.operators')::regclass
+    UNION ALL
+    SELECT 'grant ' || grantee FROM information_schema.role_table_grants
+     WHERE table_schema = current_schema() AND table_name = 'operators'
+       AND grantee IN ('anon','authenticated')
+  ) y;
+  IF leaked IS NOT NULL THEN
+    RAISE EXCEPTION 'VERIFY V9 failed: operators is reachable: %', leaked;
+  END IF;
+
+  -- V10 a suspended maker cannot write. Established from the policy text rather than by
+  -- running as a suspended maker, which the probe suite does over HTTP: every write policy
+  -- must go through writing_maker_id(), which returns NULL unless the maker is active.
+  SELECT string_agg(polname, ', ') INTO leaked
+  FROM pg_policy
+  WHERE polrelid IN ((current_schema() || '.works')::regclass,
+                     (current_schema() || '.work_images')::regclass,
+                     (current_schema() || '.contact_routes')::regclass,
+                     (current_schema() || '.galleries')::regclass)
+    AND polcmd <> 'r'
+    AND pg_get_expr(polwithcheck, polrelid) NOT LIKE '%writing_maker_id%';
+  IF leaked IS NOT NULL THEN
+    RAISE EXCEPTION 'VERIFY V10 failed: write policies that do not check maker status: %', leaked;
+  END IF;
+
+  RAISE NOTICE 'VERIFY V1-V10 passed';
 END $verify$;

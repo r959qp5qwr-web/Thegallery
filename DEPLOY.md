@@ -1,5 +1,12 @@
 # Deploying The Gallery to Cloudflare
 
+> **Superseded in part, 2026-09-06.** Decision GAL-SUPA-1 returned the data and auth path to
+> Supabase-native: the application reaches its data through PostgREST with `@supabase/supabase-js`
+> and Supabase Auth owns the maker door. **Hyperdrive is no longer needed and should not be
+> created** — section 1 below is kept only as the record of an approach that was tried and
+> replaced. Sections 2 to 5 still apply, with the schema files noted in the session's report.
+> This file is rewritten when the application layer lands.
+
 The build target is a Cloudflare Worker: `@opennextjs/cloudflare` compiles the Next
 application into `.open-next/`, and `worker-entry.ts` wraps the generated worker so the image
 codecs are compiled while modules are evaluated (a Worker isolate refuses WebAssembly
