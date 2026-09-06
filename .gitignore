@@ -30,3 +30,6 @@ tsconfig.tsbuildinfo
 .wrangler/
 .open-next/
 .dev.vars
+
+# Scratch walkers used while proving a path; not part of the suite.
+*.tmp.mjs
