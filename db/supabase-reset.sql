@@ -17,14 +17,22 @@ DROP SCHEMA IF EXISTS gallery CASCADE;
 -- The roles the previous design created. Ownership and grants go with the schema above, so
 -- these should drop cleanly; if one refuses, it still holds a grant somewhere and that is
 -- worth reading rather than forcing.
+-- Each role is dropped on its own, and a refusal is reported rather than aborting the rest.
+-- The SQL editor runs as `postgres`, which is not a superuser on Supabase, so a role that
+-- still holds a grant somewhere may refuse — and that is worth reading, not forcing.
 DO $$
-DECLARE r text;
+DECLARE r text; msg text;
 BEGIN
   FOREACH r IN ARRAY ARRAY['gallery_authstore','gallery_auth','gallery_anon','gallery_app'] LOOP
     IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = r) THEN
-      EXECUTE format('DROP OWNED BY %I', r);
-      EXECUTE format('DROP ROLE %I', r);
-      RAISE NOTICE 'dropped role %', r;
+      BEGIN
+        EXECUTE format('DROP OWNED BY %I', r);
+        EXECUTE format('DROP ROLE %I', r);
+        RAISE NOTICE 'dropped role %', r;
+      EXCEPTION WHEN OTHERS THEN
+        GET STACKED DIAGNOSTICS msg = MESSAGE_TEXT;
+        RAISE WARNING 'could not drop role %: %', r, msg;
+      END;
     END IF;
   END LOOP;
 END $$;
