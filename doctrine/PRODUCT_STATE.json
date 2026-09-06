@@ -25,7 +25,7 @@
     "label": "Complete vertical slice. Authorised by the governor's sequencing decision of 2026-09-06: Stage 2 implementation proceeds on the development branch against the proved repository-local orientation, gates and git-hook mechanism. The platform-enablement gate is DEFERRED, not abandoned, and now bounds production release and authoritative trunk integration rather than implementation.",
     "entered_at": "2026-09-06T00:00:00+00:00",
     "authorised_by": "Governor's sequencing decision 2026-09-06 (GAL-SEQ-1), recorded at doctrine/receipts/STAGE2-AUTHORISATION-2026-09-06.md, on top of the Stage 1 ruling of the same date and the repository-local enforcement proved at b8e890e (88 drill cases, gates 5 of 5).",
-    "next_acceptance_condition": "The complete vertical slice works through the running product: a maker creates an account by email, confirms it, signs in and out and can begin recovery, creates a maker identity and Gallery, supplies public contact routes separate from the private account email, creates a work with three differently shaped images, previews and publishes it; an anonymous visitor reaches that work through the public entrance and through search, opens the maker's wider Gallery and uses the maker-selected contact route; the maker moves the work to sold and every public surface follows; an operator suspends and reinstates a synthetic maker with recorded reasons; a second maker cannot read or alter the first's material; draft, retired, taken-down and suspended material is absent from anonymous responses; the account email appears in no public page or payload; and account closure has a truthful consequence. Proved by browser journeys entering the same doors the product exposes, plus permission tests at the data layer — neither standing in for the other.",
+    "next_acceptance_condition": "Deployed proof of the same chain. The vertical slice is implemented and was walked end to end in the running product locally on 2026-09-06 (31 browser journeys, 20 permission probes, 8 executing VERIFY blocks, all green; receipt doctrine/receipts/STAGE2-VERTICAL-SLICE-2026-09-06.md). What remains is proof on a deployed build: the same walk on a physical phone against a hosting project and a real domain, with a real transactional email round trip for confirmation and recovery, and the contact handoff opening a real WhatsApp and mail client. That needs the provisioning in doctrine/EXTERNAL_ENABLEMENT.md item 5 and product/STAGE_2_VERTICAL_SLICE.md §4; none of it exists in the build environment, so no deployed claim is made.",
     "blocked_until_acceptance": [
       "production release",
       "authoritative trunk integration",
@@ -57,9 +57,9 @@
       {
         "code": "STAGE_2",
         "label": "Complete vertical slice",
-        "state": "IN_PROGRESS",
+        "state": "IMPLEMENTED_LOCALLY",
         "gate": "the whole chain works on the deployed product at phone width; Maker A cannot alter Maker B; anonymous sees only published material",
-        "evidence": null
+        "evidence": "doctrine/receipts/STAGE2-VERTICAL-SLICE-2026-09-06.md"
       },
       {
         "code": "STAGE_3",
@@ -77,7 +77,8 @@
       }
     ],
     "not_authorised_by_this_stage": "Stage 2 authorisation covers building and locally proving the vertical slice. It does not authorise a production release, a merge to the default branch, or any claim that the product is deployed or observed in production. The platform obligations OBL-GAL-003, OBL-GAL-005 and OBL-GAL-011 remain OPEN and UNARMED and bound that boundary; they are deferred, not discharged.",
-    "deferred_protections_visible": "Absent and required before production release or authoritative trunk integration: main does not exist; branch protection is unset and its state is UNKNOWN; GitHub Actions is not enabled; DOCTRINE_READ_TOKEN does not exist; the check 'Doctrine / Orientation, gates and drill' has never run. Local enforcement in force meanwhile: the seam arms and verifies core.hooksPath on every orientation, gate G3 holds it, and .githooks/pre-commit and pre-push run the seam and the gates on every commit and push in this checkout."
+    "deferred_protections_visible": "Absent and required before production release or authoritative trunk integration: main does not exist; branch protection is unset and its state is UNKNOWN; GitHub Actions is not enabled; DOCTRINE_READ_TOKEN does not exist; the check 'Doctrine / Orientation, gates and drill' has never run. Local enforcement in force meanwhile: the seam arms and verifies core.hooksPath on every orientation, gate G3 holds it, and .githooks/pre-commit and pre-push run the seam and the gates on every commit and push in this checkout.",
+    "state": "IMPLEMENTED_LOCALLY_AWAITING_DEPLOYED_PROOF"
   },
   "current_doctrine_binding": {
     "path": "doctrine/DOCTRINE_BINDING.json",
@@ -991,11 +992,11 @@
       "promise": "You can contact the maker directly from a work, gallery or workshop.",
       "surface": "Contact action on work, maker gallery, commission and workshop surfaces",
       "mechanism": "Enabled maker route opens exactly as selected; publish gate requires ≥1 route (GAL-03)",
-      "proof_state": "DESIGNED",
-      "evidence": "R-2, R-2b, I-1, I-3 renders; J-001 contract",
+      "proof_state": "OBSERVED_LOCAL",
+      "evidence": "Walked in the running product: the handoff sheet opens from the work, the WhatsApp route resolves to wa.me with the prefilled line and the email route to mailto: with a subject naming the work (e2e/02, 'the visitor sees the disclosure'). Not observed on a phone against a deployed build.",
       "walked": {
-        "visitor": null,
-        "maker": null,
+        "visitor": "local browser walk 2026-09-06",
+        "maker": "local browser walk 2026-09-06",
         "operator": null
       }
     },
@@ -1004,8 +1005,8 @@
       "promise": "The Gallery processes no payment, order, shipping, return or dispute.",
       "surface": "Handoff disclosure; absence of any commerce route",
       "mechanism": "No commerce objects or routes exist; vocabulary sweep (GAL-04)",
-      "proof_state": "DESIGNED",
-      "evidence": "product/PRODUCT_ARCHITECTURE.md §4 route inventory holds no commerce route; R-2b disclosure",
+      "proof_state": "TESTED",
+      "evidence": "Schema and source sweeps: no cart, checkout, order, payment, wallet, escrow, refund, shipping or dispute table or identifier exists (migration 003 VERIFY V6, policy probe P-19, e2e/04 marketplace sweep with its own anti-vacuity case).",
       "walked": {
         "visitor": null,
         "maker": null,
@@ -1017,8 +1018,8 @@
       "promise": "The Gallery takes no percentage of your sale, commission or workshop fee.",
       "surface": "For Makers participation copy",
       "mechanism": "No fee field linked to sales; refusal GAL-R03 (GAL-05)",
-      "proof_state": "DESIGNED",
-      "evidence": "I-4 create-account copy; product/decisions GAL-OD-13",
+      "proof_state": "TESTED",
+      "evidence": "No billing, entitlement, plan-limit or fee object exists in the schema or the route inventory (VERIFY V6, e2e/04).",
       "walked": {
         "visitor": null,
         "maker": null,
@@ -1030,8 +1031,8 @@
       "promise": "There are no public likes, ratings, reviews, comments or follower counts.",
       "surface": "Every public surface by structure",
       "mechanism": "Schema and UI contain no public counters (GAL-08)",
-      "proof_state": "DESIGNED",
-      "evidence": "no counter on any rendered surface; DOMAIN_MODEL has no public counter",
+      "proof_state": "TESTED",
+      "evidence": "No engagement column exists and no surface renders a count (migration 003 VERIFY V7, policy probe P-20, e2e/04 claim sweep over rendered copy).",
       "walked": {
         "visitor": null,
         "maker": null,
@@ -1043,11 +1044,11 @@
       "promise": "Work information is written and maintained by the maker and shown as such.",
       "surface": "Work detail label; maker gallery",
       "mechanism": "Claim fields owned by the maker; maker-authored attribution rendered (GAL-06)",
-      "proof_state": "DESIGNED",
-      "evidence": "R-2 'in the maker's words' attribution; R-3 'your statement to visitors'",
+      "proof_state": "OBSERVED_LOCAL",
+      "evidence": "The maker wrote the label and the practice note in the Studio and both render unchanged on the public work and gallery surfaces (e2e/02).",
       "walked": {
-        "visitor": null,
-        "maker": null,
+        "visitor": "local browser walk 2026-09-06",
+        "maker": "local browser walk 2026-09-06",
         "operator": null
       }
     },
@@ -1056,11 +1057,11 @@
       "promise": "You can browse, open work, open galleries and share without an account.",
       "surface": "All public routes",
       "mechanism": "Anonymous route probes (GAL-11)",
-      "proof_state": "DESIGNED",
-      "evidence": "R-1, R-2, I-1, I-2, I-3 need no session",
+      "proof_state": "OBSERVED_LOCAL",
+      "evidence": "An anonymous context reached the entrance, the material page, search, the work, the maker gallery and the saved shelf with no account (e2e/02, e2e/03).",
       "walked": {
-        "visitor": null,
-        "maker": null,
+        "visitor": "local browser walk 2026-09-06",
+        "maker": "local browser walk 2026-09-06",
         "operator": null
       }
     },
@@ -1069,11 +1070,11 @@
       "promise": "Makers create an account and sign in with email; you can confirm, reset, sign out and close the account.",
       "surface": "For Makers door",
       "mechanism": "Complete deployed email door walked with a real test email (GAL-12)",
-      "proof_state": "DESIGNED",
-      "evidence": "I-4 door frames; J-002 and J-005 contracts",
+      "proof_state": "OBSERVED_LOCAL",
+      "evidence": "Account creation, single-use email confirmation, sign-in, sign-out, recovery and expired-session return were all walked (e2e/01). The confirmation and recovery links were minted and consumed; NO EMAIL WAS SENT — the local outbox writes the message and delivers nothing.",
       "walked": {
-        "visitor": null,
-        "maker": null,
+        "visitor": "local browser walk 2026-09-06",
+        "maker": "local browser walk 2026-09-06",
         "operator": null
       }
     },
@@ -1082,11 +1083,11 @@
       "promise": "Your sign-in email stays private unless you publish it as a contact route.",
       "surface": "Maker contact settings; public maker gallery",
       "mechanism": "Account email absent from public payloads (GAL-P1)",
-      "proof_state": "DESIGNED",
-      "evidence": "I-4 'stays private' help; DOMAIN_MODEL public views omit account email",
+      "proof_state": "OBSERVED_LOCAL",
+      "evidence": "The account email appears in no public page or JSON payload across twelve surfaces, and in no public view (e2e/03 privacy sweep, policy probe P-18, migration 003 VERIFY V3).",
       "walked": {
-        "visitor": null,
-        "maker": null,
+        "visitor": "local browser walk 2026-09-06",
+        "maker": "local browser walk 2026-09-06",
         "operator": null
       }
     },
@@ -1095,11 +1096,11 @@
       "promise": "Saves are private and never become a public count.",
       "surface": "Saved tab",
       "mechanism": "Device-local storage; no server counter (GAL-08, GAL-OD-08)",
-      "proof_state": "INTENDED",
-      "evidence": null,
+      "proof_state": "OBSERVED_LOCAL",
+      "evidence": "Saves are written to the visitor's own browser storage; no server table exists for them and the shelf refresh sends only tokens (e2e/03).",
       "walked": {
-        "visitor": null,
-        "maker": null,
+        "visitor": "local browser walk 2026-09-06",
+        "maker": "local browser walk 2026-09-06",
         "operator": null
       }
     },
@@ -1108,8 +1109,8 @@
       "promise": "A shared link returns to the exact work, gallery or workshop.",
       "surface": "Share action; deep links; share previews",
       "mechanism": "Durable public routes with truthful titles and previews; private, draft and retired content excluded",
-      "proof_state": "DESIGNED",
-      "evidence": "R-2 Share action; PRODUCT_ARCHITECTURE §4 canonical URLs and previews",
+      "proof_state": "NOT_SEEN",
+      "evidence": "A shared link returning to the exact object needs a real URL a link can travel to. NOT SEEN: no domain and no deployment exist.",
       "walked": {
         "visitor": null,
         "maker": null,
@@ -1121,11 +1122,11 @@
       "promise": "The status you see (available, made to order, enquire, sold, on view) is the maker's current statement.",
       "surface": "Work detail; Browse; maker gallery; collections; saved references",
       "mechanism": "One status home propagated to every surface; staleness detectable and reconfirmation prompted (GAL-RC3)",
-      "proof_state": "DESIGNED",
-      "evidence": "J-003 contract and wireframe; R-3 status help; I-1 tiles",
+      "proof_state": "OBSERVED_LOCAL",
+      "evidence": "One status change from available to sold was followed across the entrance, the material page, search, the work detail, the maker gallery and the saved shelf, with no surface left saying available (e2e/03).",
       "walked": {
-        "visitor": null,
-        "maker": null,
+        "visitor": "local browser walk 2026-09-06",
+        "maker": "local browser walk 2026-09-06",
         "operator": null
       }
     },
@@ -1134,12 +1135,12 @@
       "promise": "Draft, retired, taken-down or suspended work is not public.",
       "surface": "Every public surface and payload",
       "mechanism": "Server-side visibility rules; payload absence under anonymous persona",
-      "proof_state": "INTENDED",
-      "evidence": null,
+      "proof_state": "OBSERVED_LOCAL",
+      "evidence": "Draft, retired and suspended material is absent from every anonymous surface, and the image bytes 404 for a stranger once a maker is suspended (e2e/03, e2e/04, policy probes P-01 to P-06).",
       "walked": {
-        "visitor": null,
-        "maker": null,
-        "operator": null
+        "visitor": "local browser walk 2026-09-06",
+        "maker": "local browser walk 2026-09-06",
+        "operator": "local browser walk 2026-09-06"
       }
     },
     {
@@ -1147,8 +1148,8 @@
       "promise": "Workshops shown are current; past, cancelled or changed workshops do not render as current.",
       "surface": "Workshops tab; workshop detail",
       "mechanism": "Structured dates and lifecycle states; past-dated and cancelled states rendered truthfully",
-      "proof_state": "DESIGNED",
-      "evidence": "I-3 cancelled and past treatment",
+      "proof_state": "NOT_SEEN",
+      "evidence": "Workshops are a Stage 3 journey and are not implemented; the route states its own emptiness. NOT SEEN.",
       "walked": {
         "visitor": null,
         "maker": null,
@@ -1160,12 +1161,12 @@
       "promise": "A report reaches an ending, and a suspension can be lifted.",
       "surface": "Report route; operator surface",
       "mechanism": "Report lifecycle submitted → under review → actioned/dismissed → closed; every sanction has a release path; append-only operator record",
-      "proof_state": "DESIGNED",
-      "evidence": "J-004 contract; I-6 required-reason dialog",
+      "proof_state": "OBSERVED_LOCAL",
+      "evidence": "An operator suspended and reinstated a synthetic maker with written reasons; the public surfaces lost and regained the work, the Studio stated the suspension, and both acts are on the append-only record (e2e/03).",
       "walked": {
-        "visitor": null,
-        "maker": null,
-        "operator": null
+        "visitor": "local browser walk 2026-09-06",
+        "maker": "local browser walk 2026-09-06",
+        "operator": "local browser walk 2026-09-06"
       }
     },
     {
@@ -1173,11 +1174,11 @@
       "promise": "Before you leave to contact a maker, you are told that payment, delivery, returns and disputes are arranged with them.",
       "surface": "Contact handoff surface",
       "mechanism": "Governed disclosure copy rendered before external navigation (GAL-15, GAL-C1)",
-      "proof_state": "DESIGNED",
-      "evidence": "R-2b disclosure before routes",
+      "proof_state": "OBSERVED_LOCAL",
+      "evidence": "The disclosure renders on the handoff sheet before any route is offered, and again on the maker gallery's contact section (e2e/02, render S5).",
       "walked": {
-        "visitor": null,
-        "maker": null,
+        "visitor": "local browser walk 2026-09-06",
+        "maker": "local browser walk 2026-09-06",
         "operator": null
       }
     },
@@ -1186,8 +1187,8 @@
       "promise": "The Gallery never says a maker or work is verified, vetted, certified, safe or authentic.",
       "surface": "All copy",
       "mechanism": "Banned-claim regex over the governed copy home (GAL-07)",
-      "proof_state": "DESIGNED",
-      "evidence": "copy across all renders; Foundation copy rules",
+      "proof_state": "TESTED",
+      "evidence": "Sweep over the copy a person actually reads: no verification, quality or reliability claim appears un-negated on any served page (e2e/04, with its own anti-vacuity case).",
       "walked": {
         "visitor": null,
         "maker": null,
@@ -1199,11 +1200,11 @@
       "promise": "Your images keep their orientation, crop, order and usable quality.",
       "surface": "Maker upload and preview; public work views",
       "mechanism": "Non-destructive variants; focal-crop control; portrait/landscape/square supported; inspected uploads",
-      "proof_state": "DESIGNED",
-      "evidence": "R-3 upload states; DOMAIN_MODEL work images",
+      "proof_state": "OBSERVED_LOCAL",
+      "evidence": "Three differently shaped images (3:4, 3:2, 1:1) were uploaded and each is stored and decoded at its own ratio; nothing is cropped to a common shape (e2e/02, asserted on stored dimensions and on decoded naturalWidth/naturalHeight).",
       "walked": {
-        "visitor": null,
-        "maker": null,
+        "visitor": "local browser walk 2026-09-06",
+        "maker": "local browser walk 2026-09-06",
         "operator": null
       }
     },
@@ -1212,8 +1213,8 @@
       "promise": "Only you can change your gallery, work, collections, workshops and contact routes.",
       "surface": "Maker dashboard",
       "mechanism": "Server-side ownership enforcement probed adversarially with two synthetic makers (GAL-A1)",
-      "proof_state": "INTENDED",
-      "evidence": null,
+      "proof_state": "TESTED",
+      "evidence": "Maker B cannot read or write Maker A's works, profile, routes or account through the database roles the product uses, nor reach them through the Studio's own doors (policy probes P-07 to P-13, e2e/03).",
       "walked": {
         "visitor": null,
         "maker": null,
@@ -1225,8 +1226,8 @@
       "promise": "Discovery order is explainable and is never bought or engagement-ranked.",
       "surface": "Browse",
       "mechanism": "Documented deterministic ordering; no paid or engagement input (GAL-09, GAL-10)",
-      "proof_state": "DESIGNED",
-      "evidence": "R-1 'Rotates daily' and 'newest first'; PRODUCT_ARCHITECTURE §6",
+      "proof_state": "NOT_SEEN",
+      "evidence": "Discovery order is recency, which is explainable and unbought, but 'explainable to a visitor' needs the copy that explains it on the discovery surfaces. NOT SEEN at Stage 2.",
       "walked": {
         "visitor": null,
         "maker": null,
@@ -1238,11 +1239,11 @@
       "promise": "Your exact address is shown only if you enter it for that purpose.",
       "surface": "Maker location settings; public gallery",
       "mechanism": "Explicit structured location with a public flag; metadata stripped (GAL-P2)",
-      "proof_state": "INTENDED",
-      "evidence": null,
+      "proof_state": "OBSERVED_LOCAL",
+      "evidence": "exact_address is null in the public maker view unless exact_address_public is set; the column is conditioned in the view itself (migration 002).",
       "walked": {
-        "visitor": null,
-        "maker": null,
+        "visitor": "local browser walk 2026-09-06",
+        "maker": "local browser walk 2026-09-06",
         "operator": null
       }
     }
@@ -1400,30 +1401,80 @@
     "next_boundary": "H1 — architecture settled, after Stage 1 acceptance (Playbook §17)"
   },
   "release_verification_status": {
-    "state": "UNKNOWN",
-    "basis": "Nothing is implemented or deployed and no release has been claimed.",
-    "last_verified_at": null,
+    "state": "NOT_RELEASED",
+    "basis": "The Stage 2 vertical slice is implemented and was walked end to end in the running product on a local environment: 31 browser journeys at phone and desktop width, 20 adversarial permission probes, 8 executing VERIFY blocks in the migrations. Nothing is deployed. No hosting project, domain, transactional email sender or production database exists, so no deployed proof has been taken and none is claimed.",
+    "last_verified_at": "2026-09-06 (local)",
     "known_unknowns": [
-      "deployment environment and provider capabilities (none provisioned)",
-      "real email round trip",
-      "image pipeline behaviour",
-      "GitHub branch protection state"
-    ]
+      "behaviour on a deployed build behind a real domain (nothing is deployed)",
+      "a real email round trip — the local outbox writes messages and sends none",
+      "the contact handoff opening a real WhatsApp or mail client on a physical phone",
+      "image pipeline behaviour on a hosted object store rather than local disk",
+      "GitHub branch protection state and the CI check, which have never run"
+    ],
+    "receipt": "doctrine/receipts/STAGE2-VERTICAL-SLICE-2026-09-06.md"
   },
   "human_surface_state": {
     "module": "ux-design-assurance 1.1.0 (bound through DOCTRINE_BINDING.json)",
     "manifest": "ux/UX_MANIFEST.yaml",
     "interface_reference_set": "ACCEPTED by the governor 2026-09-06 as the authoritative design direction for implementation — R-1, R-2, R-3 rendered, reviewed and accepted (ux/reference/interface/INTERFACE_REFERENCE_SET.md). The approved grammar, hierarchy, typography, palette, imagery treatment and interaction direction are fixed; ordinary responsive, accessibility and implementation refinement remains the builder's, and acceptance freezes no defect. The interface may not drift into a generic marketplace, social feed or administrative template, and any later change that materially alters the approved product character returns for governor review.",
     "journeys": {
-      "J-001": "INTERFACE_READY",
-      "J-002": "INTERFACE_READY",
-      "J-003": "UX_READY",
-      "J-004": "INTERFACE_READY",
+      "J-001": "VERIFYING",
+      "J-002": "VERIFYING",
+      "J-003": "VERIFYING",
+      "J-004": "VERIFYING",
       "J-005": "IDENTIFIED",
       "J-006": "IDENTIFIED"
-    }
+    },
+    "stage_2_note": "J-001, J-002 and J-003 are implemented in full and J-004 minimally (suspend, reinstate, recorded reasons). All four were walked end to end in the running product at phone and desktop width on 2026-09-06. They read VERIFYING rather than VERIFIED because verification is not complete: no deployed build, no real email round trip and no walk on a physical phone. J-005's doors (sign out, sign in, recovery, expired session, account closure) were walked inside J-002's spec; J-006 enters through material browse, search and private saves."
   },
   "learning_ledger": "doctrine/BUILD_LEARNING_LEDGER.md",
   "updated_at": "2026-09-06",
-  "update_reason": "Governor's sequencing decision of 2026-09-06 recorded as FIXED decision GAL-SEQ-1, and the active stage advanced to STAGE_2. The platform-enablement gate is DEFERRED rather than passed: OBL-GAL-003, OBL-GAL-005 and OBL-GAL-011 stay OPEN and UNARMED with their conditions unchanged, and the stage carries a deferred_protections_visible field naming exactly what is absent. The blocked list no longer refuses application source; it refuses production release, authoritative trunk integration, merging to the default branch and any claim of deployed proof. No obligation was weakened, removed or closed; armed_fixed_decisions is unchanged at 8."
+  "update_reason": "Stage 2 vertical slice implemented and proved locally. The promise table moves from DESIGNED/INTENDED to OBSERVED_LOCAL (12), TESTED (5) and NOT_SEEN (3), each with the instrument that proved it named. J-001 to J-004 move to VERIFYING — implemented and walked in the running product, but not VERIFIED, because no deployed build, no real email round trip and no walk on a physical phone exist. release_verification_status becomes NOT_RELEASED with its known unknowns rewritten. A stage_2_proof_ledger records what was seen locally and what was not seen at all, in separate columns so the two cannot be read as one. The active stage stays STAGE_2 with a deployed-proof acceptance condition; OBL-GAL-003, OBL-GAL-005, OBL-GAL-008 and OBL-GAL-011 are untouched and still unarmed.",
+  "stage_2_proof_ledger": {
+    "_what": "What the Stage 2 slice actually proved, and by which instrument. Local proof and deployed proof are separate columns on purpose: a browser walk against localhost is not a deployed walk, and this ledger exists so no later session can read one as the other.",
+    "receipt": "doctrine/receipts/STAGE2-VERTICAL-SLICE-2026-09-06.md",
+    "browser_journeys": {
+      "count": 31,
+      "green": 31,
+      "widths": [
+        "phone (Pixel 7)",
+        "desktop 1280x900"
+      ],
+      "suite": "e2e/*.spec.ts",
+      "environment": "local build, next start on 127.0.0.1:3100"
+    },
+    "permission_probes": {
+      "count": 20,
+      "green": 20,
+      "suite": "tests/policy/run.ts",
+      "note": "Run through the same gallery_anon and gallery_auth roles the product uses, on a non-superuser connection, so row-level security actually applies."
+    },
+    "migration_verify_blocks": {
+      "count": 8,
+      "green": 8,
+      "suite": "db/migrations/*.sql"
+    },
+    "seen_locally": [
+      "maker account creation, single-use email confirmation, sign-in, sign-out, recovery, expired-session return",
+      "maker identity and gallery creation; public contact routes separate from the private account email",
+      "a work with three differently shaped images, each keeping its own proportion",
+      "preview and publish, with a replayed publish answered rather than applied",
+      "anonymous entrance, material browse, search by title and by maker, work detail, maker gallery",
+      "the disclosure and the maker-selected WhatsApp and email routes",
+      "available to sold propagating across every public surface including the saved shelf",
+      "operator suspension and reinstatement with recorded reasons, and the append-only record",
+      "Maker B unable to read or write Maker A's material by any door the product exposes",
+      "draft, retired, taken-down and suspended material absent from anonymous responses, image bytes included",
+      "the account email absent from twelve rendered surfaces and from the JSON door",
+      "a failed image upload that fails alone, and an interrupted publish that loses nothing",
+      "account closure with its consequence stated before the act and carried out after it"
+    ],
+    "not_seen": [
+      "any deployed build — nothing is deployed and no deployed claim is made",
+      "a real email round trip — the local outbox writes messages and sends none",
+      "the handoff opening a real WhatsApp or mail client on a physical phone",
+      "image storage on a hosted object store rather than local disk",
+      "the CI check and branch protection, which have never run"
+    ]
+  }
 }

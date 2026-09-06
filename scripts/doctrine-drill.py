@@ -405,8 +405,47 @@ def build_cases(root: Path, tmp: Path):
          lambda: guard(call("Write", {"file_path": str(REPO / "ux" / "notes.md")}, session="drill-unoriented"), root, rt("unoriented")), deny("GUARD-2", "file"))
     case("D-37", "guard: Write to a governance path with no orientation → ALLOWED (the repair path)", "a guard must remain repairable and Stage 0 must be able to bootstrap",
          lambda: guard(call("Write", {"file_path": str(REPO / "scripts" / "doctrine-hook.py")}, session="drill-unoriented"), root, rt("unoriented")), allow("write-governance-path"))
-    case("D-38", "guard: Write application source while the stage blocks it → DENIED", "GUARD-4 the stage gate is enforced, not remembered",
-         lambda: guard(call("Write", {"file_path": str(REPO / "src" / "app" / "page.tsx")}), root, oriented_rt), deny("GUARD-4", "file"))
+    def orient_project(proj: Path, runtime: Path, session: str):
+        """Orient a scratch project against ITS OWN governing state.
+
+        A case that edits a fixture's PRODUCT_STATE invalidates that fixture's orientation, so
+        the guard answers GUARD-2 (stale orientation) before it ever reaches the rule under
+        test. That is the guard behaving correctly and the case testing nothing, which the
+        grammar reports as STALE. Re-orienting the fixture after the edit is what puts the
+        intended rule back in the path.
+        """
+        rc, out = run([sys.executable, "-B", str(proj / "scripts" / "doctrine-orient.py"), "orient", "--quiet"],
+                      e=env(DOCTRINE_ROOT=str(root), DOCTRINE_RUNTIME_DIR=str(runtime), DOCTRINE_SESSION_ID=session),
+                      cwd=str(proj))
+        if rc != 0:
+            raise RuntimeError(f"fixture orientation failed: {out}")
+
+    def d38():
+        # GUARD-4 reads the LIVE stage record, so it must be drilled against a stage that
+        # blocks application source rather than against whichever stage is active today. The
+        # governor's sequencing decision of 2026-09-06 opened application source at STAGE_2;
+        # that makes the rule inactive, not absent, and a drill that quietly passed because the
+        # law is asleep would be exactly the decorative case this suite exists to catch.
+        proj = scratch_project(tmp / "p38")
+        st = json.loads((proj / "doctrine" / "PRODUCT_STATE.json").read_text())
+        st["active_stage"]["blocked_until_acceptance"] = ["application source", "database schema and migrations"]
+        (proj / "doctrine" / "PRODUCT_STATE.json").write_text(json.dumps(st, indent=2))
+        orient_project(proj, rt("p38"), "drill-p38")
+        return guard(call("Write", {"file_path": str(proj / "src" / "app" / "page.tsx")}, session="drill-p38"),
+                     root, rt("p38"), project=proj, hook=proj / "scripts" / "doctrine-hook.py")
+    case("D-38", "guard: Write application source while the stage blocks it → DENIED", "GUARD-4 the stage gate is enforced, not remembered", d38, deny("GUARD-4", "file"))
+
+    def d38b():
+        # The other side of the same rule: under a stage that does NOT block it, the write is
+        # allowed. Without this, D-38 could pass with a guard that denied every file write.
+        proj = scratch_project(tmp / "p38b")
+        st = json.loads((proj / "doctrine" / "PRODUCT_STATE.json").read_text())
+        st["active_stage"]["blocked_until_acceptance"] = ["production release", "merge to the default branch"]
+        (proj / "doctrine" / "PRODUCT_STATE.json").write_text(json.dumps(st, indent=2))
+        orient_project(proj, rt("p38b"), "drill-p38b")
+        return guard(call("Write", {"file_path": str(proj / "src" / "app" / "page.tsx")}, session="drill-p38b"),
+                     root, rt("p38b"), project=proj, hook=proj / "scripts" / "doctrine-hook.py")
+    case("D-38b", "guard: Write application source under a stage that permits it → ALLOWED (anti-vacuous)", "the stage gate reads the stage, not a memory of one", d38b, allow("write-product-path-oriented"))
     case("D-39", "guard: Write a product document while oriented → ALLOWED (anti-vacuous)", "the stage blocks application source, not documents",
          lambda: guard(call("Write", {"file_path": str(REPO / "product" / "NOTES.md")}), root, oriented_rt), allow("write-product-path-oriented"))
     case("D-40", "guard: local-write tool with no path this guard can read → DENIED", "GUARD-0 an unreadable target is indeterminate",

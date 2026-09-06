@@ -1,0 +1,59 @@
+/* The Gallery — design tokens (single source; see ux/INTERFACE_FOUNDATION.md §12).
+   Direction layer: the product's colours and type families.  Semantic layer: what components read. */
+:root {
+  /* direction */
+  --paper: #F3EEE6;
+  --paper-deep: #EAE3D8;
+  --stone: #D8CFC2;
+  --stone-strong: #857D73;
+  --ink: #1B1917;
+  --ink-muted: #5C5751;
+  --amber: #A04A1B;
+  --amber-tint: #F4E1D4;
+  --alarm: #7E2A17;
+  --scrim: rgba(27, 25, 23, 0.40);
+  --font-serif: "Newsreader", "Iowan Old Style", "Times New Roman", serif;
+  --font-mono: "IBM Plex Mono", "Courier Prime", "Courier New", monospace;
+  --font-sans: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  /* semantic */
+  --surface: var(--paper);
+  --surface-sunken: var(--paper-deep);
+  --text: var(--ink);
+  --text-muted: var(--ink-muted);
+  --accent: var(--amber);
+  --accent-tint: var(--amber-tint);
+  --rule: var(--ink);
+  --rule-soft: var(--stone);
+  --field-border: var(--stone-strong);
+  --action-fill: var(--ink);
+  --action-text: var(--paper);
+  --alarm-fill: var(--alarm);
+  --focus-ring: 0 0 0 2px var(--paper), 0 0 0 4px var(--ink);
+  /* type roles */
+  --t-wordmark: 500 15px/1 var(--font-mono);
+  --t-display: 300 34px/1.1 var(--font-serif);
+  --t-heading: 400 26px/1.15 var(--font-serif);
+  --t-subheading: 400 20px/1.25 var(--font-serif);
+  --t-grid-title: 400 17px/1.25 var(--font-serif);
+  --t-meta: 400 13px/1.4 var(--font-mono);
+  --t-label: 500 12px/1.2 var(--font-mono);
+  --t-body: 400 16px/1.5 var(--font-sans);
+  --t-body-small: 400 14px/1.45 var(--font-sans);
+  --t-action: 500 15px/1 var(--font-sans);
+  --t-field: 400 16px/1.4 var(--font-sans);
+  --t-note: italic 400 18px/1.45 var(--font-serif);
+  --track-wordmark: 0.18em;
+  --track-meta: 0.06em;
+  --track-label: 0.12em;
+  /* rhythm */
+  --s1: 4px; --s2: 8px; --s3: 16px; --s4: 24px; --s5: 32px; --s6: 48px;
+  --pad-x: 20px;
+  --pad-x-studio: 16px;
+  --radius: 2px;
+  --radius-sheet: 12px;
+  --header-h: 56px;
+  --bar-h: 64px;
+  --target: 44px;
+}
+@media (min-width: 600px) { :root { --t-display: 300 40px/1.1 var(--font-serif); --pad-x: 32px; } }
+@media (min-width: 900px) { :root { --t-display: 300 44px/1.08 var(--font-serif); --pad-x: 48px; } }

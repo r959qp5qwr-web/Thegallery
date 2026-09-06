@@ -1,0 +1,52 @@
+/* The Gallery — the accepted grammar, made responsive.
+   system.css was written for 390 x 844 reference plates. Nothing here changes the grammar:
+   the page container becomes fluid with the phone width as its measure, and the bottom bar
+   becomes fixed to the viewport instead of the plate. Everything else — type roles, rules,
+   rhythm, colour — is read unchanged from tokens.css and system.css. */
+@import url("system.css");
+
+.phone { width: 100%; max-width: 430px; min-height: 100vh; margin: 0 auto; overflow: visible;
+         padding-bottom: calc(var(--bar-h) + 12px); }
+@media (min-width: 760px) { .phone { max-width: 720px; } .grid { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 1080px) { .phone { max-width: 960px; } .grid { grid-template-columns: repeat(4, 1fr); } }
+
+.bar { position: fixed; left: 50%; transform: translateX(-50%); width: 100%; max-width: 430px; z-index: 20; }
+@media (min-width: 760px) { .bar { max-width: 720px; } }
+@media (min-width: 1080px) { .bar { max-width: 960px; } }
+
+.header { position: sticky; top: 0; z-index: 15; }
+.frame img { object-position: 50% 45%; }
+.frame.natural { aspect-ratio: auto; }
+.frame.natural img { height: auto; object-fit: contain; background: var(--surface-sunken); }
+
+form { margin: 0; }
+input, textarea, select { font: var(--t-field); color: var(--text); background: var(--surface);
+  border: 1px solid var(--field-border); border-radius: var(--radius); min-height: 48px;
+  padding: 12px; width: 100%; }
+textarea { min-height: 96px; resize: vertical; }
+select { min-height: 48px; }
+input[type="checkbox"] { width: auto; min-height: 0; }
+input[type="file"] { border: 1px dashed var(--field-border); padding: 14px; }
+.field input[aria-invalid="true"], .field textarea[aria-invalid="true"] { border-width: 2px; border-color: var(--ink); }
+button.btn { border: 0; }
+button.btn:disabled { background: var(--surface-sunken); color: var(--text-muted); cursor: default; }
+
+/* The handoff sheet, as the accepted R-2b surface has it: the work stays visible behind a
+   scrim and the sheet rises from the bottom. Anchored to the viewport, not to the document,
+   so the visitor meets the disclosure and the routes without scrolling for them. */
+.contact-scrim { position: fixed; inset: 0; background: var(--scrim); z-index: 30; display: block; }
+.sheet.contact { position: fixed; left: 50%; transform: translateX(-50%); bottom: 0;
+  width: 100%; max-width: 430px; z-index: 31; padding-bottom: 20px;
+  max-height: 86vh; overflow-y: auto; box-shadow: 0 -8px 32px rgba(27, 25, 23, 0.18); }
+@media (min-width: 760px) { .sheet.contact { max-width: 480px; bottom: 24px; border-radius: var(--radius-sheet); } }
+.stack { display: flex; flex-direction: column; gap: 10px; padding: var(--s3) var(--pad-x) 0; }
+.inline-actions { display: flex; gap: 8px; flex-wrap: wrap; padding: var(--s3) var(--pad-x) 0; align-items: center; }
+.crumb { padding: 12px var(--pad-x) 0; font: var(--t-meta); letter-spacing: var(--track-meta); color: var(--text-muted); }
+.crumb a { text-decoration: underline; text-underline-offset: 3px; }
+.sold .gs, .status.sold { color: var(--text-muted); }
+.imgstrip { display: flex; gap: 10px; overflow-x: auto; padding: 0 var(--pad-x); scroll-snap-type: x mandatory; }
+.imgstrip .shot { flex: 0 0 auto; width: min(88%, 360px); scroll-snap-align: center; }
+.imgstrip .shot img { width: 100%; height: auto; display: block; background: var(--surface-sunken); }
+.tile .frame img { object-fit: cover; }
+.hint { font: var(--t-body-small); color: var(--text-muted); padding: 8px var(--pad-x) 0; }
+.err-band { color: var(--alarm); }

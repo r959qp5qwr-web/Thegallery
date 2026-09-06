@@ -245,6 +245,26 @@ The nine ratified decisions carry `enforcement_locus` describing the mechanism t
 
 ---
 
+### GAL-L0013
+**Date:** 2026-09-06  
+**Observed event:**  
+Two things during the Stage 2 build that a green test suite would have hidden. First, the work detail rendered two of its three images broken, and every automated check passed: the journeys asserted that three `<img>` elements existed and said nothing about whether any of them returned bytes. It was caught by looking at a screenshot. Second, drill case D-38 went DECORATIVE the moment the governor's sequencing decision opened application source — the case had been asserting a rule that was no longer active, and would have kept passing for the wrong reason if the drill's grammar had not named it.
+
+**Evidence:**  
+`doctrine/receipts/STAGE2-VERTICAL-SLICE-2026-09-06.md` §5 and §6. The image defect: the surface requested a `w1280` variant, which is never generated for an image narrower than 1280 because upscaling would show a worse image than the maker supplied. The drill: `{'PASS': 87, 'DECORATIVE': 1}` on the run immediately after the stage moved.
+
+**Why it mattered:**  
+The image case is the presence-versus-behaviour mistake in a new place — the same shape as GAL-L0011's "existence is not execution", one layer up. An element being in the DOM is not the image being visible, exactly as a hook file being on disk is not git running it. The drill case is the opposite failure and the more instructive one: a law can be switched off by a legitimate governed decision, and the test that guards it then passes forever without testing anything. The drill's DECORATIVE verdict exists precisely to make that visible, and it did its job on the first change that could trigger it.
+
+**What changed:**  
+The image path was fixed on both sides — the surface asks for a width the image actually has, and the read falls back to the largest that exists — and the journey now asserts that every image returns real bytes and decodes at its own aspect ratio, so a broken image fails a test rather than needing an eye. D-38 was rewritten to plant a fixture whose stage blocks application source and orient that fixture against its own state, and D-38b added for the permitting stage: the rule is drilled from both sides against the stage record, rather than against whichever stage happens to be active. Neither the drill nor the stage was weakened to make the red go away. Drill totals 88 to 89, 0 red.
+
+**Status:** RESOLVED  
+**Related finding / decision IDs:** GAL-SEQ-1, GAL-G9, P-17, L-A8, L-A17  
+**Harvest status:** UNHARVESTED
+
+---
+
 ## Ledger rules
 
 - Capture the event in the governed change that fixes or formally records it where feasible.

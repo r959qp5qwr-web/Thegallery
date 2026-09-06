@@ -1,0 +1,20 @@
+import { Header, Footer } from "@/components/Chrome";
+
+export const dynamic = "force-dynamic";
+
+// Workshops are a Stage 3 journey (product/STAGE_2_VERTICAL_SLICE.md §6). The route exists
+// because the navigation names it, and it states its own emptiness rather than pretending to
+// a programme that has not been built.
+export default function Workshops() {
+  return (
+    <>
+      <Header place="Workshops" />
+      <div className="empty">
+        <h2>No workshops yet</h2>
+        <p>Makers will publish workshops here — dates, place and how to register. Nothing is
+          scheduled at the moment.</p>
+      </div>
+      <Footer />
+    </>
+  );
+}
