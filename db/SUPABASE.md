@@ -44,32 +44,26 @@ makes the twenty-two permission probes real, and no Supabase client library is i
 
 ---
 
-## 2. Create the roles
+## 2. Run the migrations
 
-Supabase's `postgres` role has `CREATEROLE`, so this works in the SQL editor:
+The roles are created by the migrations themselves — `gallery_anon` and `gallery_auth` in 001,
+`gallery_app` in 004 — so there is nothing to paste into the SQL editor first.
 
-```sql
--- The application connects as a role with NO privileges of its own.
-create role gallery_anon nologin;
-create role gallery_auth nologin;
-create role gallery_app  login password '<a long random password>' noinherit;
-grant gallery_anon, gallery_auth to gallery_app;
+`gallery_app`'s password comes from `GALLERY_APP_PASSWORD`. **Generate one.** The runner refuses
+to apply the local development password to anything that is not localhost, so a forgotten export
+fails loudly instead of leaving a role whose password is written down in this repository.
+
+```bash
+export GALLERY_SCHEMA=gallery
+export GALLERY_APP_PASSWORD="$(openssl rand -base64 24)"   # keep this; the app connects with it
+export DATABASE_URL_OWNER='postgres://postgres.<ref>:<db-password>@aws-N-<region>.pooler.supabase.com:5432/postgres'
+npm run db:migrate      # NOT db:reset — that drops a database, and this one is not only yours
 ```
 
 If the platform refuses to create a login role, connect the application as `postgres` instead.
 The permission model still holds: `postgres` on Supabase is **not** a superuser, and every
 request does `SET LOCAL ROLE` before it touches anything, so row-level security applies either
 way. Verify it with `npm run test:policy` before trusting it.
-
----
-
-## 3. Run the migrations
-
-```bash
-export GALLERY_SCHEMA=gallery
-export DATABASE_URL_OWNER='postgres://postgres.<ref>:<password>@aws-N-<region>.pooler.supabase.com:5432/postgres'
-npm run db:migrate      # NOT db:reset — that drops a database, and this one is not only yours
-```
 
 > **Never run `npm run db:reset` against Supabase.** It drops and recreates the whole database.
 > It exists for the local cluster. `db:migrate` only ever creates inside the `gallery` schema.
@@ -85,7 +79,7 @@ walking the product.
 
 ---
 
-## 4. Point the application at it
+## 3. Point the application at it
 
 Use the **session-mode** pooler (port 5432), not transaction mode (6543).
 
@@ -106,7 +100,7 @@ GALLERY_MAIL_FROM=The Gallery <hello@atthegallery.in>
 
 ---
 
-## 5. Images
+## 4. Images
 
 `GALLERY_STORAGE_DIR` writes to local disk. On a serverless host that disk does not survive a
 request, so before a real deployment either attach a persistent volume or swap the adapter to
@@ -120,7 +114,7 @@ that route, or keep the route reading bytes itself.
 
 ---
 
-## 6. Prove it, rather than assume it
+## 5. Prove it, rather than assume it
 
 Against the deployed URL:
 

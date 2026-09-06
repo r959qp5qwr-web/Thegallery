@@ -18,13 +18,21 @@ SET search_path = "@schema@";
 -- superuser, row-level security actually applies to every request. A pool that connected as
 -- the owner would silently bypass every policy in migration 002 and the isolation tests
 -- would prove nothing.
+-- The password comes from GALLERY_APP_PASSWORD through the migration runner, and the grant
+-- names current_database() rather than a hard-coded name. Both were local-only assumptions:
+-- the first would have put a known development password on a real project, and the second
+-- named a database that does not exist on a hosted one, where the database is `postgres`.
 DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'gallery_app') THEN
-    CREATE ROLE gallery_app LOGIN PASSWORD 'gallery_local_dev' NOINHERIT;
+    EXECUTE format('CREATE ROLE gallery_app LOGIN PASSWORD %L NOINHERIT', '@app_password@');
+  ELSE
+    EXECUTE format('ALTER ROLE gallery_app PASSWORD %L', '@app_password@');
   END IF;
 END $$;
 GRANT gallery_anon, gallery_auth TO gallery_app;
-GRANT CONNECT ON DATABASE gallery TO gallery_app;
+DO $$ BEGIN
+  EXECUTE format('GRANT CONNECT ON DATABASE %I TO gallery_app', current_database());
+END $$;
 GRANT USAGE ON SCHEMA "@schema@" TO gallery_app;
 
 DO $verify$

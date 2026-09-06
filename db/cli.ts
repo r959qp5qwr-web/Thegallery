@@ -14,6 +14,10 @@ const DB = process.env.GALLERY_DB ?? "gallery";
 const SCHEMA = process.env.GALLERY_SCHEMA ?? "gallery";
 if (!/^[a-z_][a-z0-9_]{0,62}$/.test(SCHEMA)) throw new Error(`unsafe GALLERY_SCHEMA: ${SCHEMA}`);
 if (SCHEMA === "public") throw new Error("GALLERY_SCHEMA must not be `public` — see db/migrations header");
+// The runtime role's password. Defaulted for the local cluster; on any hosted database set
+// GALLERY_APP_PASSWORD, or the role would carry a password that is written down in this repo.
+const APP_PASSWORD = process.env.GALLERY_APP_PASSWORD ?? "gallery_local_dev";
+if (APP_PASSWORD.includes("'")) throw new Error("GALLERY_APP_PASSWORD must not contain a single quote");
 
 async function run(url: string, sql: string) {
   const c = new Client({ connectionString: url });
@@ -31,10 +35,14 @@ async function runEach(url: string, statements: string[]) {
 
 async function migrate() {
   console.log(`  schema: ${SCHEMA}`);
+  if (APP_PASSWORD === "gallery_local_dev" && !/127\.0\.0\.1|localhost/.test(OWNER)) {
+    throw new Error("refusing to put the local development password on a non-local database. " +
+      "Set GALLERY_APP_PASSWORD to something you generated.");
+  }
   const dir = join(HERE, "migrations");
   for (const f of readdirSync(dir).filter((n) => n.endsWith(".sql")).sort()) {
     process.stdout.write(`  ${f} … `);
-    await run(OWNER, readFileSync(join(dir, f), "utf8").replaceAll("@schema@", SCHEMA));
+    await run(OWNER, readFileSync(join(dir, f), "utf8").replaceAll("@schema@", SCHEMA).replaceAll("@app_password@", APP_PASSWORD));
     process.stdout.write("ok\n");
   }
 }
