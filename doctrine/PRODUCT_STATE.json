@@ -17,20 +17,20 @@
   "governing_line": "The Gallery hosts the encounter. The maker owns the transaction.",
   "current_product_phase": {
     "code": "PRE_H1",
-    "label": "Architecture being settled. Doctrine bound at Stage 0; Stage 1 product and interface architecture in progress; no application source, schema, deployment or harvest exists. The H1 harvest (architecture settled) follows Stage 1 acceptance.",
-    "since": "2026-09-04"
+    "label": "Architecture settled. Doctrine bound at Stage 0; Stage 1 product and interface architecture accepted by the governor on 2026-09-06 with nine strategic decisions ratified and the interface reference set accepted; the pre-Stage-2 platform-enablement gate is the active stage. No application source, schema, deployment or harvest exists. The H1 harvest — architecture settled — is now due and is not yet taken.",
+    "since": "2026-09-06"
   },
   "active_stage": {
-    "code": "STAGE_1",
-    "label": "Product and interface architecture (Build Commission v1.1 §15) — artefacts complete; awaiting the governor's review",
-    "entered_at": "2026-09-04T04:45:14+00:00",
-    "authorised_by": "Stage 0 orientation VALID in the binding session; receipt recorded at doctrine/receipts/STAGE0-ORIENTATION-2026-09-04.md",
-    "next_acceptance_condition": "The governor reviews the Stage 1 artefacts (product/PRODUCT_ARCHITECTURE.md, product/DOMAIN_MODEL.md, ux/journeys/*, ux/INTERFACE_FOUNDATION.md, ux/reference/interface/*) and rules on the STRATEGIC open decisions in open_governor_decisions; only that ruling authorises Stage 2 (the vertical slice). Until then application source, schema and deployment configuration are not created.",
+    "code": "STAGE_2",
+    "label": "Complete vertical slice. Authorised by the governor's sequencing decision of 2026-09-06: Stage 2 implementation proceeds on the development branch against the proved repository-local orientation, gates and git-hook mechanism. The platform-enablement gate is DEFERRED, not abandoned, and now bounds production release and authoritative trunk integration rather than implementation.",
+    "entered_at": "2026-09-06T00:00:00+00:00",
+    "authorised_by": "Governor's sequencing decision 2026-09-06 (GAL-SEQ-1), recorded at doctrine/receipts/STAGE2-AUTHORISATION-2026-09-06.md, on top of the Stage 1 ruling of the same date and the repository-local enforcement proved at b8e890e (88 drill cases, gates 5 of 5).",
+    "next_acceptance_condition": "Deployed proof of the same chain. The vertical slice is implemented and was walked end to end in the running product locally on 2026-09-06 (31 browser journeys, 20 permission probes, 8 executing VERIFY blocks, all green; receipt doctrine/receipts/STAGE2-VERTICAL-SLICE-2026-09-06.md). What remains is proof on a deployed build: the same walk on a physical phone against a hosting project and a real domain, with a real transactional email round trip for confirmation and recovery, and the contact handoff opening a real WhatsApp and mail client. That needs the provisioning in doctrine/EXTERNAL_ENABLEMENT.md item 5 and product/STAGE_2_VERTICAL_SLICE.md §4; none of it exists in the build environment, so no deployed claim is made.",
     "blocked_until_acceptance": [
-      "application source",
-      "database schema and migrations",
-      "deployment and hosting configuration",
-      "feature commits"
+      "production release",
+      "authoritative trunk integration",
+      "merge to the default branch",
+      "any claim of deployed proof"
     ],
     "stages": [
       {
@@ -43,16 +43,23 @@
       {
         "code": "STAGE_1",
         "label": "Product and interface architecture",
-        "state": "COMPLETE_AWAITING_GOVERNOR_REVIEW",
-        "gate": "the governor can see what the product is, how it moves, how the maker publishes and how the operator acts; direction accepted",
-        "evidence": "product/PRODUCT_ARCHITECTURE.md; product/DOMAIN_MODEL.md; product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md; product/STAGE_2_VERTICAL_SLICE.md; ux/UX_FOUNDATION.md; ux/INTERFACE_FOUNDATION.md; ux/journeys/J-001..J-004; ux/wireframes/*.png; ux/reference/interface/INTERFACE_REFERENCE_SET.md and renders/"
+        "state": "ACCEPTED",
+        "gate": "the governor can see what the product is, how it moves, how the maker publishes and how the operator acts; direction accepted — ruled 2026-09-06",
+        "evidence": "product/PRODUCT_ARCHITECTURE.md; product/DOMAIN_MODEL.md; product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md; product/STAGE_2_VERTICAL_SLICE.md; ux/UX_FOUNDATION.md; ux/INTERFACE_FOUNDATION.md; ux/journeys/J-001..J-004; ux/wireframes/*.png; ux/reference/interface/INTERFACE_REFERENCE_SET.md and renders/; doctrine/receipts/STAGE1-GOVERNOR-RULING-2026-09-06.md"
+      },
+      {
+        "code": "PLATFORM_ENABLEMENT_GATE",
+        "label": "Repository and platform enforcement boundary (deferred, not abandoned)",
+        "state": "DEFERRED",
+        "gate": "main exists and is protected; the Doctrine CI check runs green on a pull request and is required; the read-only Doctrine credential exists. Every one of these is a governor or platform act and none of them is reachable from a build session. Deferred by the governor's sequencing decision of 2026-09-06: it no longer gates Stage 2 implementation and still gates production release and authoritative trunk integration.",
+        "evidence": "doctrine/EXTERNAL_ENABLEMENT.md items 1-3; observation of the branch-protection state"
       },
       {
         "code": "STAGE_2",
         "label": "Complete vertical slice",
-        "state": "NOT_STARTED",
+        "state": "IMPLEMENTED_LOCALLY",
         "gate": "the whole chain works on the deployed product at phone width; Maker A cannot alter Maker B; anonymous sees only published material",
-        "evidence": null
+        "evidence": "doctrine/receipts/STAGE2-VERTICAL-SLICE-2026-09-06.md"
       },
       {
         "code": "STAGE_3",
@@ -68,13 +75,16 @@
         "gate": "SEEN / NOT SEEN / OPEN DEFECTS / UNKNOWN / RELEASE DECISION on deployed walks",
         "evidence": null
       }
-    ]
+    ],
+    "not_authorised_by_this_stage": "Stage 2 authorisation covers building and locally proving the vertical slice. It does not authorise a production release, a merge to the default branch, or any claim that the product is deployed or observed in production. The platform obligations OBL-GAL-003, OBL-GAL-005 and OBL-GAL-011 remain OPEN and UNARMED and bound that boundary; they are deferred, not discharged.",
+    "deferred_protections_visible": "Absent and required before production release or authoritative trunk integration: main does not exist; branch protection is unset and its state is UNKNOWN; GitHub Actions is not enabled; DOCTRINE_READ_TOKEN does not exist; the check 'Doctrine / Orientation, gates and drill' has never run. Local enforcement in force meanwhile: the seam arms and verifies core.hooksPath on every orientation, gate G3 holds it, and .githooks/pre-commit and pre-push run the seam and the gates on every commit and push in this checkout.",
+    "state": "IMPLEMENTED_LOCALLY_AWAITING_DEPLOYED_PROOF"
   },
   "current_doctrine_binding": {
     "path": "doctrine/DOCTRINE_BINDING.json",
     "doctrine_version": "1.1.0",
-    "doctrine_commit": "dfdecb651df8cef5387487fee21d8ee2f798db95",
-    "bound_at": "2026-09-04T04:41:52+00:00"
+    "doctrine_commit": "6dc016c485ec1ddf31163534d84e02e0f74772f0",
+    "bound_at": "2026-11-05T12:52:50+00:00"
   },
   "proof_ladder": [
     "INTENDED",
@@ -351,7 +361,7 @@
       "enforcement_locus": "scripts/doctrine-hook.py GUARD-1 denies any shell, file-write or GitHub-API act that targets the Doctrine checkout or repository, wired through .claude/settings.json; .githooks/pre-push refuses a push whose remote URL names builders-doctrine. Drilled by scripts/doctrine-drill.py.",
       "enforcement_state": "ARMED_AS_CONFIGURED",
       "proof_state": "IMPLEMENTED",
-      "layer_note": "The push route is compulsory (git runs the hook); the agent routes are as-configured (the host must have loaded this project's hook configuration). The weaker of the two is the honest claim."
+      "layer_note": "The push route is compulsory (git runs the hook); the agent routes are as-configured (the host must have loaded this project's hook configuration). The weaker of the two is the honest claim. HOST TOPOLOGY QUALIFIER (2026-09-06, governed disposition): this reads ARMED_AS_CONFIGURED only in a session whose host project root IS this repository. Where the host opens this repository beneath a parent directory that it treats as the project root — the multi-repository shape in which the product and the Doctrine checkout sit as siblings — the harness never discovers .claude/settings.json and this layer executes nothing at all. That is a platform topology fact, carried by OBL-GAL-002. It is not a compulsory enforcement layer in the present topology and it is not a blocker to product development, because the commit and push routes are held compulsorily by GAL-G7 and GAL-G8 and the trunk boundary by CI."
     },
     {
       "id": "GAL-G2",
@@ -362,7 +372,7 @@
       "enforcement_locus": "scripts/doctrine-hook.py GUARD-2 denies a consequential act when scripts/doctrine-orient.py check fails, and GUARD-0 denies when the guard cannot establish a verdict at all; .claude/settings.json wires it to every mutation-capable tool.",
       "enforcement_state": "ARMED_AS_CONFIGURED",
       "proof_state": "IMPLEMENTED",
-      "layer_note": "In-session mutation is guarded only as-configured. The commit and push routes are held separately and compulsorily by GAL-G7."
+      "layer_note": "In-session mutation is guarded only as-configured. The commit and push routes are held separately and compulsorily by GAL-G7. HOST TOPOLOGY QUALIFIER (2026-09-06, governed disposition): this reads ARMED_AS_CONFIGURED only in a session whose host project root IS this repository. Where the host opens this repository beneath a parent directory that it treats as the project root — the multi-repository shape in which the product and the Doctrine checkout sit as siblings — the harness never discovers .claude/settings.json and this layer executes nothing at all. That is a platform topology fact, carried by OBL-GAL-002. It is not a compulsory enforcement layer in the present topology and it is not a blocker to product development, because the commit and push routes are held compulsorily by GAL-G7 and GAL-G8 and the trunk boundary by CI."
     },
     {
       "id": "GAL-G3",
@@ -404,7 +414,7 @@
       "enforcement_locus": "scripts/doctrine-hook.py GUARD-0 exits 2 on every indeterminate path; .claude/settings.json matches only mutation-capable tools, derived from doctrine/MUTATION_SURFACE.json and held by scripts/doctrine-gate.py G2.",
       "enforcement_state": "ARMED_AS_CONFIGURED",
       "proof_state": "IMPLEMENTED",
-      "layer_note": "The one fail-open this cannot close is structural: the host treats any non-zero exit other than 2 as a non-blocking error, so a guard that never starts (missing interpreter, missing file) lets the act through. That residue is OBL-GAL-010 and is why the compulsory git layer exists."
+      "layer_note": "The one fail-open this cannot close is structural: the host treats any non-zero exit other than 2 as a non-blocking error, so a guard that never starts (missing interpreter, missing file) lets the act through. That residue is OBL-GAL-010 and is why the compulsory git layer exists. HOST TOPOLOGY QUALIFIER (2026-09-06, governed disposition): this reads ARMED_AS_CONFIGURED only in a session whose host project root IS this repository. Where the host opens this repository beneath a parent directory that it treats as the project root — the multi-repository shape in which the product and the Doctrine checkout sit as siblings — the harness never discovers .claude/settings.json and this layer executes nothing at all. That is a platform topology fact, carried by OBL-GAL-002. It is not a compulsory enforcement layer in the present topology and it is not a blocker to product development, because the commit and push routes are held compulsorily by GAL-G7 and GAL-G8 and the trunk boundary by CI."
     },
     {
       "id": "GAL-G7",
@@ -412,10 +422,10 @@
       "source": "Builders' Playbook §3 consequence gate; Governor enforcement-closure instruction 2026-09-04",
       "decided_at": "2026-09-04",
       "status": "FIXED",
-      "enforcement_locus": ".githooks/pre-commit and .githooks/pre-push run scripts/doctrine-orient.py check and scripts/doctrine-gate.py, and refuse the act on failure or when the interpreter is absent.",
+      "enforcement_locus": "scripts/doctrine-orient.py orient configures this checkout's core.hooksPath to the governed .githooks directory and verifies the effective value git would use before it establishes the orientation receipt; scripts/doctrine-gate.py G3 reads git configuration directly and goes red when that path is absent, displaced or incomplete; .githooks/pre-commit and .githooks/pre-push run scripts/doctrine-orient.py check and scripts/doctrine-gate.py, and refuse the act on failure or when the interpreter is absent.",
       "enforcement_state": "ARMED",
       "proof_state": "IMPLEMENTED",
-      "layer_note": "Compulsory for every local git commit and push in this checkout, by any actor. The residue is `--no-verify`, which is deliberate and visible; the CI job named in doctrine/EXTERNAL_ENABLEMENT.md is the layer that closes it."
+      "layer_note": "Compulsory for every local git commit and push in this checkout, by any actor, and armed by the seam rather than by the harness hook — the OBL-GAL-013 repair of 2026-09-06. Before it, core.hooksPath was set only inside session_start in scripts/doctrine-hook.py, so this layer was armed by the as-configured layer and a fresh clone ran no hook at all. Two residues remain, both real, both held only by CI and a protected trunk: `--no-verify`, which is deliberate and visible; and a checkout that commits before it has ever oriented, since the arming and the hook live behind the same command. Drilled end to end against a fresh checkout with no inherited git configuration by D-73 through D-87, including the displaced-hook-path and repair cases."
     },
     {
       "id": "GAL-G8",
@@ -437,7 +447,202 @@
       "enforcement_locus": "scripts/doctrine-hook.py GUARD-4 denies a local write into an application root or build manifest while active_stage.blocked_until_acceptance names it.",
       "enforcement_state": "ARMED_AS_CONFIGURED",
       "proof_state": "IMPLEMENTED",
-      "layer_note": "As-configured at the hook layer; the compulsory layer is that such files would have to reach a commit, where GAL-G7's gates run."
+      "layer_note": "As-configured at the hook layer; the compulsory layer is that such files would have to reach a commit, where GAL-G7's gates run. HOST TOPOLOGY QUALIFIER (2026-09-06, governed disposition): this reads ARMED_AS_CONFIGURED only in a session whose host project root IS this repository. Where the host opens this repository beneath a parent directory that it treats as the project root — the multi-repository shape in which the product and the Doctrine checkout sit as siblings — the harness never discovers .claude/settings.json and this layer executes nothing at all. That is a platform topology fact, carried by OBL-GAL-002. It is not a compulsory enforcement layer in the present topology and it is not a blocker to product development, because the commit and push routes are held compulsorily by GAL-G7 and GAL-G8 and the trunk boundary by CI."
+    },
+    {
+      "id": "GAL-OD-01",
+      "summary": "Working name: use The Gallery consistently as the product name and machine-readable identity (thegallery). Option A of the Stage 1 instrument, ratified.",
+      "question": "Working name.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; PLANBELLA_TO_THE_GALLERY_RESEARCH_BRIEF.docx (2026-09-03) §11",
+      "decided_at": "2026-09-06",
+      "status": "FIXED",
+      "ratified_by": "GOVERNOR",
+      "ratified_at": "2026-09-06",
+      "ratification_receipt": "doctrine/receipts/STAGE1-GOVERNOR-RULING-2026-09-06.md",
+      "stage_1_instrument": "product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md §A",
+      "reason": "The product wears the name in every surface already; leaving it a working title costs nothing now and costs a sweep of copy, routes and fixtures after launch.",
+      "consequence_of_rejection": "Rejecting A means renaming before Stage 2 (option B) or carrying an unlocked name the product uses anyway (option C).",
+      "reopen_condition": "A governor decision to rename, executed as a single governed sweep across copy, routes, fixtures and renders in one change.",
+      "enforcement_locus": "Every render, route, copy string and fixture carries the single name; each stage gate compares rendered copy and route inventory against it, and a rename is a governed sweep rather than an edit.",
+      "enforcement_state": "MANUAL",
+      "proof_state": "INTENDED"
+    },
+    {
+      "id": "GAL-OD-02",
+      "summary": "Account boundary: a maker gallery may be held by an individual maker, a studio or a collective presenting work they created or materially produced. Retailers and ordinary resellers are excluded. Option B of the Stage 1 instrument, ratified.",
+      "question": "Account boundary: who may hold a maker gallery?",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; PLANBELLA_TO_THE_GALLERY_RESEARCH_BRIEF.docx (2026-09-03) §10 D1; THE_GALLERY_CONCEPT_NOTE_v0.1.docx §07",
+      "decided_at": "2026-09-06",
+      "status": "FIXED",
+      "ratified_by": "GOVERNOR",
+      "ratified_at": "2026-09-06",
+      "ratification_receipt": "doctrine/receipts/STAGE1-GOVERNOR-RULING-2026-09-06.md",
+      "stage_1_instrument": "product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md §A",
+      "reason": "Collective and studio craft is common in the target context, so individual-only would exclude real makers; admitting retailers and resellers would turn a gallery into a listing platform and contradict the product thesis GAL-T1.",
+      "consequence_of_rejection": "Option A excludes collective craft; option C admits resale and changes what the product is.",
+      "reopen_condition": "A governor decision that changes GAL-T1's thesis, since the boundary is what keeps the product a gallery rather than a marketplace.",
+      "enforcement_locus": "The domain model carries maker kind (individual, studio, collective); the published participation rules state the boundary; prohibited resale is one of the five report categories in the moderation standard, which is the post-publication path when the boundary is crossed.",
+      "enforcement_state": "UNARMED",
+      "proof_state": "INTENDED"
+    },
+    {
+      "id": "GAL-OD-03",
+      "summary": "Admission: open maker account creation by email, with self-declaration at gallery creation, published participation rules and post-publication moderation. There is no pre-publication taste or quality gate and no verification claim. Option A of the Stage 1 instrument, ratified.",
+      "question": "Admission mechanism.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §5",
+      "decided_at": "2026-09-06",
+      "status": "FIXED",
+      "ratified_by": "GOVERNOR",
+      "ratified_at": "2026-09-06",
+      "ratification_receipt": "doctrine/receipts/STAGE1-GOVERNOR-RULING-2026-09-06.md",
+      "stage_1_instrument": "product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md §A",
+      "reason": "A pre-publication review installs the taste gate the operator is forbidden to hold under GAL-14 and makes the founder a blocking step in every first publish. An invitation cohort can be layered on later without changing the mechanism.",
+      "consequence_of_rejection": "Option B installs a forbidden taste gate; option C is compatible with A and needs no decision now.",
+      "reopen_condition": "A governor decision that changes GAL-14's limit on operator authority.",
+      "enforcement_locus": "The publish path contains no operator review step; the operator's authority is the report queue, takedown, suspension and reinstatement, each with a recorded reason and an appeal route.",
+      "enforcement_state": "UNARMED",
+      "proof_state": "INTENDED"
+    },
+    {
+      "id": "GAL-OD-04",
+      "summary": "Launch geography: Bengaluru is used for realistic demonstration content and the first real makers, while geography stays a configurable field. The product makes no Bengaluru-only and no India-wide launch claim. Option A of the Stage 1 instrument, ratified.",
+      "question": "Launch geography and how location shapes discovery.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; THE_GALLERY_CONCEPT_NOTE_v0.1.docx §07",
+      "decided_at": "2026-09-06",
+      "status": "FIXED",
+      "ratified_by": "GOVERNOR",
+      "ratified_at": "2026-09-06",
+      "ratification_receipt": "doctrine/receipts/STAGE1-GOVERNOR-RULING-2026-09-06.md",
+      "stage_1_instrument": "product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md §A",
+      "reason": "India-wide from day one dilutes the first cohort and raises the Nearby question before any location data exists; a city-locked product hard-codes a boundary the domain model would then have to enforce.",
+      "consequence_of_rejection": "Option B dilutes the cohort; option C hard-codes a boundary that is expensive to remove.",
+      "reopen_condition": "A governor decision to make a public geographic claim, which requires the discovery behaviour that would make the claim true.",
+      "enforcement_locus": "Location is a configurable field rather than a hard-coded boundary in the domain model; rendered copy carries no geographic launch claim, and the claim sweep over rendered surfaces is the check that holds it.",
+      "enforcement_state": "UNARMED",
+      "proof_state": "INTENDED"
+    },
+    {
+      "id": "GAL-OD-06",
+      "summary": "Direct contact: a maker may choose any of public WhatsApp, public email, phone, website or an external form. At least one route is required before direct contact is advertised, and not before work can be published. The private account email stays private unless separately supplied as a public route. There is no in-app chat. Option A of the Stage 1 instrument, ratified.",
+      "question": "Contact routes: which routes, how many required, and no in-app chat.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; THE_GALLERY_CONCEPT_NOTE_v0.1.docx §07",
+      "decided_at": "2026-09-06",
+      "status": "FIXED",
+      "ratified_by": "GOVERNOR",
+      "ratified_at": "2026-09-06",
+      "ratification_receipt": "doctrine/receipts/STAGE1-GOVERNOR-RULING-2026-09-06.md",
+      "stage_1_instrument": "product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md §A",
+      "reason": "Requiring a route to publish at all blocks the one-sitting first publish that J-002 is built around; a platform-relayed enquiry form makes the product the intermediary and creates the moderation and privacy duty refused in GAL-R04.",
+      "consequence_of_rejection": "Option B blocks the first publish; option C creates a duty the product has refused.",
+      "reopen_condition": "Stage 3 evidence that external routes fail visitors, ruled by the governor, which would also reopen GAL-R04.",
+      "enforcement_locus": "The publish gate advertises contact only when at least one public route is enabled; the contact action resolves to the exact enabled route; the account email is a separate private field that no public surface reads; the route inventory contains no messaging or chat object.",
+      "enforcement_state": "UNARMED",
+      "proof_state": "INTENDED"
+    },
+    {
+      "id": "GAL-OD-09",
+      "summary": "Social depth: private, device-local saves only in the MVP. Public counts, comments, reactions and popularity ranking stay refused. Count-free following and low-volume notices may be reconsidered later as a separate candidate. Option A of the Stage 1 instrument, ratified.",
+      "question": "Social depth at launch.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; PLANBELLA_TO_THE_GALLERY_RESEARCH_BRIEF.docx (2026-09-03) §10 D2",
+      "decided_at": "2026-09-06",
+      "status": "FIXED",
+      "ratified_by": "GOVERNOR",
+      "ratified_at": "2026-09-06",
+      "ratification_receipt": "doctrine/receipts/STAGE1-GOVERNOR-RULING-2026-09-06.md",
+      "stage_1_instrument": "product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md §A",
+      "reason": "Following in the MVP introduces a visitor identity, a notification substrate and a privacy surface before the core maker-to-visitor chain is proven; removing saves altogether takes away the visitor's only memory and weakens return visits.",
+      "consequence_of_rejection": "Option B builds identity infrastructure before the core chain works; option C removes the visitor's memory.",
+      "reopen_condition": "A separate governor candidate for count-free following and low-volume notices, which requires an optional visitor identity decision first; public counts and popularity ranking stay refused independently of it.",
+      "enforcement_locus": "Saves are held on the visitor's device with no server record and no visitor identity; no public surface renders a count, a comment, a reaction or a popularity order; the refusal register carries the standing refusals and their reopen conditions.",
+      "enforcement_state": "UNARMED",
+      "proof_state": "INTENDED"
+    },
+    {
+      "id": "GAL-OD-12",
+      "summary": "Identity confirmation: deferred beyond the MVP. The Gallery makes no verification claim at launch, and carries no badge and no verification vocabulary. Option A of the Stage 1 instrument, ratified.",
+      "question": "Identity confirmation.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; PLANBELLA_TO_THE_GALLERY_RESEARCH_BRIEF.docx (2026-09-03) §7",
+      "decided_at": "2026-09-06",
+      "status": "FIXED",
+      "ratified_by": "GOVERNOR",
+      "ratified_at": "2026-09-06",
+      "ratification_receipt": "doctrine/receipts/STAGE1-GOVERNOR-RULING-2026-09-06.md",
+      "stage_1_instrument": "product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md §A",
+      "reason": "A badge needs review, privacy, renewal, appeal and revocation mechanisms before it may appear; none exist, so a badge at launch would be a promise without a mechanism.",
+      "consequence_of_rejection": "Option B requires building all five mechanisms in the MVP.",
+      "reopen_condition": "A narrow implemented mechanism that earns the exact statement made, ruled by the governor under the constraints in GAL-RC5.",
+      "enforcement_locus": "No surface renders a verification badge or verification vocabulary; the claim sweep over rendered surfaces holds the vocabulary; the constraints recorded in GAL-RC5 bind any reopening.",
+      "enforcement_state": "UNARMED",
+      "proof_state": "INTENDED"
+    },
+    {
+      "id": "GAL-OD-13",
+      "summary": "Revenue: no monetisation is implemented in the MVP. The presentation architecture stays capable of supporting subscription plans later. There is no transaction percentage, no advertising and no paid ranking. Option A of the Stage 1 instrument, ratified.",
+      "question": "Revenue and maker plan limits.",
+      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; THE_GALLERY_CONCEPT_NOTE_v0.1.docx §07",
+      "decided_at": "2026-09-06",
+      "status": "FIXED",
+      "ratified_by": "GOVERNOR",
+      "ratified_at": "2026-09-06",
+      "ratification_receipt": "doctrine/receipts/STAGE1-GOVERNOR-RULING-2026-09-06.md",
+      "stage_1_instrument": "product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md §A",
+      "reason": "Plans in the MVP add billing, entitlements and limit enforcement before a single maker-to-visitor chain is proven, which is the admin-before-value scar the Doctrine records.",
+      "consequence_of_rejection": "Option B builds the billing surface first.",
+      "reopen_condition": "A governor decision to introduce subscription plans, taken with the plan limits in the same ruling; a transaction percentage, advertising and paid ranking stay refused.",
+      "enforcement_locus": "The route inventory and schema contain no billing, entitlement, plan-limit, advertising or paid-ranking object; presentation limits are configurable values rather than plan-bound ones, so a later subscription needs no change to the presentation model.",
+      "enforcement_state": "UNARMED",
+      "proof_state": "INTENDED"
+    },
+    {
+      "id": "GAL-OD-15",
+      "summary": "Moderation standard: publish a minimal standard before launch covering impersonation, prohibited or unlawful content, spam or systematic misuse, prohibited resale and safety concerns. Every sanction carries a recorded reason, is reversible where appropriate, and supports appeal by email to a published address. Moderation protects access and safety; it does not curate taste and does not certify maker claims. Option A of the Stage 1 instrument, ratified.",
+      "question": "Moderation standard: report categories, response expectations, prohibited content, appeal and reinstatement rules.",
+      "source": "THE_GALLERY_CONCEPT_NOTE_v0.1.docx §07; THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §5, §6",
+      "decided_at": "2026-09-06",
+      "status": "FIXED",
+      "ratified_by": "GOVERNOR",
+      "ratified_at": "2026-09-06",
+      "ratification_receipt": "doctrine/receipts/STAGE1-GOVERNOR-RULING-2026-09-06.md",
+      "stage_1_instrument": "product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md §A",
+      "reason": "Without a named standard the operator's authority is unbounded and unexplained, which GAL-14 forbids; a full policy document with response-time guarantees makes promises a single founder cannot keep.",
+      "consequence_of_rejection": "Option B leaves operator authority unbounded; option C makes unkeepable promises.",
+      "reopen_condition": "A governor decision to widen or narrow the categories, or to convert the response-time intent into a guarantee, which requires the capacity to keep it.",
+      "enforcement_locus": "The published standard names the five report categories and the appeal address; every sanction writes a reason and a reversal path; the operator surface offers takedown, suspension and reinstatement and offers no quality or taste judgement.",
+      "enforcement_state": "MANUAL",
+      "proof_state": "INTENDED"
+    },
+    {
+      "id": "GAL-SEQ-1",
+      "summary": "Sequencing: Stage 2 implementation is authorised on the development branch using the proved repository-local orientation, gates and git-hook mechanism. Creation of main, GitHub Actions, DOCTRINE_READ_TOKEN, required status checks and branch protection remain mandatory before production release or authoritative trunk integration. Those protections are deferred, not abandoned, and their absence stays visible in the product state and every proof report.",
+      "source": "Governor sequencing decision 2026-09-06",
+      "decided_at": "2026-09-06",
+      "status": "FIXED",
+      "ratified_by": "GOVERNOR",
+      "ratified_at": "2026-09-06",
+      "ratification_receipt": "doctrine/receipts/STAGE2-AUTHORISATION-2026-09-06.md",
+      "reason": "The repository-local layer is armed, independent of the harness, and drilled end to end through git's own invocation, so a commit on this branch already meets orientation, the gates and the hooks. The trunk and CI boundary protects release and integration, which is a later act than building and locally proving a slice.",
+      "consequence_of_rejection": "Holding Stage 2 behind platform acts that only the governor and GitHub can perform stalls the build indefinitely while the layer that actually guards this checkout is already in force.",
+      "reopen_condition": "A governor decision that re-couples implementation to the platform boundary, or evidence that the repository-local layer does not hold on this branch.",
+      "enforcement_locus": "doctrine/PRODUCT_STATE.json active_stage records the authorisation, the blocked list that still refuses production release and trunk integration, and the deferred protections that stay absent; doctrine/EXTERNAL_ENABLEMENT.md carries the same boundary as governor and platform items.",
+      "enforcement_state": "MANUAL",
+      "proof_state": "INTENDED"
+    },
+    {
+      "id": "GAL-SUPA-1",
+      "summary": "The data and auth path return to Supabase-native: Supabase Auth owns the maker door, the application reaches its data through PostgREST with @supabase/supabase-js, and row-level security keys on auth.uid(). This restores product/PRODUCT_ARCHITECTURE.md §9, which the Stage 2 build had substituted away from for a build-environment reason that was recorded but never reversed.",
+      "source": "Governor's decision 2026-09-06, session 9e4e9e82-091a-58bd-96d4-39aae1304020; instrument product/decisions/SUPABASE-NATIVE-2026-09-06.md",
+      "decided_at": "2026-09-06",
+      "status": "FIXED",
+      "supersedes": "the substitution recorded in doctrine/receipts/STAGE2-VERTICAL-SLICE-2026-09-06.md §1 for auth and the data path; the storage row of that table was already reversed",
+      "accepted_consequences": [
+        "One identity table: auth.users is per project, so makers and Ustaad's users share one identity store and one JWT issuer. A token minted for either product is structurally valid at the other's API; only row-level security separates them. Accepted knowingly, alternative (a dedicated project) declined.",
+        "The gallery schema is exposed to PostgREST and therefore reachable by anyone holding the publishable key, behind grants and row-level security alone. Verified before the decision that the project exposed only public and graphql_public.",
+        "Email confirmation is a project-wide Supabase Auth setting. mailer_autoconfirm was true and must be turned off for GAL-12, which changes Ustaad's signup behaviour too."
+      ],
+      "enforcement_locus": "Row-level security policies on the gallery schema keyed on auth.uid(), probed over HTTP through PostgREST with the anonymous key and two synthetic makers' own tokens — the same door an attacker reaches. Grants probed separately from row policies (GAL-A1).",
+      "enforcement_state": "UNARMED",
+      "proof_state": "NOT_SEEN",
+      "required_consequence": "The eighteen-step chain walks again on the rewritten path before any claim is made about it. Until then the rewritten path is proved by nothing."
     }
   ],
   "mandated_outcomes": [
@@ -719,46 +924,6 @@
   ],
   "open_governor_decisions": [
     {
-      "id": "GAL-OD-01",
-      "status": "OPEN",
-      "question": "Working name.",
-      "current_recommendation": "Use 'The Gallery' throughout the build.",
-      "boundary": "Do not scatter alternate names through code or copy.",
-      "classification": "STRATEGIC_RATIFY",
-      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; PLANBELLA_TO_THE_GALLERY_RESEARCH_BRIEF.docx (2026-09-03) §11",
-      "stage_1_resolution": "Recommendation A in product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md; awaiting the governor's ruling before Stage 2."
-    },
-    {
-      "id": "GAL-OD-02",
-      "status": "OPEN",
-      "question": "Account boundary: who may hold a maker gallery?",
-      "current_recommendation": "Makers, studios and collectives presenting work they created or materially produced (research brief D1 option B).",
-      "boundary": "No retailer/reseller expansion without a product decision.",
-      "classification": "STRATEGIC",
-      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; PLANBELLA_TO_THE_GALLERY_RESEARCH_BRIEF.docx (2026-09-03) §10 D1; THE_GALLERY_CONCEPT_NOTE_v0.1.docx §07",
-      "stage_1_resolution": "Recommendation A in product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md; awaiting the governor's ruling before Stage 2."
-    },
-    {
-      "id": "GAL-OD-03",
-      "status": "OPEN",
-      "question": "Admission mechanism.",
-      "current_recommendation": "Open maker email creation with self-declaration and post-publication moderation (GAL-RC1).",
-      "boundary": "No pre-publication taste or quality gate; no verification claim.",
-      "classification": "STRATEGIC",
-      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §5",
-      "stage_1_resolution": "Recommendation A in product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md; awaiting the governor's ruling before Stage 2."
-    },
-    {
-      "id": "GAL-OD-04",
-      "status": "OPEN",
-      "question": "Launch geography and how location shapes discovery.",
-      "current_recommendation": "Use Bengaluru as realistic demonstration content while keeping geography configurable; no launch-scope claim until ruled.",
-      "boundary": "Do not claim a Bengaluru-only or India-wide launch until ruled.",
-      "classification": "STRATEGIC",
-      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; THE_GALLERY_CONCEPT_NOTE_v0.1.docx §07",
-      "stage_1_resolution": "Recommendation A in product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md; awaiting the governor's ruling before Stage 2."
-    },
-    {
       "id": "GAL-OD-05",
       "status": "DECIDED_AT_STAGE_1_REVERSIBLE",
       "question": "Public entrance composition.",
@@ -767,16 +932,6 @@
       "classification": "PRODUCT_RECOMMENDATION",
       "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; PLANBELLA_TO_THE_GALLERY_RESEARCH_BRIEF.docx (2026-09-03) §10 D5",
       "stage_1_resolution": "Decided at Stage 1 (reversible): deterministic daily rotation of a recent work, then newest-first interleaved by maker; rendered on R-1 with the mechanism named."
-    },
-    {
-      "id": "GAL-OD-06",
-      "status": "OPEN",
-      "question": "Contact routes: which routes, how many required, and no in-app chat.",
-      "current_recommendation": "Maker chooses from public WhatsApp, public email, phone, website or external form; at least one required before contact is advertised; account email private unless separately supplied; no in-app chat.",
-      "boundary": "Account email remains private; no in-app chat.",
-      "classification": "STRATEGIC",
-      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; THE_GALLERY_CONCEPT_NOTE_v0.1.docx §07",
-      "stage_1_resolution": "Recommendation A in product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md; awaiting the governor's ruling before Stage 2."
     },
     {
       "id": "GAL-OD-07",
@@ -799,16 +954,6 @@
       "stage_1_resolution": "Decided at Stage 1 (reversible): device-local saves; no server table."
     },
     {
-      "id": "GAL-OD-09",
-      "status": "OPEN",
-      "question": "Social depth at launch.",
-      "current_recommendation": "Private saves first; count-free following and low-volume notices later (research brief D2 option B) — following is not in the MVP.",
-      "boundary": "No comments, reactions or popularity feed.",
-      "classification": "STRATEGIC",
-      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; PLANBELLA_TO_THE_GALLERY_RESEARCH_BRIEF.docx (2026-09-03) §10 D2",
-      "stage_1_resolution": "Recommendation A in product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md; awaiting the governor's ruling before Stage 2."
-    },
-    {
       "id": "GAL-OD-10",
       "status": "DECIDED_AT_STAGE_1_REVERSIBLE",
       "question": "Gallery customisation.",
@@ -829,26 +974,6 @@
       "stage_1_resolution": "Decided at Stage 1 (reversible): contact route or external registration URL; rendered on I-3."
     },
     {
-      "id": "GAL-OD-12",
-      "status": "OPEN",
-      "question": "Identity confirmation.",
-      "current_recommendation": "Defer beyond the MVP (GAL-RC5).",
-      "boundary": "If reopened it confirms identity only and never affects rank.",
-      "classification": "STRATEGIC",
-      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; PLANBELLA_TO_THE_GALLERY_RESEARCH_BRIEF.docx (2026-09-03) §7",
-      "stage_1_resolution": "Recommendation A in product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md; awaiting the governor's ruling before Stage 2."
-    },
-    {
-      "id": "GAL-OD-13",
-      "status": "OPEN",
-      "question": "Revenue and maker plan limits.",
-      "current_recommendation": "Defer monetisation implementation; preserve subscription-ready presentation architecture; plan limits decided with monetisation.",
-      "boundary": "No percentage of transactions, advertising or pay-to-rank.",
-      "classification": "STRATEGIC",
-      "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; THE_GALLERY_CONCEPT_NOTE_v0.1.docx §07",
-      "stage_1_resolution": "Recommendation A in product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md; awaiting the governor's ruling before Stage 2."
-    },
-    {
       "id": "GAL-OD-14",
       "status": "DECIDED_AT_STAGE_1_REVERSIBLE",
       "question": "Delivery surface.",
@@ -857,16 +982,6 @@
       "classification": "ORDINARY_IMPLEMENTATION",
       "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17",
       "stage_1_resolution": "Decided (ordinary): mobile-first responsive web, no service-worker fetch handler."
-    },
-    {
-      "id": "GAL-OD-15",
-      "status": "OPEN",
-      "question": "Moderation standard: report categories, response expectations, prohibited content, appeal and reinstatement rules.",
-      "current_recommendation": "A minimal published standard: report categories (impersonation, prohibited or unlawful content, spam or systematic misuse, prohibited resale, safety concern); operator response target stated as an intent, not a promise; every sanction reversible with a recorded reason; one appeal route by email.",
-      "boundary": "Moderation of the space, never curation of taste or arbitration of sales.",
-      "classification": "STRATEGIC",
-      "source": "THE_GALLERY_CONCEPT_NOTE_v0.1.docx §07; THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §5, §6",
-      "stage_1_resolution": "Recommendation A in product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md; awaiting the governor's ruling before Stage 2."
     },
     {
       "id": "GAL-OD-16",
@@ -894,11 +1009,11 @@
       "promise": "You can contact the maker directly from a work, gallery or workshop.",
       "surface": "Contact action on work, maker gallery, commission and workshop surfaces",
       "mechanism": "Enabled maker route opens exactly as selected; publish gate requires ≥1 route (GAL-03)",
-      "proof_state": "DESIGNED",
-      "evidence": "R-2, R-2b, I-1, I-3 renders; J-001 contract",
+      "proof_state": "OBSERVED_LOCAL",
+      "evidence": "Walked in the running product: the handoff sheet opens from the work, the WhatsApp route resolves to wa.me with the prefilled line and the email route to mailto: with a subject naming the work (e2e/02, 'the visitor sees the disclosure'). Not observed on a phone against a deployed build.",
       "walked": {
-        "visitor": null,
-        "maker": null,
+        "visitor": "local browser walk 2026-09-06",
+        "maker": "local browser walk 2026-09-06",
         "operator": null
       }
     },
@@ -907,8 +1022,8 @@
       "promise": "The Gallery processes no payment, order, shipping, return or dispute.",
       "surface": "Handoff disclosure; absence of any commerce route",
       "mechanism": "No commerce objects or routes exist; vocabulary sweep (GAL-04)",
-      "proof_state": "DESIGNED",
-      "evidence": "product/PRODUCT_ARCHITECTURE.md §4 route inventory holds no commerce route; R-2b disclosure",
+      "proof_state": "TESTED",
+      "evidence": "Schema and source sweeps: no cart, checkout, order, payment, wallet, escrow, refund, shipping or dispute table or identifier exists (migration 003 VERIFY V6, policy probe P-19, e2e/04 marketplace sweep with its own anti-vacuity case).",
       "walked": {
         "visitor": null,
         "maker": null,
@@ -920,8 +1035,8 @@
       "promise": "The Gallery takes no percentage of your sale, commission or workshop fee.",
       "surface": "For Makers participation copy",
       "mechanism": "No fee field linked to sales; refusal GAL-R03 (GAL-05)",
-      "proof_state": "DESIGNED",
-      "evidence": "I-4 create-account copy; product/decisions GAL-OD-13",
+      "proof_state": "TESTED",
+      "evidence": "No billing, entitlement, plan-limit or fee object exists in the schema or the route inventory (VERIFY V6, e2e/04).",
       "walked": {
         "visitor": null,
         "maker": null,
@@ -933,8 +1048,8 @@
       "promise": "There are no public likes, ratings, reviews, comments or follower counts.",
       "surface": "Every public surface by structure",
       "mechanism": "Schema and UI contain no public counters (GAL-08)",
-      "proof_state": "DESIGNED",
-      "evidence": "no counter on any rendered surface; DOMAIN_MODEL has no public counter",
+      "proof_state": "TESTED",
+      "evidence": "No engagement column exists and no surface renders a count (migration 003 VERIFY V7, policy probe P-20, e2e/04 claim sweep over rendered copy).",
       "walked": {
         "visitor": null,
         "maker": null,
@@ -946,11 +1061,11 @@
       "promise": "Work information is written and maintained by the maker and shown as such.",
       "surface": "Work detail label; maker gallery",
       "mechanism": "Claim fields owned by the maker; maker-authored attribution rendered (GAL-06)",
-      "proof_state": "DESIGNED",
-      "evidence": "R-2 'in the maker's words' attribution; R-3 'your statement to visitors'",
+      "proof_state": "OBSERVED_LOCAL",
+      "evidence": "The maker wrote the label and the practice note in the Studio and both render unchanged on the public work and gallery surfaces (e2e/02).",
       "walked": {
-        "visitor": null,
-        "maker": null,
+        "visitor": "local browser walk 2026-09-06",
+        "maker": "local browser walk 2026-09-06",
         "operator": null
       }
     },
@@ -959,11 +1074,11 @@
       "promise": "You can browse, open work, open galleries and share without an account.",
       "surface": "All public routes",
       "mechanism": "Anonymous route probes (GAL-11)",
-      "proof_state": "DESIGNED",
-      "evidence": "R-1, R-2, I-1, I-2, I-3 need no session",
+      "proof_state": "OBSERVED_LOCAL",
+      "evidence": "An anonymous context reached the entrance, the material page, search, the work, the maker gallery and the saved shelf with no account (e2e/02, e2e/03).",
       "walked": {
-        "visitor": null,
-        "maker": null,
+        "visitor": "local browser walk 2026-09-06",
+        "maker": "local browser walk 2026-09-06",
         "operator": null
       }
     },
@@ -972,11 +1087,11 @@
       "promise": "Makers create an account and sign in with email; you can confirm, reset, sign out and close the account.",
       "surface": "For Makers door",
       "mechanism": "Complete deployed email door walked with a real test email (GAL-12)",
-      "proof_state": "DESIGNED",
-      "evidence": "I-4 door frames; J-002 and J-005 contracts",
+      "proof_state": "OBSERVED_LOCAL",
+      "evidence": "Account creation, single-use email confirmation, sign-in, sign-out, recovery and expired-session return were all walked (e2e/01). The confirmation and recovery links were minted and consumed; NO EMAIL WAS SENT — the local outbox writes the message and delivers nothing.",
       "walked": {
-        "visitor": null,
-        "maker": null,
+        "visitor": "local browser walk 2026-09-06",
+        "maker": "local browser walk 2026-09-06",
         "operator": null
       }
     },
@@ -985,11 +1100,11 @@
       "promise": "Your sign-in email stays private unless you publish it as a contact route.",
       "surface": "Maker contact settings; public maker gallery",
       "mechanism": "Account email absent from public payloads (GAL-P1)",
-      "proof_state": "DESIGNED",
-      "evidence": "I-4 'stays private' help; DOMAIN_MODEL public views omit account email",
+      "proof_state": "OBSERVED_LOCAL",
+      "evidence": "The account email appears in no public page or JSON payload across twelve surfaces, and in no public view (e2e/03 privacy sweep, policy probe P-18, migration 003 VERIFY V3).",
       "walked": {
-        "visitor": null,
-        "maker": null,
+        "visitor": "local browser walk 2026-09-06",
+        "maker": "local browser walk 2026-09-06",
         "operator": null
       }
     },
@@ -998,11 +1113,11 @@
       "promise": "Saves are private and never become a public count.",
       "surface": "Saved tab",
       "mechanism": "Device-local storage; no server counter (GAL-08, GAL-OD-08)",
-      "proof_state": "INTENDED",
-      "evidence": null,
+      "proof_state": "OBSERVED_LOCAL",
+      "evidence": "Saves are written to the visitor's own browser storage; no server table exists for them and the shelf refresh sends only tokens (e2e/03).",
       "walked": {
-        "visitor": null,
-        "maker": null,
+        "visitor": "local browser walk 2026-09-06",
+        "maker": "local browser walk 2026-09-06",
         "operator": null
       }
     },
@@ -1011,8 +1126,8 @@
       "promise": "A shared link returns to the exact work, gallery or workshop.",
       "surface": "Share action; deep links; share previews",
       "mechanism": "Durable public routes with truthful titles and previews; private, draft and retired content excluded",
-      "proof_state": "DESIGNED",
-      "evidence": "R-2 Share action; PRODUCT_ARCHITECTURE §4 canonical URLs and previews",
+      "proof_state": "NOT_SEEN",
+      "evidence": "A shared link returning to the exact object needs a real URL a link can travel to. NOT SEEN: no domain and no deployment exist.",
       "walked": {
         "visitor": null,
         "maker": null,
@@ -1024,11 +1139,11 @@
       "promise": "The status you see (available, made to order, enquire, sold, on view) is the maker's current statement.",
       "surface": "Work detail; Browse; maker gallery; collections; saved references",
       "mechanism": "One status home propagated to every surface; staleness detectable and reconfirmation prompted (GAL-RC3)",
-      "proof_state": "DESIGNED",
-      "evidence": "J-003 contract and wireframe; R-3 status help; I-1 tiles",
+      "proof_state": "OBSERVED_LOCAL",
+      "evidence": "One status change from available to sold was followed across the entrance, the material page, search, the work detail, the maker gallery and the saved shelf, with no surface left saying available (e2e/03).",
       "walked": {
-        "visitor": null,
-        "maker": null,
+        "visitor": "local browser walk 2026-09-06",
+        "maker": "local browser walk 2026-09-06",
         "operator": null
       }
     },
@@ -1037,12 +1152,12 @@
       "promise": "Draft, retired, taken-down or suspended work is not public.",
       "surface": "Every public surface and payload",
       "mechanism": "Server-side visibility rules; payload absence under anonymous persona",
-      "proof_state": "INTENDED",
-      "evidence": null,
+      "proof_state": "OBSERVED_LOCAL",
+      "evidence": "Draft, retired and suspended material is absent from every anonymous surface, and the image bytes 404 for a stranger once a maker is suspended (e2e/03, e2e/04, policy probes P-01 to P-06).",
       "walked": {
-        "visitor": null,
-        "maker": null,
-        "operator": null
+        "visitor": "local browser walk 2026-09-06",
+        "maker": "local browser walk 2026-09-06",
+        "operator": "local browser walk 2026-09-06"
       }
     },
     {
@@ -1050,8 +1165,8 @@
       "promise": "Workshops shown are current; past, cancelled or changed workshops do not render as current.",
       "surface": "Workshops tab; workshop detail",
       "mechanism": "Structured dates and lifecycle states; past-dated and cancelled states rendered truthfully",
-      "proof_state": "DESIGNED",
-      "evidence": "I-3 cancelled and past treatment",
+      "proof_state": "NOT_SEEN",
+      "evidence": "Workshops are a Stage 3 journey and are not implemented; the route states its own emptiness. NOT SEEN.",
       "walked": {
         "visitor": null,
         "maker": null,
@@ -1063,12 +1178,12 @@
       "promise": "A report reaches an ending, and a suspension can be lifted.",
       "surface": "Report route; operator surface",
       "mechanism": "Report lifecycle submitted → under review → actioned/dismissed → closed; every sanction has a release path; append-only operator record",
-      "proof_state": "DESIGNED",
-      "evidence": "J-004 contract; I-6 required-reason dialog",
+      "proof_state": "OBSERVED_LOCAL",
+      "evidence": "An operator suspended and reinstated a synthetic maker with written reasons; the public surfaces lost and regained the work, the Studio stated the suspension, and both acts are on the append-only record (e2e/03).",
       "walked": {
-        "visitor": null,
-        "maker": null,
-        "operator": null
+        "visitor": "local browser walk 2026-09-06",
+        "maker": "local browser walk 2026-09-06",
+        "operator": "local browser walk 2026-09-06"
       }
     },
     {
@@ -1076,11 +1191,11 @@
       "promise": "Before you leave to contact a maker, you are told that payment, delivery, returns and disputes are arranged with them.",
       "surface": "Contact handoff surface",
       "mechanism": "Governed disclosure copy rendered before external navigation (GAL-15, GAL-C1)",
-      "proof_state": "DESIGNED",
-      "evidence": "R-2b disclosure before routes",
+      "proof_state": "OBSERVED_LOCAL",
+      "evidence": "The disclosure renders on the handoff sheet before any route is offered, and again on the maker gallery's contact section (e2e/02, render S5).",
       "walked": {
-        "visitor": null,
-        "maker": null,
+        "visitor": "local browser walk 2026-09-06",
+        "maker": "local browser walk 2026-09-06",
         "operator": null
       }
     },
@@ -1089,8 +1204,8 @@
       "promise": "The Gallery never says a maker or work is verified, vetted, certified, safe or authentic.",
       "surface": "All copy",
       "mechanism": "Banned-claim regex over the governed copy home (GAL-07)",
-      "proof_state": "DESIGNED",
-      "evidence": "copy across all renders; Foundation copy rules",
+      "proof_state": "TESTED",
+      "evidence": "Sweep over the copy a person actually reads: no verification, quality or reliability claim appears un-negated on any served page (e2e/04, with its own anti-vacuity case).",
       "walked": {
         "visitor": null,
         "maker": null,
@@ -1102,11 +1217,11 @@
       "promise": "Your images keep their orientation, crop, order and usable quality.",
       "surface": "Maker upload and preview; public work views",
       "mechanism": "Non-destructive variants; focal-crop control; portrait/landscape/square supported; inspected uploads",
-      "proof_state": "DESIGNED",
-      "evidence": "R-3 upload states; DOMAIN_MODEL work images",
+      "proof_state": "OBSERVED_LOCAL",
+      "evidence": "Three differently shaped images (3:4, 3:2, 1:1) were uploaded and each is stored and decoded at its own ratio; nothing is cropped to a common shape (e2e/02, asserted on stored dimensions and on decoded naturalWidth/naturalHeight).",
       "walked": {
-        "visitor": null,
-        "maker": null,
+        "visitor": "local browser walk 2026-09-06",
+        "maker": "local browser walk 2026-09-06",
         "operator": null
       }
     },
@@ -1115,8 +1230,8 @@
       "promise": "Only you can change your gallery, work, collections, workshops and contact routes.",
       "surface": "Maker dashboard",
       "mechanism": "Server-side ownership enforcement probed adversarially with two synthetic makers (GAL-A1)",
-      "proof_state": "INTENDED",
-      "evidence": null,
+      "proof_state": "TESTED",
+      "evidence": "Maker B cannot read or write Maker A's works, profile, routes or account through the database roles the product uses, nor reach them through the Studio's own doors (policy probes P-07 to P-13, e2e/03).",
       "walked": {
         "visitor": null,
         "maker": null,
@@ -1128,8 +1243,8 @@
       "promise": "Discovery order is explainable and is never bought or engagement-ranked.",
       "surface": "Browse",
       "mechanism": "Documented deterministic ordering; no paid or engagement input (GAL-09, GAL-10)",
-      "proof_state": "DESIGNED",
-      "evidence": "R-1 'Rotates daily' and 'newest first'; PRODUCT_ARCHITECTURE §6",
+      "proof_state": "NOT_SEEN",
+      "evidence": "Discovery order is recency, which is explainable and unbought, but 'explainable to a visitor' needs the copy that explains it on the discovery surfaces. NOT SEEN at Stage 2.",
       "walked": {
         "visitor": null,
         "maker": null,
@@ -1141,11 +1256,11 @@
       "promise": "Your exact address is shown only if you enter it for that purpose.",
       "surface": "Maker location settings; public gallery",
       "mechanism": "Explicit structured location with a public flag; metadata stripped (GAL-P2)",
-      "proof_state": "INTENDED",
-      "evidence": null,
+      "proof_state": "OBSERVED_LOCAL",
+      "evidence": "exact_address is null in the public maker view unless exact_address_public is set; the column is conditioned in the view itself (migration 002).",
       "walked": {
-        "visitor": null,
-        "maker": null,
+        "visitor": "local browser walk 2026-09-06",
+        "maker": "local browser walk 2026-09-06",
         "operator": null
       }
     }
@@ -1153,27 +1268,27 @@
   "unresolved_material_findings_or_obligations": [
     {
       "id": "OBL-GAL-001",
-      "state": "OPEN",
+      "state": "RESOLVED",
       "owner": "GOVERNOR",
-      "summary": "Stage 1 artefacts are complete and awaiting the governor's review: the nine strategic decisions in product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md need a ruling and the interface reference set needs acceptance before Stage 2 implementation begins.",
-      "evidence_path": "product/ and ux/ after Stage 1",
-      "activation_condition": "The governor reviews the Stage 1 artefacts and rules on the strategic decisions in product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md.",
-      "future_acceptance_test": "doctrine/PRODUCT_STATE.json records each strategic decision's ruling with its date, ux/UX_MANIFEST.yaml moves the affected journeys to INTERFACE_READY, and active_stage advances to STAGE_2 with its own blocked list."
+      "summary": "RESOLVED 2026-09-06 by the governor's Stage 1 ruling. All nine strategic decisions are ratified as recommended and recorded as governor-ratified FIXED decisions with their reasons, consequences of rejection and reopen conditions retained: GAL-OD-01 working name, GAL-OD-02 account boundary, GAL-OD-03 admission, GAL-OD-04 geography, GAL-OD-06 direct contact, GAL-OD-09 social depth, GAL-OD-12 identity confirmation, GAL-OD-13 revenue, GAL-OD-15 moderation standard. The interface reference set is accepted as the authoritative design direction and J-001, J-002 and J-004 are INTERFACE_READY. Seven PRODUCT_RECOMMENDATION and ORDINARY_IMPLEMENTATION decisions remain open and reversible by design; none of them gates Stage 2. Stage 1 acceptance does NOT authorise Stage 2: the active stage is the pre-Stage-2 platform-enablement gate.",
+      "evidence_path": "doctrine/receipts/STAGE1-GOVERNOR-RULING-2026-09-06.md; product/decisions/STAGE1-GOVERNOR-DECISION-INSTRUMENT.md §A",
+      "activation_condition": "This obligation is discharged. The governor reviewed the Stage 1 artefacts on 2026-09-06 and ruled on every strategic decision.",
+      "future_acceptance_test": "doctrine/PRODUCT_STATE.json records each ratified decision with its ruling date and reopen condition, ux/UX_MANIFEST.yaml carries the reference set as accepted with J-001, J-002 and J-004 at INTERFACE_READY, and active_stage names the platform-enablement gate rather than Stage 2."
     },
     {
       "id": "OBL-GAL-002",
       "state": "NOT_SEEN",
       "owner": "BUILDER",
-      "summary": "Host invocation of this project's hooks is unproven. Attempt 1 (2026-09-04, receipt doctrine/receipts/HOOK_LIVENESS_ATTEMPT-2026-09-04.md) tested nothing because the harness continued the session that had created .claude/settings.json rather than starting a fresh one; in that session the project hooks demonstrably did not fire — a default-branch commit and a stage-blocked application-source Write both executed, while the guard script denied the same payloads with GUARD-3 and GUARD-4. The cause is host snapshot timing: the harness ran the hooks present at session start and not the project file that appeared later. Settings discovery, matcher behaviour and guard logic are each ruled out by that evidence.",
-      "evidence_path": "SessionStart output at the start of a later session",
-      "activation_condition": "The governor starts a session from the client with this branch already checked out, so that .claude/settings.json exists before the session begins, and step 0 of the procedure confirms the session id differs from every id recorded in the attempt receipts.",
-      "future_acceptance_test": "The SessionStart output of that session contains the standing assessment and the line 'DOCTRINE GUARD: pre-act enforcement live for this session', and a deliberate denial attempt in that session returns a GUARD-rule denial. Procedure and expected evidence: doctrine/receipts/HOOK_LIVENESS_VERIFICATION.md."
+      "summary": "GOVERNED DISPOSITION 2026-09-06, superseding two attempts to prove this from inside a session. The host hook is ARMED_AS_CONFIGURED only when Thegallery is itself the host project root. It is not a compulsory enforcement layer in the present multi-repository topology, in which the host opens this repository and the Doctrine checkout as siblings beneath a parent directory and treats that parent as the project root; the harness looks for project settings at <project root>/.claude/ only, so .claude/settings.json one level deeper is never a discovery candidate and no project hook fires. Attempt 1 (2026-09-04, receipt doctrine/receipts/HOOK_LIVENESS_ATTEMPT-2026-09-04.md) tested nothing, because the harness continued the session that had created the settings file. Attempt 2 (2026-09-06, receipt doctrine/receipts/HOOK_LIVENESS_ATTEMPT-2026-09-06.md) was a genuinely fresh session with the file tracked in the checked-out commit and on disk 1.87 seconds before the harness's first settings load, and the harness's own diagnostics recorded exactly one hook spawn in the whole session — its own git-identity SessionStart hook — and zero PreToolUse spawns against 14 Bash calls and 1 Write call that the matcher covers. Snapshot timing, matcher behaviour and guard logic are each ruled out by that evidence, and the hook door itself works in that environment. This limitation is dispositioned, not reopened: no third liveness experiment is authorised unless the hosting topology materially changes, and no session claims automatic host orientation while the topology prevents it. It is NOT a blocker to product development, because the commit and push routes are held compulsorily by GAL-G7 and GAL-G8 in every checkout and the trunk boundary is CI and branch protection (OBL-GAL-003, OBL-GAL-011).",
+      "evidence_path": "SessionStart output at the start of a later session; the harness diagnostics file named by CLAUDE_CODE_DIAGNOSTICS_FILE",
+      "activation_condition": "The hosting topology materially changes: a session opens with this repository as the actual host project root — its working directory and settings-discovery root — with the Doctrine checkout supplied through DOCTRINE_ROOT rather than as a sibling beneath a shared parent. Only then do steps 0a, 0b and 0c of doctrine/receipts/HOOK_LIVENESS_VERIFICATION.md have anything to test.",
+      "future_acceptance_test": "The SessionStart output of that session contains the standing assessment and the line 'DOCTRINE GUARD: pre-act enforcement live for this session', the harness diagnostics record a PreToolUse hook_spawn for a covered tool call, and a deliberate reversible denial attempt in that session returns a GUARD-rule denial. Procedure and expected evidence: doctrine/receipts/HOOK_LIVENESS_VERIFICATION.md."
     },
     {
       "id": "OBL-GAL-003",
       "state": "UNARMED",
       "owner": "BUILDER+GOVERNOR",
-      "summary": "No CI exists. The orientation check cannot run at the pull-request chokepoint until CI can read the builders-doctrine repository (a read-only deploy key or token provisioned by the governor). Until then the trunk layer is UNARMED and branch protection state is UNKNOWN (dashboard-only fact).",
+      "summary": "No CI exists. The orientation check cannot run at the pull-request chokepoint until CI can read the builders-doctrine repository (a read-only deploy key or token provisioned by the governor). Until then the trunk layer is UNARMED and branch protection state is UNKNOWN (dashboard-only fact). Two local residues sit behind this same boundary and are held by nothing else: a commit made with --no-verify, and a commit made in a checkout that has never oriented, since the seam that arms core.hooksPath and the hook it arms are reached by the same command. Both are visible acts and both are caught at the pull-request chokepoint once this obligation is discharged. Since the Stage 1 ruling of 2026-09-06 this obligation is part of the active stage's acceptance condition: the Doctrine workflow must run green on a pull request before Stage 2 is authorised. Sequencing decision 2026-09-06 (GAL-SEQ-1): this obligation no longer gates Stage 2 implementation and now bounds production release and authoritative trunk integration. It is DEFERRED, not discharged, and stays OPEN with its activation condition and acceptance test unchanged.",
       "evidence_path": ".github/workflows once created",
       "activation_condition": "GitHub Actions is enabled for the repository and a read credential for builders-doctrine is stored as the repository secret named in doctrine/EXTERNAL_ENABLEMENT.md.",
       "future_acceptance_test": "A run of the workflow .github/workflows/doctrine.yml on a pull request completes green, and the same workflow is a required status check on the default branch."
@@ -1191,7 +1306,7 @@
       "id": "OBL-GAL-005",
       "state": "OPEN",
       "owner": "GOVERNOR",
-      "summary": "Thegallery had no commits and no main branch at binding. The first governed commits are on the designated branch claude/the-gallery-foundation-7plo1e; the governor's merge establishes main. Branch protection on main is a GitHub setting this session cannot see or set (UNKNOWN until observed).",
+      "summary": "Thegallery had no commits and no main branch at binding. The first governed commits are on the designated branch claude/the-gallery-foundation-7plo1e; the governor's merge establishes main. Branch protection on main is a GitHub setting this session cannot see or set (UNKNOWN until observed). Since the Stage 1 ruling of 2026-09-06 this obligation is part of the active stage's acceptance condition: main is created from claude/gallery-hook-liveness-verify-bzn5c6 and Stage 2 is not authorised until it exists and is protected. Sequencing decision 2026-09-06 (GAL-SEQ-1): this obligation no longer gates Stage 2 implementation and now bounds production release and authoritative trunk integration. It is DEFERRED, not discharged, and stays OPEN with its activation condition and acceptance test unchanged.",
       "evidence_path": "GitHub repository settings",
       "activation_condition": "The governor merges this branch, creating main.",
       "future_acceptance_test": "git ls-remote origin shows refs/heads/main, and the branch-protection state required by doctrine/EXTERNAL_ENABLEMENT.md is observed."
@@ -1218,10 +1333,10 @@
       "id": "OBL-GAL-008",
       "state": "OPEN",
       "owner": "GOVERNOR",
-      "summary": "Stage 2 deployed proof needs provisioning that does not exist in the build environment: a database/auth/storage project, a hosting project, a transactional email sender and domain, and DNS. None of these credentials is present. They are batched in product/STAGE_2_VERTICAL_SLICE.md so they can be provisioned ahead of dependence.",
-      "evidence_path": "product/STAGE_2_VERTICAL_SLICE.md",
-      "activation_condition": "The governor provisions the items listed in product/STAGE_2_VERTICAL_SLICE.md §4 and doctrine/EXTERNAL_ENABLEMENT.md.",
-      "future_acceptance_test": "Each credential is present in the hosting environment and the deployed email round trip is walked on a phone."
+      "summary": "Stage 2 deployed proof needs provisioning that does not exist in the build environment. As of 2026-09-06 the governor has named a Supabase project (shared with Ustaad) and the domain atthegallery.in. Neither is usable from a build session: the project's database is unreachable from this environment by every route tried, and the publishable key the governor supplied cannot run DDL and is not used by this build at all, which talks to Postgres directly with its own roles and session auth. What remains outstanding is a database password or owner connection string over the session-mode pooler, a hosting project, a DNS record for the domain, a transactional sender on that domain with SPF and DKIM, and durable image storage. Exact procedure: db/SUPABASE.md. Nothing here is provisioned and no deployed claim is made. PARTIAL PROGRESS 2026-09-06: the governor applied db/supabase-schema.sql to the named project by hand and returned db/supabase-verify.sql at 10 of 10 PASS, so the database half of this obligation is provisioned and structurally verified, with Ustaad's public schema untouched. Outstanding: a hosting project, DNS for atthegallery.in, a transactional sender on that domain, durable image storage, and the runtime connection string. Receipt: doctrine/receipts/SUPABASE-SCHEMA-APPLIED-2026-09-06.md.",
+      "evidence_path": "db/SUPABASE.md; product/STAGE_2_VERTICAL_SLICE.md §4; doctrine/EXTERNAL_ENABLEMENT.md item 5",
+      "activation_condition": "The governor supplies the database owner connection string for the named Supabase project over its session-mode pooler, a hosting project connected to the repository, a DNS record for atthegallery.in, and a transactional sender on that domain.",
+      "future_acceptance_test": "The migrations create the gallery schema in that project with `public` untouched (probes P-21 and P-22 green against it), the 31 journeys run green against the deployed URL, and one account is created on a phone with a confirmation email actually received."
     },
     {
       "id": "UNK-GAL-001",
@@ -1263,7 +1378,7 @@
       "id": "UNK-GAL-002",
       "state": "UNKNOWN",
       "owner": "BUILDER",
-      "summary": "Whether this project's PreToolUse hooks are applied to tool calls made inside a subagent started through Agent, Task or Workflow is not provable from inside the repository. Delegation is itself a guarded act, so an unoriented session cannot start one. Not probed on 2026-09-04: in a session with no hooks loaded, a subagent probe cannot distinguish an ungoverned delegation route from an absent hook configuration, so it would not be evidence.",
+      "summary": "Whether this project's PreToolUse hooks are applied to tool calls made inside a subagent started through Agent, Task or Workflow is not provable from inside the repository. Delegation is itself a guarded act, so an unoriented session cannot start one. Not probed on 2026-09-04 and not probed again on 2026-09-06, for the same reason both times: in a session with no hooks loaded, a subagent probe cannot distinguish an ungoverned delegation route from an absent hook configuration, so it would not be evidence. It is retained rather than closed at the cost of expanding a bounded verification.",
       "activation_condition": "A fresh session with hooks live runs a delegated agent that attempts a denied act.",
       "future_acceptance_test": "The subagent's attempt returns a GUARD-rule denial, or the absence of one is recorded and the delegation class is declared UNARMED.",
       "evidence_path": "doctrine/MUTATION_SURFACE.json uncovered_routes_declared"
@@ -1272,7 +1387,7 @@
       "id": "OBL-GAL-011",
       "state": "OPEN",
       "owner": "GOVERNOR",
-      "summary": "Branch protection on the default branch, and the Doctrine status check as a required check, are platform settings this session can neither read nor set.",
+      "summary": "Branch protection on the default branch, and the Doctrine status check as a required check, are platform settings this session can neither read nor set. Since the Stage 1 ruling of 2026-09-06 this obligation is part of the active stage's acceptance condition: the check named 'Doctrine / Orientation, gates and drill' must be a required status check on main before Stage 2 is authorised. Sequencing decision 2026-09-06 (GAL-SEQ-1): this obligation no longer gates Stage 2 implementation and now bounds production release and authoritative trunk integration. It is DEFERRED, not discharged, and stays OPEN with its activation condition and acceptance test unchanged.",
       "activation_condition": "main exists and GitHub Actions is enabled.",
       "future_acceptance_test": "The repository's branch-protection state shows the Doctrine check required and direct pushes refused; recorded by observation, since dashboard-only facts are otherwise UNKNOWN.",
       "evidence_path": "doctrine/EXTERNAL_ENABLEMENT.md"
@@ -1285,6 +1400,15 @@
       "activation_condition": "Stage 2 creates the first application source file or committed fixture.",
       "future_acceptance_test": "G5's root set is derived from the tracked corpus rather than one directory, the drill plants a violation in application source and the gate goes red.",
       "evidence_path": "scripts/doctrine-gate.py G5"
+    },
+    {
+      "id": "OBL-GAL-013",
+      "state": "RESOLVED",
+      "owner": "BUILDER",
+      "summary": "RESOLVED 2026-09-06. The compulsory git layer no longer depends on the harness hook. Both complementary mechanisms were adopted: (1) scripts/doctrine-orient.py orient now identifies and validates the Gallery repository root, validates the live Doctrine binding and fingerprints, configures core.hooksPath to the governed .githooks directory, verifies the EFFECTIVE configuration git would use rather than the value it just wrote, establishes the orientation receipt, and then runs the repository gates — arming before gating, so a fresh checkout can be repaired by the command whose absence gate G3 refuses; and (2) scripts/doctrine-gate.py G3 reads git configuration directly, independently of the seam, and goes red on a hook path that is missing, displaced to another directory, pointing outside the worktree root, or incomplete. The arming in scripts/doctrine-hook.py session_start is retained as a convenience and is no longer the only place it happens. Proved against an isolated fresh checkout with no inherited local git configuration, D-73 through D-87: the checkout begins with no core.hooksPath; it reports itself unarmed and names its repair; G3 is red; orientation establishes the configuration; G3 passes; a real git commit with a foreign session receipt is refused through core.hooksPath; a legitimate feature-branch commit with valid orientation and green gates lands; a commit on the default branch is refused; a push to refs/heads/main is refused; a push at a builders-doctrine remote is refused; a push to a feature ref is allowed; --no-verify still bypasses and both the CI workflow and doctrine/EXTERNAL_ENABLEMENT.md name it as a residue; unsetting the path turns G3 red; displacing it to a directory of permissive hooks turns G3 red; re-running orientation repairs it and returns G3 green. Drill totals moved from 73 to 88 cases, 0 red. GAL-G7's ARMED classification is therefore sound and armed_fixed_decisions is unchanged at 8: this change made a standing claim true rather than arming a new one.",
+      "evidence_path": "scripts/doctrine-orient.py arm_git_hooks and inspect_git_hooks; scripts/doctrine-gate.py git_config_hooks_path; scripts/doctrine-drill.py D-73 through D-87; doctrine/receipts/GIT_LAYER_INDEPENDENCE-2026-09-06.md",
+      "activation_condition": "This obligation is discharged. The seam arms the governed hook path on every orientation and gate G3 holds the live configuration, so the git layer stands without the harness hook.",
+      "future_acceptance_test": "In a checkout where no harness hook has run, gate G3 is red until scripts/doctrine-orient.py orient establishes core.hooksPath, a real git commit that violates the gates is then refused by git's own invocation of .githooks/pre-commit, and removing or displacing the configuration returns G3 to red — asserted by scripts/doctrine-drill.py D-73 through D-87."
     }
   ],
   "most_recent_accepted_product_harvest": {
@@ -1294,30 +1418,121 @@
     "next_boundary": "H1 — architecture settled, after Stage 1 acceptance (Playbook §17)"
   },
   "release_verification_status": {
-    "state": "UNKNOWN",
-    "basis": "Nothing is implemented or deployed and no release has been claimed.",
-    "last_verified_at": null,
+    "state": "NOT_RELEASED",
+    "basis": "The Stage 2 vertical slice is implemented and was walked end to end in the running product on a local environment: 31 browser journeys at phone and desktop width, 20 adversarial permission probes, 8 executing VERIFY blocks in the migrations. Nothing is deployed. No hosting project, domain, transactional email sender or production database exists, so no deployed proof has been taken and none is claimed.",
+    "last_verified_at": "2026-09-06 (local)",
     "known_unknowns": [
-      "deployment environment and provider capabilities (none provisioned)",
-      "real email round trip",
-      "image pipeline behaviour",
-      "GitHub branch protection state"
-    ]
+      "behaviour on a deployed build behind a real domain (nothing is deployed)",
+      "a real email round trip — the local outbox writes messages and sends none",
+      "the contact handoff opening a real WhatsApp or mail client on a physical phone",
+      "image pipeline behaviour on a hosted object store rather than local disk",
+      "GitHub branch protection state and the CI check, which have never run"
+    ],
+    "receipt": "doctrine/receipts/STAGE2-VERTICAL-SLICE-2026-09-06.md"
   },
   "human_surface_state": {
     "module": "ux-design-assurance 1.1.0 (bound through DOCTRINE_BINDING.json)",
     "manifest": "ux/UX_MANIFEST.yaml",
-    "interface_reference_set": "DRAFT — R-1, R-2, R-3 rendered and reviewed; awaiting governor acceptance (ux/reference/interface/INTERFACE_REFERENCE_SET.md)",
+    "interface_reference_set_revision": "VERSION 2, 2026-09-06, at the governor's direction and awaiting the governor's acceptance of the rendered result. The governor judged the implemented treatment dull (grey-beige ground, black rules, mono uppercase as the dominant voice, black filled action blocks) and mandated a recomposition: the work supplies the colour, the interface supplies the room. Palette, rules, type registers, action treatment, hero composition and empty states were revised across tokens.css, system.css and the shared chrome; behaviour, data architecture, permissions and the Stage 2 slice are unchanged. Reference plates re-rendered; implemented surfaces captured in ux/reference/implemented/; receipt doctrine/receipts/VISUAL-SYSTEM-REVISION-2026-09-06.md with the remaining weaknesses stated. Version 1 acceptance stands for grammar, hierarchy and imagery treatment; version 2 supersedes its palette, rules and type-register decisions. Not a silent drift: the change was directed, and it returns to the governor for review as the version 1 acceptance requires.",
+    "interface_reference_set": "ACCEPTED by the governor 2026-09-06 as the authoritative design direction for implementation — R-1, R-2, R-3 rendered, reviewed and accepted (ux/reference/interface/INTERFACE_REFERENCE_SET.md). The approved grammar, hierarchy, typography, palette, imagery treatment and interaction direction are fixed; ordinary responsive, accessibility and implementation refinement remains the builder's, and acceptance freezes no defect. The interface may not drift into a generic marketplace, social feed or administrative template, and any later change that materially alters the approved product character returns for governor review.",
     "journeys": {
-      "J-001": "INTERFACE_DESIGNING",
-      "J-002": "INTERFACE_DESIGNING",
-      "J-003": "UX_READY",
-      "J-004": "INTERFACE_DESIGNING",
+      "J-001": "VERIFYING",
+      "J-002": "VERIFYING",
+      "J-003": "VERIFYING",
+      "J-004": "VERIFYING",
       "J-005": "IDENTIFIED",
       "J-006": "IDENTIFIED"
-    }
+    },
+    "stage_2_note": "J-001, J-002 and J-003 are implemented in full and J-004 minimally (suspend, reinstate, recorded reasons). All four were walked end to end in the running product at phone and desktop width on 2026-09-06. They read VERIFYING rather than VERIFIED because verification is not complete: no deployed build, no real email round trip and no walk on a physical phone. J-005's doors (sign out, sign in, recovery, expired session, account closure) were walked inside J-002's spec; J-006 enters through material browse, search and private saves."
   },
   "learning_ledger": "doctrine/BUILD_LEARNING_LEDGER.md",
-  "updated_at": "2026-09-06T05:12:17+00:00",
-  "update_reason": "Hook-liveness attempt 1 recorded: NOT PROVABLE. The session was not fresh, the project hooks did not fire, and the cause is host snapshot timing. No enforcement claim changed; OBL-GAL-002 and UNK-GAL-002 both remain open."
+  "updated_at": "2026-09-06T19:00:00+00:00",
+  "update_reason": "Visual system recomposed at the governor's direction (version 2 of the interface reference set, pending the governor's acceptance of the rendered result). Deployed to atthegallery.in through the Worker's git build on push; seen on the governor's phone before the recomposition, not after. Previous reason: The Supabase-native chain has been walked in a browser against the hosted project: Supabase Auth, row-level security, a real upload into the private bucket, publish, and an anonymous visitor receiving real image bytes. First byte this product has written to an object store. Still not deployed, and email remains unwalked.",
+  "stage_2_proof_ledger": {
+    "_what": "What the Stage 2 slice actually proved, and by which instrument. Local proof and deployed proof are separate columns on purpose: a browser walk against localhost is not a deployed walk, and this ledger exists so no later session can read one as the other.",
+    "receipt": "doctrine/receipts/STAGE2-VERTICAL-SLICE-2026-09-06.md",
+    "browser_journeys": {
+      "count": 31,
+      "green": 31,
+      "widths": [
+        "phone (Pixel 7)",
+        "desktop 1280x900"
+      ],
+      "suite": "e2e/*.spec.ts",
+      "environment": "local build, next start on 127.0.0.1:3100"
+    },
+    "permission_probes": {
+      "count": 22,
+      "green": 22,
+      "suite": "tests/policy/run.ts",
+      "note": "Run through the same gallery_anon and gallery_auth roles the product uses, on a non-superuser connection, so row-level security actually applies."
+    },
+    "migration_verify_blocks": {
+      "count": 8,
+      "green": 8,
+      "suite": "db/migrations/*.sql"
+    },
+    "seen_locally": [
+      "maker account creation, single-use email confirmation, sign-in, sign-out, recovery, expired-session return",
+      "maker identity and gallery creation; public contact routes separate from the private account email",
+      "a work with three differently shaped images, each keeping its own proportion",
+      "preview and publish, with a replayed publish answered rather than applied",
+      "anonymous entrance, material browse, search by title and by maker, work detail, maker gallery",
+      "the disclosure and the maker-selected WhatsApp and email routes",
+      "available to sold propagating across every public surface including the saved shelf",
+      "operator suspension and reinstatement with recorded reasons, and the append-only record",
+      "Maker B unable to read or write Maker A's material by any door the product exposes",
+      "draft, retired, taken-down and suspended material absent from anonymous responses, image bytes included",
+      "the account email absent from twelve rendered surfaces and from the JSON door",
+      "a failed image upload that fails alone, and an interrupted publish that loses nothing",
+      "account closure with its consequence stated before the act and carried out after it",
+      "the whole slice re-proved against an isolated schema, with `public` left empty",
+      "the whole slice re-proved on Cloudflare's own runtime: 62 journeys against the built Worker under workerd, with Postgres through a Hyperdrive binding and images written and read over HTTP"
+    ],
+    "not_seen": [
+      "any deployed build — nothing is deployed and no deployed claim is made",
+      "the product running against the hosted database — the schema is verified structurally there, but no application has connected to it and no journey has run against it",
+      "any connection to the Supabase project: its direct database host is IPv6-only and this environment has no IPv6, the pooler's Postgres ports are blocked, and api.supabase.com is refused by egress policy, so no migration has been run there and no Supabase schema exists",
+      "a real email round trip — GALLERY_MAIL=resend is implemented and UNTESTED; the local outbox records messages and sends none",
+      "the handoff opening a real WhatsApp or mail client on a physical phone",
+      "the CI check and branch protection, which have never run",
+      "Hyperdrive against the hosted database — the binding was exercised only through its localConnectionString, and no Hyperdrive configuration has been created"
+    ],
+    "co_tenancy": "The Gallery is to be hosted inside the governor's existing Supabase project, which already carries Ustaad. Every object this product owns lives in one schema named by GALLERY_SCHEMA (default `gallery`) and nothing is created in `public`, enforced by the migration runner refusing GALLERY_SCHEMA=public and by probes P-21 and P-22 — P-21 fails if any of this product's tables appear in `public`, P-22 fails if they are not in the named schema, so P-21 cannot pass by the product having built nothing. Runbook: db/SUPABASE.md.",
+    "hosted_substrate": {
+      "state": "SCHEMA APPLIED, EXPOSED, AND PROBED ANONYMOUSLY OVER HTTP; NO AUTHENTICATED PATH PROVED",
+      "date": "2026-09-06",
+      "project": "the governor's existing Supabase project, shared with Ustaad",
+      "applied_by": "the governor, through the SQL editor, one statement group at a time, with each result returned into the session",
+      "verified_by": "db/supabase-verify.sql — 12 of 12 PASS, every row recorded in the receipt",
+      "receipt": "doctrine/receipts/SUPABASE-NATIVE-SCHEMA-APPLIED-2026-09-06.md",
+      "supersedes": "the pre-GAL-SUPA-1 schema and its four database roles, all removed from the project and verified gone (C11)",
+      "not_established": "that any authenticated path works or is safe there. No account exists on the project, no token has been issued, and the public views returned no rows — so no private row has yet had the chance to leak. Maker isolation, operator authority and the suspended-maker refusal are proved locally and nowhere else.",
+      "anonymous_http_probes": "13 probes against the live project with the publishable key: the vocabulary and the two public views readable; works, makers, contact_routes and operators refused at grant level (42501); one RPC callable and five refused. Recorded in the receipt's addendum."
+    },
+    "worker_runtime": {
+      "state": "BUILT AND WALKED UNDER workerd; NOT DEPLOYED",
+      "date": "2026-09-06",
+      "receipt": "doctrine/receipts/WORKER-RUNTIME-2026-09-06.md",
+      "builder": "@opennextjs/cloudflare 1.20.6; entry worker-entry.ts wraps the generated worker",
+      "bundle": "7.2 MB, 1.57 MB gzipped",
+      "journeys": "31 at phone width and 31 at desktop width, against the Worker under `wrangler dev --local`, all green",
+      "database": "reached through the Hyperdrive binding's localConnectionString — a local cluster, not the hosted one",
+      "storage": "reached over HTTP against tools/local-object-store.mjs, a local stand-in for the bucket; the Worker wrote and read real JPEG bytes, and Supabase Storage was not involved",
+      "runtime_finding": "A Worker isolate permits WebAssembly compilation only while modules are evaluated, and OpenNext evaluates the Next server bundle inside a request. Established by direct measurement under workerd before any code changed, not inferred. The Worker entry now compiles the codecs at startup and the request path only instantiates.",
+      "not_established": "that any of this runs on Cloudflare. Nothing is deployed, no Hyperdrive configuration exists, no bucket exists, and no hosted database has been connected to."
+    },
+    "superseded_note": "The local proof recorded in this ledger — 62 journeys, 22 probes — was obtained against the hand-built authentication store and the raw Postgres path, both of which GAL-SUPA-1 removes. It stands as an honest record of what was proved on 2026-09-06 and it does NOT transfer to the rewritten path. A later session must not read it as evidence for the Supabase-native build.",
+    "supabase_native_walk": {
+      "state": "THE CHAIN WALKED IN A BROWSER AGAINST THE HOSTED PROJECT; NOT DEPLOYED",
+      "date": "2026-09-06",
+      "receipt": "doctrine/receipts/SUPABASE-NATIVE-WALK-2026-09-06.md",
+      "seen": "account creation and sign-in through Supabase Auth; maker identity and work written under row-level security as that person; an image decoded, resized and accepted into the private bucket under the maker's own token; publish through the RPC; an anonymous visitor meeting the work at the entrance and receiving 9,358 bytes of real JPEG through /img",
+      "first_real_upload": "yes — this is the first byte this product has written to an object store",
+      "wall_with_data_behind_it": "public_works returns the published work to a stranger holding only the publishable key; the makers base table still returns 401. The earlier anonymous probes ran against an empty schema and could not establish this.",
+      "not_seen": "email of any kind (the project is on mailer_autoconfirm); the operator surfaces, suspension, reinstatement, closure, the saved shelf and the endings; any deployed build",
+      "defect_found": "An empty price passed validation because Number(\"\") is 0, then failed at the database as an unreadable refusal. Fixed. The journeys never caught it because they always typed a price.",
+      "left_on_the_project": "synthetic makers under reserved .example addresses and one published work, visible at the entrance until cleared"
+    }
+  }
 }

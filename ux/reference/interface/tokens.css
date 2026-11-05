@@ -1,59 +1,89 @@
 /* The Gallery — design tokens (single source; see ux/INTERFACE_FOUNDATION.md §12).
-   Direction layer: the product's colours and type families.  Semantic layer: what components read. */
+   Direction layer: the product's colours and type families.  Semantic layer: what components read.
+
+   Revised 2026-09-06 under the governor's visual mandate: the work supplies the colour, the
+   interface supplies the room. Luminous ivory and limestone for the ground; a softened,
+   warm near-black for ink; burnt amber as the curatorial mark rather than a technical
+   indicator; natural material tones drawn from the five materials, used only as fragments. */
 :root {
-  /* direction */
-  --paper: #F3EEE6;
-  --paper-deep: #EAE3D8;
-  --stone: #D8CFC2;
-  --stone-strong: #857D73;
-  --ink: #1B1917;
-  --ink-muted: #5C5751;
-  --amber: #A04A1B;
-  --amber-tint: #F4E1D4;
+  /* direction — ground */
+  --paper: #F8F3EA;          /* luminous warm ivory: the wall */
+  --paper-deep: #F0E9DC;     /* limestone, light: image frames while loading, sunken fields */
+  --limestone: #E7DECF;      /* limestone: plinths, the ground a work sits on */
+  --stone: #D5CAB8;          /* soft rules, dividers */
+  --stone-strong: #9A9082;   /* control boundaries: field and chip borders (3.2:1 on paper) */
+  /* direction — ink */
+  --ink: #221E1A;            /* softened near-black, warm */
+  --ink-soft: #3D3630;       /* structural rules, secondary headings, icons at rest */
+  --ink-muted: #675F56;      /* warm charcoal: metadata, help (5.4:1 on paper) */
+  /* direction — the curatorial mark */
+  --amber: #A5501F;          /* burnt amber / oxidised terracotta (5.0:1 on paper at 12 px+) */
+  --amber-deep: #8A3F14;     /* amber for small text where 4.5:1 must hold with margin */
+  --amber-tint: #F2E1D2;     /* warning ground */
   --alarm: #7E2A17;
-  --scrim: rgba(27, 25, 23, 0.40);
+  --scrim: rgba(34, 30, 26, 0.42);
+  /* direction — material tones (fragments only: never a surface, never a fill behind text) */
+  --m-clay: #9B5E3A;
+  --m-textile: #34466B;
+  --m-wood: #7B5334;
+  --m-metal: #8B8170;
+  --m-paper: #CFC4B0;
+  /* type families */
   --font-serif: "Newsreader", "Iowan Old Style", "Times New Roman", serif;
   --font-mono: "IBM Plex Mono", "Courier Prime", "Courier New", monospace;
   --font-sans: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+
   /* semantic */
   --surface: var(--paper);
   --surface-sunken: var(--paper-deep);
+  --surface-plinth: var(--limestone);
   --text: var(--ink);
+  --text-soft: var(--ink-soft);
   --text-muted: var(--ink-muted);
   --accent: var(--amber);
+  --accent-text: var(--amber-deep);
   --accent-tint: var(--amber-tint);
-  --rule: var(--ink);
-  --rule-soft: var(--stone);
+  --rule: var(--ink-soft);                      /* structural — used sparingly */
+  --rule-soft: var(--stone);                    /* dividers between rows */
+  --rule-hair: rgba(34, 30, 26, 0.16);          /* the hairline under the header and above the bar */
   --field-border: var(--stone-strong);
-  --action-fill: var(--ink);
-  --action-text: var(--paper);
+  --action-line: var(--ink);                    /* editorial action: a line, not a block */
+  --action-fill-hover: var(--ink);
+  --action-text-hover: var(--paper);
   --alarm-fill: var(--alarm);
-  --focus-ring: 0 0 0 2px var(--paper), 0 0 0 4px var(--ink);
+  --focus-ring: 0 0 0 2px var(--paper), 0 0 0 4px var(--amber);
+  --shadow-plinth: 0 1px 0 rgba(34, 30, 26, 0.08), 0 14px 28px -18px rgba(34, 30, 26, 0.35);
+
   /* type roles */
-  --t-wordmark: 500 15px/1 var(--font-mono);
-  --t-display: 300 34px/1.1 var(--font-serif);
-  --t-heading: 400 26px/1.15 var(--font-serif);
-  --t-subheading: 400 20px/1.25 var(--font-serif);
-  --t-grid-title: 400 17px/1.25 var(--font-serif);
-  --t-meta: 400 13px/1.4 var(--font-mono);
-  --t-label: 500 12px/1.2 var(--font-mono);
-  --t-body: 400 16px/1.5 var(--font-sans);
-  --t-body-small: 400 14px/1.45 var(--font-sans);
+  --t-wordmark: 500 14px/1 var(--font-mono);
+  --t-display: 350 40px/1.04 var(--font-serif);
+  --t-heading: 400 30px/1.1 var(--font-serif);
+  --t-subheading: 400 22px/1.2 var(--font-serif);
+  --t-grid-title: 400 18px/1.22 var(--font-serif);
+  --t-lead: italic 400 17px/1.3 var(--font-serif);      /* curatorial lead: section titles, context */
+  --t-maker: italic 400 17px/1.35 var(--font-serif);    /* the maker line under a title */
+  --t-meta: 400 13px/1.45 var(--font-mono);
+  --t-label: 500 11.5px/1.2 var(--font-mono);
+  --t-body: 400 16px/1.55 var(--font-sans);
+  --t-body-small: 400 14px/1.5 var(--font-sans);
   --t-action: 500 15px/1 var(--font-sans);
+  --t-nav: 500 10.5px/1 var(--font-sans);
   --t-field: 400 16px/1.4 var(--font-sans);
-  --t-note: italic 400 18px/1.45 var(--font-serif);
-  --track-wordmark: 0.18em;
-  --track-meta: 0.06em;
-  --track-label: 0.12em;
+  --t-field-label: 500 13px/1.3 var(--font-sans);
+  --t-note: italic 400 19px/1.45 var(--font-serif);
+  --track-wordmark: 0.2em;
+  --track-meta: 0.04em;
+  --track-label: 0.14em;
+  --track-nav: 0.1em;
   /* rhythm */
-  --s1: 4px; --s2: 8px; --s3: 16px; --s4: 24px; --s5: 32px; --s6: 48px;
+  --s1: 4px; --s2: 8px; --s3: 16px; --s4: 24px; --s5: 32px; --s6: 48px; --s7: 64px;
   --pad-x: 20px;
   --pad-x-studio: 16px;
   --radius: 2px;
   --radius-sheet: 12px;
-  --header-h: 56px;
-  --bar-h: 64px;
+  --header-h: 60px;
+  --bar-h: 66px;
   --target: 44px;
 }
-@media (min-width: 600px) { :root { --t-display: 300 40px/1.1 var(--font-serif); --pad-x: 32px; } }
-@media (min-width: 900px) { :root { --t-display: 300 44px/1.08 var(--font-serif); --pad-x: 48px; } }
+@media (min-width: 600px) { :root { --t-display: 350 48px/1.03 var(--font-serif); --t-heading: 400 34px/1.1 var(--font-serif); --pad-x: 32px; } }
+@media (min-width: 900px) { :root { --t-display: 350 56px/1.02 var(--font-serif); --pad-x: 48px; } }

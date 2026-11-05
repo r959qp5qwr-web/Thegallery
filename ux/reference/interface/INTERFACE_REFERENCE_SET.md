@@ -1,9 +1,12 @@
 # Interface Reference Set
 
 **Product:** The Gallery  
-**Version:** 1 (Stage 1, 2026-09-04)  
+**Version:** 2 (visual system revised 2026-09-06 under the governor's mandate; receipt `doctrine/receipts/VISUAL-SYSTEM-REVISION-2026-09-06.md`)  
 **Status:** `DRAFT` — awaiting the governor's Stage 1 review; acceptance sets `INTERFACE_READY` for J-001, J-002 and J-004 and lets J-003 inherit  
 **Interface Foundation:** `ux/INTERFACE_FOUNDATION.md` (tokens in `ux/reference/interface/tokens.css`)
+
+## Revision of 2026-09-06
+The governor judged the implemented treatment below the accepted artistic standard — orderly but dull, a museum directory rather than a living gallery — and mandated a recomposition of the visual system rather than a restyle of components. `tokens.css` and `system.css` were revised in place, so every plate below re-rendered on the new system without a change to its markup; the renders in `renders/` are from the revised system. What changed and what remains weak is recorded in the receipt. The grammar's names (frame, label, rail, bar, tile, band, sheet, field) are unchanged; their weight, colour and voice are not.
 
 ## Purpose
 Bounded high-fidelity evidence establishing the reusable interface grammar of a new product (module `ux-design-assurance` v1.1, §7 and I4): three representative surfaces, not a mock-up of every screen. Six further key screens were rendered from the same tokens and components as **inheritance demonstrations**, because the governor's Stage 1 gate asks to see how the product moves, how the maker publishes and how the operator acts (ledger GAL-L0001 records the reconciliation). Nothing here is a second design direction.

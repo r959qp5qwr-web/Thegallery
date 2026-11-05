@@ -25,8 +25,11 @@ bootstrap validates.
 
 ## How a blank session orients
 
-The SessionStart hook in `.claude/settings.json` runs this automatically and prints the
-derived standing assessment. To run it by hand:
+**Run this by hand, first thing.** `.claude/settings.json` carries a SessionStart hook that
+would do it for you, and whether the host runs it depends on the session's topology: the
+harness discovers project settings at `<project root>/.claude/` only, so if the session opened
+on a parent directory holding this repository and the Doctrine checkout as siblings, no project
+hook fires at all. Assume nothing oriented you (`doctrine/EXTERNAL_ENABLEMENT.md` item 4):
 
 ```bash
 python3 scripts/doctrine-orient.py orient      # verify the Doctrine checkout, emit the receipt
@@ -36,10 +39,13 @@ python3 scripts/doctrine-drill.py              # prove every protection fails un
 ```
 
 Three layers, and none of them stands in for another. `scripts/doctrine-hook.py` denies an act
-before it happens, but only in a session whose host loaded this project's hook configuration.
-`.githooks/pre-commit` and `pre-push` refuse a commit or push and are compulsory for local git.
-CI at the pull-request chokepoint is the only layer that binds a human, and it is not enabled
-yet — `doctrine/EXTERNAL_ENABLEMENT.md` says what that needs.
+before it happens, but only in a session whose host loaded this project's hook configuration —
+which the present multi-repository topology prevents, so treat it as enforcing nothing until
+the standing assessment says otherwise. `.githooks/pre-commit` and `pre-push` refuse a commit
+or push and are compulsory for local git once `core.hooksPath` names them; the orient command
+above is what sets and verifies that, and gate G3 goes red without it. CI at the pull-request
+chokepoint is the only layer that binds a human, and it is not enabled yet —
+`doctrine/EXTERNAL_ENABLEMENT.md` says what that needs.
 
 The seam expects the live `builders-doctrine` checkout beside this repository or at
 `$DOCTRINE_ROOT`. It fingerprints the central bootstrap before executing it, verifies the

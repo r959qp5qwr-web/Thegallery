@@ -22,7 +22,7 @@ carries the matching obligations with their activation conditions.
 - **Exact setting:** repository → Settings → Secrets and variables → Actions → *New repository secret*, name `DOCTRINE_READ_TOKEN`, value a fine-grained personal access token or a deploy key with **read-only** access to `r959qp5qwr-web/builders-doctrine` and nothing else.
 - **Why:** the central Doctrine is private. Orientation means fingerprinting the Canon, Playbook, Audit Protocol, Candidate Register, `VERSION.json` and the twenty module files against the bound commit; without read access CI cannot do that and must not pretend to.
 - **Activates:** the *Check out the central Doctrine at the bound commit* step. The workflow already refuses to continue when the secret is absent, so an unset secret produces a red check rather than a green one that verified nothing.
-- **Proved by:** the workflow log showing `binding pins dfdecb651df8…` followed by a green orientation step.
+- **Proved by:** the workflow log showing `binding pins 6dc016c485ec…` followed by a green orientation step.
 - **Blocked until then:** the same obligation. Grant read-only scope: this credential must not be able to write to the Doctrine, and the product's own rule is that nothing writes there.
 
 ## 3. Create `main` by merging this branch, then protect it
@@ -33,27 +33,37 @@ carries the matching obligations with their activation conditions.
 - **Proved by:** the branch-protection state showing the Doctrine check required and direct pushes refused. This is a dashboard fact, so it is recorded by observation and stays UNKNOWN until observed.
 - **Blocked until then:** obligations OBL-GAL-005 and OBL-GAL-011.
 
-## 4. Run the hook-liveness verification in a fresh session
+## 4. Host topology — dispositioned 2026-09-06, not an open experiment
 
-- **Exact act:** follow `doctrine/receipts/HOOK_LIVENESS_VERIFICATION.md` in a new session started on this branch.
-- **Why:** hook configuration is snapshotted when a session starts. This branch's `.claude/settings.json` was written during the session that created it, so no project hook has ever fired. Script behaviour and hook wiring are proven; host invocation is not, and no amount of testing from inside this session can prove it.
-- **Activates:** the pre-act enforcement layer for agent sessions (GAL-G1, GAL-G2, GAL-G6, GAL-G9 rest on it).
-- **Proved by:** the exact evidence listed in that procedure.
-- **Blocked until then:** obligation OBL-GAL-002. Everything at the hook layer is ARMED-AS-CONFIGURED and no more.
+- **Exact act:** none, and none is authorised. Two verification attempts are recorded in `doctrine/receipts/HOOK_LIVENESS_ATTEMPT-2026-09-04.md` and `-2026-09-06.md`. The governed disposition is that the host hook is `ARMED_AS_CONFIGURED` **only when `Thegallery` is itself the host project root**, and is not a compulsory enforcement layer in the present multi-repository topology.
+- **Why:** the harness discovers project settings at `<project root>/.claude/` only. Where a session opens this repository and the Doctrine checkout as siblings beneath a parent directory, that parent is the project root and `.claude/settings.json` one level deeper is never a discovery candidate. Attempt 2 established this with the harness's own record: exactly one hook spawn in the whole session, its own git-identity hook, and zero `PreToolUse` spawns against fifteen covered tool calls.
+- **Activates:** nothing that this repository can act on. Should a future environment open `Thegallery` as the actual project root — with the Doctrine checkout supplied through `DOCTRINE_ROOT` rather than as a sibling — the procedure in `doctrine/receipts/HOOK_LIVENESS_VERIFICATION.md` becomes testable again.
+- **Proved by:** the evidence in that procedure, if and when the topology materially changes. **No third liveness experiment is authorised before then**, and no session claims automatic host orientation while the topology prevents it.
+- **Consequence today:** obligation OBL-GAL-002 stays open with that activation condition. It is **not a blocker**: the commit and push routes are held compulsorily by GAL-G7 and GAL-G8 in every checkout, armed by the seam rather than by the harness (OBL-GAL-013, repaired 2026-09-06), and the trunk boundary is items 1–3 below.
 
 ## 5. Stage 2 provisioning
 
 Unchanged from `product/STAGE_2_VERTICAL_SLICE.md` §4 and obligation OBL-GAL-008: a database and auth project, a hosting project, a domain, a transactional email sender with SPF/DKIM records, an operator account, and a phone-reachable test mailbox. None of it is needed for enforcement closure; all of it is needed before any deployed proof.
 
+Now that the host is chosen and the Worker builds, the remainder is specific. `DEPLOY.md` is the runbook; this is the list of things only the governor can create, and each is NOT SEEN until it exists.
+
+| Item | Where | State |
+|---|---|---|
+| Migrations 005 and 006 on the hosted database | Supabase SQL editor, `db/supabase-delta.sql`, then `db/supabase-verify.sql` — all 13 rows must read PASS | 001–004 applied 2026-09-06; these two not applied |
+| A Hyperdrive configuration over the session-pooler string for `gallery_app` | `wrangler hyperdrive create`; its id replaces `REPLACE_WITH_HYPERDRIVE_ID` in `wrangler.jsonc` | not created; the placeholder stands |
+| A **private** Storage bucket `gallery-images` and a `service_role` key as a Worker secret | Supabase Storage; `wrangler secret put SUPABASE_URL` and `SUPABASE_STORAGE_KEY` | not created. A public bucket would route around `/img`, which is the control that keeps a draft's pixels unreachable |
+| A transactional sender and its SPF/DKIM records | Resend or equivalent; `wrangler secret put RESEND_API_KEY` | not created; `GALLERY_MAIL=resend` remains implemented and untested |
+| `atthegallery.in` attached to the Worker, and `GALLERY_BASE_URL` set to it | Cloudflare Workers → Domains & Routes | nameservers updated 2026-09-06; no Worker exists to attach |
+
 ---
 
-## What remains unenforced while items 1–4 are open
+## What remains unenforced while items 1–3 are open
 
 | Route | Layer that would hold it | State today |
 |---|---|---|
-| An agent mutating files in a session where the host did not load the hooks | harness hook | ARMED-AS-CONFIGURED, unproven (item 4) |
+| An agent mutating files in a session where the host did not load the hooks | harness hook | executes nothing in the present multi-repository topology; dispositioned (item 4) |
 | A commit made with `--no-verify` | CI at the pull-request chokepoint | UNARMED (items 1–2) |
-| A push from a checkout that never set `core.hooksPath` | CI at the pull-request chokepoint | UNARMED (items 1–2) |
+| A commit made in a checkout that never oriented, so never armed `core.hooksPath` | CI at the pull-request chokepoint | UNARMED (items 1–2). The seam arms the path on every orientation and gate G3 goes red without it, so this is now a narrow residue rather than the default state |
 | A merge performed in the GitHub UI | branch protection | UNARMED (item 3) |
 | A tool the harness adds after 2026-09-04 | the mutation-surface inventory | UNARMED, declared (OBL-GAL-009) |
 | A guard process that never starts | nothing at the hook layer, by the host's own protocol | structural; see OBL-GAL-010 |

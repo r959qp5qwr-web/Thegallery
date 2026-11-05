@@ -1,9 +1,15 @@
 # The Gallery — Doctrine enforcement at the pull-request chokepoint.
 #
 # This is the layer that catches what the other two cannot: a commit made with --no-verify, a
-# change pushed from a checkout whose core.hooksPath was never set, and any mutation that
-# reached the repository through a route the harness guard did not see. It is the only layer
-# that binds a human as well as an agent.
+# change committed in a checkout that never oriented and so never armed core.hooksPath, and any
+# mutation that reached the repository through a route the harness guard did not see. It is the
+# only layer that binds a human as well as an agent.
+#
+# It depends on NEITHER of the layers below it. actions/checkout produces a fresh clone with no
+# inherited local git configuration and no harness present, and the Orient step below is what
+# establishes the governed core.hooksPath in it — which is also why Orient must stay BEFORE the
+# Repository gates step: gate G3 verifies the effective hook path and is red until orientation
+# has set it (OBL-GAL-013). Do not reorder these steps.
 #
 # INERT UNTIL ENABLED. It needs GitHub Actions switched on for the repository and a read
 # credential for the private central Doctrine repository, because orientation is meaningless
@@ -52,6 +58,9 @@ jobs:
           git -C builders-doctrine checkout --quiet "${BOUND}"
           echo "DOCTRINE_ROOT=${GITHUB_WORKSPACE}/builders-doctrine" >> "$GITHUB_ENV"
 
+      # Validates the bootstrap fingerprint, the bound commit, every bound artifact, the version
+      # manifest and the module manifests; then arms and verifies core.hooksPath in this fresh
+      # checkout; then writes the orientation receipt; then runs the repository gates itself.
       - name: Orient against the bound Doctrine
         working-directory: Thegallery
         run: python3 -B scripts/doctrine-orient.py orient --session-id "ci-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"

@@ -1,0 +1,13 @@
+# Copy to .dev.vars for `wrangler dev`. Nothing here is a production credential; production
+# values are Worker vars and secrets, set with `wrangler secret put`, never in the repository.
+GALLERY_SCHEMA=gallery
+GALLERY_STORAGE=supabase
+GALLERY_BASE_URL=http://127.0.0.1:3200
+GALLERY_MAIL=outbox
+GALLERY_MAIL_FROM=The Gallery <no-reply@atthegallery.in>
+
+# A local stand-in for the bucket, served by `node tools/local-object-store.mjs`. It exercises
+# the Worker's own storage path over HTTP; it proves nothing about Supabase Storage.
+SUPABASE_URL=http://127.0.0.1:54321
+SUPABASE_STORAGE_KEY=local-stand-in-not-a-credential
+SUPABASE_STORAGE_BUCKET=gallery-images

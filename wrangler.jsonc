@@ -1,0 +1,35 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "thegallery",
+  // Not OpenNext's worker directly: worker-entry.ts wraps it to compile the image codecs
+  // at startup, which a Worker isolate allows and refuses to do inside a request.
+  "main": "worker-entry.ts",
+  "compatibility_date": "2025-09-01",
+  // nodejs_compat gives the Worker `node:crypto`, `node:buffer` and the pieces `pg` needs.
+  // The image codecs need none of it — they are WASM compiled from bytes.
+  "compatibility_flags": ["nodejs_compat"],
+
+  "assets": { "directory": ".open-next/assets", "binding": "ASSETS" },
+
+  // No Hyperdrive, and none needed since GAL-SUPA-1: this Worker holds no database
+  // connection. It talks to PostgREST, GoTrue and Storage over HTTPS like any other Supabase
+  // client, and the identity it sends is the caller's own.
+  //
+  // SUPABASE_URL and SUPABASE_PUBLISHABLE_KEY are vars, not secrets — the publishable key is
+  // meant to reach a browser. There is no service-role key here at all: a key that bypasses
+  // row-level security, held by the thing serving public requests, would make every policy in
+  // this product advisory.
+
+  // All non-secret. The publishable key is meant to reach a browser; there is no service-role
+  // key here, so nothing in this file needs hiding. GALLERY_BASE_URL is what confirmation and
+  // recovery links point at, so it must be the address people actually visit.
+  "vars": {
+    "GALLERY_SCHEMA": "gallery",
+    "SUPABASE_URL": "https://kemrceegbyizpcfewgri.supabase.co",
+    "SUPABASE_PUBLISHABLE_KEY": "sb_publishable_joD-RqEyX63-Y1CwQSErxg_nuGsUB7N",
+    "SUPABASE_STORAGE_BUCKET": "gallery-images",
+    "GALLERY_BASE_URL": "https://atthegallery.in"
+  },
+
+  "observability": { "enabled": true }
+}
