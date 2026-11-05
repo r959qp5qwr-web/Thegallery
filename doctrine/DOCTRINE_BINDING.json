@@ -8,10 +8,10 @@
   "doctrine": {
     "repository": "https://github.com/r959qp5qwr-web/builders-doctrine",
     "branch": "main",
-    "commit": "dfdecb651df8cef5387487fee21d8ee2f798db95",
+    "commit": "6dc016c485ec1ddf31163534d84e02e0f74772f0",
     "version": "1.1.0",
     "status_at_binding": "ACTIVE_PENDING_REPIN",
-    "commit_derivation": "git rev-parse origin/main in the live builders-doctrine checkout inspected in the binding session (local HEAD identical); not copied from any other product's binding.",
+    "commit_derivation": "git rev-parse origin/main in the live builders-doctrine checkout inspected in the re-pin session (local HEAD identical, working tree clean); not copied from any other product's binding.",
     "artifacts": {
       "canon": {
         "path": "THE-BUILDERS-CANON-v1.0.md",
@@ -27,7 +27,7 @@
       },
       "candidate_register": {
         "path": "DOCTRINE_CANDIDATE_REGISTER.csv",
-        "sha256": "cf1b2d857111ab972694b7cfb8da35d7a3587e81a37fe87b64c3e33263010f38",
+        "sha256": "6bf92ecbdd3cb62d97e06599d63d9bb6830e826b4ebb418ccb49491a67126d5f",
         "_why": "Central Doctrine authority per the Doctrine README; every artifact named here is validated by doctrine_bootstrap.py (trial defect B6)."
       },
       "bootstrap": {
@@ -37,7 +37,7 @@
       },
       "version_manifest": {
         "path": "VERSION.json",
-        "sha256": "4acbc7016ed7431e81edecd583652f43eeaa2c57c578ed1aca60a5b505cfb3cd",
+        "sha256": "2ce5c0e6b1f02f56165ae6662daabfc418b877ab4f9198876e760f4a38e15e06",
         "_why": "The Doctrine's own declaration of version, status and core fingerprints. Pinned so the version and status inspected at binding (1.1.0, ACTIVE_PENDING_REPIN) cannot drift silently; scripts/doctrine-orient.py cross-checks it against the disk and this binding and refuses a contradiction."
       },
       "ux_design_assurance_manifest": {
@@ -54,12 +54,19 @@
       }
     }
   },
-  "bound_at": "2026-09-04T04:41:52+00:00",
+  "bound_at": "2026-11-05T12:52:50+00:00",
   "bound_by": {
     "authority": "GOVERNOR",
-    "decision_id": "GAL-GOV-2026-09-04-STAGE0",
-    "decision_source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §3 (Stage 0: bind to the exact current Doctrine commit actually inspected in this session) and the governor's session instruction of 2026-09-04; handoff package THE_GALLERY_FABLE_5_HANDOFF_v1.1.zip sha256 db781afa096c8c72763b5be49ebb580bf2fc75d73c2d50b290de3fa475f5c6f0."
+    "decision_id": "GAL-GOV-2026-11-05-REPIN",
+    "decision_source": "The governor's session instruction of 2026-11-05: \"Could we re pin the new builders doctrine to this?\" Discharges the activation of OBL-GAL-004 after builders-doctrine main advanced dfdecb651df8 -> 6dc016c485ec (21 commits; pinned artefacts changed: DOCTRINE_CANDIDATE_REGISTER.csv +C-0014..C-0017 and VERSION.json register fingerprint; Canon, Playbook, Audit Protocol, bootstrap and ux-design-assurance manifest byte-identical)."
   },
+  "previous_pins": [
+    {
+      "commit": "dfdecb651df8cef5387487fee21d8ee2f798db95",
+      "bound_at": "2026-09-04T04:41:52+00:00",
+      "decision_id": "GAL-GOV-2026-09-04-STAGE0"
+    }
+  ],
   "status": "ACTIVE",
   "repin_rule": "This binding pins a commit. Any advance of builders-doctrine's default branch makes it stale and orientation refuses until it is re-pinned in a governed change that re-derives every fingerprint (Doctrine VERSION.json freeze_note; product obligation OBL-GAL-004).",
   "seam": "scripts/doctrine-orient.py"

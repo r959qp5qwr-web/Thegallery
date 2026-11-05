@@ -22,7 +22,7 @@ carries the matching obligations with their activation conditions.
 - **Exact setting:** repository → Settings → Secrets and variables → Actions → *New repository secret*, name `DOCTRINE_READ_TOKEN`, value a fine-grained personal access token or a deploy key with **read-only** access to `r959qp5qwr-web/builders-doctrine` and nothing else.
 - **Why:** the central Doctrine is private. Orientation means fingerprinting the Canon, Playbook, Audit Protocol, Candidate Register, `VERSION.json` and the twenty module files against the bound commit; without read access CI cannot do that and must not pretend to.
 - **Activates:** the *Check out the central Doctrine at the bound commit* step. The workflow already refuses to continue when the secret is absent, so an unset secret produces a red check rather than a green one that verified nothing.
-- **Proved by:** the workflow log showing `binding pins dfdecb651df8…` followed by a green orientation step.
+- **Proved by:** the workflow log showing `binding pins 6dc016c485ec…` followed by a green orientation step.
 - **Blocked until then:** the same obligation. Grant read-only scope: this credential must not be able to write to the Doctrine, and the product's own rule is that nothing writes there.
 
 ## 3. Create `main` by merging this branch, then protect it

@@ -83,8 +83,8 @@
   "current_doctrine_binding": {
     "path": "doctrine/DOCTRINE_BINDING.json",
     "doctrine_version": "1.1.0",
-    "doctrine_commit": "dfdecb651df8cef5387487fee21d8ee2f798db95",
-    "bound_at": "2026-09-04T04:41:52+00:00"
+    "doctrine_commit": "6dc016c485ec1ddf31163534d84e02e0f74772f0",
+    "bound_at": "2026-11-05T12:52:50+00:00"
   },
   "proof_ladder": [
     "INTENDED",
