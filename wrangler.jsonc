@@ -25,8 +25,8 @@
   // recovery links point at, so it must be the address people actually visit.
   "vars": {
     "GALLERY_SCHEMA": "gallery",
-    "SUPABASE_URL": "https://ljbsrrctpynyarmlqkba.supabase.co",
-    "SUPABASE_PUBLISHABLE_KEY": "sb_publishable_5jiOM-fepTP1aV4d1YdgHQ_iVNqrIjr",
+    "SUPABASE_URL": "https://kemrceegbyizpcfewgri.supabase.co",
+    "SUPABASE_PUBLISHABLE_KEY": "sb_publishable_joD-RqEyX63-Y1CwQSErxg_nuGsUB7N",
     "SUPABASE_STORAGE_BUCKET": "gallery-images",
     "GALLERY_BASE_URL": "https://atthegallery.in"
   },
