@@ -123,11 +123,16 @@ export default async function Studio({ searchParams }: {
                 {/* J-003: on a published work the chip is the status control — a button whose name
                     carries the value, opening the picker. A draft or retired work has no status yet. */}
                 {w.lifecycle === "published" && !w.taken_down ? (
-                  <Link className={`chip ${w.status === "sold" ? "" : "available"}`} id={`chip-${w.id}`}
-                        href={`/studio?status=${w.id}`} scroll={false} role="button"
-                        aria-label={`Status: ${STATUS_LABEL[w.status] ?? w.status}. Change status of ${w.title}`}>
-                    {STATUS_LABEL[w.status] ?? w.status}
-                  </Link>
+                  // A real button (Space and Enter both work), in a GET form so it opens the picker
+                  // without script too. A pending Undo travels with it.
+                  <form method="get" action="/studio" className="chip-form">
+                    <input type="hidden" name="status" value={w.id} />
+                    {changed && from ? <><input type="hidden" name="changed" value={changed} /><input type="hidden" name="from" value={from} /></> : null}
+                    <button className={`chip ${w.status === "sold" ? "" : "available"}`} id={`chip-${w.id}`} type="submit"
+                            aria-label={`Status: ${STATUS_LABEL[w.status] ?? w.status}. Change status of ${w.title}`}>
+                      {STATUS_LABEL[w.status] ?? w.status}
+                    </button>
+                  </form>
                 ) : <StatusChip lifecycle={w.lifecycle} status={w.status} />}
                 {changed === w.id && from && STATUSES.includes(from) ? (
                   <form action={changeStatusAction} className="undo-line" role="status">
@@ -159,16 +164,17 @@ export default async function Studio({ searchParams }: {
       {(() => {
         const w = picking ? works.find((x) => x.id === picking && x.lifecycle === "published") : undefined;
         if (!w) return null;
+        const close = changed && from ? `/studio?changed=${changed}&from=${encodeURIComponent(from)}` : "/studio";
         return (
           <>
-            <Link className="contact-scrim" href="/studio" aria-hidden tabIndex={-1} scroll={false} />
+            <Link className="contact-scrim" href={close} aria-hidden tabIndex={-1} scroll={false} />
             <section className="sheet contact" role="dialog" aria-modal="true" tabIndex={-1}
                      aria-labelledby="status-title" id="status-sheet">
-              <SheetFocus sheetId="status-sheet" closeHref="/studio" returnFocusTo={`chip-${w.id}`} />
+              <SheetFocus sheetId="status-sheet" closeHref={close} returnFocusTo={`chip-${w.id}`} />
               <div className="handle" />
               <div className="head">
                 <h2 id="status-title">{w.title} is</h2>
-                <Link className="iconbtn" href="/studio" aria-label="Close" data-autofocus scroll={false}><Icon name="close" /></Link>
+                <Link className="iconbtn" href={close} aria-label="Close" data-autofocus scroll={false}><Icon name="close" /></Link>
               </div>
               <ul className="choice">
                 {STATUSES.map((st) => (

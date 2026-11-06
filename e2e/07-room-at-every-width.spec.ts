@@ -11,8 +11,22 @@ const STARTED = "Untitled work";
 const wide = (page: import("@playwright/test").Page) => (page.viewportSize()?.width ?? 0) >= 900;
 
 test.describe("the room at every width", () => {
-  test.afterAll(async () => {
-    await owner((c) => c.query("DELETE FROM works WHERE title = $1", [STARTED]));
+  // Only Maker B's image-first drafts: never another maker's work that happens to share a title.
+  const clearStarted = () => owner((c) => c.query(
+    `DELETE FROM works WHERE title = $1 AND gallery_id IN
+      (SELECT g.id FROM galleries g JOIN makers m ON m.id = g.maker_id WHERE m.handle = 'dhaaga-studio')`, [STARTED]));
+  test.afterAll(clearStarted);
+
+  test("the window stays the size of the screen, with no sideways scroll", async ({ page }) => {
+    // Regression: overflow-x: clip on <html> made a phone size its layout viewport to the whole
+    // page (innerHeight 2548 on an 839 px screen) and taps landed on the wrong element.
+    for (const path of ["/", "/about", "/makers/sign-in"]) {
+      await page.goto(path);
+      const m = await page.evaluate(() => ({ ih: innerHeight, vh: visualViewport!.height,
+        sw: document.documentElement.scrollWidth, cw: document.documentElement.clientWidth }));
+      expect(Math.abs(m.ih - m.vh), path).toBeLessThan(2);
+      expect(m.sw, path).toBeLessThanOrEqual(m.cw);
+    }
   });
 
   test("one Sections navigation at any width, in the bar or in the header", async ({ page }) => {
@@ -26,11 +40,16 @@ test.describe("the room at every width", () => {
   });
 
   test("header and footer are landmarks of their own, outside main", async ({ page }) => {
+    // Every kind of public page, /search included: one page missed is how the skip link broke.
+    for (const path of ["/", "/browse/clay", "/search", "/saved", "/workshops", "/makers", "/makers/sign-in", "/privacy"]) {
+      await page.goto(path);
+      await expect(page.getByRole("banner"), path).toHaveCount(1);
+      await expect(page.getByRole("main"), path).toHaveCount(1);
+      await expect(page.locator("main#main"), path).toHaveCount(1);
+      expect(await page.locator("main header, main footer").count(), path).toBe(0);
+    }
     await page.goto("/about");
-    await expect(page.getByRole("banner")).toHaveCount(1);
     await expect(page.getByRole("contentinfo")).toHaveCount(1);
-    await expect(page.getByRole("main")).toHaveCount(1);
-    expect(await page.locator("main header, main footer").count()).toBe(0);
     // The skip link lands on main, past the header.
     await page.keyboard.press("Tab");
     await expect(page.getByRole("link", { name: "Skip to content" })).toBeFocused();
@@ -46,8 +65,13 @@ test.describe("the room at every width", () => {
     const img = await page.locator(".detail-media").boundingBox();
     const label = await page.locator(".detail-label").boundingBox();
     expect(label!.x).toBeGreaterThan(img!.x + img!.width - 1);           // beside, not below
+    const heading = page.getByRole("heading", { name: MONSOON });
+    const before = (await heading.boundingBox())!.y;
     await page.mouse.wheel(0, 400);
-    await expect(page.getByRole("heading", { name: MONSOON })).toBeInViewport();
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(100);   // it did scroll
+    await expect(heading).toBeInViewport();
+    // The page moved and the label did not move with it: it is held beside the work.
+    expect(Math.abs((await heading.boundingBox())!.y - before)).toBeLessThan(400);
   });
 
   test("the Studio chip changes status in place, and Undo puts it back", async ({ page }) => {
@@ -74,8 +98,22 @@ test.describe("the room at every width", () => {
       "SELECT status FROM works WHERE id = $1", [before.id]))).rows[0].status).toBe(before.status);
   });
 
+  test("a refused image-first save keeps what was typed and asks for the image again", async ({ page }) => {
+    await clearStarted();
+    await signIn(page, MAKER_B.email, MAKER_B.password);
+    await page.goto("/studio/works/new");
+    await page.getByLabel("Image file").setInputFiles(join(process.cwd(), "e2e/fixtures/square-1x1.jpg"));
+    await page.getByLabel("Medium").fill("Kept medium probe");
+    await page.getByRole("radio", { name: "Fixed price" }).check();       // fixed price, no amount: refused
+    await page.getByRole("button", { name: "Save draft" }).click();
+    await expect(page.getByTestId("form-error")).toContainText("Choose the image again");
+    await expect(page.getByLabel("Title")).toHaveValue("");              // not "Untitled work"
+    await expect(page.getByLabel("Medium")).toHaveValue("Kept medium probe");
+    expect((await owner((c) => c.query("SELECT 1 FROM works WHERE medium = 'Kept medium probe'"))).rowCount).toBe(0);
+  });
+
   test("a work can start from a picture alone, and is not published untitled", async ({ page }) => {
-    await owner((c) => c.query("DELETE FROM works WHERE title = $1", [STARTED]));
+    await clearStarted();
     await signIn(page, MAKER_B.email, MAKER_B.password);
     await page.goto("/studio/works/new");
     // Plate R-3: the images come first.
@@ -89,6 +127,7 @@ test.describe("the room at every width", () => {
     await page.getByLabel("Image file").setInputFiles(join(process.cwd(), "e2e/fixtures/square-1x1.jpg"));
     await page.getByRole("button", { name: "Save draft" }).click();
     await expect(page.getByText("Draft work")).toBeVisible({ timeout: 20_000 });
+    await expect(page.getByText("saved with its first image")).toBeVisible();
     await expect(page.getByRole("heading", { name: STARTED })).toBeVisible();
     const w = (await owner((c) => c.query<{ id: string }>("SELECT id FROM works WHERE title = $1", [STARTED]))).rows[0];
     const imgs = await owner((c) => c.query<{ state: string }>("SELECT state FROM work_images WHERE work_id = $1", [w.id]));

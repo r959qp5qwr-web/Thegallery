@@ -9,7 +9,7 @@
    own breakpoints (tokens.css: 600 and 900). The page is transparent so the paper grain in
    system.css covers the whole viewport, not only a column. */
 .phone { width: 100%; max-width: 1200px; min-height: 100vh; margin: 0 auto; overflow: visible;
-         background: transparent; padding-bottom: calc(var(--bar-h) + 12px); }
+         background: transparent; padding-bottom: calc(var(--bar-h) + env(safe-area-inset-bottom, 0px) + 12px); }
 
 /* The bottom bar below 900 px; from 900 px the same four sections sit in the header (§7). */
 .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; padding-bottom: env(safe-area-inset-bottom, 0px); height: calc(var(--bar-h) + env(safe-area-inset-bottom, 0px)); }
@@ -139,18 +139,20 @@ main { display: block; }
   .detail { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 0 32px;
             padding: var(--s4) var(--pad-x) 0; align-items: start; }
   .detail-media .imgstrip .shot img { max-height: 70vh; }
-  .detail-label { position: sticky; top: calc(var(--header-h) + var(--s4)); }
   .detail-label .label, .detail-label .actions, .detail-label .section { padding-left: 0; padding-right: 0; }
   .detail-label .label { padding-top: 0; }
 }
 @media (min-width: 900px) {
   .grid { gap: 48px 32px; }
   .grid .tile { flex-basis: calc((100% - 64px) / 3); }
-  .grid .tile.wide { flex-basis: calc((100% - 64px) / 3 * 2 + 32px); }
+  /* Half a pixel of slack: one tile plus a wide tile is exactly a row, and subpixel rounding
+     must not push the wide one down. */
+  .grid .tile.wide { flex-basis: calc((100% - 64px) / 3 * 2 + 32px - 0.5px); }
 
   /* Work detail: image 7 parts beside the wall label 5 parts; the label stays beside the work. */
   .detail { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 0 48px; padding-top: var(--s5); }
   .detail-media .imgstrip .shot img { max-height: 80vh; }
+  .detail-label { position: sticky; top: calc(var(--header-h) + var(--s4)); }   /* §10: sticky is expanded only */
   .rail { justify-content: flex-start; gap: 40px; }
 
   /* The entrance's featured work hangs larger on a wall that can hold it. */
@@ -174,18 +176,22 @@ main { display: block; }
 }
 
 /* The header's ground and hairline run the full width of the window, whatever the page width:
-   a sticky band that stopped at the column's edge read as a phone pasted onto a desktop. */
-html { overflow-x: clip; }
-.header { box-shadow: 0 0 0 100vmax var(--surface); clip-path: inset(0 -100vmax -1px); }
-.header::after { content: ""; position: absolute; left: -100vmax; right: -100vmax; bottom: -1px;
-                 border-bottom: 1px solid var(--rule-hair); pointer-events: none; }
+   a sticky band that stopped at the column's edge read as a phone pasted onto a desktop.
+   Drawn with box-shadows clipped to the header's height: a shadow never creates overflow, so
+   nothing here can widen the page or change how a phone sizes its viewport. (An earlier version
+   used overflow-x: clip on <html>, which made mobile browsers size the layout viewport to the
+   whole page and sent taps to the wrong element.) The first shadow is the ground; the second,
+   one pixel lower, shows only as the hairline below it. */
+.header { box-shadow: 0 0 0 100vmax var(--surface), 0 1px 0 100vmax var(--rule-hair);
+          clip-path: inset(0 -100vmax -1px); }
 
 /* Studio rows (J-003): the work's cover, its title, and the status chip as the control. */
 .rowlist.works li { gap: 14px; }
 .rowlist.works .thumb { flex: none; width: 56px; height: 56px; background: var(--surface-plinth); display: block; }
 .rowlist.works .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.rowlist .chip[role="button"] { text-decoration: none; min-height: var(--target); cursor: pointer; }
-.rowlist .chip[role="button"]::after { content: "▾"; margin-left: 8px; font-size: 10px; letter-spacing: 0; }
+.chip-form { margin: 0; }
+.rowlist button.chip { min-height: var(--target); cursor: pointer; background: transparent; }
+.rowlist button.chip::after { content: "▾"; margin-left: 8px; font-size: 10px; letter-spacing: 0; }
 .undo-line { flex-basis: 100%; display: flex; align-items: center; gap: 4px; margin: 0;
   font: var(--t-body-small); color: var(--text-soft); padding: 0 0 6px 70px; }
 .choice button { display: flex; align-items: center; justify-content: space-between; width: 100%;

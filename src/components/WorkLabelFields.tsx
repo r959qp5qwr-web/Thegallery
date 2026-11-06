@@ -69,7 +69,10 @@ export function WorkLabelFields({ materials, values = {}, withStatus = true, def
       </fieldset>
       <div className="field-short"><Field name="year" label="Year" defaultValue={values.year ?? undefined} /></div>
       <div className="group"><div className="ghead">Price and status</div></div>
-      <Segmented name="price_mode" legend="Price" options={PRICE_MODES} value={values.price_mode}
+      <Segmented name="price_mode" legend="Price" options={PRICE_MODES}
+                 // A new work starts On enquiry: a draft begun from a picture alone has no price yet,
+                 // and a fixed price without an amount cannot be saved.
+                 value={values.price_mode ?? (titleOptional ? "enquire" : undefined)}
                  help="Whatever you choose, the sale happens between you and the visitor. The Gallery takes no part in it." />
       <div className="field-short"><Field name="price_amount" label="Amount (₹)" defaultValue={values.price_amount ?? undefined}
              help="Only shown with a fixed price." /></div>

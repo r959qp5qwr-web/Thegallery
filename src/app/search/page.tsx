@@ -16,6 +16,7 @@ export default async function Search({ searchParams }: { searchParams: Promise<{
   return (
     <>
       <Header place="Search" back="/" action={<span style={{ width: 44 }} />} />
+      <main id="main" tabIndex={-1}>
       <h1 className="sr-only">Search work and makers</h1>
       <form className="form" action="/search" method="get" style={{ paddingTop: 16 }}>
         <div className="field">
@@ -62,6 +63,7 @@ export default async function Search({ searchParams }: { searchParams: Promise<{
           ) : null}
         </>
       )}
+      </main>
       <Footer />
     </>
   );

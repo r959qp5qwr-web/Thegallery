@@ -24,12 +24,12 @@ type Img = { id: string; position: number; width: number; height: number; alt_te
 
 export default async function EditWork(
   { params, searchParams }: { params: Promise<{ id: string }>;
-    searchParams: Promise<{ created?: string; confirm?: string; retired?: string; restored?: string; kept?: string; removed?: string }> },
+    searchParams: Promise<{ created?: string; confirm?: string; retired?: string; restored?: string; kept?: string; removed?: string; image_problem?: string }> },
 ) {
   const account = await currentAccount();
   if (!account) redirect("/makers/sign-in");
   const { id } = await params;
-  const { created, confirm, retired, restored, kept, removed } = await searchParams;
+  const { created, confirm, retired, restored, kept, removed, image_problem } = await searchParams;
   const mats = await materials();
 
   const db = await client();
@@ -59,7 +59,9 @@ export default async function EditWork(
     <>
       <StudioHeader title={work.lifecycle === "published" ? "Published work" : work.lifecycle === "retired" ? "Retired work" : "Draft work"} back="/studio" />
       <main id="main" tabIndex={-1}>
-      {created ? <Band label="Saved">The label is saved. Add images, then publish.</Band> : null}
+      {created === "image" ? <Band label="Saved">Your draft is saved with its first image. Add the rest, give it a
+        title if it has none, then publish.</Band> : created && !image_problem ? <Band label="Saved">The label is saved. Add images, then publish.</Band> : null}
+      {image_problem ? <Band kind="fail" label="The image did not go up">Your draft is saved. {image_problem} Add the image again below.</Band> : null}
       {retired ? <Band label="Retired">This work is no longer on view. Its link now says so. You can restore it below.</Band> : null}
       {restored ? <Band label="Restored">This work is on view again, with its status as it was.</Band> : null}
       {removed === "image" ? <Band label="Removed">The image is removed. The others are unchanged.</Band> : null}

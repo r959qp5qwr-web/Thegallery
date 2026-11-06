@@ -136,9 +136,10 @@ export async function deleteRouteAction(form: FormData): Promise<void> {
 // -------------------------------------------------------------------------------- works
 /** The label as the maker typed it, checked once for both create and edit. A refusal names the
  *  field it is about, so the form can put the message under that field and keep every value. */
-function readLabel(form: FormData):
+function readLabel(form: FormData, untitled?: string):
   { fields: Record<string, unknown> } | { error: string; field: string } {
-  const title = String(form.get("title") ?? "").trim();
+  // `untitled`: a draft started from an image may be saved before it has a title (decision R1).
+  const title = String(form.get("title") ?? "").trim() || (untitled ?? "");
   const material = String(form.get("material") ?? "");
   const price_mode = String(form.get("price_mode") ?? "enquire");
   const rawPrice = String(form.get("price_amount") ?? "").trim();
@@ -187,25 +188,31 @@ export async function createWorkAction(_prev: FormState, form: FormData): Promis
   // before publishing. Without an image, the title is required as before.
   const file = form.get("image");
   const hasImage = file instanceof File && file.size > 0;
-  if (hasImage && !String(form.get("title") ?? "").trim()) form.set("title", UNTITLED);
-  const label = readLabel(form);
-  if ("error" in label) return { ...label, values: typed(form) };
+  // The form is read, never rewritten: a refusal must hand back exactly what was typed, and a
+  // browser cannot hand back a chosen file, so the refusal says to choose it again.
+  const label = readLabel(form, hasImage ? UNTITLED : undefined);
+  const again = hasImage ? " Choose the image again — a browser does not keep it after a refusal." : "";
+  if ("error" in label) return { ...label, error: label.error + again, values: typed(form) };
 
   const db = await client();
   const { data: galleries } = await db.from("galleries").select("id").limit(1);
   const gallery = galleries?.[0] as { id: string } | undefined;
-  if (!gallery) return { error: "Set up your maker identity first — that is what a work belongs to." };
+  if (!gallery) return { error: "Set up your maker identity first — that is what a work belongs to.", values: typed(form) };
 
   const { data, error } = await db.from("works").insert({
     public_token: token(), gallery_id: gallery.id, ...label.fields,
     status: String(form.get("status") ?? "available"),
   }).select("id").limit(1);
 
-  if (error || !data?.length) return { error: "We could not save that work. Nothing was created.", values: typed(form) };
+  if (error || !data?.length) return { error: "We could not save that work. Nothing was created." + again, values: typed(form) };
   const id = (data[0] as { id: string }).id;
-  // The image goes up after the draft exists; if it fails, the draft is kept and the failure is
-  // shown on the work's page as a failed tile, never as a lost label.
-  if (hasImage) await storeImage(db, id, file as File, String(form.get("alt_text") ?? "").trim() || null);
+  // The image goes up after the draft exists; if it fails, the draft is kept and the reason is
+  // carried to the work's page, never lost behind a generic notice.
+  if (hasImage) {
+    const problem = await storeImage(db, id, file as File, String(form.get("alt_text") ?? "").trim() || null);
+    if (problem) redirect(`/studio/works/${id}?created=1&image_problem=${encodeURIComponent(problem)}`);
+    redirect(`/studio/works/${id}?created=image`);
+  }
   redirect(`/studio/works/${id}?created=1`);
 }
 
