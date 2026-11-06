@@ -89,3 +89,11 @@ receipt.
   failure is reported, not prevented. Wave 3 or later.
 - **Real devices**: no physical phone or tablet; no iOS safe-area or a browser without `:has` seen
   live.
+
+## Merge — governor override of an unverifiable CI check
+
+PR #5's "Orientation, gates and drill" check was red for the same reason as PR #4: the repository
+secret `DOCTRINE_READ_TOKEN` is not set (`doctrine/EXTERNAL_ENABLEMENT.md` item 2). The job stops
+before reading the Doctrine and verifies nothing (log seen, job 127870391509). The Cloudflare
+build check was green. Presented with this, the governor chose to merge ("Yes", 2026-11-06). The
+evidence for the merge is the local record above.
