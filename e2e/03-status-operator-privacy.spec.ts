@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { owner, signIn, MAKER_A, MAKER_B, OPERATOR } from "./helpers";
+import { forgetPerson, linkFromOutbox, owner, signIn, MAKER_A, MAKER_B, OPERATOR } from "./helpers";
 
 // J-003 (status propagates), J-004 (operator acts and undoes it), the isolation and privacy
 // promises, and the closure ending.
@@ -143,7 +143,9 @@ test.describe("status, authority and privacy", () => {
   });
 
   test("no account email appears in any public page or payload", async ({ page }) => {
-    const emails = await owner((c) => c.query<{ email: string }>("SELECT email FROM auth_accounts"));
+    const emails = await owner((c) => c.query<{ email: string }>(
+      "SELECT email FROM auth.users WHERE email IS NOT NULL"));
+    expect(emails.rows.length, "no accounts to check for, which would make this vacuous").toBeGreaterThan(2);
     const { token } = await surfaces();
     const urls = ["/", "/browse/clay", "/search?q=Monsoon", `/work/${token}`, `/work/${token}?contact=1`,
                   "/m/anika-rao", "/saved", "/workshops", "/about", "/participation", "/privacy", "/makers"];
@@ -163,18 +165,16 @@ test.describe("status, authority and privacy", () => {
   test("closing an account has a stated consequence and carries it out", async ({ page }) => {
     // A third disposable maker, so the slice's own maker survives for inspection.
     const disposable = { email: "closing.soon@makers.example", password: "one-last-firing-4" };
-    await owner((c) => c.query("DELETE FROM auth_accounts WHERE email_normalised = lower($1)",
-      [disposable.email]));
+    await forgetPerson(disposable.email);
 
     await page.goto("/makers/create-account");
     await page.getByLabel("Email").fill(disposable.email);
     await page.getByLabel("Password").fill(disposable.password);
     await page.getByRole("button", { name: "Create account" }).click();
     await expect(page.getByRole("heading", { name: "Check your email" })).toBeVisible();
-    const link = await owner(async (c) => (await c.query<{ link: string }>(
-      "SELECT link FROM dev_outbox WHERE to_email = $1 ORDER BY created_at DESC LIMIT 1",
-      [disposable.email])).rows[0].link);
+    const link = await linkFromOutbox(disposable.email, "/makers/confirm/");
     await page.goto(link);
+    await expect(page.getByRole("heading", { name: "Your email is confirmed" })).toBeVisible();
     await signIn(page, disposable.email, disposable.password);
 
     await page.goto("/studio/profile");
@@ -206,10 +206,12 @@ test.describe("status, authority and privacy", () => {
     await page.goto("/m/closing-soon");
     await expect(page.getByRole("heading", { name: "This gallery is not available" })).toBeVisible();
 
-    const state = await owner((c) => c.query<{ access_state: string; status: string; lifecycle: string }>(
-      `SELECT a.access_state, m.status, g.lifecycle FROM auth_accounts a
-         JOIN makers m ON m.account_id = a.id JOIN galleries g ON g.maker_id = m.id
-        WHERE a.email_normalised = lower($1)`, [disposable.email]));
-    expect(state.rows[0]).toMatchObject({ access_state: "closed", status: "closed", lifecycle: "closed" });
+    // Closure is the product's own record (account_closures), kept apart from the auth identity.
+    const state = await owner((c) => c.query<{ closed: boolean; status: string; lifecycle: string }>(
+      `SELECT (cl.user_id IS NOT NULL) AS closed, m.status, g.lifecycle FROM auth.users u
+         JOIN makers m ON m.user_id = u.id JOIN galleries g ON g.maker_id = m.id
+         LEFT JOIN account_closures cl ON cl.user_id = u.id
+        WHERE lower(u.email) = lower($1)`, [disposable.email]));
+    expect(state.rows[0]).toMatchObject({ closed: true, status: "closed", lifecycle: "closed" });
   });
 });

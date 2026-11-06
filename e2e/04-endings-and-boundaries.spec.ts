@@ -77,6 +77,10 @@ test.describe("failure endings", () => {
       "SELECT id, public_token FROM works WHERE title = 'Unfinished Warp'"));
     await page.goto(`/studio/works/${work.rows[0].id}`);
     await page.getByRole("button", { name: "Take this work off view" }).click();
+    // Settle on the outcome, not the click: the control exists only on a published work, so it
+    // goes away once the server has retired it. Against a hosted database the visitor's request
+    // otherwise races the write and sees the work still on view.
+    await expect(page.getByRole("button", { name: "Take this work off view" })).toHaveCount(0, { timeout: 15_000 });
 
     const anon = await page.context().browser()!.newContext();
     const visitor = await anon.newPage();

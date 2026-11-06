@@ -1,12 +1,12 @@
 import { test, expect } from "@playwright/test";
-import { linkFromOutbox, owner, signIn } from "./helpers";
+import { forgetPerson, linkFromOutbox, owner, signIn } from "./helpers";
 
 // J-002, first half: the door. A person with an email address and nothing else.
 const NEW = { email: "kavya.iyer@makers.example", password: "slipware-and-salt-3" };
 
 test.describe("the maker door", () => {
   test.beforeAll(async () => {
-    await owner((c) => c.query("DELETE FROM auth_accounts WHERE email_normalised = lower($1)", [NEW.email]));
+    await forgetPerson(NEW.email);
   });
 
   test("create an account, confirm the email, sign in, sign out", async ({ page }) => {
@@ -78,12 +78,14 @@ test.describe("the maker door", () => {
     await expect(page).toHaveURL(/\/studio/);
   });
 
-  test("an expired session returns to the door rather than half-working", async ({ page }) => {
+  test("an ended session returns to the door rather than half-working", async ({ page }) => {
     await signIn(page, NEW.email, "re-fired-and-cooled-8");
     await expect(page).toHaveURL(/\/studio/);
+    // GoTrue owns sessions now. Ending this person's sessions server-side is what an expiry or
+    // a revocation does: the cookie still holds a token, and getUser() must refuse it.
     await owner((c) => c.query(
-      `UPDATE auth_sessions SET expires_at = now() - interval '1 minute'
-        WHERE account_id = (SELECT id FROM auth_accounts WHERE email_normalised = lower($1))`, [NEW.email]));
+      `DELETE FROM auth.sessions WHERE user_id = (SELECT id FROM auth.users WHERE lower(email) = lower($1))`,
+      [NEW.email]));
     await page.goto("/studio");
     await expect(page).toHaveURL(/sign-in/);
   });

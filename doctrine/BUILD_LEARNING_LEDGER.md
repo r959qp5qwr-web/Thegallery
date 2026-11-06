@@ -325,6 +325,27 @@ The system was recomposed under the governor's mandate (the work supplies the co
 
 ---
 
+### GAL-L0017
+
+**Date:** 2026-11-06  
+**Observed event:**  
+Asked to run the journeys against the live site, the suite could not run at all. Every journey file still queried the self-hosted auth design — `auth_accounts`, `auth_sessions`, `dev_outbox`, `makers.account_id`, `access_state` — none of which exist after the move onto Supabase Auth (GAL-SUPA-1, commit 83f0901). The "31 journeys green" receipt of 2026-09-06 proved the pre-Supabase build; no journey had ever run against the Supabase-native build that was deployed. Two journeys had also drifted from the product: the gallery link was reworded by the visual system revision without the journey following, and the retire journey asserted the visitor's view without waiting for the write, which a local database had hidden and a hosted one exposed.
+
+**Evidence:**  
+`doctrine/receipts/E2E-HOSTED-JOURNEYS-2026-11-06.md`; first hosted run 22 passed, 2 failed, 7 not run; both failures diagnosed against the test project's rows (the retired work was retired; the link text had changed in 8d346d8).
+
+**Why it mattered:**  
+An architectural change replaced the identity layer and left its proof behind. The receipt kept saying green while the thing it described no longer existed, and the deployed build carried no executed journey at all.
+
+**What changed:**  
+The journeys run against a separate hosted test project (`thegallery-test`). Owner access goes over HTTPS through the Supabase Management API, behind a guard that refuses the live project and the live site before any request. A Send Email auth hook on the test project records each message in `test_support.outbox`, so confirmation and recovery links are exercised without sending mail. Every query uses the Supabase-native model. The seed creates its people through Supabase Auth's own sign-up and confirmation.
+
+**Status:** RESOLVED  
+**Related finding / decision IDs:** GAL-SUPA-1, GAL-L0016  
+**Harvest status:** UNHARVESTED
+
+---
+
 ## Ledger rules
 
 - Capture the event in the governed change that fixes or formally records it where feasible.
