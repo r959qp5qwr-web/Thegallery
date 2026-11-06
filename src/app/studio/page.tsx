@@ -5,7 +5,6 @@ import { studioContext } from "@/lib/queries";
 import { StudioHeader, Band } from "@/components/Chrome";
 import { StatusChip } from "@/components/StatusChip";
 import { publishGalleryAction } from "@/app/actions/studio";
-import { STATUS_LABEL } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 
@@ -92,7 +91,8 @@ export default async function Studio({ searchParams }: { searchParams: Promise<{
                 <Link className="grow" href={`/studio/works/${w.id}`} style={{ textDecoration: "none" }}>
                   <span className="primary">{w.title}</span>
                   <span className="secondary">
-                    {w.lifecycle === "published" ? STATUS_LABEL[w.status] : w.lifecycle} · {w.material}
+                    {/* Status is the chip's to say; the row's second line carries the material. */}
+                    {w.material}
                   </span>
                 </Link>
                 <StatusChip lifecycle={w.lifecycle} status={w.status} />

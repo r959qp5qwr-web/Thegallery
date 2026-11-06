@@ -47,8 +47,8 @@ svg.icon.sm { width: 20px; height: 20px; }
 /* the hero — one work at scale, on the wall. The work keeps its own proportion; the limestone
    ground around a portrait or square image is the wall it hangs on, not letterboxing. */
 .hero { position: relative; background: var(--surface-plinth); }
-.hero .wall { display: flex; align-items: flex-end; justify-content: center; min-height: 52vw; max-height: 74vh; overflow: hidden; }
-.hero img { display: block; width: 100%; height: auto; max-height: 74vh; object-fit: contain; object-position: 50% 100%; }
+.hero .wall { display: flex; align-items: flex-end; justify-content: center; min-height: min(52vw, 46vh); max-height: 46vh; overflow: hidden; }
+.hero img { display: block; width: 100%; height: auto; max-height: 46vh; object-fit: contain; object-position: 50% 100%; }
 .hero.landscape img { object-fit: cover; height: auto; }
 .hero .ledge { height: 10px; background: linear-gradient(180deg, rgba(34,30,26,0.10), rgba(34,30,26,0)); }
 
@@ -227,5 +227,5 @@ svg.icon.sm { width: 20px; height: 20px; }
 .empty h2 { font: var(--t-heading); margin: 0 0 10px; letter-spacing: -0.01em; }
 .empty p { font: var(--t-body); margin: 0 0 20px; color: var(--text-soft); max-width: 34ch; }
 .skeleton { background: var(--surface-sunken); border-radius: 2px; }
-.footer { padding: var(--s5) var(--pad-x) 100px; font: var(--t-meta); letter-spacing: var(--track-meta); color: var(--text-muted); display: flex; gap: 18px; flex-wrap: wrap; border-top: 1px solid var(--rule-hair); margin-top: var(--s6); }
+.footer { padding: var(--s5) var(--pad-x) 100px; font: var(--t-body-small); color: var(--text-muted); display: flex; gap: 18px; flex-wrap: wrap; border-top: 1px solid var(--rule-hair); margin-top: var(--s6); }
 .footer a { text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--stone); }

@@ -17,7 +17,8 @@ export default async function Entrance() {
 
   return (
     <>
-      <Header place="Bengaluru" />
+      {/* The place is stated once, on the context line (INTERFACE_FOUNDATION §8 metadata policy). */}
+      <Header />
       {featured ? (
         <>
           <div className="context">

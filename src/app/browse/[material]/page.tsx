@@ -20,11 +20,12 @@ export default async function Browse({ params }: { params: Promise<{ material: s
 
   return (
     <>
-      <Header place={found.label} />
+      {/* The material is named once, by the active tab. The count is information, not the
+          Gallery's mark, so it is not amber (INTERFACE_FOUNDATION §5). */}
+      <Header />
       <MaterialRail materials={mats} active={material} />
       <div className="context">
-        <span>{found.label}</span>
-        <span className="accent">{works.length ? `${works.length} on view` : "Nothing on view"}</span>
+        <span>{works.length ? `${works.length} on view` : "Nothing on view"}</span>
       </div>
       {works.length ? (
         <div className="grid" style={{ paddingTop: 4 }}>

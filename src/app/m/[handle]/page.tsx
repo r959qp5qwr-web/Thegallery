@@ -34,7 +34,8 @@ export default async function MakerGallery({ params }: { params: Promise<{ handl
 
   return (
     <>
-      <Header place={maker.city} back="/" />
+      {/* The place is stated once, under the maker's name. */}
+      <Header back="/" />
       <div className="label">
         <div className="status"><span><Mark muted />{KIND_LABEL[maker.kind]}</span></div>
         <h1 className="title">{maker.display_name}</h1>
@@ -59,7 +60,7 @@ export default async function MakerGallery({ params }: { params: Promise<{ handl
         {works.length ? (
           <div className="grid" style={{ padding: 0 }}>
             {works.map((w) => (
-              <WorkTile key={w.id} work={w} image={byWork.get(w.id)}
+              <WorkTile key={w.id} work={w} image={byWork.get(w.id)} inGallery
                         wide={orientation(byWork.get(w.id)) === "landscape"} />
             ))}
           </div>
