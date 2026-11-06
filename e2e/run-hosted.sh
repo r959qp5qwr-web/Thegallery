@@ -23,5 +23,13 @@ if [ -z "$BUILD_ID" ] || ! curl -fsS "$GALLERY_BASE_URL/about" | grep -q "$BUILD
   exit 2
 fi
 
+# One run at a time. The journeys share one test project: two runs seed and delete each other's
+# rows, and both results are void. It happened on 2026-11-06 (ledger GAL-L0020).
+exec 9>"${TMPDIR:-/tmp}/thegallery-journeys.lock"
+if ! flock -n 9; then
+  echo "refusing: another journey run holds the test project" >&2
+  exit 3
+fi
+
 node --no-warnings --experimental-strip-types e2e/support/seed-test-project.ts
 npx playwright test "$@"
