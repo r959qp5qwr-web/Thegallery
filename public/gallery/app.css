@@ -219,3 +219,7 @@ main { display: block; }
   .skeleton, .skeleton-wall, .skeleton-line { animation: breathe 1.6s ease-in-out infinite; }
   @keyframes breathe { 50% { opacity: 0.55; } }
 }
+
+/* While a sheet is open the bottom bar steps aside. Since Wave 2 the bar sits outside the page,
+   so the sheet cannot rise above it by z-index; the bar is inert behind the sheet anyway. */
+body:has(.contact-scrim) .bar { display: none; }

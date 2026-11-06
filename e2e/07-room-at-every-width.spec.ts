@@ -98,6 +98,9 @@ test.describe("the room at every width", () => {
     await page.getByRole("button", { name: new RegExp(`^Status: .*Change status of ${MONSOON}`) }).click();
     const sheet = page.getByRole("dialog");
     await expect(sheet).toBeVisible();
+    // Nothing covers the sheet: the bottom bar steps aside while it is open.
+    await expect(page.locator("nav.bar")).toBeHidden();
+    await expect(sheet.getByText("reads this one setting")).toBeInViewport();
     await sheet.getByRole("button", { name: label, exact: true }).click();
     await expect(page.getByText(`Marked as ${label}`)).toBeVisible({ timeout: 15_000 });
     expect((await owner((c) => c.query<{ status: string }>(
