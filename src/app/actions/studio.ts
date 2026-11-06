@@ -6,7 +6,7 @@ import { client } from "@/lib/supabase";
 import { ingestImage } from "@/lib/storage";
 import { validateRoute } from "@/lib/format";
 
-export type FormState = { error?: string; notice?: string };
+export type FormState = { error?: string; notice?: string; field?: string; values?: Record<string, string> };
 
 async function requireActiveMaker() {
   const account = await currentAccount();
@@ -126,18 +126,19 @@ export async function deleteRouteAction(form: FormData): Promise<void> {
   const db = await client();
   await db.from("contact_routes").delete().eq("id", id);
   revalidatePath("/studio/contact-routes");
+  revalidatePath("/", "layout");
+  redirect("/studio/contact-routes?removed=1");
 }
 
 // -------------------------------------------------------------------------------- works
-export async function createWorkAction(_prev: FormState, form: FormData): Promise<FormState> {
-  await requireActiveMaker();
+/** The label as the maker typed it, checked once for both create and edit. A refusal names the
+ *  field it is about, so the form can put the message under that field and keep every value. */
+function readLabel(form: FormData):
+  { fields: Record<string, unknown> } | { error: string; field: string } {
   const title = String(form.get("title") ?? "").trim();
   const material = String(form.get("material") ?? "");
-  const medium = String(form.get("medium") ?? "").trim() || null;
-  const process = String(form.get("process") ?? "").trim() || null;
   const price_mode = String(form.get("price_mode") ?? "enquire");
   const rawPrice = String(form.get("price_amount") ?? "").trim();
-  const status = String(form.get("status") ?? "available");
   const year = String(form.get("year") ?? "").trim();
   const mm = (name: string) => {
     const v = String(form.get(name) ?? "").trim();
@@ -146,14 +147,37 @@ export async function createWorkAction(_prev: FormState, form: FormData): Promis
     return Number.isFinite(n) && n > 0 ? Math.round(n * 10) : null;  // entered in cm, stored in mm
   };
 
-  if (!title) return { error: "A work needs a title." };
-  if (!material) return { error: "Choose the material." };
+  if (!title) return { error: "Give the work a title.", field: "title" };
+  if (!material) return { error: "Choose the material.", field: "material" };
   // Number("") is 0, so a blank price passed the very check that exists to catch it and then
   // failed at the database as an unreadable "we could not save that work". An empty field is
   // not a zero price; it is an unanswered question.
   if (price_mode === "exact" && !(rawPrice !== "" && Number.isFinite(Number(rawPrice)) && Number(rawPrice) >= 0)) {
-    return { error: "Enter the price, or choose price on enquiry." };
+    return { error: "Enter the price in rupees, or choose On enquiry.", field: "price_amount" };
   }
+  if (year && !/^\d{4}$/.test(year)) return { error: "Enter the year as four digits, like 2026.", field: "year" };
+
+  return { fields: {
+    title, material,
+    medium: String(form.get("medium") ?? "").trim() || null,
+    process: String(form.get("process") ?? "").trim() || null,
+    height_mm: mm("height_cm"), width_mm: mm("width_cm"), depth_mm: mm("depth_cm"),
+    year: year ? Number(year) : null, price_mode,
+    price_amount: price_mode === "exact" ? rawPrice : null,
+  } };
+}
+
+/** What the person typed, handed back with a refusal so nothing they wrote is lost. */
+function typed(form: FormData): Record<string, string> {
+  const out: Record<string, string> = {};
+  form.forEach((v, k) => { if (typeof v === "string" && !k.startsWith("$")) out[k] = v; });
+  return out;
+}
+
+export async function createWorkAction(_prev: FormState, form: FormData): Promise<FormState> {
+  await requireActiveMaker();
+  const label = readLabel(form);
+  if ("error" in label) return { ...label, values: typed(form) };
 
   const db = await client();
   const { data: galleries } = await db.from("galleries").select("id").limit(1);
@@ -161,14 +185,27 @@ export async function createWorkAction(_prev: FormState, form: FormData): Promis
   if (!gallery) return { error: "Set up your maker identity first — that is what a work belongs to." };
 
   const { data, error } = await db.from("works").insert({
-    public_token: token(), gallery_id: gallery.id, title, material, medium, process,
-    height_mm: mm("height_cm"), width_mm: mm("width_cm"), depth_mm: mm("depth_cm"),
-    year: year ? Number(year) : null, price_mode,
-    price_amount: price_mode === "exact" ? rawPrice : null, status,
+    public_token: token(), gallery_id: gallery.id, ...label.fields,
+    status: String(form.get("status") ?? "available"),
   }).select("id").limit(1);
 
-  if (error || !data?.length) return { error: "We could not save that work. Nothing was created." };
+  if (error || !data?.length) return { error: "We could not save that work. Nothing was created.", values: typed(form) };
   redirect(`/studio/works/${(data[0] as { id: string }).id}?created=1`);
+}
+
+/** Correct a work's label after it was saved. Without this a typo in a title or a price was
+ *  permanent. Row-level security decides whose work this is; a suspended maker cannot write. */
+export async function updateWorkLabelAction(_prev: FormState, form: FormData): Promise<FormState> {
+  await requireActiveMaker();
+  const workId = String(form.get("work_id") ?? "");
+  const label = readLabel(form);
+  if ("error" in label) return { ...label, values: typed(form) };
+  const db = await client();
+  const { data, error } = await db.from("works")
+    .update({ ...label.fields, updated_at: new Date().toISOString() }).eq("id", workId).select("id");
+  if (error || !data?.length) return { error: "We could not save the label. Nothing was changed.", values: typed(form) };
+  revalidatePath("/", "layout");
+  return { notice: "The label is updated. Every page that shows this work now shows the change." };
 }
 
 export async function addImageAction(_prev: FormState, form: FormData): Promise<FormState> {
@@ -218,8 +255,19 @@ export async function removeImageAction(form: FormData): Promise<void> {
   const id = String(form.get("id") ?? "");
   const workId = String(form.get("work_id") ?? "");
   const db = await client();
+  // A published work keeps at least one image: removing the last one would leave a public page
+  // with nothing to look at. The maker retires the work instead, which is a choice they make
+  // knowingly, with its own confirmation.
+  const { data: work } = await db.from("works").select("lifecycle").eq("id", workId).limit(1);
+  const { data: ready } = await db.from("work_images").select("id").eq("work_id", workId).eq("state", "ready");
+  const readyIds = (ready ?? []).map((r) => (r as { id: string }).id);
+  if ((work?.[0] as { lifecycle: string } | undefined)?.lifecycle === "published"
+      && readyIds.length <= 1 && readyIds.includes(id)) {
+    redirect(`/studio/works/${workId}?kept=last-image`);
+  }
   await db.from("work_images").delete().eq("id", id);
   revalidatePath(`/studio/works/${workId}`);
+  redirect(`/studio/works/${workId}?removed=image`);
 }
 
 export async function publishWorkAction(_prev: FormState, form: FormData): Promise<FormState> {
@@ -256,9 +304,26 @@ export async function setStatusAction(form: FormData): Promise<void> {
 
 export async function retireWorkAction(form: FormData): Promise<void> {
   await requireActiveMaker();
+  const workId = String(form.get("work_id") ?? "");
   const db = await client();
-  await db.rpc("retire_work", { p_work_id: String(form.get("work_id") ?? "") });
+  await db.rpc("retire_work", { p_work_id: workId });
   revalidatePath("/", "layout");
+  redirect(`/studio/works/${workId}?retired=1`);
+}
+
+/** Put a retired work back on view. Retiring is the maker's own choice and must be undoable;
+ *  a work taken down by an operator is not the maker's to restore. */
+export async function restoreWorkAction(form: FormData): Promise<void> {
+  await requireActiveMaker();
+  const workId = String(form.get("work_id") ?? "");
+  const db = await client();
+  const { data: ready } = await db.from("work_images").select("id").eq("work_id", workId).eq("state", "ready").limit(1);
+  if (!ready?.length) redirect(`/studio/works/${workId}?kept=no-image`);
+  await db.from("works")
+    .update({ lifecycle: "published", retired_at: null, updated_at: new Date().toISOString() })
+    .eq("id", workId).eq("lifecycle", "retired").eq("taken_down", false);
+  revalidatePath("/", "layout");
+  redirect(`/studio/works/${workId}?restored=1`);
 }
 
 export async function publishGalleryAction(form: FormData): Promise<void> {

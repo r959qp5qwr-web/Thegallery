@@ -6,6 +6,12 @@ import { KIND_LABEL, ROUTE_LABEL, routeHref, routeDisplay } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 
+export async function generateMetadata({ params }: { params: Promise<{ handle: string }> }) {
+  const { handle } = await params;
+  const maker = await getMaker(handle);
+  return { title: maker ? maker.display_name : "Gallery not available" };
+}
+
 export default async function MakerGallery({ params }: { params: Promise<{ handle: string }> }) {
   const { handle } = await params;
   const maker = await getMaker(handle);
@@ -96,7 +102,7 @@ export default async function MakerGallery({ params }: { params: Promise<{ handl
                   <span className="kind">{ROUTE_LABEL[r.kind]}</span>
                   <a className="val" href={routeHref(r)} rel="noopener noreferrer"
                      target={r.kind === "website" || r.kind === "form" ? "_blank" : undefined}>
-                    {routeDisplay(r, maker.display_name)}
+                    {routeDisplay(r, maker.display_name, false, maker.kind)}
                   </a>
                   <Icon name="external" small />
                 </li>

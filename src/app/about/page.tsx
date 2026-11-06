@@ -1,9 +1,12 @@
 import { Header, Footer } from "@/components/Chrome";
+
+export const metadata = { title: "About" };
 export const dynamic = "force-static";
 export default function About() {
   return (
     <>
       <Header place="About" back="/" />
+      <h1 className="sr-only">About The Gallery</h1>
       <div className="section">
         <h2 style={{ font: "var(--t-heading)", margin: "0 0 12px" }}>What The Gallery is</h2>
         <p className="body">A maker-led digital gallery for art and craft objects. Makers present their own

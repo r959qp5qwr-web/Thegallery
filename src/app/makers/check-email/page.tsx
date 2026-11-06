@@ -4,6 +4,7 @@ import { ActionForm } from "@/components/ActionForm";
 import { resendConfirmAction } from "@/app/actions/account";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Check your email" };
 
 export default async function CheckEmail({ searchParams }: { searchParams: Promise<{ e?: string }> }) {
   const { e = "" } = await searchParams;

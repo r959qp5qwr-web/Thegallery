@@ -1,9 +1,12 @@
 import { Header, Footer } from "@/components/Chrome";
+
+export const metadata = { title: "Privacy" };
 export const dynamic = "force-static";
 export default function Privacy() {
   return (
     <>
       <Header place="Privacy" back="/" />
+      <h1 className="sr-only">Privacy</h1>
       <div className="section">
         <h2 style={{ font: "var(--t-heading)", margin: "0 0 12px" }}>Your account email stays private</h2>
         <p className="body">The address you sign in with is never shown on a public page and is not included
@@ -12,8 +15,10 @@ export default function Privacy() {
       </div>
       <div className="section">
         <div className="lead">What visitors leave behind</div>
-        <p className="body">Nothing. There is no visitor account and no tracking of what you look at. Saved
-          works are stored in your own browser on this device and are never sent to us.</p>
+        <p className="body">There is no visitor account and no tracking of what you look at. Saved works
+          are kept in your own browser on this device. When you open Saved, the page asks The Gallery
+          for those works&rsquo; current status, so it can tell you whether each is still available.
+          That request names the works, not you.</p>
       </div>
       <div className="section">
         <div className="lead">When you contact a maker</div>

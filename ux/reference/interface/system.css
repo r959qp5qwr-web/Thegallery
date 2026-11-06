@@ -30,7 +30,7 @@ svg.icon.sm { width: 20px; height: 20px; }
 
 /* the curatorial line — a serif whisper, amber where it points */
 .context { display: flex; justify-content: space-between; align-items: baseline; padding: 18px var(--pad-x) 12px; font: var(--t-lead); color: var(--text-muted); }
-.context .accent { color: var(--accent-text); font-style: normal; font: var(--t-label); letter-spacing: var(--track-label); text-transform: uppercase; }
+.context .accent { color: var(--text-muted); font-style: normal; font: var(--t-label); letter-spacing: var(--track-label); text-transform: uppercase; }
 
 /* the mark — a small amber square that precedes availability, the active place, a lead */
 .mark { display: inline-block; width: 9px; height: 9px; background: var(--accent); vertical-align: 1px; margin-right: 10px; }
@@ -201,7 +201,7 @@ svg.icon.sm { width: 20px; height: 20px; }
 .steps { list-style: none; margin: 16px 0 0; padding: 0 var(--pad-x-studio); }
 .steps li { display: flex; align-items: center; gap: 14px; min-height: 60px; border-top: 1px solid var(--rule-soft); font: var(--t-body); }
 .steps li:last-child { border-bottom: 1px solid var(--rule-soft); }
-.steps .num { font: var(--t-label); letter-spacing: var(--track-label); width: 24px; color: var(--accent-text); }
+.steps .num { font: var(--t-label); letter-spacing: var(--track-label); width: 24px; color: var(--text-muted); }
 .steps .done { color: var(--text-muted); }
 
 /* centred state */

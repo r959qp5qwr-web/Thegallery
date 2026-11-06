@@ -6,6 +6,7 @@ import { ActionForm, Field } from "@/components/ActionForm";
 import { saveProfileAction } from "@/app/actions/studio";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Your details" };
 
 export default async function Profile() {
   const account = await currentAccount();

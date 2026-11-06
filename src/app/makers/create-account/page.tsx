@@ -4,6 +4,7 @@ import { ActionForm, Field } from "@/components/ActionForm";
 import { createAccountAction } from "@/app/actions/account";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Create an account" };
 
 export default function CreateAccount() {
   return (
@@ -17,8 +18,8 @@ export default function CreateAccount() {
         </p>
       </div>
       <ActionForm action={createAccountAction} submitLabel="Create account" busyLabel="Creating…">
-        <Field name="email" label="Email" type="email" required placeholder="you@example.com" />
-        <Field name="password" label="Password" type="password" required
+        <Field name="email" label="Email" type="email" required autoComplete="email" />
+        <Field name="password" label="Password" type="password" required autoComplete="new-password"
                help="At least 10 characters. Length beats punctuation." />
       </ActionForm>
       <div className="inline-actions">

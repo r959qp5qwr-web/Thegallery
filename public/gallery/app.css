@@ -23,7 +23,9 @@ form { margin: 0; }
 input, textarea, select { font: var(--t-field); color: var(--text); background: var(--surface);
   border: 1px solid var(--field-border); border-radius: var(--radius); min-height: 50px;
   padding: 12px 14px; width: 100%; transition: border-color 140ms ease; }
-input:focus, textarea:focus, select:focus { border-color: var(--accent); box-shadow: none; outline: none; }
+/* The field border turns amber on focus and the global focus ring stays: a colour shift alone
+   (1.77:1) is not a visible focus indicator. */
+input:focus, textarea:focus, select:focus { border-color: var(--accent); }
 textarea { min-height: 104px; resize: vertical; }
 select { min-height: 50px; }
 input[type="checkbox"] { width: auto; min-height: 0; accent-color: var(--amber); }
@@ -49,3 +51,56 @@ button.btn:disabled { border-color: var(--stone); color: var(--text-muted); back
 .tile .frame img { object-fit: cover; }
 .hint { font: var(--t-body-small); color: var(--text-muted); padding: 10px var(--pad-x) 0; }
 .err-band { color: var(--alarm); }
+
+/* Wave 1, 2026-11-06: the accessibility baseline (INTERFACE_FOUNDATION §11) and the governor's
+   decided items (segmented controls for material and price mode). */
+html { scroll-padding-top: 72px; scroll-padding-bottom: calc(var(--bar-h) + env(safe-area-inset-bottom, 0px) + 12px); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.skip { position: absolute; left: 8px; top: -80px; z-index: 60; background: var(--surface); color: var(--text);
+  padding: 12px 16px; font: var(--t-action); border: 1px solid var(--ink); text-decoration: none; }
+.skip:focus { top: 8px; }
+main { display: block; }
+
+/* Targets: 44 px is product policy for every control. */
+.footer a { display: inline-flex; align-items: center; min-height: var(--target); }
+.wordmark { display: inline-flex; align-items: center; min-height: var(--target); }
+.rail { overflow-x: auto; scrollbar-width: none; gap: 8px; }
+.rail::-webkit-scrollbar { display: none; }
+.rail a { flex: none; min-width: var(--target); text-align: center; }
+.routes li { flex-wrap: wrap; row-gap: 0; }
+.routes .val { display: inline-flex; align-items: center; min-height: var(--target); min-width: 0; overflow-wrap: anywhere; }
+
+/* The contact sheet's intent choice: real links, the chosen one marked by a check and by aria-current. */
+.choice a { display: flex; align-items: center; justify-content: space-between; width: 100%;
+  min-height: 52px; color: var(--text-soft); text-decoration: none; }
+.choice a[aria-current="true"] { color: var(--text); }
+.sheet.contact:focus { outline: none; }
+
+/* Segmented control on real radio inputs: one native control per option, the system's look. */
+.segfield { border: 0; padding: 0; margin-inline: 0; min-width: 0; }
+.segfield legend { font: var(--t-field-label); color: var(--text-soft); margin-bottom: 8px; padding: 0; }
+.seg label { flex: 1; display: flex; position: relative; margin: 0; cursor: pointer; }
+.seg label span { flex: 1; display: flex; align-items: center; justify-content: center; text-align: center; }
+.seg input { position: absolute; inset: 0; width: 100%; height: 100%; min-height: 0; margin: 0; padding: 0;
+  border: 0; opacity: 0; cursor: pointer; }
+.seg input:checked + span { border-bottom-color: var(--accent); color: var(--accent-text); }
+.seg input:focus-visible + span { box-shadow: var(--focus-ring); }
+.dims-inputs { display: flex; gap: 8px; }
+.dims-inputs .sub { flex: 1; display: grid; gap: 4px; margin: 0; min-width: 0; }
+.dims-inputs .sub span { font: var(--t-body-small); color: var(--text-muted); }
+.inline-confirm { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+/* Field-level errors, tied to the field by aria-describedby. */
+.field .err { margin-top: 6px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}
+
+/* Reflow at 200% zoom and 320 px: rows wrap instead of pushing the page sideways, and the bar's
+   labels shrink before they collide. */
+.rowlist li { flex-wrap: wrap; }
+.rowlist .grow { min-width: 0; overflow-wrap: anywhere; }
+@media (max-width: 340px) { .bar a { letter-spacing: 0; font-size: 9.5px; } }
+@media (max-width: 260px) { .bar a { font-size: 0; gap: 0; } .bar a svg.icon { width: 22px; height: 22px; } }

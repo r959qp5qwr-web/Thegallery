@@ -1,17 +1,26 @@
 import { redirect } from "next/navigation";
 import { currentAccount } from "@/lib/auth";
 import { studioContext, materials } from "@/lib/queries";
+import { client } from "@/lib/supabase";
 import { StudioHeader } from "@/components/Chrome";
-import { ActionForm, Field } from "@/components/ActionForm";
+import { ActionForm } from "@/components/ActionForm";
+import { WorkLabelFields } from "@/components/WorkLabelFields";
 import { createWorkAction } from "@/app/actions/studio";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Add a work" };
 
 export default async function NewWork() {
   const account = await currentAccount();
   if (!account) redirect("/makers/sign-in?next=/studio/works/new");
   const [{ maker }, mats] = await Promise.all([studioContext(account.id), materials()]);
   if (!maker) redirect("/studio/profile");
+
+  // Start on the material this maker last used: a weaver should not have to move off Clay
+  // every time. Row-level security scopes this read to the maker's own works.
+  const db = await client();
+  const { data: last } = await db.from("works").select("material").order("created_at", { ascending: false }).limit(1);
+  const defaultMaterial = (last?.[0] as { material: string } | undefined)?.material ?? mats[0]?.key;
 
   return (
     <>
@@ -23,47 +32,7 @@ export default async function NewWork() {
       <ActionForm action={createWorkAction} submitLabel="Save draft" busyLabel="Saving…">
         {/* No example values inside fields: a filled-looking empty field leaves a first-time
             maker unsure what is saved. Examples, where useful, live in the help line. */}
-        <Field name="title" label="Title" required />
-        <div className="field">
-          <label htmlFor="material">Material</label>
-          <select id="material" name="material" defaultValue="clay">
-            {mats.map((m) => <option key={m.key} value={m.key}>{m.label}</option>)}
-          </select>
-        </div>
-        <Field name="medium" label="Medium"
-               help="How you would write it on a wall label, for example “Wood-fired stoneware”." />
-        <Field name="process" label="About this work" textarea
-               help="Optional. Shown under “About this work”." />
-        <div className="field">
-          <label>Dimensions (cm)</label>
-          <div className="field inline" style={{ marginTop: 0 }}>
-            <input name="height_cm" placeholder="Height" inputMode="decimal" aria-label="Height in centimetres" />
-            <input name="width_cm" placeholder="Width" inputMode="decimal" aria-label="Width in centimetres" />
-            <input name="depth_cm" placeholder="Depth" inputMode="decimal" aria-label="Depth in centimetres" />
-          </div>
-        </div>
-        <Field name="year" label="Year" />
-        <div className="field">
-          <label htmlFor="price_mode">Price</label>
-          <select id="price_mode" name="price_mode" defaultValue="exact">
-            <option value="exact">Show a price</option>
-            <option value="enquire">Price on enquiry</option>
-            <option value="made_to_order">Made to order</option>
-          </select>
-          <div className="help">Whatever you choose, the sale happens between you and the visitor. The
-            Gallery takes no part in it.</div>
-        </div>
-        <Field name="price_amount" label="Amount (₹)" />
-        <div className="field">
-          <label htmlFor="status">Status</label>
-          <select id="status" name="status" defaultValue="available">
-            <option value="available">Available</option>
-            <option value="made_to_order">Made to order</option>
-            <option value="enquire">Enquire</option>
-            <option value="on_view">On view</option>
-            <option value="sold">Sold</option>
-          </select>
-        </div>
+        <WorkLabelFields materials={mats} defaultMaterial={defaultMaterial} />
       </ActionForm>
     </>
   );

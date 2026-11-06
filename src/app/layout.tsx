@@ -4,7 +4,8 @@ import { BottomBar } from "@/components/BottomBar";
 import { currentAccount } from "@/lib/auth";
 
 export const metadata: Metadata = {
-  title: "The Gallery",
+  // Every page names itself first, so a screen reader announces where a navigation landed.
+  title: { default: "The Gallery", template: "%s · The Gallery" },
   description:
     "A maker-led digital gallery for art and craft objects. Makers present their own work; " +
     "visitors approach the maker directly.",
@@ -26,8 +27,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
       <body>
         <IconSprite />
+        <a className="skip" href="#main">Skip to content</a>
         <div className="phone">
-          {children}
+          <main id="main" tabIndex={-1}>{children}</main>
           <BottomBar signedIn={!!account} />
         </div>
       </body>

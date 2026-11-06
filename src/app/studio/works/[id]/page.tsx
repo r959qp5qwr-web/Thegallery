@@ -5,10 +5,14 @@ import { client } from "@/lib/supabase";
 import { StudioHeader, Band } from "@/components/Chrome";
 import { ActionForm, Field } from "@/components/ActionForm";
 import { PublishButton } from "@/components/PublishButton";
-import { addImageAction, removeImageAction, setStatusAction, retireWorkAction } from "@/app/actions/studio";
+import { addImageAction, removeImageAction, setStatusAction, retireWorkAction, restoreWorkAction,
+         updateWorkLabelAction } from "@/app/actions/studio";
 import { STATUS_LABEL, price, dimensions } from "@/lib/format";
+import { materials } from "@/lib/queries";
+import { WorkLabelFields } from "@/components/WorkLabelFields";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Your work" };
 
 type Row = {
   id: string; title: string; material: string; medium: string | null; process: string | null;
@@ -19,12 +23,14 @@ type Row = {
 type Img = { id: string; position: number; width: number; height: number; alt_text: string | null; state: string };
 
 export default async function EditWork(
-  { params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ created?: string }> },
+  { params, searchParams }: { params: Promise<{ id: string }>;
+    searchParams: Promise<{ created?: string; confirm?: string; retired?: string; restored?: string; kept?: string; removed?: string }> },
 ) {
   const account = await currentAccount();
   if (!account) redirect("/makers/sign-in");
   const { id } = await params;
-  const { created } = await searchParams;
+  const { created, confirm, retired, restored, kept, removed } = await searchParams;
+  const mats = await materials();
 
   const db = await client();
   const { data: workRows } = await db.from("works")
@@ -53,6 +59,15 @@ export default async function EditWork(
     <>
       <StudioHeader title={work.lifecycle === "published" ? "Published work" : "Draft work"} back="/studio" />
       {created ? <Band label="Saved">The label is saved. Add images, then publish.</Band> : null}
+      {retired ? <Band label="Retired">This work is no longer on view. Its link now says so. You can restore it below.</Band> : null}
+      {restored ? <Band label="Restored">This work is on view again, with its status as it was.</Band> : null}
+      {removed === "image" ? <Band label="Removed">The image is removed. The others are unchanged.</Band> : null}
+      {kept === "last-image" ? (
+        <Band kind="warn" label="Image kept">A published work keeps at least one image. Add another first, or retire the work.</Band>
+      ) : null}
+      {kept === "no-image" ? (
+        <Band kind="warn" label="Not restored">Add an image that finished uploading, then restore the work.</Band>
+      ) : null}
       {work.taken_down ? (
         <Band kind="warn" label="Taken down">
           An operator has taken this work down. It is not shown publicly. Reply to the notice you were sent.
@@ -140,14 +155,49 @@ export default async function EditWork(
               <Link className="btn quiet" href={`/work/${work.public_token}`}><span>View public page</span></Link>
             </div>
           </form>
-          <form action={retireWorkAction} className="inline-actions">
-            <input type="hidden" name="work_id" value={work.id} />
-            <button className="btn quiet" type="submit"><span>Take this work off view</span></button>
-          </form>
+          {/* Retiring takes a work off every public page. It is never one tap: the consequence is
+              named first, and the act can be undone from this page (UX_FOUNDATION). */}
+          {confirm === "retire" ? (
+            <div className="confirm" role="group" aria-labelledby="retire-title" style={{ margin: "20px var(--pad-x-studio) 0" }}>
+              <Band kind="warn" label="Retire this work?">
+                <span id="retire-title">&ldquo;{work.title}&rdquo; leaves the entrance, its material, search and
+                your gallery. Its link stays and says it is no longer on view. You can restore it later.</span>
+              </Band>
+              <div className="inline-actions">
+                <form action={retireWorkAction}>
+                  <input type="hidden" name="work_id" value={work.id} />
+                  <button className="btn" type="submit">Retire work</button>
+                </form>
+                <Link className="btn quiet" href={`/studio/works/${work.id}`}><span>Keep it on view</span></Link>
+              </div>
+            </div>
+          ) : (
+            <div className="inline-actions">
+              <Link className="btn quiet" href={`/studio/works/${work.id}?confirm=retire`}><span>Retire this work…</span></Link>
+            </div>
+          )}
         </>
+      ) : work.lifecycle === "retired" ? (
+        <div className="inline-actions">
+          <p className="small" style={{ margin: 0 }}>Retired. Not shown on any public page.</p>
+          {!work.taken_down ? (
+            <form action={restoreWorkAction}>
+              <input type="hidden" name="work_id" value={work.id} />
+              <button className="btn" type="submit">Restore to view</button>
+            </form>
+          ) : null}
+        </div>
       ) : (
         <PublishButton workId={work.id} intentKey={intentKey} canPublish={ready.length > 0} />
       )}
+
+      <div className="group" style={{ margin: "36px var(--pad-x-studio) 0" }}>
+        <div className="ghead">The label</div>
+      </div>
+      <ActionForm action={updateWorkLabelAction} submitLabel="Save label" busyLabel="Saving…"
+                  hidden={{ work_id: work.id }}>
+        <WorkLabelFields materials={mats} withStatus={false} values={work} />
+      </ActionForm>
     </>
   );
 }

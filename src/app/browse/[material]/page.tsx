@@ -4,6 +4,12 @@ import { Header, WorkTile, MaterialRail, Footer, EmptyPlinth, Action, orientatio
 
 export const dynamic = "force-dynamic";
 
+export async function generateMetadata({ params }: { params: Promise<{ material: string }> }) {
+  const { material } = await params;
+  const found = (await materials()).find((m) => m.key === material);
+  return { title: found ? found.label : "Browse" };
+}
+
 export default async function Browse({ params }: { params: Promise<{ material: string }> }) {
   const { material } = await params;
   const mats = await materials();
@@ -23,6 +29,7 @@ export default async function Browse({ params }: { params: Promise<{ material: s
       {/* The material is named once, by the active tab. The count is information, not the
           Gallery's mark, so it is not amber (INTERFACE_FOUNDATION §5). */}
       <Header />
+      <h1 className="sr-only">{found.label}</h1>
       <MaterialRail materials={mats} active={material} />
       <div className="context">
         <span>{works.length ? `${works.length} on view` : "Nothing on view"}</span>

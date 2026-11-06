@@ -4,6 +4,7 @@ import { currentAccount } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "For makers" };
 
 export default async function ForMakers() {
   if (await currentAccount()) redirect("/studio");

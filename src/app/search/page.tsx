@@ -4,6 +4,7 @@ import { Header, WorkTile, Footer, EmptyPlinth, Action } from "@/components/Chro
 import { KIND_LABEL } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Search" };
 
 export default async function Search({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
   const { q = "" } = await searchParams;
@@ -15,6 +16,7 @@ export default async function Search({ searchParams }: { searchParams: Promise<{
   return (
     <>
       <Header place="Search" back="/" action={<span style={{ width: 44 }} />} />
+      <h1 className="sr-only">Search work and makers</h1>
       <form className="form" action="/search" method="get" style={{ paddingTop: 16 }}>
         <div className="field">
           <label htmlFor="q">Search work and makers</label>

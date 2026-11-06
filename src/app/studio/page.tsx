@@ -7,6 +7,7 @@ import { StatusChip } from "@/components/StatusChip";
 import { publishGalleryAction } from "@/app/actions/studio";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Studio" };
 
 export default async function Studio({ searchParams }: { searchParams: Promise<{ saved?: string }> }) {
   const account = await currentAccount();

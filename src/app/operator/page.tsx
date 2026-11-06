@@ -1,10 +1,12 @@
 import Link from "next/link";
+import { ACTION_LABEL, recordedAt } from "@/lib/format";
 import { redirect } from "next/navigation";
 import { currentAccount } from "@/lib/auth";
 import { client } from "@/lib/supabase";
 import { StudioHeader } from "@/components/Chrome";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Operator" };
 
 // "not permitted" is distinct from "not signed in" (PRODUCT_ARCHITECTURE §4.3). Telling a
 // signed-in maker to sign in again when the real answer is that this door is not theirs is a
@@ -54,8 +56,7 @@ export default async function OperatorHome() {
           <li key={m.id}>
             <Link className="grow" href={`/operator/makers/${m.id}`} style={{ textDecoration: "none" }}>
               <span className="primary">{m.display_name}</span>
-              <span className="secondary">{m.city} · {m.status}
-                {m.status_reason ? ` · ${m.status_reason}` : ""}</span>
+              <span className="secondary">{m.city}{m.status_reason ? ` · ${m.status_reason}` : ""}</span>
             </Link>
             <span className={`chip ${m.status === "active" ? "available" : ""}`}>{m.status}</span>
           </li>
@@ -68,8 +69,11 @@ export default async function OperatorHome() {
             {actions.map((a) => (
               <li key={a.id}>
                 <span className="grow">
-                  <span className="primary">{a.action.replace("_", " ")}</span>
-                  <span className="secondary">{a.reason} · {new Date(a.created_at).toLocaleString("en-IN")}</span>
+                  <span className="primary">
+                    {ACTION_LABEL[a.action] ?? a.action} · {makers.find((m) => m.id === a.subject_id)?.display_name ?? "a maker"}
+                  </span>
+                  <span className="secondary">{a.reason}</span>
+                  <span className="secondary meta">{recordedAt(a.created_at)}</span>
                 </span>
               </li>
             ))}

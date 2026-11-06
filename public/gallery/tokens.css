@@ -11,7 +11,7 @@
   --paper-deep: #F0E9DC;     /* limestone, light: image frames while loading, sunken fields */
   --limestone: #E7DECF;      /* limestone: plinths, the ground a work sits on */
   --stone: #D5CAB8;          /* soft rules, dividers */
-  --stone-strong: #9A9082;   /* control boundaries: field and chip borders (3.2:1 on paper) */
+  --stone-strong: #857A6B;   /* control boundaries: field and chip borders (3.8:1 on paper; was #9A9082, measured 2.84:1) */
   /* direction — ink */
   --ink: #221E1A;            /* softened near-black, warm */
   --ink-soft: #3D3630;       /* structural rules, secondary headings, icons at rest */

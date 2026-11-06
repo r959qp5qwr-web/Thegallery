@@ -3,6 +3,7 @@ import { StudioHeader } from "@/components/Chrome";
 import { confirmEmail } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Confirm your email" };
 
 export default async function Confirm({ params }: { params: Promise<{ token: string }> }) {
   const { token } = await params;

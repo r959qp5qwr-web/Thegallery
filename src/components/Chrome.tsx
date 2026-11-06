@@ -136,12 +136,12 @@ export function MaterialRail({ materials, active }: { materials: { key: string; 
 
 export function Footer() {
   return (
-    <div className="footer">
+    <footer className="footer">
       <Link href="/about">About</Link>
       <Link href="/participation">Participation</Link>
       <Link href="/privacy">Privacy</Link>
       <Link href="/makers">For Makers</Link>
-    </div>
+    </footer>
   );
 }
 
