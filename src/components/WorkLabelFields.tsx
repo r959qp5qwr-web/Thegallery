@@ -1,5 +1,5 @@
 "use client";
-import { Field, useFormState } from "./ActionForm";
+import { Field, KeptSelect, useFormState } from "./ActionForm";
 
 /** The work as a person writes it, used by Add a work and by Edit label so the two can never
  *  drift apart. Material and price mode are segmented controls (INTERFACE_FOUNDATION §7):
@@ -79,13 +79,13 @@ export function WorkLabelFields({ materials, values = {}, withStatus = true, def
       {withStatus ? (
         <div className="field">
           <label htmlFor="status">Status</label>
-          <select id="status" name="status" defaultValue={typed?.status ?? values.status ?? "available"}>
+          <KeptSelect name="status" defaultValue={values.status ?? "available"}>
             <option value="available">Available</option>
             <option value="made_to_order">Made to order</option>
             <option value="enquire">Enquire</option>
             <option value="on_view">On view</option>
             <option value="sold">Sold</option>
-          </select>
+          </KeptSelect>
         </div>
       ) : null}
       <Field name="process" label="About this work" textarea defaultValue={values.process}

@@ -52,7 +52,10 @@ test.describe("the room at every width", () => {
 
   test("header and footer are landmarks of their own, outside main", async ({ page }) => {
     // Every kind of public page, /search included: one page missed is how the skip link broke.
-    for (const path of ["/", "/browse/clay", "/search", "/saved", "/workshops", "/makers", "/makers/sign-in", "/privacy"]) {
+    const tok = (await owner((c) => c.query<{ public_token: string }>(
+      "SELECT public_token FROM works WHERE title = $1", [MONSOON]))).rows[0].public_token;
+    for (const path of ["/", "/browse/clay", "/search", "/saved", "/workshops", "/makers", "/makers/sign-in",
+                        "/privacy", "/participation", `/work/${tok}`, "/m/anika-rao", "/no-such-page"]) {
       await page.goto(path);
       await expect(page.getByRole("banner"), path).toHaveCount(1);
       await expect(page.getByRole("main"), path).toHaveCount(1);
@@ -76,13 +79,17 @@ test.describe("the room at every width", () => {
     const img = await page.locator(".detail-media").boundingBox();
     const label = await page.locator(".detail-label").boundingBox();
     expect(label!.x).toBeGreaterThan(img!.x + img!.width - 1);           // beside, not below
-    const heading = page.getByRole("heading", { name: MONSOON });
-    const before = (await heading.boundingBox())!.y;
-    await page.mouse.wheel(0, 400);
-    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(100);   // it did scroll
-    await expect(heading).toBeInViewport();
-    // The page moved and the label did not move with it: it is held beside the work.
-    expect(Math.abs((await heading.boundingBox())!.y - before)).toBeLessThan(400);
+    // Scroll far enough that the label is held at its sticky offset, then scroll further: a
+    // sticky label stays put while the page moves; a plain one moves by exactly the scroll.
+    await page.mouse.wheel(0, 200);
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(150);
+    const held = page.locator(".detail-label");
+    const y1 = (await held.boundingBox())!.y; const s1 = await page.evaluate(() => window.scrollY);
+    await page.mouse.wheel(0, 200);
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(s1 + 100);
+    const y2 = (await held.boundingBox())!.y;
+    expect(Math.abs(y2 - y1)).toBeLessThan(5);
+    await expect(page.getByRole("heading", { name: MONSOON })).toBeInViewport();
   });
 
   test("the Studio chip changes status in place, and Undo puts it back", async ({ page }) => {
@@ -143,7 +150,9 @@ test.describe("the room at every width", () => {
     await expect(page.getByText("Draft work")).toBeVisible({ timeout: 20_000 });
     await expect(page.getByText("saved with its first image")).toBeVisible();
     await expect(page.getByRole("heading", { name: STARTED })).toBeVisible();
-    const w = (await owner((c) => c.query<{ id: string }>("SELECT id FROM works WHERE title = $1", [STARTED]))).rows[0];
+    const w = (await owner((c) => c.query<{ id: string }>(
+      `SELECT w.id FROM works w JOIN galleries g ON g.id = w.gallery_id JOIN makers m ON m.id = g.maker_id
+        WHERE w.title = $1 AND m.handle = 'dhaaga-studio'`, [STARTED]))).rows[0];
     const imgs = await owner((c) => c.query<{ state: string }>("SELECT state FROM work_images WHERE work_id = $1", [w.id]));
     expect(imgs.rows.map((r) => r.state)).toEqual(["ready"]);
 

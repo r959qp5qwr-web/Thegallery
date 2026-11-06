@@ -12,6 +12,13 @@ import { materials } from "@/lib/queries";
 import { WorkLabelFields } from "@/components/WorkLabelFields";
 
 export const dynamic = "force-dynamic";
+
+/** What the first image's failure means, by code (the URL carries only the code). */
+const IMAGE_PROBLEM: Record<string, string> = {
+  too_large: "That image is larger than 12 MB; export it smaller.",
+  not_yours: "That work could not take images.",
+  failed: "We could not read that file; a JPEG works best.",
+};
 export const metadata = { title: "Your work" };
 
 type Row = {
@@ -61,7 +68,7 @@ export default async function EditWork(
       <main id="main" tabIndex={-1}>
       {created === "image" ? <Band label="Saved">Your draft is saved with its first image. Add the rest, give it a
         title if it has none, then publish.</Band> : created && !image_problem ? <Band label="Saved">The label is saved. Add images, then publish.</Band> : null}
-      {image_problem ? <Band kind="fail" label="The image did not go up">Your draft is saved. {image_problem} Add the image again below.</Band> : null}
+      {image_problem && IMAGE_PROBLEM[image_problem] ? <Band kind="fail" label="The image did not go up">Your draft is saved. {IMAGE_PROBLEM[image_problem]} Add the image again below.</Band> : null}
       {retired ? <Band label="Retired">This work is no longer on view. Its link now says so. You can restore it below.</Band> : null}
       {restored ? <Band label="Restored">This work is on view again, with its status as it was.</Band> : null}
       {removed === "image" ? <Band label="Removed">The image is removed. The others are unchanged.</Band> : null}

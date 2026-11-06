@@ -177,13 +177,11 @@ main { display: block; }
 
 /* The header's ground and hairline run the full width of the window, whatever the page width:
    a sticky band that stopped at the column's edge read as a phone pasted onto a desktop.
-   Drawn with box-shadows clipped to the header's height: a shadow never creates overflow, so
-   nothing here can widen the page or change how a phone sizes its viewport. (An earlier version
-   used overflow-x: clip on <html>, which made mobile browsers size the layout viewport to the
-   whole page and sent taps to the wrong element.) The first shadow is the ground; the second,
-   one pixel lower, shows only as the hairline below it. */
-.header { box-shadow: 0 0 0 100vmax var(--surface), 0 1px 0 100vmax var(--rule-hair);
-          clip-path: inset(0 -100vmax -1px); }
+   Drawn as a border-image outset to each side: an outset is painted, never laid out, so it
+   cannot widen the page or change how a phone sizes its viewport. (overflow-x: clip on <html>
+   did, GAL-L0021; a pair of box-shadows left no hairline beyond the column.) One gradient
+   carries the ground and, in its last pixel, the hairline. */
+.header { border-image: linear-gradient(to bottom, var(--surface) calc(100% - 1px), var(--rule-hair) calc(100% - 1px)) 0 fill / 0 0 1px 0 / 0 100vmax; }
 
 /* Studio rows (J-003): the work's cover, its title, and the status chip as the control. */
 .rowlist.works li { gap: 14px; }
@@ -223,3 +221,8 @@ main { display: block; }
 /* While a sheet is open the bottom bar steps aside. Since Wave 2 the bar sits outside the page,
    so the sheet cannot rise above it by z-index; the bar is inert behind the sheet anyway. */
 body:has(.contact-scrim) .bar { display: none; }
+/* Without :has() (Firefox before 121, Safari before 15.4) the bar stays; the sheet makes room
+   above it so its last line and choices remain reachable. */
+@supports not selector(:has(*)) {
+  .sheet.contact { padding-bottom: calc(20px + var(--bar-h) + env(safe-area-inset-bottom, 0px)); }
+}

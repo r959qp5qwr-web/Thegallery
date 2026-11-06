@@ -210,7 +210,11 @@ export async function createWorkAction(_prev: FormState, form: FormData): Promis
   // carried to the work's page, never lost behind a generic notice.
   if (hasImage) {
     const problem = await storeImage(db, id, file as File, String(form.get("alt_text") ?? "").trim() || null);
-    if (problem) redirect(`/studio/works/${id}?created=1&image_problem=${encodeURIComponent(problem)}`);
+    // A code, never the message: text in a URL can be planted by anyone who sends a link.
+    if (problem) {
+      const code = problem.includes("12 MB") ? "too_large" : problem.includes("not yours") ? "not_yours" : "failed";
+      redirect(`/studio/works/${id}?created=1&image_problem=${code}`);
+    }
     redirect(`/studio/works/${id}?created=image`);
   }
   redirect(`/studio/works/${id}?created=1`);
