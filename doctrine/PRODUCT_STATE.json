@@ -1433,7 +1433,7 @@
   "human_surface_state": {
     "module": "ux-design-assurance 1.1.0 (bound through DOCTRINE_BINDING.json)",
     "manifest": "ux/UX_MANIFEST.yaml",
-    "interface_reference_set_revision": "VERSION 2, 2026-09-06, at the governor's direction and awaiting the governor's acceptance of the rendered result. The governor judged the implemented treatment dull (grey-beige ground, black rules, mono uppercase as the dominant voice, black filled action blocks) and mandated a recomposition: the work supplies the colour, the interface supplies the room. Palette, rules, type registers, action treatment, hero composition and empty states were revised across tokens.css, system.css and the shared chrome; behaviour, data architecture, permissions and the Stage 2 slice are unchanged. Reference plates re-rendered; implemented surfaces captured in ux/reference/implemented/; receipt doctrine/receipts/VISUAL-SYSTEM-REVISION-2026-09-06.md with the remaining weaknesses stated. Version 1 acceptance stands for grammar, hierarchy and imagery treatment; version 2 supersedes its palette, rules and type-register decisions. Not a silent drift: the change was directed, and it returns to the governor for review as the version 1 acceptance requires.",
+    "interface_reference_set_revision": "VERSION 2 ACCEPTED by the governor 2026-11-06 (\"go by your recommendations\"), together with the conformance pass of the same day (receipt doctrine/receipts/UI-CONFORMANCE-2026-11-06.md). Supersedes version 1's palette, rules and type-register decisions; version 1 acceptance stands for grammar, hierarchy and imagery treatment. History: version 2 was made 2026-09-06 at the governor's direction after the implemented treatment was judged dull (GAL-L0016).",
     "interface_reference_set": "ACCEPTED by the governor 2026-09-06 as the authoritative design direction for implementation — R-1, R-2, R-3 rendered, reviewed and accepted (ux/reference/interface/INTERFACE_REFERENCE_SET.md). The approved grammar, hierarchy, typography, palette, imagery treatment and interaction direction are fixed; ordinary responsive, accessibility and implementation refinement remains the builder's, and acceptance freezes no defect. The interface may not drift into a generic marketplace, social feed or administrative template, and any later change that materially alters the approved product character returns for governor review.",
     "journeys": {
       "J-001": "VERIFYING",
@@ -1443,7 +1443,14 @@
       "J-005": "IDENTIFIED",
       "J-006": "IDENTIFIED"
     },
-    "stage_2_note": "J-001, J-002 and J-003 are implemented in full and J-004 minimally (suspend, reinstate, recorded reasons). All four were walked end to end in the running product at phone and desktop width on 2026-09-06. They read VERIFYING rather than VERIFIED because verification is not complete: no deployed build, no real email round trip and no walk on a physical phone. J-005's doors (sign out, sign in, recovery, expired session, account closure) were walked inside J-002's spec; J-006 enters through material browse, search and private saves."
+    "stage_2_note": "J-001, J-002 and J-003 are implemented in full and J-004 minimally (suspend, reinstate, recorded reasons). All four were walked end to end in the running product at phone and desktop width on 2026-09-06. They read VERIFYING rather than VERIFIED because verification is not complete: no deployed build, no real email round trip and no walk on a physical phone. J-005's doors (sign out, sign in, recovery, expired session, account closure) were walked inside J-002's spec; J-006 enters through material browse, search and private saves.",
+    "design_decisions_2026_11_06": {
+      "decided_by": "GOVERNOR, 2026-11-06, adopting the builder's recommendations",
+      "D1_maker_gallery_tile": "On the maker's own gallery a tile carries the medium (or material) in the maker-line slot; the maker's name is the page heading. Local reading of INTERFACE_FOUNDATION §8 preview anatomy, now decided.",
+      "D2_amber": "Amber is reserved for availability, the active tab and bar item, the lead's short rule, the primary action's edge and focus. Context labels (entrance place, For Makers, sign-in, Workshops) and Studio step numbers return to muted text, as plate R-1 shows. To be implemented.",
+      "D3_add_work_controls": "Material and price mode become segmented controls as INTERFACE_FOUNDATION §7 specifies. Whether image upload moves into the Add work form (plate R-3) is decided in the full design review that follows. To be implemented.",
+      "D4_visual_revision": "Version 2 of the interface reference set accepted (see interface_reference_set_revision)."
+    }
   },
   "learning_ledger": "doctrine/BUILD_LEARNING_LEDGER.md",
   "updated_at": "2026-09-06T19:00:00+00:00",
