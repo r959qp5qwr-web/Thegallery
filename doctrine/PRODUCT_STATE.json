@@ -1450,6 +1450,15 @@
       "D2_amber": "Amber is reserved for availability, the active tab and bar item, the lead's short rule, the primary action's edge and focus. Context labels (entrance place, For Makers, sign-in, Workshops) and Studio step numbers return to muted text, as plate R-1 shows. To be implemented.",
       "D3_add_work_controls": "Material and price mode become segmented controls as INTERFACE_FOUNDATION §7 specifies. Whether image upload moves into the Add work form (plate R-3) is decided in the full design review that follows. To be implemented.",
       "D4_visual_revision": "Version 2 of the interface reference set accepted (see interface_reference_set_revision)."
+    },
+    "design_review_2026_11_06": {
+      "review": "https://claude.ai/artifact/6UtifvpBuyytm4Nj68C6h4 — four skill-based reviews of 38 surfaces at three widths, findings verified against code",
+      "decided_by": "GOVERNOR, 2026-11-06, adopting the builder's four recommendations",
+      "R1_add_work_images": "Image upload moves into the Add work form as plate R-3 shows; the draft is created on the first image. Wave 2.",
+      "R2_operator_reports": "The visitor report queue of J-004 arrives in a later stage; the operator log's wording and dates are fixed now.",
+      "R3_status_names": "Shown labels become 'By enquiry' (stored 'enquire') and 'Not for sale' (stored 'on_view'); stored values unchanged. Wave 3.",
+      "R4_cutting_edge": "Desktop hang with sticky wall label; one tile-to-detail view transition; a self-standing contact message with a WhatsApp publish preview; status freshness. Wave 4.",
+      "waves": "1 trust and access; 2 the room at every width; 3 one vocabulary; 4 cutting edge. Each wave: full journeys, independent review, renders, before merge."
     }
   },
   "learning_ledger": "doctrine/BUILD_LEARNING_LEDGER.md",
