@@ -11,6 +11,7 @@ export default async function ForMakers() {
   return (
     <>
       <Header place="For Makers" />
+      <main id="main" tabIndex={-1}>
       <div className="context"><span>For makers</span><span className="accent">One gallery of your own</span></div>
       <div className="section" style={{ paddingTop: 8 }}>
         <h1 style={{ font: "var(--t-display)", margin: "0 0 14px", letterSpacing: "-0.015em" }}>Show your work the way a gallery would</h1>
@@ -34,6 +35,7 @@ export default async function ForMakers() {
       <div className="actions secondary">
         <Link className="btn quiet" href="/makers/sign-in"><span>I already have one</span></Link>
       </div>
+      </main>
       <Footer />
     </>
   );

@@ -17,6 +17,7 @@ export default async function Account() {
   return (
     <>
       <StudioHeader title="Account" back="/studio" />
+      <main id="main" tabIndex={-1}>
       <div className="studio-state">
         <h1>Account</h1>
         <p className="small" style={{ marginTop: 6 }}>
@@ -48,6 +49,7 @@ export default async function Account() {
       <ActionForm action={closeAccountAction} submitLabel="Close my account" busyLabel="Closing…">
         <Field name="confirm" label="Type close to confirm" placeholder="close" required />
       </ActionForm>
+      </main>
     </>
   );
 }

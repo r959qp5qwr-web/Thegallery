@@ -11,6 +11,7 @@ export default async function CheckEmail({ searchParams }: { searchParams: Promi
   return (
     <>
       <StudioHeader title="Confirm your email" back="/makers/create-account" />
+      <main id="main" tabIndex={-1}>
       <div className="centre">
         <div className="lbl">One step left</div>
         <h1>Check your email</h1>
@@ -24,6 +25,7 @@ export default async function CheckEmail({ searchParams }: { searchParams: Promi
       <div className="inline-actions">
         <Link className="btn quiet" href="/makers/sign-in"><span>Back to sign in</span></Link>
       </div>
+      </main>
     </>
   );
 }

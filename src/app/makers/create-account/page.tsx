@@ -10,6 +10,7 @@ export default function CreateAccount() {
   return (
     <>
       <StudioHeader title="Create account" back="/makers" />
+      <main id="main" tabIndex={-1}>
       <div className="studio-state">
         <h1>Your email opens the Studio</h1>
         <p className="small" style={{ marginTop: 6 }}>
@@ -25,6 +26,7 @@ export default function CreateAccount() {
       <div className="inline-actions">
         <Link className="btn quiet" href="/makers/sign-in"><span>I already have an account</span></Link>
       </div>
+      </main>
     </>
   );
 }

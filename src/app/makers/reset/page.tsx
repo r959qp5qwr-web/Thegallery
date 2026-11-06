@@ -10,6 +10,7 @@ export default function Reset() {
   return (
     <>
       <StudioHeader title="Set a new password" back="/makers/sign-in" />
+      <main id="main" tabIndex={-1}>
       <div className="studio-state">
         <h1>Send yourself a link</h1>
         <p className="small" style={{ marginTop: 6 }}>
@@ -23,6 +24,7 @@ export default function Reset() {
       <div className="inline-actions">
         <Link className="btn quiet" href="/makers/sign-in"><span>Back to sign in</span></Link>
       </div>
+      </main>
     </>
   );
 }

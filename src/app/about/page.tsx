@@ -6,6 +6,7 @@ export default function About() {
   return (
     <>
       <Header place="About" back="/" />
+      <main id="main" tabIndex={-1}>
       <h1 className="sr-only">About The Gallery</h1>
       <div className="section">
         <h2 style={{ font: "var(--t-heading)", margin: "0 0 12px" }}>What The Gallery is</h2>
@@ -27,6 +28,7 @@ export default function About() {
         <p className="body">There are no public follower counts, likes, comments or popularity charts. A work
           is shown because a maker published it, not because it performed.</p>
       </div>
+      </main>
       <Footer />
     </>
   );

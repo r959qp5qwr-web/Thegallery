@@ -6,6 +6,7 @@ export default function Privacy() {
   return (
     <>
       <Header place="Privacy" back="/" />
+      <main id="main" tabIndex={-1}>
       <h1 className="sr-only">Privacy</h1>
       <div className="section">
         <h2 style={{ font: "var(--t-heading)", margin: "0 0 12px" }}>Your account email stays private</h2>
@@ -33,6 +34,7 @@ export default function Privacy() {
           with a plain notice rather than disappearing. Your sign-in email is not deleted when you close: it
           stays, private and never shown, as the record that the account existed and was closed.</p>
       </div>
+      </main>
       <Footer />
     </>
   );

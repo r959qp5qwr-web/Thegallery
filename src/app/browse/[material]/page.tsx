@@ -29,6 +29,7 @@ export default async function Browse({ params }: { params: Promise<{ material: s
       {/* The material is named once, by the active tab. The count is information, not the
           Gallery's mark, so it is not amber (INTERFACE_FOUNDATION §5). */}
       <Header />
+      <main id="main" tabIndex={-1}>
       <h1 className="sr-only">{found.label}</h1>
       <MaterialRail materials={mats} active={material} />
       <div className="context">
@@ -48,6 +49,7 @@ export default async function Browse({ params }: { params: Promise<{ material: s
           No work in this material is on view. The room is ready for it.
         </EmptyPlinth>
       )}
+      </main>
       <Footer />
     </>
   );

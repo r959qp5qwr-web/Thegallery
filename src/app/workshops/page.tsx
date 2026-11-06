@@ -10,12 +10,14 @@ export default function Workshops() {
   return (
     <>
       <Header place="Workshops" />
+      <main id="main" tabIndex={-1}>
       <h1 className="sr-only">Workshops</h1>
       <div className="context"><span>Programme</span><span className="accent">Nothing scheduled</span></div>
       <EmptyPlinth title="No workshops yet" action={<Action href="/">Back to the entrance</Action>}>
         Makers will publish workshops here — dates, place and how to register. Nothing is
         scheduled at the moment.
       </EmptyPlinth>
+      </main>
       <Footer />
     </>
   );

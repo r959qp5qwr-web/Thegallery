@@ -58,6 +58,7 @@ export default async function EditWork(
   return (
     <>
       <StudioHeader title={work.lifecycle === "published" ? "Published work" : work.lifecycle === "retired" ? "Retired work" : "Draft work"} back="/studio" />
+      <main id="main" tabIndex={-1}>
       {created ? <Band label="Saved">The label is saved. Add images, then publish.</Band> : null}
       {retired ? <Band label="Retired">This work is no longer on view. Its link now says so. You can restore it below.</Band> : null}
       {restored ? <Band label="Restored">This work is on view again, with its status as it was.</Band> : null}
@@ -202,13 +203,11 @@ export default async function EditWork(
         <PublishButton workId={work.id} intentKey={intentKey} canPublish={ready.length > 0} />
       )}
 
-      <div className="group" style={{ margin: "36px var(--pad-x-studio) 0" }}>
-        <div className="ghead">The label</div>
-      </div>
       <ActionForm action={updateWorkLabelAction} submitLabel="Save label" busyLabel="Saving…"
-                  hidden={{ work_id: work.id }}>
+                  hidden={{ work_id: work.id }} bar={null}>
         <WorkLabelFields materials={mats} withStatus={false} values={work} />
       </ActionForm>
+      </main>
     </>
   );
 }

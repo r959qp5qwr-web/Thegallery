@@ -10,6 +10,7 @@ export default async function ResetWithToken({ params }: { params: Promise<{ tok
   return (
     <>
       <StudioHeader title="Set a new password" />
+      <main id="main" tabIndex={-1}>
       <div className="studio-state">
         <h1>Choose a new password</h1>
         <p className="small" style={{ marginTop: 6 }}>Setting it signs out every other session.</p>
@@ -19,6 +20,7 @@ export default async function ResetWithToken({ params }: { params: Promise<{ tok
         <Field name="password" label="New password" type="password" required autoComplete="new-password"
                help="At least 10 characters." />
       </ActionForm>
+      </main>
     </>
   );
 }

@@ -24,11 +24,13 @@ function Submit({ label, busy, block = true, className = "btn" }:
 }
 
 export function ActionForm(
-  { action, submitLabel, busyLabel = "Working…", children, hidden, className = "form", secondary }:
+  { action, submitLabel, busyLabel = "Working…", children, hidden, className = "form", secondary, bar }:
   {
     action: (prev: FormState, form: FormData) => Promise<FormState>;
     submitLabel: string; busyLabel?: string; children: React.ReactNode;
     hidden?: Record<string, string>; className?: string; secondary?: React.ReactNode;
+    /** Plate R-3: the form's action stays in reach in a bar fixed to the bottom of the form. */
+    bar?: React.ReactNode;
   },
 ) {
   const [state, formAction] = useActionState(action, {});
@@ -57,9 +59,16 @@ export function ActionForm(
         </div>
       ) : null}
       {children}
-      <div className="inline-actions" style={{ padding: "20px 0 0" }}>
-        <Submit label={submitLabel} busy={busyLabel} />
-      </div>
+      {bar !== undefined ? (
+        <div className="actionbar form-bar">
+          <Submit label={submitLabel} busy={busyLabel} block={false} />
+          {bar}
+        </div>
+      ) : (
+        <div className="inline-actions" style={{ padding: "20px 0 0" }}>
+          <Submit label={submitLabel} busy={busyLabel} />
+        </div>
+      )}
       {secondary}
     </form>
     </FormStateContext.Provider>

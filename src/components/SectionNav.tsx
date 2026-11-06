@@ -1,4 +1,5 @@
 "use client";
+import { createContext, useContext } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Icon } from "./Icon";
@@ -11,18 +12,29 @@ const ITEMS = [
   { href: "/workshops", label: "Workshops", icon: "workshops", match: (p: string) => p.startsWith("/workshops") },
 ];
 
-export function BottomBar({ signedIn }: { signedIn: boolean }) {
+const SignedInContext = createContext(false);
+export function SignedIn({ value, children }: { value: boolean; children: React.ReactNode }) {
+  return <SignedInContext.Provider value={value}>{children}</SignedInContext.Provider>;
+}
+
+/**
+ * The four sections, in one of two places: the bottom bar below 900 px, the header from 900 px
+ * (INTERFACE_FOUNDATION §7). Both are rendered; CSS shows exactly one, and the hidden one is
+ * display:none, so assistive technology meets a single "Sections" navigation at any width.
+ */
+export function SectionNav({ placement }: { placement: "bar" | "header" }) {
   const path = usePathname();
+  const signedIn = useContext(SignedInContext);
   if (path.startsWith("/operator")) return null;
   const last = signedIn
     ? { href: "/studio", label: "Studio", icon: "makers", match: (p: string) => p.startsWith("/studio") }
     : { href: "/makers", label: "For Makers", icon: "makers", match: (p: string) => p.startsWith("/makers") };
   return (
-    <nav className="bar" aria-label="Sections">
+    <nav className={placement === "bar" ? "bar" : "topnav"} aria-label="Sections">
       {[...ITEMS, last].map((i) => (
         <Link key={i.href} href={i.href} className={i.match(path) ? "active" : ""}
               aria-current={i.match(path) ? "page" : undefined}>
-          <Icon name={i.icon} />
+          {placement === "bar" ? <Icon name={i.icon} /> : null}
           {i.label}
         </Link>
       ))}

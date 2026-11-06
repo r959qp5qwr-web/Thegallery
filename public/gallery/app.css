@@ -5,14 +5,36 @@
    system.css. */
 @import url("system.css");
 
-.phone { width: 100%; max-width: 430px; min-height: 100vh; margin: 0 auto; overflow: visible;
-         padding-bottom: calc(var(--bar-h) + 12px); }
-@media (min-width: 760px) { .phone { max-width: 720px; } .grid { grid-template-columns: repeat(3, 1fr); } .hero .wall { min-height: 0; } }
-@media (min-width: 1080px) { .phone { max-width: 960px; } .grid { grid-template-columns: repeat(4, 1fr); } }
+/* Wave 2, 2026-11-06 — the room at every width (INTERFACE_FOUNDATION §2, §4, §10), on the theme's
+   own breakpoints (tokens.css: 600 and 900). The page is transparent so the paper grain in
+   system.css covers the whole viewport, not only a column. */
+.phone { width: 100%; max-width: 1200px; min-height: 100vh; margin: 0 auto; overflow: visible;
+         background: transparent; padding-bottom: calc(var(--bar-h) + 12px); }
 
-.bar { position: fixed; left: 50%; transform: translateX(-50%); width: 100%; max-width: 430px; z-index: 20; }
-@media (min-width: 760px) { .bar { max-width: 720px; } }
-@media (min-width: 1080px) { .bar { max-width: 960px; } }
+/* The bottom bar below 900 px; from 900 px the same four sections sit in the header (§7). */
+.bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; padding-bottom: env(safe-area-inset-bottom, 0px); height: calc(var(--bar-h) + env(safe-area-inset-bottom, 0px)); }
+.header-end { display: inline-flex; align-items: center; gap: 8px; }
+.header-spacer { width: 44px; }
+.topnav { display: none; }
+.topnav a { display: inline-flex; align-items: center; min-height: var(--target); padding: 0 12px;
+  font: var(--t-nav); letter-spacing: var(--track-nav); text-transform: uppercase; text-decoration: none;
+  color: var(--text-muted); border-bottom: 2px solid transparent; }
+.topnav a:hover { color: var(--text); }
+/* Active: amber and underlined, so the state is not carried by colour alone (§11). */
+.topnav a.active { color: var(--accent-text); border-bottom-color: var(--accent); }
+@media (min-width: 900px) {
+  .bar { display: none; }
+  .topnav { display: flex; align-items: center; gap: 4px; }
+  .phone { padding-bottom: 0; }
+  html { scroll-padding-bottom: 0; }
+}
+
+/* Prose keeps a reading measure at any width; Studio forms stay a form's width. */
+.section > p, .section .body, .studio-state p, .empty p, .label .note { max-width: 66ch; }
+.form { max-width: calc(560px + 2 * var(--pad-x-studio)); }
+@media (min-width: 600px) {
+  :root { --pad-x-studio: var(--pad-x); }   /* one side padding for Studio and operator from medium up */
+}
 
 .header { position: sticky; top: 0; z-index: 15; }
 .frame img { object-position: 50% 45%; }
@@ -39,7 +61,7 @@ button.btn:disabled { border-color: var(--stone); color: var(--text-muted); back
 .sheet.contact { position: fixed; left: 50%; transform: translateX(-50%); bottom: 0;
   width: 100%; max-width: 430px; z-index: 31; padding-bottom: 20px;
   max-height: 86vh; overflow-y: auto; box-shadow: 0 -8px 32px rgba(34, 30, 26, 0.18); }
-@media (min-width: 760px) { .sheet.contact { max-width: 480px; bottom: 24px; border-radius: var(--radius-sheet); } }
+@media (min-width: 600px) { .sheet.contact { max-width: 480px; bottom: 24px; border-radius: var(--radius-sheet); } }
 .stack { display: flex; flex-direction: column; gap: 10px; padding: var(--s3) var(--pad-x) 0; }
 .inline-actions { display: flex; gap: 8px; flex-wrap: wrap; padding: var(--s3) var(--pad-x) 0; align-items: center; }
 .crumb { padding: 12px var(--pad-x) 0; font: var(--t-meta); letter-spacing: var(--track-meta); color: var(--text-muted); }
@@ -104,3 +126,90 @@ main { display: block; }
 .rowlist .grow { min-width: 0; overflow-wrap: anywhere; }
 @media (max-width: 340px) { .bar a { letter-spacing: 0; font-size: 9.5px; } }
 @media (max-width: 260px) { .bar a { font-size: 0; gap: 0; } .bar a svg.icon { width: 22px; height: 22px; } }
+
+/* Wave 2 — the hang. Compact and medium keep the two-column grid of the plates, a landscape
+   work taking the row. From 900 px at most three columns: a landscape work spans two, never
+   all, and a short row is centred rather than left half empty (design review 2026-11-06). */
+/* Medium (§10): two columns hung from the centre; the work's image at 60 % beside its label. */
+@media (min-width: 600px) {
+  .grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 40px 24px; }
+  .grid .tile { flex: 0 0 calc((100% - 24px) / 2); min-width: 0; }
+  .grid .tile.wide { flex-basis: 100%; }
+
+  .detail { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 0 32px;
+            padding: var(--s4) var(--pad-x) 0; align-items: start; }
+  .detail-media .imgstrip .shot img { max-height: 70vh; }
+  .detail-label { position: sticky; top: calc(var(--header-h) + var(--s4)); }
+  .detail-label .label, .detail-label .actions, .detail-label .section { padding-left: 0; padding-right: 0; }
+  .detail-label .label { padding-top: 0; }
+}
+@media (min-width: 900px) {
+  .grid { gap: 48px 32px; }
+  .grid .tile { flex-basis: calc((100% - 64px) / 3); }
+  .grid .tile.wide { flex-basis: calc((100% - 64px) / 3 * 2 + 32px); }
+
+  /* Work detail: image 7 parts beside the wall label 5 parts; the label stays beside the work. */
+  .detail { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 0 48px; padding-top: var(--s5); }
+  .detail-media .imgstrip .shot img { max-height: 80vh; }
+  .rail { justify-content: flex-start; gap: 40px; }
+
+  /* The entrance's featured work hangs larger on a wall that can hold it. */
+  .hero .wall { max-height: 64vh; }
+  .hero img { max-height: 64vh; }
+}
+
+/* Studio and operator: a working column, not a stretched list. The header keeps the room's width. */
+.header.studio ~ main { max-width: 760px; margin: 0 auto; }
+
+/* Dialogs centred from medium up (§10). */
+@media (min-width: 600px) {
+  .sheet.contact { top: 50%; bottom: auto; transform: translate(-50%, -50%); }
+}
+
+@media (min-width: 900px) {
+  .featured { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 0 48px;
+              padding: 0 var(--pad-x); align-items: end; }
+  .featured-label .label, .featured-label .actions { padding-left: 0; padding-right: 0; }
+  .featured-label .row-end { justify-content: flex-start; padding-left: 0; }
+}
+
+/* The header's ground and hairline run the full width of the window, whatever the page width:
+   a sticky band that stopped at the column's edge read as a phone pasted onto a desktop. */
+html { overflow-x: clip; }
+.header { box-shadow: 0 0 0 100vmax var(--surface); clip-path: inset(0 -100vmax -1px); }
+.header::after { content: ""; position: absolute; left: -100vmax; right: -100vmax; bottom: -1px;
+                 border-bottom: 1px solid var(--rule-hair); pointer-events: none; }
+
+/* Studio rows (J-003): the work's cover, its title, and the status chip as the control. */
+.rowlist.works li { gap: 14px; }
+.rowlist.works .thumb { flex: none; width: 56px; height: 56px; background: var(--surface-plinth); display: block; }
+.rowlist.works .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.rowlist .chip[role="button"] { text-decoration: none; min-height: var(--target); cursor: pointer; }
+.rowlist .chip[role="button"]::after { content: "▾"; margin-left: 8px; font-size: 10px; letter-spacing: 0; }
+.undo-line { flex-basis: 100%; display: flex; align-items: center; gap: 4px; margin: 0;
+  font: var(--t-body-small); color: var(--text-soft); padding: 0 0 6px 70px; }
+.choice button { display: flex; align-items: center; justify-content: space-between; width: 100%;
+  min-height: 52px; font: var(--t-body); color: var(--text-soft); text-align: left; }
+.choice button[aria-current="true"] { color: var(--text); }
+
+/* Plate R-3: short values in short fields; the form's action in a bar that stays in reach. */
+.field-short .field input { max-width: 200px; }
+.dims-inputs { max-width: 420px; }
+.form .group:first-child { margin-top: 8px; }
+.actionbar { bottom: calc(var(--bar-h) + env(safe-area-inset-bottom, 0px)); z-index: 5; }
+.form-bar { margin: 24px calc(-1 * var(--pad-x-studio)) 0; align-items: center; justify-content: space-between; }
+.form-bar .savedline { padding: 0; flex: 1; min-width: 0; text-align: right; }
+.form-bar .btn { flex: none; white-space: nowrap; padding-inline: 24px; }
+@media (min-width: 900px) { .actionbar { bottom: 0; } }
+
+/* Loading (§9): paper-deep blocks at true aspect; no spinner over the first work. */
+.skeleton, .skeleton-wall, .skeleton-line { background: var(--surface-sunken); }
+.skeleton-wall { height: min(52vw, 46vh); }
+.skeleton-line { display: block; height: 14px; margin-top: 10px; }
+.skeleton-line.tall { height: 30px; }
+.skeleton-line.w30 { width: 30%; } .skeleton-line.w50 { width: 50%; } .skeleton-line.w70 { width: 70%; }
+.skeleton-grid { padding-top: var(--s5); }
+@media (prefers-reduced-motion: no-preference) {
+  .skeleton, .skeleton-wall, .skeleton-line { animation: breathe 1.6s ease-in-out infinite; }
+  @keyframes breathe { 50% { opacity: 0.55; } }
+}
