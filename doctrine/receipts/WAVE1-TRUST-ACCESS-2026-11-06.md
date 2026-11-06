@@ -73,3 +73,12 @@ Nothing merged or deployed by this receipt.
 - **Real devices and hand-offs**: no physical phone, no real WhatsApp or mail client opened, no
   email round trip. The live Supabase auth settings (Site URL, redirects, templates) are still the
   governor's task.
+
+## Merge — governor override of an unverifiable CI check
+
+PR #4's CI check "Orientation, gates and drill" was red because the repository secret
+`DOCTRINE_READ_TOKEN` is not set (`doctrine/EXTERNAL_ENABLEMENT.md` item 2). The job stops before
+reading the Doctrine and verifies nothing, so its verdict is indeterminate, not a finding about the
+code. PRs #1–#3 merged in the same state. Presented with this, the governor chose to merge
+("1.", 2026-11-06). The evidence for the merge is the local record above (orientation VALID, gates
+5/5, drill 89 PASS, journeys 38/38 on both widths). CI stays unenabled until the secret exists.
