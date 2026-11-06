@@ -55,6 +55,11 @@ test.describe("publish a work and meet it as a visitor", () => {
   });
 
   test("the maker creates a work with three differently shaped images and publishes it", async ({ page }) => {
+    // The longest walk in the suite: sign-in, a draft, three real uploads and a publish, each a
+    // round trip to the hosted test project. On 2026-11-06 every request completed but each act
+    // took 3–8 s, and the walk passed 60 s on both the Wave 2 and Wave 3 builds (GAL-L0023).
+    // The budget is raised for this walk alone; no assertion is loosened.
+    test.setTimeout(120_000);
     await signIn(page, MAKER_A.email, MAKER_A.password);
     await page.goto("/studio/works/new");
     await page.getByLabel("Title").fill(TITLE);

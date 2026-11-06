@@ -451,6 +451,27 @@ The only loading state left is the entrance's (route group `(entrance)`); the en
 
 ---
 
+### GAL-L0023
+
+**Date:** 2026-11-06  
+**Observed event:**  
+During Wave 3 the phone suite failed twice on the same journey: 02 "creates a work with three differently shaped images and publishes it" timed out at 60 s, and 03's first journey failed after it because no work had been published. The first time, a `next build` of the default branch (for before-renders) ran beside the suite, and the builder named that load as the cause. The second run had nothing beside it and failed the same way, so that explanation was wrong.
+
+**Evidence:**  
+Cold server, 01 then 02: 02 fails. Cold server, 02 alone: fails. Same journey against the pre-Wave-3 build `388f914` (served from a separate worktree): fails at the same step. Warm server, 02 alone: passes, 6 of 6. The trace of the control failure shows every request completed (no hang, no error): each server action took 3.5–8.5 s, and sign-in, draft, three uploads and publish together passed the 60 s test budget. `pg_stat_activity` showed no held lock; table sizes are small.
+
+**Why it mattered:**  
+A timeout on the hosted test project read as a Wave 3 defect, and a cause was named before it was tested. Had the guess stood, the receipt would have carried a false explanation.
+
+**What changed:**  
+That one journey's budget is 120 s (`test.setTimeout`), with the reason in a comment; no assertion is loosened and no test is skipped. A cause is now named only after a control run on the previous build. Nothing heavy (a build, a second server under load) runs beside a suite run.
+
+**Status:** RESOLVED (budget); OPEN (the latency of the hosted test project is not explained)  
+**Related finding / decision IDs:** GAL-L0018, GAL-L0020, Wave 3  
+**Harvest status:** UNHARVESTED
+
+---
+
 ## Ledger rules
 
 - Capture the event in the governed change that fixes or formally records it where feasible.
