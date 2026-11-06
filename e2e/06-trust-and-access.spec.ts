@@ -6,7 +6,7 @@ import { owner, signIn, MAKER_A, MAKER_B } from "./helpers";
 // notice appears only when the change happened, and contact carries what the visitor meant.
 //
 // Runs after 04, which leaves Maker B's "Unfinished Warp" retired with one ready image and one
-// failed one. This walk restores it, so it ends published, as 04 left it before retiring.
+// failed one. This walk restores it, then puts it back to retired when it ends.
 test.describe.configure({ mode: "serial" });
 
 const WORK = "Unfinished Warp";
@@ -19,6 +19,13 @@ async function warp() {
 }
 
 test.describe("trust and access", () => {
+  // Leave the test project as 04 left it: "Unfinished Warp" retired. Left published, it shows on
+  // the entrance beside the next run's work and breaks 02's single-work assumptions.
+  test.afterAll(async () => {
+    await owner((c) => c.query(
+      "UPDATE works SET lifecycle = 'retired', retired_at = now() WHERE title = $1 AND lifecycle = 'published'", [WORK]));
+  });
+
   test("sign-in never sends a maker to another site", async ({ page }) => {
     for (const next of ["//evil.example/studio", "/\\evil.example"]) {
       await page.goto(`/makers/sign-in?next=${encodeURIComponent(next)}`);
