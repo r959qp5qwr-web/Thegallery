@@ -79,6 +79,11 @@ test.describe("the room at every width", () => {
     const img = await page.locator(".detail-media").boundingBox();
     const label = await page.locator(".detail-label").boundingBox();
     expect(label!.x).toBeGreaterThan(img!.x + img!.width - 1);           // beside, not below
+    // The test work has one image, so its page barely scrolls at 900 px tall. Lengthen the image
+    // column the way a work with several images would, so there is a page to scroll past.
+    await page.locator(".detail-media").evaluate((el) => {
+      const pad = document.createElement("div"); pad.style.height = "1600px"; el.appendChild(pad);
+    });
     // Scroll far enough that the label is held at its sticky offset, then scroll further: a
     // sticky label stays put while the page moves; a plain one moves by exactly the scroll.
     await page.mouse.wheel(0, 200);
