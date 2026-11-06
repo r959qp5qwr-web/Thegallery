@@ -45,15 +45,25 @@ export function bind(text: string, params: unknown[] = []): string {
 export async function sql<R = Record<string, unknown>>(text: string, params: unknown[] = []): Promise<R[]> {
   guard();
   const query = `SET search_path = "${SCHEMA}", public;\n` + bind(text, params);
-  const res = await fetch(`https://api.supabase.com/v1/projects/${TEST_REF}/database/query`, {
-    method: "POST",
-    // The real token is injected by the environment's network proxy; this value is replaced.
-    headers: { "Content-Type": "application/json", Authorization: "Bearer proxy-injected" },
-    body: JSON.stringify({ query }),
-  });
-  const body = await res.text();
-  if (!res.ok) throw new Error(`owner SQL failed (${res.status}): ${body.slice(0, 300)}`);
-  return JSON.parse(body) as R[];
+  // A gateway error (502/503/504) from the Management API is the platform, not the product: one
+  // retry after a pause. Only reads and idempotent writes go through here (SELECT, DELETE,
+  // UPDATE to a fixed value), so a retried query cannot double an effect. Any other status fails
+  // at once. Seen 2026-11-06: two desktop journeys failed on a 502 page, the app untouched.
+  for (let attempt = 1; ; attempt++) {
+    const res = await fetch(`https://api.supabase.com/v1/projects/${TEST_REF}/database/query`, {
+      method: "POST",
+      // The real token is injected by the environment's network proxy; this value is replaced.
+      headers: { "Content-Type": "application/json", Authorization: "Bearer proxy-injected" },
+      body: JSON.stringify({ query }),
+    });
+    const body = await res.text();
+    if (res.ok) return JSON.parse(body) as R[];
+    if (attempt === 1 && [502, 503, 504].includes(res.status) && !/\bINSERT\b/i.test(text)) {
+      await new Promise((r) => setTimeout(r, 3_000));
+      continue;
+    }
+    throw new Error(`owner SQL failed (${res.status}): ${body.slice(0, 300)}`);
+  }
 }
 
 /** A pg-shaped client, so the journeys keep their `owner((c) => c.query(...))` form. */
