@@ -159,7 +159,8 @@ test.describe("publish a work and meet it as a visitor", () => {
     expect(decoded.every((d) => d.w > 0 && d.h > 0), "an image failed to decode").toBe(true);
     expect(decoded.map((d) => Number((d.w / d.h).toFixed(2)))).toEqual([0.75, 1.5, 1]);
 
-    await page.getByRole("link", { name: /View the gallery/ }).click();
+    // Worded "The gallery, N works" since the visual system revision of 2026-09-06.
+    await page.getByRole("link", { name: /The gallery, 1 work/ }).click();
     await expect(page).toHaveURL(/\/m\/anika-rao/);
     await expect(page.getByRole("heading", { name: "Anika Rao" })).toBeVisible();
     await expect(page.getByText("I fire in a wood kiln")).toBeVisible();
