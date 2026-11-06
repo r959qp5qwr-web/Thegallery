@@ -73,7 +73,7 @@ export default async function ContactRoutes() {
         </div>
         <Field name="value" label="The route" required
                help="WhatsApp and phone in full international form, starting with + and the country code. Website and form as a full https:// address." />
-        <Field name="label" label="Label (optional)" placeholder="Studio enquiries" />
+        <Field name="label" label="Label (optional)" help="For example “Studio enquiries”." />
       </ActionForm>
     </>
   );

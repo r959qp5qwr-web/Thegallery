@@ -23,9 +23,10 @@ export default async function Profile() {
       </div>
       <ActionForm action={saveProfileAction} submitLabel="Save" busyLabel="Saving…">
         <Field name="display_name" label="Name shown to visitors" defaultValue={maker?.display_name}
-               required placeholder="Anika Rao" />
+               required />
+        {/* No example values inside fields: an empty field must look empty. */}
         <Field name="handle" label="Gallery address" defaultValue={maker?.handle} required
-               placeholder="anika-rao" help="Your gallery lives at /m/your-address. Lowercase and hyphens." />
+               help="Your gallery lives at /m/your-address. Lowercase and hyphens, for example “anika-rao”." />
         <div className="field">
           <label htmlFor="kind">How you work</label>
           <select id="kind" name="kind" defaultValue={maker?.kind ?? "individual"}>
@@ -35,7 +36,7 @@ export default async function Profile() {
           </select>
           <div className="help">Studios and collectives are welcome. Retailers and resellers are not.</div>
         </div>
-        <Field name="city" label="City" defaultValue={maker?.city} required placeholder="Bengaluru" />
+        <Field name="city" label="City" defaultValue={maker?.city} required />
         <Field name="practice_note" label="About your practice" textarea defaultValue={maker?.practice_note}
                help="In your own words. This is the wall text beside your work." />
         <Field name="intro" label="A line for the top of your gallery" textarea defaultValue={gallery?.intro} />

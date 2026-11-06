@@ -45,7 +45,7 @@ button.btn:disabled { border-color: var(--stone); color: var(--text-muted); back
 .sold .gs, .status.sold { color: var(--text-muted); }
 .imgstrip { display: flex; gap: 10px; overflow-x: auto; padding: 0; scroll-snap-type: x mandatory; background: var(--surface-plinth); }
 .imgstrip .shot { flex: 0 0 auto; width: 100%; scroll-snap-align: center; }
-.imgstrip .shot img { width: 100%; height: auto; max-height: 76vh; object-fit: contain; display: block; background: var(--surface-plinth); }
+.imgstrip .shot img { width: 100%; height: auto; max-height: 60vh; object-fit: contain; display: block; background: var(--surface-plinth); }
 .tile .frame img { object-fit: cover; }
 .hint { font: var(--t-body-small); color: var(--text-muted); padding: 10px var(--pad-x) 0; }
 .err-band { color: var(--alarm); }

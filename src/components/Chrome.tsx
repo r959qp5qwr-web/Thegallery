@@ -9,7 +9,10 @@ export function Header({ place, back, action }: { place?: string; back?: string;
       {back
         ? <Link className="iconbtn lead" href={back} aria-label="Back"><Icon name="back" /></Link>
         : <Link className="wordmark" href="/">The Gallery</Link>}
-      {place ? <span className="place">{place}</span> : <span />}
+      {/* With Back in the lead slot, the wordmark moves to the centre (reference I-1), so a
+          page without a place still says where the visitor is. */}
+      {place ? <span className="place">{place}</span>
+             : back ? <Link className="wordmark" href="/">The Gallery</Link> : <span />}
       {action ?? <Link className="iconbtn" href="/search" aria-label="Search"><Icon name="search" /></Link>}
     </header>
   );
@@ -93,8 +96,11 @@ export function Hero({ image, alt, href }: { image?: PublicImage; alt: string; h
 
 /** A grid tile. A landscape image is given the full row so it is not squeezed into a
  *  portrait frame; the rest keep the 4:5 frame, covered inside it. The work's own proportion
- *  is honoured on the detail surface where it can be seen whole. */
-export function WorkTile({ work, image, wide }: { work: PublicWork; image?: PublicImage; wide?: boolean }) {
+ *  is honoured on the detail surface where it can be seen whole.
+ *  `inGallery`: on the maker's own gallery the maker line would repeat the page heading, so
+ *  the tile carries the medium there instead. */
+export function WorkTile({ work, image, wide, inGallery }:
+  { work: PublicWork; image?: PublicImage; wide?: boolean; inGallery?: boolean }) {
   const src = imgSrc(image, "w640");
   const sold = work.status === "sold";
   return (
@@ -105,7 +111,10 @@ export function WorkTile({ work, image, wide }: { work: PublicWork; image?: Publ
           : <span className="notice">No image yet</span>}
       </div>
       <div className="gt">{work.title}</div>
-      <div className="gm">{work.maker_display_name}, {work.maker_city}</div>
+      <div className="gm">
+        {/* Place belongs to the maker gallery and the entrance context line only (§8). */}
+        {inGallery ? (work.medium ?? work.material) : work.maker_display_name}
+      </div>
       <div className={`gs ${sold ? "" : "available"}`}>
         {STATUS_LABEL[work.status] ?? work.status}
         {work.price_mode === "exact" && !sold ? ` · ${price(work.price_mode, work.price_amount)}` : ""}

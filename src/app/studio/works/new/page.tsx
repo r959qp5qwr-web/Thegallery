@@ -21,15 +21,17 @@ export default async function NewWork() {
         <p className="small" style={{ marginTop: 6 }}>Images come next, on the work&rsquo;s own page.</p>
       </div>
       <ActionForm action={createWorkAction} submitLabel="Save draft" busyLabel="Saving…">
-        <Field name="title" label="Title" required placeholder="Monsoon Vessel No. 4" />
+        {/* No example values inside fields: a filled-looking empty field leaves a first-time
+            maker unsure what is saved. Examples, where useful, live in the help line. */}
+        <Field name="title" label="Title" required />
         <div className="field">
           <label htmlFor="material">Material</label>
           <select id="material" name="material" defaultValue="clay">
             {mats.map((m) => <option key={m.key} value={m.key}>{m.label}</option>)}
           </select>
         </div>
-        <Field name="medium" label="Medium" placeholder="Wood-fired stoneware"
-               help="How you would write it on a wall label." />
+        <Field name="medium" label="Medium"
+               help="How you would write it on a wall label, for example “Wood-fired stoneware”." />
         <Field name="process" label="About this work" textarea
                help="Optional. Shown under “About this work”." />
         <div className="field">
@@ -40,7 +42,7 @@ export default async function NewWork() {
             <input name="depth_cm" placeholder="Depth" inputMode="decimal" aria-label="Depth in centimetres" />
           </div>
         </div>
-        <Field name="year" label="Year" placeholder="2026" />
+        <Field name="year" label="Year" />
         <div className="field">
           <label htmlFor="price_mode">Price</label>
           <select id="price_mode" name="price_mode" defaultValue="exact">
@@ -51,7 +53,7 @@ export default async function NewWork() {
           <div className="help">Whatever you choose, the sale happens between you and the visitor. The
             Gallery takes no part in it.</div>
         </div>
-        <Field name="price_amount" label="Amount (₹)" placeholder="6800" />
+        <Field name="price_amount" label="Amount (₹)" />
         <div className="field">
           <label htmlFor="status">Status</label>
           <select id="status" name="status" defaultValue="available">
