@@ -29,6 +29,17 @@ test.describe("the room at every width", () => {
     }
   });
 
+  test("a page that is not there answers 404, loading states or not", async ({ page }) => {
+    // Regression: a loading boundary streams the response and sends 200 before notFound() runs.
+    for (const path of ["/work/not-a-real-token", "/browse/no-such-material"]) {
+      const res = await page.goto(path);
+      expect(res?.status(), path).toBe(404);
+    }
+    // And a signed-out visit to the Studio is redirected by the server, not by a timed refresh.
+    const res = await page.request.get("/studio", { maxRedirects: 0 });
+    expect(res.status()).toBe(307);
+  });
+
   test("one Sections navigation at any width, in the bar or in the header", async ({ page }) => {
     await page.goto("/");
     // Exactly one is exposed: the other is display:none, so it is not in the accessibility tree.
