@@ -367,6 +367,27 @@ A green run is a claim about a specific build. Nothing tied the run to the build
 
 ---
 
+### GAL-L0019
+
+**Date:** 2026-11-06  
+**Observed event:**  
+Wave 1 (trust and access) was marked as coded with a list of what it delivered: "field errors under fields with kept values", "last image of published work protected", "retire confirm + restore", "Contact only with a route". An independent review of the branch found four of those claims only partly true. Values were kept on the work-label and account forms but not on identity or contact routes. The last-image guard checked one work and deleted by image id alone. Retire and restore always announced success, even when no row changed. The Studio home never showed the missing-route task. A journey written to prove "kept values" then failed on its first run: text fields kept what was typed, but the select went back to its saved value.
+
+**Evidence:**  
+The reviewer's findings (`src/app/actions/studio.ts` lines cited, confirmed by reading); journey `e2e/06-trust-and-access.spec.ts` failing at "How you work" expected `studio`, received `collective`; receipt `doctrine/receipts/WAVE1-TRUST-ACCESS-2026-11-06.md`.
+
+**Why it mattered:**  
+Each claim was written from the change's intent, not from proof. The existing journeys passed because none of them exercised these acts. The suite was green while the claims were partly false.
+
+**What changed:**  
+Each Wave 1 claim now has a journey that would fail without it (`e2e/06-trust-and-access.spec.ts`, 7 tests). The defects were fixed in `634bd2a`. The select and checkbox are remounted on a refusal, so the form reset cannot restore the saved choice.
+
+**Status:** RESOLVED  
+**Related finding / decision IDs:** GAL-L0018, GAL-PR-01  
+**Harvest status:** UNHARVESTED
+
+---
+
 ## Ledger rules
 
 - Capture the event in the governed change that fixes or formally records it where feasible.
