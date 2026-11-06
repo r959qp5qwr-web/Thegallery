@@ -37,20 +37,20 @@ test.describe("publish a work and meet it as a visitor", () => {
 
     await page.getByLabel("Way to contact").selectOption("whatsapp");
     await page.getByLabel("Number or address").fill(ROUTE_WHATSAPP);
-    await page.getByRole("button", { name: "Add", exact: true }).click();
+    await page.getByRole("button", { name: "Add this way to contact you" }).click();
     await expect(page.getByTestId("form-notice")).toContainText("Visitors can use it from your gallery");
     await expect(rows).toHaveCount(1);
 
     await page.getByLabel("Way to contact").selectOption("email");
     await page.getByLabel("Number or address").fill(ROUTE_EMAIL);
-    await page.getByRole("button", { name: "Add", exact: true }).click();
+    await page.getByRole("button", { name: "Add this way to contact you" }).click();
     await expect(rows).toHaveCount(2);
     await expect(rows.nth(1)).toContainText(ROUTE_EMAIL);
 
     // A malformed route is refused with a sentence that says how to fix it.
     await page.getByLabel("Way to contact").selectOption("whatsapp");
     await page.getByLabel("Number or address").fill("98765 43210");
-    await page.getByRole("button", { name: "Add", exact: true }).click();
+    await page.getByRole("button", { name: "Add this way to contact you" }).click();
     await expect(page.getByTestId("form-error")).toContainText("international form");
   });
 

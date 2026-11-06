@@ -1,9 +1,10 @@
 import { test, expect, type Page } from "@playwright/test";
 import { owner, signIn, MAKER_A } from "./helpers";
 
-// Wave 3 — one vocabulary. The design review's word table, held by journeys: each assertion
-// here fails if the old word comes back. Stored tokens are unchanged (R3); only what a person
-// reads changes.
+// Wave 3 — one vocabulary. The design review's word table, held by journeys: each test below
+// fails if the old word it names comes back on the pages it visits. Stored tokens are unchanged
+// (R3); only what a person reads changes. "Contact The Clay Collective" (shortName) and "Retire
+// this work" landed in Wave 1 and are held by format.ts and e2e/04, not here.
 //
 // Uses Maker A's "Monsoon Vessel No. 4" (published by 02, three images). Its status is put
 // back to what it was when the walk ends.
@@ -38,9 +39,10 @@ test.describe("one vocabulary", () => {
       const status = page.locator(".label .status");
       await expect(status).toContainText(shown);
       await expect(status).not.toContainText(new RegExp(`^${old}`));
-      // The maker's own gallery shows the same word on the tile.
+      // The maker's own gallery shows the same word on this work's tile.
       await page.goto("/m/anika-rao");
-      await expect(page.getByText(shown, { exact: true }).first()).toBeVisible();
+      const tile = page.locator(".tile", { has: page.locator(".gt", { hasText: MONSOON }) });
+      await expect(tile.locator(".gs")).toContainText(shown);
     }
   });
 
@@ -83,6 +85,14 @@ test.describe("one vocabulary", () => {
     expect(names.filter((n) => /\broute\b/i.test(n))).toEqual([]);
   });
 
+  test("a visitor reads no engineering word on the public pages", async ({ page }) => {
+    const w = await monsoon();
+    for (const path of ["/", "/about", "/participation", "/privacy", "/makers", "/m/anika-rao", `/work/${w.public_token}`, `/work/${w.public_token}?contact=1`]) {
+      await page.goto(path);
+      expect(await visibleText(page), path).not.toMatch(/\broutes?\b|\bviews\b|swipe/i);
+    }
+  });
+
   test("closing an account says the works are retired, not taken 'off view'", async ({ page }) => {
     await signIn(page, MAKER_A.email, MAKER_A.password);
     await page.goto("/studio/account");
@@ -102,7 +112,7 @@ test.describe("one vocabulary", () => {
     await page.goto(`/work/${w.public_token}`);
     const count = page.getByTestId("image-count");
     await expect(count).toHaveText("1 of 3");
-    expect(await visibleText(page)).not.toMatch(/\bviews?\b|swipe|\d+ images/i);
+    expect(await visibleText(page)).not.toMatch(/\bviews\b|swipe|\d+ images/i);
 
     const strip = page.locator("#work-images");
     await strip.evaluate((el) => { el.scrollLeft = el.scrollWidth; });

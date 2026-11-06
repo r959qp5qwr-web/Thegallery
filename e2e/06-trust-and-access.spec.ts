@@ -136,7 +136,7 @@ test.describe("trust and access", () => {
     await page.goto("/studio/contact-routes");
     await page.getByLabel("Way to contact").selectOption("website");
     await page.getByLabel("Number or address").fill("https://dhaaga.example");
-    await page.getByRole("button", { name: "Add", exact: true }).click();
+    await page.getByRole("button", { name: "Add this way to contact you" }).click();
     await expect(page.locator("ul.rowlist li")).toHaveCount(1);
 
     await page.getByRole("link", { name: "Remove Website" }).click();

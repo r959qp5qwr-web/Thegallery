@@ -119,7 +119,7 @@ test.describe("status, authority and privacy", () => {
     const res = await page.goto(`/studio/works/${work.rows[0].id}`);
     expect(res?.status()).toBe(404);
 
-    // The operator door says "not yours" rather than pretending Maker B is not signed in.
+    // The operator page says only the operator can open it, rather than pretending Maker B is not signed in.
     await page.goto("/operator");
     await expect(page.getByRole("heading", { name: "Only the operator can open this page" })).toBeVisible();
   });

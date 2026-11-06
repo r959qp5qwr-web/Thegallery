@@ -79,7 +79,7 @@ export default async function ContactRoutes({ searchParams }: { searchParams: Pr
       <div className="group" style={{ margin: "28px var(--pad-x-studio) 0" }}>
         <div className="ghead">Add a way to contact you</div>
       </div>
-      <ActionForm action={saveRouteAction} submitLabel="Add" busyLabel="Adding…">
+      <ActionForm action={saveRouteAction} submitLabel="Add this way to contact you" busyLabel="Adding…">
         <div className="field">
           <label htmlFor="kind">Way to contact</label>
           <KeptSelect name="kind" defaultValue="whatsapp">

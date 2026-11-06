@@ -25,8 +25,14 @@ export function ImageCount({ stripId, total }: { stripId: string; total: number 
       setAt(nearest + 1);
     };
     const onScroll = () => { if (!frame) frame = requestAnimationFrame(measure); };
+    // Measured once on arrival too: a restored scroll position opens the strip mid-way.
+    measure();
     strip.addEventListener("scroll", onScroll, { passive: true });
-    return () => { strip.removeEventListener("scroll", onScroll); if (frame) cancelAnimationFrame(frame); };
+    window.addEventListener("resize", onScroll);
+    return () => {
+      strip.removeEventListener("scroll", onScroll); window.removeEventListener("resize", onScroll);
+      if (frame) cancelAnimationFrame(frame);
+    };
   }, [stripId]);
 
   return <span data-testid="image-count">{at} of {total}</span>;

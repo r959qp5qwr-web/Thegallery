@@ -66,7 +66,7 @@ export default async function Studio({ searchParams }: {
           <li><span className="num">2</span><span className="grow done">Add a work with its images</span></li>
           <li><span className="num">3</span><span className="grow done">Publish</span></li>
         </ol>
-        <div className="hint">A public way to be contacted is separate, and you can add it whenever you
+        <div className="hint">A public way to contact you is separate, and you can add it whenever you
           like — it is not needed to publish.</div>
       </main>
       </>
@@ -91,7 +91,7 @@ export default async function Studio({ searchParams }: {
       {/* GAL-PR-01: Contact is not advertised until a way to contact exists, and the Studio shows the task. */}
       {!routes.some((r) => r.enabled && r.validated) ? (
         <Band label="No way to contact you yet">
-          Your work is shown without a Contact button until you add a way to be contacted.{" "}
+          Your work is shown without a Contact button until you add a way to contact you.{" "}
           <Link href="/studio/contact-routes">Add a way to contact you</Link>
         </Band>
       ) : null}

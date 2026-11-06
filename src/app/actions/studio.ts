@@ -197,7 +197,7 @@ export async function createWorkAction(_prev: FormState, form: FormData): Promis
   const db = await client();
   const { data: galleries } = await db.from("galleries").select("id").limit(1);
   const gallery = galleries?.[0] as { id: string } | undefined;
-  if (!gallery) return { error: "Add your details first: a work belongs to your gallery, and your details open it.", values: typed(form) };
+  if (!gallery) return { error: "Add your details first: your name, how you work and your city. Then add the work.", values: typed(form) };
 
   const { data, error } = await db.from("works").insert({
     public_token: token(), gallery_id: gallery.id, ...label.fields,
