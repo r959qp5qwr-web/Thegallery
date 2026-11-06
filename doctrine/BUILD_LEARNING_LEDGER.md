@@ -346,6 +346,27 @@ The journeys run against a separate hosted test project (`thegallery-test`). Own
 
 ---
 
+### GAL-L0018
+
+**Date:** 2026-11-06  
+**Observed event:**  
+Verifying the interface-conformance change, the full journey suite reported 62 of 62 and the "after" renders were taken — against the wrong code. A `next-server` process from an earlier start kept port 3100 after its launcher was killed; every later `next start` failed with EADDRINUSE into a log nobody read, and the old process kept answering. It served the old page code while reading `public/` stylesheets fresh from disk, so the renders showed the new CSS and the old markup. The mismatch was caught only by looking at the before/after sheet, where header places and the amber count that the change removed were still there.
+
+**Evidence:**  
+`server4.log` (EADDRINUSE), the process list (one `next-server` started before the change), the first before/after sheet; after killing it and starting fresh, the served HTML carried the new markup and the current `.next/BUILD_ID`.
+
+**Why it mattered:**  
+A green run is a claim about a specific build. Nothing tied the run to the build it claimed to test, so a passing suite could vouch for code it never executed.
+
+**What changed:**  
+`e2e/run-hosted.sh` refuses to run unless the served page carries the current `.next/BUILD_ID`. The verification was repeated against a fresh server: 62 of 62, and the renders now show the change.
+
+**Status:** RESOLVED  
+**Related finding / decision IDs:** GAL-L0017  
+**Harvest status:** UNHARVESTED
+
+---
+
 ## Ledger rules
 
 - Capture the event in the governed change that fixes or formally records it where feasible.
