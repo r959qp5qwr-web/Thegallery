@@ -27,7 +27,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
       <body>
         <IconSprite />
-        <a className="skip" href="#main">Skip to content</a>
+        <a className="skip" href="#content">Skip to content</a>
         <div className="phone">
           <main id="main" tabIndex={-1}>{children}</main>
           <BottomBar signedIn={!!account} />

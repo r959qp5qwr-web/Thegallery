@@ -91,3 +91,27 @@ export function Field(
     </div>
   );
 }
+
+/** A select that keeps the person's choice through a refusal, like Field does for text. */
+export function KeptSelect(
+  { name, defaultValue, children }: { name: string; defaultValue: string; children: React.ReactNode },
+) {
+  const state = useFormState();
+  const invalid = state.field === name;
+  return (
+    // Keyed on the kept value: React applies a select's default only when it mounts, so the form
+    // reset after a refusal would otherwise put back the saved choice instead of the typed one.
+    <select key={state.values?.[name] ?? ""} id={name} name={name} defaultValue={state.values?.[name] ?? defaultValue}
+            aria-invalid={invalid || undefined}>
+      {children}
+    </select>
+  );
+}
+
+/** A checkbox that keeps its state through a refusal. An unticked box sends nothing, so once a
+ *  refusal has handed values back, absence means unticked. */
+export function KeptCheckbox({ name, defaultChecked }: { name: string; defaultChecked?: boolean }) {
+  const state = useFormState();
+  const checked = state.values ? state.values[name] === "on" : !!defaultChecked;
+  return <input key={String(checked)} type="checkbox" id={name} name={name} defaultChecked={checked} />;
+}

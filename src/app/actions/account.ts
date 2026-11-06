@@ -45,7 +45,13 @@ export async function signInAction(_prev: FormState, form: FormData): Promise<Fo
     // One wording for a wrong address and a wrong password, so the door does not enumerate.
     return { error: "That email and password do not match an account.", values: { email } };
   }
-  redirect(next.startsWith("/") ? next : "/studio");
+  redirect(safeNext(next));
+}
+
+/** Only a path on this site. "//host" and "/\\host" are read by browsers as another site, so a
+ *  crafted sign-in link could otherwise hand a maker to a look-alike page after a real sign-in. */
+function safeNext(next: string): string {
+  return /^\/(?![\/\\])/.test(next) ? next : "/studio";
 }
 
 export async function signOutAction(): Promise<void> {

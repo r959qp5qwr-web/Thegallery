@@ -57,13 +57,16 @@ export default async function EditWork(
 
   return (
     <>
-      <StudioHeader title={work.lifecycle === "published" ? "Published work" : "Draft work"} back="/studio" />
+      <StudioHeader title={work.lifecycle === "published" ? "Published work" : work.lifecycle === "retired" ? "Retired work" : "Draft work"} back="/studio" />
       {created ? <Band label="Saved">The label is saved. Add images, then publish.</Band> : null}
       {retired ? <Band label="Retired">This work is no longer on view. Its link now says so. You can restore it below.</Band> : null}
       {restored ? <Band label="Restored">This work is on view again, with its status as it was.</Band> : null}
       {removed === "image" ? <Band label="Removed">The image is removed. The others are unchanged.</Band> : null}
       {kept === "last-image" ? (
         <Band kind="warn" label="Image kept">A published work keeps at least one image. Add another first, or retire the work.</Band>
+      ) : null}
+      {kept === "unchanged" ? (
+        <Band kind="warn" label="Nothing changed">That did not go through, so the work is as it was. Reload the page and try again.</Band>
       ) : null}
       {kept === "no-image" ? (
         <Band kind="warn" label="Not restored">Add an image that finished uploading, then restore the work.</Band>
@@ -76,7 +79,7 @@ export default async function EditWork(
 
       <div className="label" style={{ paddingTop: 16 }}>
         <div className={`status ${work.status === "sold" ? "sold" : "available"}`}>
-          {work.lifecycle === "published" ? STATUS_LABEL[work.status] : "Draft"}
+          {work.lifecycle === "published" ? STATUS_LABEL[work.status] : work.lifecycle === "retired" ? "Retired" : "Draft"}
           {work.price_mode === "exact"
             ? <span className="price">· {price(work.price_mode, work.price_amount)}</span> : null}
         </div>
@@ -103,12 +106,20 @@ export default async function EditWork(
       </div>
       {images.length ? (
         <div className="inline-actions">
-          {images.map((im) => (
-            <form key={im.id} action={removeImageAction}>
+          {/* Removing an image deletes it; there is no undo, so the act is confirmed first. */}
+          {images.map((im) => confirm === `remove-${im.id}` ? (
+            <form key={im.id} action={removeImageAction} className="inline-confirm" role="group"
+                  aria-labelledby={`remove-${im.id}`}>
               <input type="hidden" name="id" value={im.id} />
               <input type="hidden" name="work_id" value={work.id} />
-              <button className="btn quiet" type="submit"><span>Remove {im.position + 1}</span></button>
+              <p className="small" id={`remove-${im.id}`} style={{ margin: "0 0 8px" }}>
+                Image {im.position + 1} is deleted. This cannot be undone.</p>
+              <button className="btn alarm" type="submit">Remove image {im.position + 1}</button>
+              <Link className="btn quiet" href={`/studio/works/${work.id}`}><span>Keep</span></Link>
             </form>
+          ) : (
+            <Link key={im.id} className="btn quiet" href={`/studio/works/${work.id}?confirm=remove-${im.id}`}
+                  aria-label={`Remove image ${im.position + 1}`}><span>Remove {im.position + 1}…</span></Link>
           ))}
         </div>
       ) : null}

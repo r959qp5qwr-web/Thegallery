@@ -41,12 +41,15 @@ export async function saveProfileAction(_prev: FormState, form: FormData): Promi
   const commissions_note = String(form.get("commissions_note") ?? "").trim() || null;
   const intro = String(form.get("intro") ?? "").trim() || null;
 
-  if (!display_name) return { error: "Your name is how visitors will know you. Add it." };
-  if (!city) return { error: "Add the city you work in." };
+  // Every refusal names its field and hands back what was typed: a first-time maker whose gallery
+  // address is taken must not lose the whole identity form (J-002, one sitting).
+  const refuse = (error: string, field?: string): FormState => ({ error, field, values: typed(form) });
+  if (!display_name) return refuse("Your name is how visitors will know you. Add it.", "display_name");
+  if (!city) return refuse("Add the city you work in.", "city");
   if (!/^[a-z0-9]([a-z0-9-]{1,28}[a-z0-9])$/.test(handle)) {
-    return { error: "The gallery address uses lowercase letters, numbers and hyphens, 3 to 30 characters." };
+    return refuse("The gallery address uses lowercase letters, numbers and hyphens, 3 to 30 characters.", "handle");
   }
-  if (!["individual", "studio", "collective"].includes(kind)) return { error: "Choose how you work." };
+  if (!["individual", "studio", "collective"].includes(kind)) return refuse("Choose how you work.", "kind");
 
   const db = await client();
   const fields = { handle, display_name, kind, city, practice_note, commissions_open, commissions_note };
@@ -61,20 +64,20 @@ export async function saveProfileAction(_prev: FormState, form: FormData): Promi
     const { error } = await db.from("makers")
       .update({ ...fields, updated_at: new Date().toISOString() }).eq("id", existing.id);
     if (error) {
-      if (error.code === "23505") return { error: "That gallery address is taken. Try another." };
-      return { error: "We could not save that just now. Nothing was changed." };
+      if (error.code === "23505") return refuse("That gallery address is taken. Try another.", "handle");
+      return refuse("We could not save that just now. Nothing was changed.");
     }
     if (intro !== null) await db.from("galleries").update({ intro }).eq("maker_id", existing.id);
   } else {
     const { data: created, error } = await db.from("makers")
       .insert({ ...fields, user_id: account.id }).select("id").limit(1);
     if (error || !created?.length) {
-      if (error?.code === "23505") return { error: "That gallery address is taken. Try another." };
-      return { error: "We could not save that just now. Nothing was changed." };
+      if (error?.code === "23505") return refuse("That gallery address is taken. Try another.", "handle");
+      return refuse("We could not save that just now. Nothing was changed.");
     }
     const makerId = (created[0] as { id: string }).id;
     const { error: gErr } = await db.from("galleries").insert({ maker_id: makerId, intro });
-    if (gErr) return { error: "We could not save that just now. Nothing was changed." };
+    if (gErr) return refuse("We could not save that just now. Nothing was changed.");
   }
   revalidatePath("/studio");
   redirect("/studio?saved=profile");
@@ -87,7 +90,7 @@ export async function saveRouteAction(_prev: FormState, form: FormData): Promise
   const value = String(form.get("value") ?? "").trim();
   const label = String(form.get("label") ?? "").trim() || null;
   const problem = validateRoute(kind, value);
-  if (problem) return { error: problem };
+  if (problem) return { error: problem, field: "value", values: typed(form) };
 
   const db = await client();
   const { data: mine } = await db.from("makers").select("id").limit(1);
@@ -102,7 +105,7 @@ export async function saveRouteAction(_prev: FormState, form: FormData): Promise
     maker_id: maker.id, kind, value, label, enabled: true, validated: true,
     position: await nextPosition(existing as { position: number }[] | null),
   });
-  if (error) return { error: "We could not add that route. Nothing was changed." };
+  if (error) return { error: "We could not add that route. Nothing was changed.", values: typed(form) };
 
   revalidatePath("/studio/contact-routes");
   return { notice: "Route added. It becomes an action on your gallery straight away." };
@@ -265,7 +268,10 @@ export async function removeImageAction(form: FormData): Promise<void> {
       && readyIds.length <= 1 && readyIds.includes(id)) {
     redirect(`/studio/works/${workId}?kept=last-image`);
   }
-  await db.from("work_images").delete().eq("id", id);
+  // Scoped to the work the guard just checked, so a post pairing one work's image with another
+  // work's id cannot slip past the last-image rule.
+  const { data: gone } = await db.from("work_images").delete().eq("id", id).eq("work_id", workId).select("id");
+  if (!gone?.length) redirect(`/studio/works/${workId}?kept=unchanged`);
   revalidatePath(`/studio/works/${workId}`);
   redirect(`/studio/works/${workId}?removed=image`);
 }
@@ -306,7 +312,9 @@ export async function retireWorkAction(form: FormData): Promise<void> {
   await requireActiveMaker();
   const workId = String(form.get("work_id") ?? "");
   const db = await client();
-  await db.rpc("retire_work", { p_work_id: workId });
+  const { error } = await db.rpc("retire_work", { p_work_id: workId });
+  // Say "retired" only when it was. A refused or failed retire leaves the work as it was.
+  if (error) redirect(`/studio/works/${workId}?kept=unchanged`);
   revalidatePath("/", "layout");
   redirect(`/studio/works/${workId}?retired=1`);
 }
@@ -319,9 +327,11 @@ export async function restoreWorkAction(form: FormData): Promise<void> {
   const db = await client();
   const { data: ready } = await db.from("work_images").select("id").eq("work_id", workId).eq("state", "ready").limit(1);
   if (!ready?.length) redirect(`/studio/works/${workId}?kept=no-image`);
-  await db.from("works")
+  const { data: back, error } = await db.from("works")
     .update({ lifecycle: "published", retired_at: null, updated_at: new Date().toISOString() })
-    .eq("id", workId).eq("lifecycle", "retired").eq("taken_down", false);
+    .eq("id", workId).eq("lifecycle", "retired").eq("taken_down", false).select("id");
+  // Zero rows means nothing changed (taken down meanwhile, or not this maker's): say so.
+  if (error || !back?.length) redirect(`/studio/works/${workId}?kept=unchanged`);
   revalidatePath("/", "layout");
   redirect(`/studio/works/${workId}?restored=1`);
 }

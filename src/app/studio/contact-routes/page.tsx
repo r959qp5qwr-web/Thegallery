@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { currentAccount } from "@/lib/auth";
 import { studioContext } from "@/lib/queries";
 import { StudioHeader, Band } from "@/components/Chrome";
-import { ActionForm, Field } from "@/components/ActionForm";
+import { ActionForm, Field, KeptSelect } from "@/components/ActionForm";
 import { saveRouteAction, toggleRouteAction, deleteRouteAction } from "@/app/actions/studio";
 import { ROUTE_LABEL, routeDisplay } from "@/lib/format";
 import Link from "next/link";
@@ -55,9 +55,15 @@ export default async function ContactRoutes({ searchParams }: { searchParams: Pr
                   <span>{r.enabled ? "Turn off" : "Turn on"}</span></button>
               </form>
               {remove === r.id ? (
-                <form action={deleteRouteAction} className="inline-confirm">
+                <form action={deleteRouteAction} className="inline-confirm" role="group"
+                      aria-labelledby={`remove-${r.id}`}>
                   <input type="hidden" name="id" value={r.id} />
-                  <button className="btn" type="submit">Remove {ROUTE_LABEL[r.kind]}</button>
+                  <p className="small" id={`remove-${r.id}`} style={{ margin: "0 0 8px" }}>
+                    {live.length === 1 && r.enabled && r.validated
+                      ? "This is your only live route. Removing it takes the Contact button off every work until you add another. This cannot be undone."
+                      : "Visitors will no longer see this route. This cannot be undone; you can turn it off instead and keep it."}
+                  </p>
+                  <button className="btn alarm" type="submit">Remove {ROUTE_LABEL[r.kind]}</button>
                   <Link className="btn quiet" href="/studio/contact-routes"><span>Keep</span></Link>
                 </form>
               ) : (
@@ -75,13 +81,13 @@ export default async function ContactRoutes({ searchParams }: { searchParams: Pr
       <ActionForm action={saveRouteAction} submitLabel="Add route" busyLabel="Adding…">
         <div className="field">
           <label htmlFor="kind">Kind</label>
-          <select id="kind" name="kind" defaultValue="whatsapp">
+          <KeptSelect name="kind" defaultValue="whatsapp">
             <option value="whatsapp">WhatsApp</option>
             <option value="email">Public email</option>
             <option value="phone">Phone</option>
             <option value="website">Website</option>
             <option value="form">Enquiry form on your own site</option>
-          </select>
+          </KeptSelect>
         </div>
         <Field name="value" label="The route" required
                help="WhatsApp and phone in full international form, starting with + and the country code. Website and form as a full https:// address." />

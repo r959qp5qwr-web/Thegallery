@@ -18,7 +18,9 @@ export default function Privacy() {
         <p className="body">There is no visitor account and no tracking of what you look at. Saved works
           are kept in your own browser on this device. When you open Saved, the page asks The Gallery
           for those works&rsquo; current status, so it can tell you whether each is still available.
-          That request names the works, not you.</p>
+          That request names the works, not you. Like any website, the servers that run The Gallery keep
+          short-lived technical logs of requests, such as which page address was asked for, to keep the site
+          working. They are not used to follow what any visitor looks at.</p>
       </div>
       <div className="section">
         <div className="lead">When you contact a maker</div>
@@ -28,8 +30,8 @@ export default function Privacy() {
       <div className="section">
         <div className="lead">Closing your account</div>
         <p className="body">Closing retires your published work and closes your gallery. Public links end
-          with a plain notice rather than disappearing. Your account email is kept only as long as it is
-          needed for the record of the account having existed.</p>
+          with a plain notice rather than disappearing. Your sign-in email is not deleted when you close: it
+          stays, private and never shown, as the record that the account existed and was closed.</p>
       </div>
       <Footer />
     </>
