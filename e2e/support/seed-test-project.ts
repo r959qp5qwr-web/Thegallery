@@ -53,6 +53,12 @@ async function person(email: string, password: string): Promise<string> {
   return row[0].id;
 }
 
+// The journeys assume the gallery holds only what they create. Anything else on the test
+// project (evidence works published for a design review, say) would make "the only Available
+// work" ambiguous, so it is cleared here. Test project only: helpers.ts refuses any other.
+const JOURNEY_TITLES = ["Monsoon Vessel No. 4", "Unfinished Warp"];
+await sql(`DELETE FROM works WHERE title <> ALL (ARRAY[$1, $2])`, JOURNEY_TITLES);
+
 for (const p of PROFILES) {
   const uid = await person(p.who.email, p.who.password);
   await sql(
