@@ -2,9 +2,14 @@
 // stored tokens into the words the accepted interface uses, and nothing reads them back.
 
 export const STATUS_LABEL: Record<string, string> = {
-  available: "Available", made_to_order: "Made to order", enquire: "Enquire",
-  sold: "Sold", on_view: "On view",
+  available: "Available", made_to_order: "Made to order", enquire: "By enquiry",
+  sold: "Sold", on_view: "Not for sale",
 };
+
+/** The order every status picker lists them in. Pickers read their words from STATUS_LABEL, so
+ *  a status is named one way wherever it appears (design review R3: "Enquire" read as a button
+ *  and "On view" already means published; the stored tokens are unchanged). */
+export const STATUS_ORDER = ["available", "made_to_order", "enquire", "on_view", "sold"] as const;
 
 export const KIND_LABEL: Record<string, string> = {
   individual: "Maker", studio: "Studio", collective: "Collective",
@@ -111,7 +116,7 @@ export function routeDisplay(route: Route, makerName: string, aboutWork?: boolea
 
 export function validateRoute(kind: string, value: string): string | null {
   const v = value.trim();
-  if (!v) return "Enter the route, or leave it out.";
+  if (!v) return "Enter the number or address.";
   switch (kind) {
     case "whatsapp":
     case "phone":
@@ -122,7 +127,7 @@ export function validateRoute(kind: string, value: string): string | null {
     case "website":
     case "form":
       return /^https?:\/\/[^\s]+\.[^\s]{2,}$/.test(v) ? null : "Use a full https:// address.";
-    default: return "Unknown route.";
+    default: return "Choose a way to contact you.";
   }
 }
 

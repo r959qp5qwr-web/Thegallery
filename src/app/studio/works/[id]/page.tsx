@@ -7,7 +7,7 @@ import { ActionForm, Field } from "@/components/ActionForm";
 import { PublishButton } from "@/components/PublishButton";
 import { addImageAction, removeImageAction, setStatusAction, retireWorkAction, restoreWorkAction,
          updateWorkLabelAction } from "@/app/actions/studio";
-import { STATUS_LABEL, price, dimensions } from "@/lib/format";
+import { STATUS_LABEL, STATUS_ORDER, price, dimensions } from "@/lib/format";
 import { materials } from "@/lib/queries";
 import { WorkLabelFields } from "@/components/WorkLabelFields";
 
@@ -161,11 +161,7 @@ export default async function EditWork(
             <div className="field">
               <label htmlFor="status">This work is</label>
               <select id="status" name="status" defaultValue={work.status}>
-                <option value="available">Available</option>
-                <option value="made_to_order">Made to order</option>
-                <option value="enquire">Enquire</option>
-                <option value="on_view">On view</option>
-                <option value="sold">Sold</option>
+                {STATUS_ORDER.map((s) => <option key={s} value={s}>{STATUS_LABEL[s]}</option>)}
               </select>
               <div className="help">Every public page reads this one setting, so a change shows everywhere
                 at once.</div>

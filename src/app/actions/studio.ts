@@ -95,7 +95,7 @@ export async function saveRouteAction(_prev: FormState, form: FormData): Promise
   const db = await client();
   const { data: mine } = await db.from("makers").select("id").limit(1);
   const maker = mine?.[0] as { id: string } | undefined;
-  if (!maker) return { error: "Set up your maker identity first." };
+  if (!maker) return { error: "Add your details first: your name, how you work and your city." };
 
   const { data: existing } = await db.from("contact_routes").select("position").eq("maker_id", maker.id);
   // validated = true because the format was checked here; enabled = true because a maker who
@@ -105,10 +105,10 @@ export async function saveRouteAction(_prev: FormState, form: FormData): Promise
     maker_id: maker.id, kind, value, label, enabled: true, validated: true,
     position: await nextPosition(existing as { position: number }[] | null),
   });
-  if (error) return { error: "We could not add that route. Nothing was changed.", values: typed(form) };
+  if (error) return { error: "We could not add that just now. Nothing was changed.", values: typed(form) };
 
   revalidatePath("/studio/contact-routes");
-  return { notice: "Route added. It becomes an action on your gallery straight away." };
+  return { notice: "Added. Visitors can use it from your gallery straight away." };
 }
 
 export async function toggleRouteAction(form: FormData): Promise<void> {
@@ -197,7 +197,7 @@ export async function createWorkAction(_prev: FormState, form: FormData): Promis
   const db = await client();
   const { data: galleries } = await db.from("galleries").select("id").limit(1);
   const gallery = galleries?.[0] as { id: string } | undefined;
-  if (!gallery) return { error: "Set up your maker identity first — that is what a work belongs to.", values: typed(form) };
+  if (!gallery) return { error: "Add your details first: a work belongs to your gallery, and your details open it.", values: typed(form) };
 
   const { data, error } = await db.from("works").insert({
     public_token: token(), gallery_id: gallery.id, ...label.fields,
@@ -305,7 +305,7 @@ export async function publishWorkAction(_prev: FormState, form: FormData): Promi
   await requireActiveMaker();
   const workId = String(form.get("work_id") ?? "");
   const intent = String(form.get("intent_key") ?? "");
-  if (!intent) return { error: "This form went stale. Reload the page and publish again." };
+  if (!intent) return { error: "This page is out of date. Reload it and publish again." };
 
   const db = await client();
   const { data: named } = await db.from("works").select("title").eq("id", workId).limit(1);

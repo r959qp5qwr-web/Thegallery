@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getWork, getWorkEnding, imagesFor, routesFor, listWorksByMaker } from "@/lib/queries";
 import { Header, Band, Footer, Mark, imgSrc } from "@/components/Chrome";
 import { Icon } from "@/components/Icon";
+import { ImageCount } from "@/components/ImageCount";
 import { SaveButton } from "@/components/SaveButton";
 import { SheetFocus } from "@/components/SheetFocus";
 import { STATUS_LABEL, price, dimensions, statusIsStale, routeHref, routeDisplay, ROUTE_LABEL,
@@ -75,7 +76,7 @@ export default async function WorkDetail(
       <div className="detail-media">
       {/* Each image keeps its own proportion. Nothing is cropped to a common shape: the
           maker framed the object, and a gallery that re-crops is editing the work. */}
-      <div className="imgstrip" role="region" aria-label={`Images of ${work.title}`} tabIndex={0}>
+      <div className="imgstrip" id="work-images" role="region" aria-label={`Images of ${work.title}`} tabIndex={0}>
         {images.length ? images.map((im) => (
           <figure className="shot" key={im.id} style={{ margin: 0 }}>
             <img src={imgSrc(im, "w1280") ?? undefined} alt={im.alt_text ?? `${work.title}, image ${im.position + 1}`}
@@ -84,9 +85,9 @@ export default async function WorkDetail(
         )) : <div className="frame r45" style={{ width: "100%" }}><span className="notice">No image yet</span></div>}
       </div>
       <div className="hero" aria-hidden><div className="ledge" /></div>
-      {/* A count of images, never "views": a view count is a public engagement figure the
-          product refuses (GAL-R07). */}
-      {images.length > 1 ? <div className="context" style={{ paddingTop: 10, paddingBottom: 0 }}><span>{images.length} images</span></div> : null}
+      {/* Where the visitor is among the images, never "views": a view count is a public
+          engagement figure the product refuses (GAL-R07). */}
+      {images.length > 1 ? <div className="context" style={{ paddingTop: 10, paddingBottom: 0 }}><ImageCount stripId="work-images" total={images.length} /></div> : null}
 
       </div>
       <div className="detail-label">

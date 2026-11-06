@@ -35,22 +35,22 @@ test.describe("publish a work and meet it as a visitor", () => {
     // appears only after the server has answered and the form has reset.
     const rows = page.locator("ul.rowlist li");
 
-    await page.getByLabel("Kind").selectOption("whatsapp");
-    await page.getByLabel("The route").fill(ROUTE_WHATSAPP);
-    await page.getByRole("button", { name: "Add route" }).click();
-    await expect(page.getByTestId("form-notice")).toContainText("Route added");
+    await page.getByLabel("Way to contact").selectOption("whatsapp");
+    await page.getByLabel("Number or address").fill(ROUTE_WHATSAPP);
+    await page.getByRole("button", { name: "Add", exact: true }).click();
+    await expect(page.getByTestId("form-notice")).toContainText("Visitors can use it from your gallery");
     await expect(rows).toHaveCount(1);
 
-    await page.getByLabel("Kind").selectOption("email");
-    await page.getByLabel("The route").fill(ROUTE_EMAIL);
-    await page.getByRole("button", { name: "Add route" }).click();
+    await page.getByLabel("Way to contact").selectOption("email");
+    await page.getByLabel("Number or address").fill(ROUTE_EMAIL);
+    await page.getByRole("button", { name: "Add", exact: true }).click();
     await expect(rows).toHaveCount(2);
     await expect(rows.nth(1)).toContainText(ROUTE_EMAIL);
 
     // A malformed route is refused with a sentence that says how to fix it.
-    await page.getByLabel("Kind").selectOption("whatsapp");
-    await page.getByLabel("The route").fill("98765 43210");
-    await page.getByRole("button", { name: "Add route" }).click();
+    await page.getByLabel("Way to contact").selectOption("whatsapp");
+    await page.getByLabel("Number or address").fill("98765 43210");
+    await page.getByRole("button", { name: "Add", exact: true }).click();
     await expect(page.getByTestId("form-error")).toContainText("international form");
   });
 

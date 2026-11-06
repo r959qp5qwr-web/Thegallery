@@ -33,10 +33,10 @@ export default async function Account() {
         <div className="ghead">Close this account</div>
       </div>
       <div className="form">
-        <p className="body" style={{ marginTop: 12 }}>Closing is not a dead button. It does this, now:</p>
+        <p className="body" style={{ marginTop: 12 }}>Closing takes effect at once. It does this:</p>
         <ul className="rowlist" style={{ padding: 0, marginTop: 12 }}>
           <li><span className="grow"><span className="primary">
-            {published} published work{published === 1 ? "" : "s"} come off view</span>
+            {published} published work{published === 1 ? " is" : "s are"} retired</span>
             <span className="secondary">Their links keep working and say the work is no longer shown</span></span></li>
           <li><span className="grow"><span className="primary">Your gallery closes</span>
             <span className="secondary">{maker ? `/m/${maker.handle}` : "Your gallery"} stops being reachable</span></span></li>

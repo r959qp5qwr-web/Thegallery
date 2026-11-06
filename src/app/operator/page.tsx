@@ -21,7 +21,7 @@ export default async function OperatorHome() {
       <main id="main" tabIndex={-1}>
         <div className="centre">
           <div className="lbl">Not permitted</div>
-          <h1>This door is not yours</h1>
+          <h1>Only the operator can open this page</h1>
           <p>You are signed in, but this area belongs to the platform operator.</p>
           <Link className="btn" href="/studio">Back to your Studio</Link>
         </div>
@@ -81,7 +81,7 @@ export default async function OperatorHome() {
               </li>
             ))}
           </ul>
-        ) : <p className="body">Nothing has been actioned.</p>}
+        ) : <p className="body">No actions recorded yet.</p>}
       </div>
       </main>
     </>
