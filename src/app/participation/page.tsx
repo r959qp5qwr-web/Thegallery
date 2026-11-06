@@ -10,6 +10,7 @@ export default function Participation() {
   return (
     <>
       <Header place="Participation" back="/" />
+      <main id="main" tabIndex={-1}>
       <h1 className="sr-only">How participation works</h1>
       <div className="section">
         <h2 style={{ font: "var(--t-heading)", margin: "0 0 12px" }}>Who may hold a gallery</h2>
@@ -44,6 +45,7 @@ export default function Participation() {
         <p className="small" style={{ marginTop: 12 }}>We do not judge whether work is good, and we do not
           verify that a maker is who they say they are.</p>
       </div>
+      </main>
       <Footer />
     </>
   );

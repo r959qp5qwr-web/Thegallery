@@ -388,6 +388,69 @@ Each Wave 1 claim now has a journey that would fail without it (`e2e/06-trust-an
 
 ---
 
+### GAL-L0020
+
+**Date:** 2026-11-06  
+**Observed event:**  
+During Wave 2 verification a superseded suite run (desktop half, on an older build) was still running when a new run started, and the server under the old run was restarted for the new build. For about a minute both runs seeded and deleted rows in the one shared test project. Both results were voided.
+
+**Evidence:**  
+Log timestamps (`w2-desktop-1.log` ended 09:14:17; `w2-phone-2.log` began 09:13); the process list showing both `playwright test` processes.
+
+**Why it mattered:**  
+A journey's verdict is only meaningful if the journey alone wrote the data it asserts on. Nothing prevented two runs from sharing the project, so either result could have been a false pass or a false failure.
+
+**What changed:**  
+`e2e/run-hosted.sh` takes an exclusive lock before seeding. A second run exits with status 3 ("another journey run holds the test project") and touches nothing; this was tested while a run was in progress.
+
+**Status:** RESOLVED  
+**Related finding / decision IDs:** GAL-L0018  
+**Harvest status:** UNHARVESTED
+
+---
+
+### GAL-L0021
+
+**Date:** 2026-11-06  
+**Observed event:**  
+To make the header's ground run the full window width, Wave 2 added `overflow-x: clip` to `<html>` and an over-wide pseudo-element. On a phone, the browser then sized its layout viewport to the whole page (innerHeight 2548 on an 839 px screen). Taps landed on the wrong element, and five journeys failed with "intercepts pointer events".
+
+**Evidence:**  
+`hit.js` probe: `elementFromPoint` at the "Add route" button returned `<main>`; innerHeight 2548 against a visual viewport of 839. After the fix: innerHeight 839, and the probe hit the button.
+
+**Why it mattered:**  
+On a real phone this would have misplaced taps and broken scrolling for every visitor. The cause was a single decorative rule.
+
+**What changed:**  
+The full-width ground and hairline are now drawn by two box-shadows clipped to the header's height; shadows never create overflow. Journey 07 asserts at every width that `innerHeight` equals the visual viewport and that nothing scrolls sideways.
+
+**Status:** RESOLVED  
+**Related finding / decision IDs:** Wave 2  
+**Harvest status:** UNHARVESTED
+
+---
+
+### GAL-L0022
+
+**Date:** 2026-11-06  
+**Observed event:**  
+Wave 2 added loading states at the root, the Studio and the operator area. A loading boundary makes Next.js stream the response, so the status goes out before a page decides. Three effects followed. Maker B reaching Maker A's work saw the not-found page, but with status 200. An unknown work link returned 200. A signed-out Studio visit was redirected by a one-second meta refresh instead of a 307. The isolation journey caught the first of these.
+
+**Evidence:**  
+`03-status-operator-privacy` "Maker B cannot reach Maker A's work": expected 404, received 200, with the page showing "This page could not be found". `curl` on `/studio` showed `http-equiv="refresh"` and status 200.
+
+**Why it mattered:**  
+The boundary held (no foreign data was shown), but the door's answer was wrong. 404 and 307 are part of the contract: crawlers, link checkers and the journeys rely on them.
+
+**What changed:**  
+The only loading state left is the entrance's (route group `(entrance)`); the entrance never answers "not found" and never redirects. Journey 07 pins 404 for an unknown work and an unknown material, and 307 for a signed-out Studio visit.
+
+**Status:** RESOLVED  
+**Related finding / decision IDs:** J-004 isolation, Wave 2  
+**Harvest status:** UNHARVESTED
+
+---
+
 ## Ledger rules
 
 - Capture the event in the governed change that fixes or formally records it where feasible.

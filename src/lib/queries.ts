@@ -161,10 +161,21 @@ export async function studioContext(_accountId: string) {
   const { data: routes } = await db.from("contact_routes")
     .select("id,kind,value,label,enabled,validated").order("position");
 
+  // The cover of each work — its first ready image — so the Studio shows the maker's own works,
+  // not a list of titles.
+  const ids = (works ?? []).map((w) => (w as { id: string }).id);
+  const { data: covers } = ids.length
+    ? await db.from("work_images").select("id,work_id,position").in("work_id", ids).eq("state", "ready")
+        .order("position")
+    : { data: [] };
+  const coverOf = new Map<string, string>();
+  for (const c of (covers ?? []) as { id: string; work_id: string }[]) if (!coverOf.has(c.work_id)) coverOf.set(c.work_id, c.id);
+
   return {
     maker, gallery,
-    works: (works ?? []) as unknown as { id: string; title: string; status: string; lifecycle: string;
-                              taken_down: boolean; material: string; public_token: string; updated_at: string }[],
+    works: ((works ?? []) as unknown as { id: string; title: string; status: string; lifecycle: string;
+                              taken_down: boolean; material: string; public_token: string; updated_at: string }[])
+      .map((w) => ({ ...w, cover: coverOf.get(w.id) ?? null })),
     routes: (routes ?? []) as unknown as { id: string; kind: string; value: string; label: string | null;
                                  enabled: boolean; validated: boolean }[],
   };

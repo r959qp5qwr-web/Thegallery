@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { Icon } from "./Icon";
+import { SectionNav } from "./SectionNav";
 import type { PublicImage, PublicWork } from "@/lib/queries";
 import { STATUS_LABEL, price } from "@/lib/format";
 
 export function Header({ place, back, action }: { place?: string; back?: string; action?: React.ReactNode }) {
   return (
-    <>
     <header className="header">
       {back
         ? <Link className="iconbtn lead" href={back} aria-label="Back"><Icon name="back" /></Link>
@@ -14,31 +14,25 @@ export function Header({ place, back, action }: { place?: string; back?: string;
           page without a place still says where the visitor is. */}
       {place ? <span className="place">{place}</span>
              : back ? <Link className="wordmark" href="/">The Gallery</Link> : <span />}
-      {action ?? <Link className="iconbtn" href="/search" aria-label="Search"><Icon name="search" /></Link>}
+      <span className="header-end">
+        {/* Expanded: the four sections sit in the header beside search (§7); below 900 px they
+            are the bottom bar, and only one of the two is ever shown. */}
+        <SectionNav placement="header" />
+        {action ?? <Link className="iconbtn" href="/search" aria-label="Search"><Icon name="search" /></Link>}
+      </span>
     </header>
-    <ContentStart />
-    </>
   );
-}
-
-/** Where "Skip to content" lands: just past the header, so the skip passes over what repeats on
- *  every page. Every page renders exactly one header, so this id is unique per page. */
-function ContentStart() {
-  return <span id="content" tabIndex={-1} style={{ display: "block", outline: "none" }} />;
 }
 
 export function StudioHeader({ title, back }: { title: string; back?: string }) {
   return (
-    <>
     <header className="header studio">
       {back
         ? <Link className="iconbtn lead" href={back} aria-label="Back"><Icon name="back" /></Link>
         : <Link className="wordmark" href="/">The Gallery</Link>}
       <span className="title">{title}</span>
-      <span style={{ width: 44 }} />
+      <span className="header-end"><SectionNav placement="header" /><span className="header-spacer" /></span>
     </header>
-    <ContentStart />
-    </>
   );
 }
 

@@ -18,12 +18,14 @@ export default async function OperatorHome() {
     return (
       <>
         <StudioHeader title="Operator" back="/" />
+      <main id="main" tabIndex={-1}>
         <div className="centre">
           <div className="lbl">Not permitted</div>
           <h1>This door is not yours</h1>
           <p>You are signed in, but this area belongs to the platform operator.</p>
           <Link className="btn" href="/studio">Back to your Studio</Link>
         </div>
+      </main>
       </>
     );
   }
@@ -45,6 +47,7 @@ export default async function OperatorHome() {
   return (
     <>
       <StudioHeader title="Operator" back="/" />
+      <main id="main" tabIndex={-1}>
       <div className="studio-state">
         <h1>Makers</h1>
         <p className="small" style={{ marginTop: 6 }}>
@@ -80,6 +83,7 @@ export default async function OperatorHome() {
           </ul>
         ) : <p className="body">Nothing has been actioned.</p>}
       </div>
+      </main>
     </>
   );
 }

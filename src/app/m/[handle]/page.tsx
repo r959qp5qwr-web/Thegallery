@@ -22,13 +22,15 @@ export default async function MakerGallery({ params }: { params: Promise<{ handl
     return (
       <>
         <Header back="/" />
+      <main id="main" tabIndex={-1}>
         <div className="centre">
           <div className="lbl">Not available</div>
           <h1>This gallery is not available</h1>
           <p>It may not be published yet, or it may have been withdrawn.</p>
           <Link className="btn" href="/">Back to the entrance</Link>
         </div>
-        <Footer />
+        </main>
+      <Footer />
       </>
     );
   }
@@ -42,6 +44,7 @@ export default async function MakerGallery({ params }: { params: Promise<{ handl
     <>
       {/* The place is stated once, under the maker's name. */}
       <Header back="/" />
+      <main id="main" tabIndex={-1}>
       <div className="label">
         <div className="status"><span><Mark muted />{KIND_LABEL[maker.kind]}</span></div>
         <h1 className="title">{maker.display_name}</h1>
@@ -113,6 +116,7 @@ export default async function MakerGallery({ params }: { params: Promise<{ handl
           <p className="body">This maker has not published a way to be contacted.</p>
         )}
       </div>
+      </main>
       <Footer />
     </>
   );

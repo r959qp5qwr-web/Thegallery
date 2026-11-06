@@ -11,6 +11,7 @@ export default async function Confirm({ params }: { params: Promise<{ token: str
   return (
     <>
       <StudioHeader title="Confirm your email" />
+      <main id="main" tabIndex={-1}>
       <div className="centre">
         {outcome === "confirmed" ? (
           <>
@@ -28,6 +29,7 @@ export default async function Confirm({ params }: { params: Promise<{ token: str
           </>
         )}
       </div>
+      </main>
     </>
   );
 }

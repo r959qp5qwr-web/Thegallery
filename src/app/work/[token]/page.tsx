@@ -38,6 +38,7 @@ export default async function WorkDetail(
     return (
       <>
         <Header place={ending.maker_status === "active" ? ending.maker_display_name : undefined} back="/" />
+      <main id="main" tabIndex={-1}>
         <div className="centre">
           <div className="lbl">No longer on view</div>
           <h1>{ending.title}</h1>
@@ -46,7 +47,8 @@ export default async function WorkDetail(
             ? <Link className="btn" href={`/m/${ending.maker_handle}`}>Visit {ending.maker_display_name}</Link>
             : <Link className="btn" href="/">Back to the entrance</Link>}
         </div>
-        <Footer />
+        </main>
+      <Footer />
       </>
     );
   }
@@ -65,7 +67,12 @@ export default async function WorkDetail(
   return (
     <>
       <Header place={work.maker_display_name} back="/" />
+      <main id="main" tabIndex={-1}>
 
+      {/* Compact: one column. Expanded (§10): the image column (7 parts) beside the wall label
+          (5 parts), the label sticky so it stays beside the work as the images scroll. */}
+      <div className="detail">
+      <div className="detail-media">
       {/* Each image keeps its own proportion. Nothing is cropped to a common shape: the
           maker framed the object, and a gallery that re-crops is editing the work. */}
       <div className="imgstrip" role="region" aria-label={`Images of ${work.title}`} tabIndex={0}>
@@ -81,6 +88,8 @@ export default async function WorkDetail(
           product refuses (GAL-R07). */}
       {images.length > 1 ? <div className="context" style={{ paddingTop: 10, paddingBottom: 0 }}><span>{images.length} images</span></div> : null}
 
+      </div>
+      <div className="detail-label">
       <div className="label">
         <div className={`status ${sold ? "sold" : "available"}`}>
           <span><Mark muted={sold} />{STATUS_LABEL[work.status]}</span>
@@ -125,6 +134,8 @@ export default async function WorkDetail(
             The gallery, {siblings.length} work{siblings.length === 1 ? "" : "s"} <span className="arrow" aria-hidden>→</span>
           </Link>
         </div>
+      </div>
+      </div>
       </div>
 
       {contact && routes.length ? (
@@ -177,6 +188,7 @@ export default async function WorkDetail(
         </section>
         </>
       ) : null}
+      </main>
       <Footer />
     </>
   );

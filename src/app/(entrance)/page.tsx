@@ -19,15 +19,21 @@ export default async function Entrance() {
     <>
       {/* The place is stated once, on the context line (INTERFACE_FOUNDATION §8 metadata policy). */}
       <Header />
+      <main id="main" tabIndex={-1}>
       {featured ? (
         <>
           <div className="context">
             <span>On view now</span>
             <span className="accent">Bengaluru</span>
           </div>
+          {/* Expanded: the featured work hangs beside its label, as on the work's own page. */}
+          <div className="featured">
+          <div className="featured-media">
           <Hero image={byWork.get(featured.id)}
                 alt={byWork.get(featured.id)?.alt_text ?? featured.title}
                 href={`/work/${featured.public_token}`} />
+          </div>
+          <div className="featured-label">
           <div className="label">
             <div className={`status ${featured.status === "sold" ? "sold" : "available"}`}>
               <span><Mark muted={featured.status === "sold"} />{STATUS_LABEL[featured.status]}</span>
@@ -44,6 +50,8 @@ export default async function Entrance() {
             <a className="textlink" href={`/m/${featured.maker_handle}`}>
               {featured.maker_display_name}&rsquo;s gallery <span className="arrow" aria-hidden>→</span>
             </a>
+          </div>
+          </div>
           </div>
         </>
       ) : (
@@ -72,6 +80,7 @@ export default async function Entrance() {
           </div>
         </div>
       ) : null}
+      </main>
       <Footer />
     </>
   );

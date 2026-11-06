@@ -16,6 +16,7 @@ export default async function Profile() {
   return (
     <>
       <StudioHeader title="Identity" back="/studio" />
+      <main id="main" tabIndex={-1}>
       <div className="studio-state">
         <h1>{maker ? "Your identity" : "Who is showing"}</h1>
         <p className="small" style={{ marginTop: 6 }}>
@@ -50,6 +51,7 @@ export default async function Profile() {
         </div>
         <Field name="commissions_note" label="What you take on" textarea defaultValue={maker?.commissions_note} />
       </ActionForm>
+      </main>
     </>
   );
 }

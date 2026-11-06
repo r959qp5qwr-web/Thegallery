@@ -33,6 +33,7 @@ export default async function OperatorMaker({ params }: { params: Promise<{ id: 
   return (
     <>
       <StudioHeader title="Maker" back="/operator" />
+      <main id="main" tabIndex={-1}>
       <div className="studio-state">
         <h1>{maker.display_name}</h1>
         <p className="small">{maker.kind} · {maker.city} · <Link href={`/m/${maker.handle}`}>/m/{maker.handle}</Link></p>
@@ -68,6 +69,7 @@ export default async function OperatorMaker({ params }: { params: Promise<{ id: 
         ) : <p className="body">No action has been taken on this maker.</p>}
         <p className="small" style={{ marginTop: 12 }}>This record cannot be edited or deleted, by anyone.</p>
       </div>
+      </main>
     </>
   );
 }

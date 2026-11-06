@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { IconSprite } from "@/components/Icon";
-import { BottomBar } from "@/components/BottomBar";
+import { SectionNav, SignedIn } from "@/components/SectionNav";
 import { currentAccount } from "@/lib/auth";
 
 export const metadata: Metadata = {
@@ -27,11 +27,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
       <body>
         <IconSprite />
-        <a className="skip" href="#content">Skip to content</a>
-        <div className="phone">
-          <main id="main" tabIndex={-1}>{children}</main>
-          <BottomBar signedIn={!!account} />
-        </div>
+        <a className="skip" href="#main">Skip to content</a>
+        <SignedIn value={!!account}>
+          {/* Each page renders its own header, then its <main>, then its footer, so the header
+              and footer are landmarks of their own rather than content inside main. */}
+          <div className="phone">{children}</div>
+          <SectionNav placement="bar" />
+        </SignedIn>
       </body>
     </html>
   );

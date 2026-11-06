@@ -1,5 +1,5 @@
 "use client";
-import { Field, useFormState } from "./ActionForm";
+import { Field, KeptSelect, useFormState } from "./ActionForm";
 
 /** The work as a person writes it, used by Add a work and by Edit label so the two can never
  *  drift apart. Material and price mode are segmented controls (INTERFACE_FOUNDATION §7):
@@ -39,18 +39,22 @@ export function Segmented({ name, legend, options, value, help }:
   );
 }
 
-export function WorkLabelFields({ materials, values = {}, withStatus = true, defaultMaterial }:
-  { materials: { key: string; label: string }[]; values?: LabelValues; withStatus?: boolean; defaultMaterial?: string }) {
+export function WorkLabelFields({ materials, values = {}, withStatus = true, defaultMaterial, titleOptional }:
+  { materials: { key: string; label: string }[]; values?: LabelValues; withStatus?: boolean; defaultMaterial?: string;
+    /** Add work: a draft may start from an image alone (decision R1); the server asks for the
+     *  title when there is no image, and before publishing. */
+    titleOptional?: boolean }) {
   const typed = useFormState().values;
   return (
     <>
-      <Field name="title" label="Title" required defaultValue={values.title} />
+      {/* Plate R-3: the label in groups, each with its lead rule; short values in short fields. */}
+      <div className="group"><div className="ghead">The label</div></div>
+      <Field name="title" label="Title" required={!titleOptional} defaultValue={values.title}
+             help={titleOptional ? "Needed before you publish." : undefined} />
       <Segmented name="material" legend="Material" options={materials}
                  value={values.material ?? defaultMaterial} />
       <Field name="medium" label="Medium" defaultValue={values.medium}
              help="How you would write it on a wall label, for example “Wood-fired stoneware”." />
-      <Field name="process" label="About this work" textarea defaultValue={values.process}
-             help="Optional. Shown under “About this work”." />
       <fieldset className="field segfield">
         <legend>Dimensions (cm)</legend>
         <div className="inline dims-inputs">
@@ -63,23 +67,29 @@ export function WorkLabelFields({ materials, values = {}, withStatus = true, def
           ))}
         </div>
       </fieldset>
-      <Field name="year" label="Year" defaultValue={values.year ?? undefined} />
-      <Segmented name="price_mode" legend="Price" options={PRICE_MODES} value={values.price_mode}
+      <div className="field-short"><Field name="year" label="Year" defaultValue={values.year ?? undefined} /></div>
+      <div className="group"><div className="ghead">Price and status</div></div>
+      <Segmented name="price_mode" legend="Price" options={PRICE_MODES}
+                 // A new work starts On enquiry: a draft begun from a picture alone has no price yet,
+                 // and a fixed price without an amount cannot be saved.
+                 value={values.price_mode ?? (titleOptional ? "enquire" : undefined)}
                  help="Whatever you choose, the sale happens between you and the visitor. The Gallery takes no part in it." />
-      <Field name="price_amount" label="Amount (₹)" defaultValue={values.price_amount ?? undefined}
-             help="Only shown with a fixed price." />
+      <div className="field-short"><Field name="price_amount" label="Amount (₹)" defaultValue={values.price_amount ?? undefined}
+             help="Only shown with a fixed price." /></div>
       {withStatus ? (
         <div className="field">
           <label htmlFor="status">Status</label>
-          <select id="status" name="status" defaultValue={typed?.status ?? values.status ?? "available"}>
+          <KeptSelect name="status" defaultValue={values.status ?? "available"}>
             <option value="available">Available</option>
             <option value="made_to_order">Made to order</option>
             <option value="enquire">Enquire</option>
             <option value="on_view">On view</option>
             <option value="sold">Sold</option>
-          </select>
+          </KeptSelect>
         </div>
       ) : null}
+      <Field name="process" label="About this work" textarea defaultValue={values.process}
+             help="Optional, shown in your words under “About this work”." />
     </>
   );
 }

@@ -136,9 +136,10 @@ export async function deleteRouteAction(form: FormData): Promise<void> {
 // -------------------------------------------------------------------------------- works
 /** The label as the maker typed it, checked once for both create and edit. A refusal names the
  *  field it is about, so the form can put the message under that field and keep every value. */
-function readLabel(form: FormData):
+function readLabel(form: FormData, untitled?: string):
   { fields: Record<string, unknown> } | { error: string; field: string } {
-  const title = String(form.get("title") ?? "").trim();
+  // `untitled`: a draft started from an image may be saved before it has a title (decision R1).
+  const title = String(form.get("title") ?? "").trim() || (untitled ?? "");
   const material = String(form.get("material") ?? "");
   const price_mode = String(form.get("price_mode") ?? "enquire");
   const rawPrice = String(form.get("price_amount") ?? "").trim();
@@ -177,23 +178,46 @@ function typed(form: FormData): Record<string, string> {
   return out;
 }
 
+/** The working name of a draft started from an image, until the maker gives it a title. */
+const UNTITLED = "Untitled work";
+
 export async function createWorkAction(_prev: FormState, form: FormData): Promise<FormState> {
   await requireActiveMaker();
-  const label = readLabel(form);
-  if ("error" in label) return { ...label, values: typed(form) };
+  // Decision R1 (2026-11-06): the draft is created on the first image. A maker who starts with a
+  // picture is not stopped for a title; the draft is named for now and the title is asked for
+  // before publishing. Without an image, the title is required as before.
+  const file = form.get("image");
+  const hasImage = file instanceof File && file.size > 0;
+  // The form is read, never rewritten: a refusal must hand back exactly what was typed, and a
+  // browser cannot hand back a chosen file, so the refusal says to choose it again.
+  const label = readLabel(form, hasImage ? UNTITLED : undefined);
+  const again = hasImage ? " Choose the image again — a browser does not keep it after a refusal." : "";
+  if ("error" in label) return { ...label, error: label.error + again, values: typed(form) };
 
   const db = await client();
   const { data: galleries } = await db.from("galleries").select("id").limit(1);
   const gallery = galleries?.[0] as { id: string } | undefined;
-  if (!gallery) return { error: "Set up your maker identity first — that is what a work belongs to." };
+  if (!gallery) return { error: "Set up your maker identity first — that is what a work belongs to.", values: typed(form) };
 
   const { data, error } = await db.from("works").insert({
     public_token: token(), gallery_id: gallery.id, ...label.fields,
     status: String(form.get("status") ?? "available"),
   }).select("id").limit(1);
 
-  if (error || !data?.length) return { error: "We could not save that work. Nothing was created.", values: typed(form) };
-  redirect(`/studio/works/${(data[0] as { id: string }).id}?created=1`);
+  if (error || !data?.length) return { error: "We could not save that work. Nothing was created." + again, values: typed(form) };
+  const id = (data[0] as { id: string }).id;
+  // The image goes up after the draft exists; if it fails, the draft is kept and the reason is
+  // carried to the work's page, never lost behind a generic notice.
+  if (hasImage) {
+    const problem = await storeImage(db, id, file as File, String(form.get("alt_text") ?? "").trim() || null);
+    // A code, never the message: text in a URL can be planted by anyone who sends a link.
+    if (problem) {
+      const code = problem.includes("12 MB") ? "too_large" : problem.includes("not yours") ? "not_yours" : "failed";
+      redirect(`/studio/works/${id}?created=1&image_problem=${code}`);
+    }
+    redirect(`/studio/works/${id}?created=image`);
+  }
+  redirect(`/studio/works/${id}?created=1`);
 }
 
 /** Correct a work's label after it was saved. Without this a typo in a title or a price was
@@ -211,19 +235,12 @@ export async function updateWorkLabelAction(_prev: FormState, form: FormData): P
   return { notice: "The label is updated. Every page that shows this work now shows the change." };
 }
 
-export async function addImageAction(_prev: FormState, form: FormData): Promise<FormState> {
-  await requireActiveMaker();
-  const workId = String(form.get("work_id") ?? "");
-  const alt = String(form.get("alt_text") ?? "").trim() || null;
-  const file = form.get("image");
-  if (!(file instanceof File) || file.size === 0) return { error: "Choose an image file." };
-  if (file.size > 12 * 1024 * 1024) return { error: "That image is larger than 12 MB. Export it smaller." };
+type Db = Awaited<ReturnType<typeof client>>;
 
-  const db = await client();
-
-  // The row is written first in `uploading`, then moved to `ready` once the bytes are stored,
-  // and left at `failed` if they are not. A half-finished upload is therefore visible as
-  // itself and never blocks the other images (DOMAIN_MODEL §2.4).
+/** Store one image for a work: the row first (`uploading`), then the bytes, then `ready` — or
+ *  `failed`, visible as itself, never blocking the other images (DOMAIN_MODEL §2.4). */
+async function storeImage(db: Db, workId: string, file: File, alt: string | null): Promise<string | null> {
+  if (file.size > 12 * 1024 * 1024) return "That image is larger than 12 MB. Export it smaller.";
   // The storage key is chosen HERE and written before a single byte is uploaded. The storage
   // policy that decides whether an object is this maker's own looks the key up in this table,
   // so a key written afterwards would make the maker's own upload unauthorised.
@@ -233,22 +250,30 @@ export async function addImageAction(_prev: FormState, form: FormData): Promise<
     work_id: workId, position: await nextPosition(siblings as { position: number }[] | null),
     storage_key: storageKey, width: 0, height: 0, alt_text: alt, state: "uploading",
   }).select("id").limit(1);
-
-  if (insertError || !created?.length) return { error: "That work is not yours to add images to." };
+  if (insertError || !created?.length) return "That work is not yours to add images to.";
   const imageId = (created[0] as { id: string }).id;
-
   try {
     const bytes = new Uint8Array(await file.arrayBuffer());
     const ingested = await ingestImage(bytes, db, storageKey);
     await db.from("work_images").update({
-      width: ingested.width, height: ingested.height,
-      variants: ingested.variants, state: "ready",
+      width: ingested.width, height: ingested.height, variants: ingested.variants, state: "ready",
     }).eq("id", imageId);
+    return null;
   } catch (e) {
     await db.from("work_images").update({ state: "failed" }).eq("id", imageId);
     const why = e instanceof Error ? e.message : "we could not read that file";
-    return { error: `That image did not go up — ${why}. The other images are untouched; try again.` };
+    return `That image did not go up — ${why}. The other images are untouched; try again.`;
   }
+}
+
+export async function addImageAction(_prev: FormState, form: FormData): Promise<FormState> {
+  await requireActiveMaker();
+  const workId = String(form.get("work_id") ?? "");
+  const alt = String(form.get("alt_text") ?? "").trim() || null;
+  const file = form.get("image");
+  if (!(file instanceof File) || file.size === 0) return { error: "Choose an image file." };
+  const problem = await storeImage(await client(), workId, file, alt);
+  if (problem) return { error: problem };
   revalidatePath(`/studio/works/${workId}`);
   return { notice: "Image added." };
 }
@@ -283,6 +308,10 @@ export async function publishWorkAction(_prev: FormState, form: FormData): Promi
   if (!intent) return { error: "This form went stale. Reload the page and publish again." };
 
   const db = await client();
+  const { data: named } = await db.from("works").select("title").eq("id", workId).limit(1);
+  if ((named?.[0] as { title: string } | undefined)?.title === UNTITLED) {
+    return { error: "Give this work its title in the label below, then publish." };
+  }
   const { data, error } = await db.rpc("publish_work", { p_work_id: workId, p_intent_key: intent });
 
   if (error) {
@@ -306,6 +335,21 @@ export async function setStatusAction(form: FormData): Promise<void> {
   });
   // Every public surface reads one column, so one revalidation is the whole propagation.
   revalidatePath("/", "layout");
+}
+
+/** J-003 from the Studio row: one choice applies at once, and the row offers Undo. The previous
+ *  status travels in the redirect so Undo is a plain form, and works without script. */
+export async function changeStatusAction(form: FormData): Promise<void> {
+  await requireActiveMaker();
+  const workId = String(form.get("work_id") ?? "");
+  const status = String(form.get("status") ?? "");
+  const from = String(form.get("from") ?? "");
+  const undo = form.get("undo") === "1";
+  const db = await client();
+  const { error } = await db.rpc("set_work_status", { p_work_id: workId, p_status: status });
+  if (error) redirect(`/studio?unchanged=${workId}`);
+  revalidatePath("/", "layout");
+  redirect(undo ? `/studio?restored_status=${workId}` : `/studio?changed=${workId}&from=${encodeURIComponent(from)}`);
 }
 
 export async function retireWorkAction(form: FormData): Promise<void> {

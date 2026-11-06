@@ -13,6 +13,7 @@ export default async function SignIn(
   return (
     <>
       <StudioHeader title="Sign in" back="/makers" />
+      <main id="main" tabIndex={-1}>
       <h1 className="sr-only">Sign in to your Studio</h1>
       <div className="context"><span>Your Studio</span><span className="accent">Makers only</span></div>
       {reset ? <Band label="Password set">Your new password is in place. Sign in with it.</Band> : null}
@@ -27,6 +28,7 @@ export default async function SignIn(
       <div className="inline-actions">
         <Link className="btn quiet" href="/makers/create-account"><span>Create an account</span></Link>
       </div>
+      </main>
     </>
   );
 }

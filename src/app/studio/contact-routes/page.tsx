@@ -22,6 +22,7 @@ export default async function ContactRoutes({ searchParams }: { searchParams: Pr
   return (
     <>
       <StudioHeader title="Contact routes" back="/studio" />
+      <main id="main" tabIndex={-1}>
       <div className="studio-state">
         <h1>How people reach you</h1>
         <p className="small" style={{ marginTop: 6 }}>
@@ -93,6 +94,7 @@ export default async function ContactRoutes({ searchParams }: { searchParams: Pr
                help="WhatsApp and phone in full international form, starting with + and the country code. Website and form as a full https:// address." />
         <Field name="label" label="Label (optional)" help="For example “Studio enquiries”." />
       </ActionForm>
+      </main>
     </>
   );
 }
