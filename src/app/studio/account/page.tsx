@@ -6,6 +6,7 @@ import { ActionForm, Field } from "@/components/ActionForm";
 import { closeAccountAction, signOutAction } from "@/app/actions/account";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Your account" };
 
 export default async function Account() {
   const account = await currentAccount();

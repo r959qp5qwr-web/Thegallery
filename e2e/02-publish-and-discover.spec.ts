@@ -58,13 +58,13 @@ test.describe("publish a work and meet it as a visitor", () => {
     await signIn(page, MAKER_A.email, MAKER_A.password);
     await page.goto("/studio/works/new");
     await page.getByLabel("Title").fill(TITLE);
-    await page.getByLabel("Material").selectOption("clay");
+    await page.getByRole("radio", { name: "Clay" }).check();
     await page.getByLabel("Medium").fill("Wood-fired stoneware");
     await page.getByLabel("About this work").fill("Fired over four days; the ash fell where it chose.");
     await page.getByLabel("Height in centimetres").fill("28");
     await page.getByLabel("Width in centimetres").fill("19");
     await page.getByLabel("Year").fill("2026");
-    await page.getByLabel("Price", { exact: true }).selectOption("exact");
+    await page.getByRole("radio", { name: "Fixed price" }).check();
     await page.getByLabel("Amount (₹)").fill("6800");
     await page.getByLabel("Status").selectOption("available");
     await page.getByRole("button", { name: "Save draft" }).click();

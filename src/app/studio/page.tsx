@@ -7,12 +7,13 @@ import { StatusChip } from "@/components/StatusChip";
 import { publishGalleryAction } from "@/app/actions/studio";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Studio" };
 
 export default async function Studio({ searchParams }: { searchParams: Promise<{ saved?: string }> }) {
   const account = await currentAccount();
   if (!account) redirect("/makers/sign-in?next=/studio");
   const { saved } = await searchParams;
-  const { maker, gallery, works } = await studioContext(account.id);
+  const { maker, gallery, works, routes } = await studioContext(account.id);
 
   // A suspended maker is not signed out and not left guessing: the Studio states the
   // suspension, gives the reason and names the way to reply (GAL-OD-15).
@@ -74,6 +75,14 @@ export default async function Studio({ searchParams }: { searchParams: Promise<{
             : "Your gallery is a draft. Publishing your first work opens it."}
         </p>
       </div>
+
+      {/* GAL-PR-01: Contact is not advertised until a route exists, and the Studio shows the task. */}
+      {!routes.some((r) => r.enabled && r.validated) ? (
+        <Band label="No way to contact you yet">
+          Your work is shown without a Contact button until you add a route.{" "}
+          <Link href="/studio/contact-routes">Add a contact route</Link>
+        </Band>
+      ) : null}
 
       {gallery && gallery.lifecycle !== "published" && published.length > 0 ? (
         <form action={publishGalleryAction} className="inline-actions">

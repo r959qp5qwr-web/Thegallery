@@ -36,20 +36,57 @@ export function statusIsStale(confirmedAt: string | Date | null): boolean {
 
 export type Route = { id: string; kind: string; value: string; label: string | null };
 
+/** How the product addresses a maker in a short action. A person is called by their first
+ *  name ("Contact Anika"); a studio or collective by its whole name, because its first word is
+ *  rarely a name at all ("Contact The", "Message Studio"). */
+export function shortName(displayName: string, kind?: string | null): string {
+  return kind === "individual" ? displayName.split(" ")[0] : displayName;
+}
+
+/** What the visitor's message is about. Chosen on the contact sheet; carried into the text. */
+export type Intent = "ask" | "commission" | "general";
+export const INTENTS: { key: Intent; label: string }[] = [
+  { key: "ask", label: "Ask about this work" },
+  { key: "commission", label: "Commission something like this" },
+  { key: "general", label: "General enquiry" },
+];
+export function parseIntent(v: string | undefined, sold: boolean): Intent {
+  if (v === "ask" || v === "commission" || v === "general") return v;
+  return sold ? "commission" : "ask";
+}
+
+/** A work as a message needs it: its title, and the address that brings the maker back to it. */
+export type MessageWork = { title: string; url: string; intent: Intent };
+
+function messageText(work?: MessageWork): string {
+  if (!work) return "Hello, I found your work on The Gallery.";
+  const about = work.intent === "commission"
+    ? `I saw "${work.title}" on The Gallery and would like to ask about commissioning something like it.`
+    : work.intent === "general"
+    ? `I found your work on The Gallery while looking at "${work.title}".`
+    : `I saw "${work.title}" on The Gallery and would like to ask about it.`;
+  return `Hello, ${about} ${work.url}`;
+}
+
 /**
  * Turn a maker's route into the link the visitor opens. The Gallery hands the visitor over
  * and stops: there is no in-product message, no relay and no record of what follows
  * (GAL-OD-06, GAL-R04).
  */
-export function routeHref(route: Route, workTitle?: string): string {
-  const subject = workTitle ? `About "${workTitle}" on The Gallery` : "Enquiry from The Gallery";
+export function routeHref(route: Route, work?: MessageWork): string {
+  // The message stands on its own: the maker reads the work's title, what the visitor wants
+  // and the link back to the work, without needing any other context.
+  const subject = !work ? "Enquiry from The Gallery"
+    : work.intent === "commission" ? `Commission enquiry: "${work.title}" on The Gallery`
+    : `About "${work.title}" on The Gallery`;
+  const text = messageText(work);
   switch (route.kind) {
     case "whatsapp": {
       const digits = route.value.replace(/[^\d]/g, "");
-      const text = workTitle ? `Hello — I saw "${workTitle}" on The Gallery.` : "Hello — I found you on The Gallery.";
       return `https://wa.me/${digits}?text=${encodeURIComponent(text)}`;
     }
-    case "email": return `mailto:${route.value}?subject=${encodeURIComponent(subject)}`;
+    case "email":
+      return `mailto:${route.value}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(text)}`;
     case "phone": return `tel:${route.value.replace(/[^\d+]/g, "")}`;
     case "website":
     case "form": return route.value.startsWith("http") ? route.value : `https://${route.value}`;
@@ -63,9 +100,10 @@ export const ROUTE_LABEL: Record<string, string> = {
 
 /** What the visitor sees for a route before they open it. A phone number is shown; a
  *  WhatsApp route is described rather than printed, matching the accepted handoff sheet. */
-export function routeDisplay(route: Route, makerName: string, workTitle?: string): string {
+export function routeDisplay(route: Route, makerName: string, aboutWork?: boolean, makerKind?: string | null): string {
   if (route.kind === "whatsapp") {
-    return workTitle ? `Message ${makerName.split(" ")[0]} about this work` : `Message ${makerName.split(" ")[0]}`;
+    const who = shortName(makerName, makerKind);
+    return aboutWork ? `Message ${who} about this work` : `Message ${who}`;
   }
   if (route.kind === "form") return route.label ?? "Enquiry form";
   return route.value.replace(/^https?:\/\//, "");
@@ -86,4 +124,19 @@ export function validateRoute(kind: string, value: string): string | null {
       return /^https?:\/\/[^\s]+\.[^\s]{2,}$/.test(v) ? null : "Use a full https:// address.";
     default: return "Unknown route.";
   }
+}
+
+/** An operator act as a person reads it. */
+export const ACTION_LABEL: Record<string, string> = {
+  suspend: "Suspended", reinstate: "Reinstated", take_down: "Taken down", restore: "Restored",
+  dismiss_report: "Report dismissed", close_report: "Report closed", vocabulary_change: "Vocabulary changed",
+};
+
+/** A date that reads the same to everyone: "6 Nov 2026, 4:45 pm", never "6/11/2026", which half
+ *  the world reads as June. Shown in India time, where the product and its operator work. */
+export function recordedAt(iso: string): string {
+  const d = new Date(iso);
+  const date = d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Kolkata" });
+  const time = d.toLocaleTimeString("en-IN", { hour: "numeric", minute: "2-digit", hour12: true, timeZone: "Asia/Kolkata" });
+  return `${date}, ${time.toLowerCase()}`;
 }

@@ -62,7 +62,7 @@ Revised 2026-09-06 under the governor's visual mandate (receipt `doctrine/receip
 | paper-deep | `#F0E9DC` | sunken fields, notice bands, loading frames | ground |
 | limestone | `#E7DECF` | plinths; the ground a work stands on in the hero and image strip | ground |
 | stone | `#D5CAB8` | row dividers, soft rules | non-text |
-| stone-strong | `#9A9082` | field and chip borders — anything a person must perceive as a control boundary | non-text ≥ 3:1 on paper (3.2:1) |
+| stone-strong | `#857A6B` | field and chip borders — anything a person must perceive as a control boundary | non-text ≥ 3:1 on paper (3.8:1; the earlier `#9A9082` measured 2.84:1, not the 3.2:1 recorded, and was corrected 2026-11-06) |
 | ink | `#221E1A` | titles, body text, the editorial action's line | ≥ 4.5:1 on paper (15.6:1) |
 | ink-soft | `#3D3630` | structural rules (used sparingly), secondary headings, icons at rest | ≥ 4.5:1 (10.4:1) |
 | ink-muted | `#675F56` | metadata, help, the curatorial lead | ≥ 4.5:1 (5.4:1) |

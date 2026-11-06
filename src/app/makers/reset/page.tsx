@@ -4,6 +4,7 @@ import { ActionForm, Field } from "@/components/ActionForm";
 import { startRecoveryAction } from "@/app/actions/account";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Reset your password" };
 
 export default function Reset() {
   return (
@@ -17,7 +18,7 @@ export default function Reset() {
         </p>
       </div>
       <ActionForm action={startRecoveryAction} submitLabel="Send the link" busyLabel="Sending…">
-        <Field name="email" label="Email" type="email" required />
+        <Field name="email" label="Email" type="email" required autoComplete="email" />
       </ActionForm>
       <div className="inline-actions">
         <Link className="btn quiet" href="/makers/sign-in"><span>Back to sign in</span></Link>

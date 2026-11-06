@@ -3,6 +3,7 @@ import { ActionForm, Field } from "@/components/ActionForm";
 import { completeRecoveryAction } from "@/app/actions/account";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Set a new password" };
 
 export default async function ResetWithToken({ params }: { params: Promise<{ token: string }> }) {
   const { token } = await params;
@@ -15,7 +16,7 @@ export default async function ResetWithToken({ params }: { params: Promise<{ tok
       </div>
       <ActionForm action={completeRecoveryAction} submitLabel="Set password" busyLabel="Saving…"
                   hidden={{ token }}>
-        <Field name="password" label="New password" type="password" required
+        <Field name="password" label="New password" type="password" required autoComplete="new-password"
                help="At least 10 characters." />
       </ActionForm>
     </>

@@ -18,8 +18,8 @@ test.describe("failure endings", () => {
     await signIn(page, MAKER_B.email, MAKER_B.password);
     await page.goto("/studio/works/new");
     await page.getByLabel("Title").fill(DRAFT);
-    await page.getByLabel("Material").selectOption("textile");
-    await page.getByLabel("Price", { exact: true }).selectOption("enquire");
+    await page.getByRole("radio", { name: "Textile" }).check();
+    await page.getByRole("radio", { name: "On enquiry" }).check();
     await page.getByRole("button", { name: "Save draft" }).click();
     await expect(page.getByText("The label is saved")).toBeVisible();
   });
@@ -76,11 +76,14 @@ test.describe("failure endings", () => {
     const work = await owner((c) => c.query<{ id: string; public_token: string }>(
       "SELECT id, public_token FROM works WHERE title = 'Unfinished Warp'"));
     await page.goto(`/studio/works/${work.rows[0].id}`);
-    await page.getByRole("button", { name: "Take this work off view" }).click();
+    // Retiring is never one tap: the consequence is named, then confirmed.
+    await page.getByRole("link", { name: "Retire this work…" }).click();
+    await expect(page.getByText("leaves the entrance, its material, search")).toBeVisible();
+    await page.getByRole("button", { name: "Retire work" }).click();
     // Settle on the outcome, not the click: the control exists only on a published work, so it
     // goes away once the server has retired it. Against a hosted database the visitor's request
     // otherwise races the write and sees the work still on view.
-    await expect(page.getByRole("button", { name: "Take this work off view" })).toHaveCount(0, { timeout: 15_000 });
+    await expect(page.getByRole("button", { name: "Restore to view" })).toBeVisible({ timeout: 15_000 });
 
     const anon = await page.context().browser()!.newContext();
     const visitor = await anon.newPage();

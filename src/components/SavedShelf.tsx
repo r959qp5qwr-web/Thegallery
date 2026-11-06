@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { readSaved } from "./SaveButton";
 import { EmptyPlinth, Action } from "./Chrome";
+import { STATUS_LABEL } from "@/lib/format";
 
 type Row = { public_token: string; title: string; maker_display_name: string; status: string; gone: boolean };
 
@@ -23,8 +24,8 @@ export function SavedShelf() {
   if (rows === null) return <div className="hint">Reading your shelf…</div>;
   if (!rows.length) {
     return (
-      <EmptyPlinth material="paper" title="Nothing saved yet" action={<Action href="/">Back to the entrance</Action>}>
-        Save a work and it waits here. The list stays on this device and is not sent anywhere.
+      <EmptyPlinth material="paper" title="Nothing saved yet" action={<Action href="/">See all work</Action>}>
+        Save a work and it waits here. The list is kept in this browser, with no account.
       </EmptyPlinth>
     );
   }
@@ -36,7 +37,7 @@ export function SavedShelf() {
             <div className="primary">{r.title}</div>
             <div className="secondary">{r.maker_display_name}{r.gone ? " · no longer shown" : ""}</div>
           </Link>
-          {!r.gone ? <span className={`chip ${r.status === "sold" ? "" : "available"}`}>{r.status}</span> : null}
+          {!r.gone ? <span className={`chip ${r.status === "sold" ? "" : "available"}`}>{STATUS_LABEL[r.status] ?? r.status}</span> : null}
         </li>
       ))}
     </ul>

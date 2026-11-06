@@ -7,17 +7,17 @@ import {
 } from "@/lib/auth";
 import { client } from "@/lib/supabase";
 
-export type FormState = { error?: string; notice?: string };
+export type FormState = { error?: string; notice?: string; field?: string; values?: Record<string, string> };
 
 export async function createAccountAction(_prev: FormState, form: FormData): Promise<FormState> {
   const email = String(form.get("email") ?? "");
   const password = String(form.get("password") ?? "");
   const problem = emailProblem(email) ?? passwordProblem(password);
-  if (problem) return { error: problem };
+  if (problem) return { error: problem, values: { email } };
   try {
     await createAccount(email, password);
   } catch {
-    return { error: "We could not create the account just now. Nothing was saved — try again." };
+    return { error: "We could not create the account just now. Nothing was saved — try again.", values: { email } };
   }
   // The same destination whether or not the address already had an account: the door does not
   // tell a stranger who is registered here.
@@ -26,7 +26,7 @@ export async function createAccountAction(_prev: FormState, form: FormData): Pro
 
 export async function resendConfirmAction(_prev: FormState, form: FormData): Promise<FormState> {
   const email = String(form.get("email") ?? "");
-  if (emailProblem(email)) return { error: "Enter the address you signed up with." };
+  if (emailProblem(email)) return { error: "Enter the address you signed up with.", values: { email } };
   await resendConfirm(email);
   return { notice: "If that address is waiting for confirmation, another link is on its way." };
 }
@@ -35,17 +35,23 @@ export async function signInAction(_prev: FormState, form: FormData): Promise<Fo
   const email = String(form.get("email") ?? "");
   const password = String(form.get("password") ?? "");
   const next = String(form.get("next") ?? "/studio");
-  if (!email || !password) return { error: "Enter your email and password." };
+  if (!email || !password) return { error: "Enter your email and password.", values: { email } };
   const result = await signIn(email, password);
   if (!result.ok) {
     if (result.reason === "unconfirmed") {
-      return { error: "This address has not been confirmed yet. Check your email for the link." };
+      return { error: "This address has not been confirmed yet. Check your email for the link.", values: { email } };
     }
-    if (result.reason === "closed") return { error: "This account has been closed." };
+    if (result.reason === "closed") return { error: "This account has been closed.", values: { email } };
     // One wording for a wrong address and a wrong password, so the door does not enumerate.
-    return { error: "That email and password do not match an account." };
+    return { error: "That email and password do not match an account.", values: { email } };
   }
-  redirect(next.startsWith("/") ? next : "/studio");
+  redirect(safeNext(next));
+}
+
+/** Only a path on this site. "//host" and "/\\host" are read by browsers as another site, so a
+ *  crafted sign-in link could otherwise hand a maker to a look-alike page after a real sign-in. */
+function safeNext(next: string): string {
+  return /^\/(?![\/\\])/.test(next) ? next : "/studio";
 }
 
 export async function signOutAction(): Promise<void> {
@@ -55,7 +61,7 @@ export async function signOutAction(): Promise<void> {
 
 export async function startRecoveryAction(_prev: FormState, form: FormData): Promise<FormState> {
   const email = String(form.get("email") ?? "");
-  if (emailProblem(email)) return { error: "Enter the address you signed up with." };
+  if (emailProblem(email)) return { error: "Enter the address you signed up with.", values: { email } };
   await startRecovery(email);
   // Same answer either way.
   return { notice: "If that address has an account, a link to set a new password is on its way." };

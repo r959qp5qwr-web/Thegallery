@@ -2,10 +2,11 @@ import { redirect } from "next/navigation";
 import { currentAccount } from "@/lib/auth";
 import { studioContext } from "@/lib/queries";
 import { StudioHeader } from "@/components/Chrome";
-import { ActionForm, Field } from "@/components/ActionForm";
+import { ActionForm, Field, KeptSelect, KeptCheckbox } from "@/components/ActionForm";
 import { saveProfileAction } from "@/app/actions/studio";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Your details" };
 
 export default async function Profile() {
   const account = await currentAccount();
@@ -29,11 +30,11 @@ export default async function Profile() {
                help="Your gallery lives at /m/your-address. Lowercase and hyphens, for example “anika-rao”." />
         <div className="field">
           <label htmlFor="kind">How you work</label>
-          <select id="kind" name="kind" defaultValue={maker?.kind ?? "individual"}>
+          <KeptSelect name="kind" defaultValue={maker?.kind ?? "individual"}>
             <option value="individual">On my own</option>
             <option value="studio">As a studio</option>
             <option value="collective">As a collective</option>
-          </select>
+          </KeptSelect>
           <div className="help">Studios and collectives are welcome. Retailers and resellers are not.</div>
         </div>
         <Field name="city" label="City" defaultValue={maker?.city} required />
@@ -43,8 +44,7 @@ export default async function Profile() {
         <div className="field">
           <label htmlFor="commissions_open">Commissions</label>
           <label style={{ display: "flex", gap: 10, alignItems: "center", font: "var(--t-body)" }}>
-            <input type="checkbox" id="commissions_open" name="commissions_open"
-                   defaultChecked={maker?.commissions_open} />
+            <KeptCheckbox name="commissions_open" defaultChecked={maker?.commissions_open} />
             I am open to commissions
           </label>
         </div>

@@ -4,6 +4,7 @@ import { ActionForm, Field } from "@/components/ActionForm";
 import { signInAction } from "@/app/actions/account";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Sign in" };
 
 export default async function SignIn(
   { searchParams }: { searchParams: Promise<{ next?: string; reset?: string; expired?: string }> },
@@ -12,12 +13,13 @@ export default async function SignIn(
   return (
     <>
       <StudioHeader title="Sign in" back="/makers" />
+      <h1 className="sr-only">Sign in to your Studio</h1>
       <div className="context"><span>Your Studio</span><span className="accent">Makers only</span></div>
       {reset ? <Band label="Password set">Your new password is in place. Sign in with it.</Band> : null}
       {expired ? <Band label="Session ended">You were signed out because the session expired. Sign in to carry on where you were.</Band> : null}
       <ActionForm action={signInAction} submitLabel="Sign in" busyLabel="Signing in…" hidden={{ next }}>
-        <Field name="email" label="Email" type="email" required />
-        <Field name="password" label="Password" type="password" required />
+        <Field name="email" label="Email" type="email" required autoComplete="email" />
+        <Field name="password" label="Password" type="password" required autoComplete="current-password" />
       </ActionForm>
       <div className="inline-actions">
         <Link className="btn quiet" href="/makers/reset"><span>I have forgotten my password</span></Link>

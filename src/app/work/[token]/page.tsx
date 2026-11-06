@@ -4,15 +4,25 @@ import { getWork, getWorkEnding, imagesFor, routesFor, listWorksByMaker } from "
 import { Header, Band, Footer, Mark, imgSrc } from "@/components/Chrome";
 import { Icon } from "@/components/Icon";
 import { SaveButton } from "@/components/SaveButton";
-import { STATUS_LABEL, price, dimensions, statusIsStale, routeHref, routeDisplay, ROUTE_LABEL } from "@/lib/format";
+import { SheetFocus } from "@/components/SheetFocus";
+import { STATUS_LABEL, price, dimensions, statusIsStale, routeHref, routeDisplay, ROUTE_LABEL,
+         shortName, INTENTS, parseIntent } from "@/lib/format";
+import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
 
+export async function generateMetadata({ params }: { params: Promise<{ token: string }> }): Promise<Metadata> {
+  const { token } = await params;
+  const work = await getWork(token);
+  return { title: work ? `${work.title} by ${work.maker_display_name}` : "No longer on view" };
+}
+
 export default async function WorkDetail(
-  { params, searchParams }: { params: Promise<{ token: string }>; searchParams: Promise<{ contact?: string }> },
+  { params, searchParams }:
+  { params: Promise<{ token: string }>; searchParams: Promise<{ contact?: string; intent?: string }> },
 ) {
   const { token } = await params;
-  const { contact } = await searchParams;
+  const { contact, intent: intentParam } = await searchParams;
   const work = await getWork(token);
 
   // A URL that was public and is not any more still answers, truthfully
@@ -47,6 +57,10 @@ export default async function WorkDetail(
   const stale = statusIsStale(work.status_confirmed_at);
   const sold = work.status === "sold";
   const dims = dimensions(work.height_mm, work.width_mm, work.depth_mm);
+  const who = shortName(work.maker_display_name, work.maker_kind);
+  const intent = parseIntent(intentParam, sold);
+  const here = `/work/${work.public_token}`;
+  const message = { title: work.title, url: `${process.env.GALLERY_BASE_URL ?? ""}${here}`, intent };
 
   return (
     <>
@@ -54,7 +68,7 @@ export default async function WorkDetail(
 
       {/* Each image keeps its own proportion. Nothing is cropped to a common shape: the
           maker framed the object, and a gallery that re-crops is editing the work. */}
-      <div className="imgstrip">
+      <div className="imgstrip" role="region" aria-label={`Images of ${work.title}`} tabIndex={0}>
         {images.length ? images.map((im) => (
           <figure className="shot" key={im.id} style={{ margin: 0 }}>
             <img src={imgSrc(im, "w1280") ?? undefined} alt={im.alt_text ?? `${work.title}, image ${im.position + 1}`}
@@ -63,7 +77,9 @@ export default async function WorkDetail(
         )) : <div className="frame r45" style={{ width: "100%" }}><span className="notice">No image yet</span></div>}
       </div>
       <div className="hero" aria-hidden><div className="ledge" /></div>
-      {images.length > 1 ? <div className="context" style={{ paddingTop: 10, paddingBottom: 0 }}><span>{images.length} views · swipe</span></div> : null}
+      {/* A count of images, never "views": a view count is a public engagement figure the
+          product refuses (GAL-R07). */}
+      {images.length > 1 ? <div className="context" style={{ paddingTop: 10, paddingBottom: 0 }}><span>{images.length} images</span></div> : null}
 
       <div className="label">
         <div className={`status ${sold ? "sold" : "available"}`}>
@@ -78,10 +94,16 @@ export default async function WorkDetail(
         {dims ? <div className="dims">{dims}{work.year ? ` · ${work.year}` : ""}</div> : null}
       </div>
 
+      {/* Contact is offered only once there is a way to be contacted (GAL-PR-01). A button
+          that opens onto "no route yet" is a promise the page cannot keep. */}
       <div className="actions">
-        <Link className="btn block" href={`/work/${work.public_token}?contact=1`}>
-          <Icon name="chat" /> Contact {work.maker_display_name.split(" ")[0]} <span className="arrow" aria-hidden>→</span>
-        </Link>
+        {routes.length ? (
+          <Link className="btn block" href={`${here}?contact=1`} id="contact-trigger" scroll={false}>
+            <Icon name="chat" /> Contact {who} <span className="arrow" aria-hidden>→</span>
+          </Link>
+        ) : (
+          <p className="small" data-testid="no-contact">{work.maker_display_name} is not taking enquiries here yet.</p>
+        )}
       </div>
       <div className="actions secondary">
         <SaveButton token={work.public_token} />
@@ -105,48 +127,53 @@ export default async function WorkDetail(
         </div>
       </div>
 
-      {contact ? (
+      {contact && routes.length ? (
         <>
-        <Link className="contact-scrim" href={`/work/${work.public_token}`} aria-label="Close" />
-        <section className="sheet contact" role="dialog" aria-modal="true"
-                 aria-label={`Contact ${work.maker_display_name}`} id="contact">
+        <Link className="contact-scrim" href={here} aria-hidden tabIndex={-1} scroll={false} />
+        <section className="sheet contact" role="dialog" aria-modal="true" tabIndex={-1}
+                 aria-labelledby="contact-title" id="contact">
+          <SheetFocus sheetId="contact" closeHref={here} returnFocusTo="contact-trigger" />
           <div className="handle" />
           <div className="head">
-            <h2>Contact {work.maker_display_name}</h2>
-            <Link className="iconbtn" href={`/work/${work.public_token}`} aria-label="Close"><Icon name="close" /></Link>
+            <h2 id="contact-title">Contact {work.maker_display_name}</h2>
+            <Link className="iconbtn" href={here} aria-label="Close" data-autofocus scroll={false}><Icon name="close" /></Link>
           </div>
-          <ul className="choice">
-            <li>Ask about this work <Icon name="check" /></li>
-            <li>Commission something like this</li>
-            <li>General enquiry</li>
-          </ul>
+          {/* The choice is real: it changes the message the maker receives. Each option is a link
+              to the same sheet with that intent, so it works without script and the URL says
+              which one is chosen. */}
+          <nav aria-label="What your message is about">
+            <ul className="choice">
+              {INTENTS.map((i) => (
+                <li key={i.key}>
+                  <Link href={`${here}?contact=1&intent=${i.key}`} replace scroll={false}
+                        aria-current={intent === i.key ? "true" : undefined} data-intent={i.key}>
+                    {i.label}{intent === i.key ? <Icon name="check" /> : null}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
           {/* GAL-C1: the disclosure appears once, here, before any route is opened. */}
           <p className="disclosure">
             You are contacting the maker directly. Payment, delivery, returns and any dispute are arranged
             with them; The Gallery does not process the transaction.
           </p>
-          {routes.length ? (
-            <ul className="routes">
-              {routes.map((r) => (
-                <li key={r.id}>
-                  <Icon name={r.kind === "whatsapp" ? "chat" : r.kind === "email" ? "mail"
-                           : r.kind === "phone" ? "phone" : r.kind === "form" ? "form" : "globe"} />
-                  <span className="kind">{ROUTE_LABEL[r.kind]}</span>
-                  <a className="val" href={routeHref(r, work.title)} rel="noopener noreferrer"
-                     target={r.kind === "website" || r.kind === "form" ? "_blank" : undefined}
-                     data-route-kind={r.kind}>
-                    {routeDisplay(r, work.maker_display_name, work.title)}
-                  </a>
-                  <Icon name="external" small />
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <Band label="No route yet">
-              {work.maker_display_name} has not published a way to be contacted. Their gallery may
-              say more about the practice.
-            </Band>
-          )}
+          <ul className="routes">
+            {routes.map((r) => (
+              <li key={r.id}>
+                <Icon name={r.kind === "whatsapp" ? "chat" : r.kind === "email" ? "mail"
+                         : r.kind === "phone" ? "phone" : r.kind === "form" ? "form" : "globe"} />
+                <span className="kind">{ROUTE_LABEL[r.kind]}</span>
+                <a className="val" href={routeHref(r, message)} rel="noopener noreferrer"
+                   target={r.kind === "website" || r.kind === "form" ? "_blank" : undefined}
+                   data-route-kind={r.kind}>
+                  {routeDisplay(r, work.maker_display_name, true, work.maker_kind)}
+                  {r.kind === "website" || r.kind === "form" ? <span className="sr-only"> (opens in a new tab)</span> : null}
+                </a>
+                <Icon name="external" small />
+              </li>
+            ))}
+          </ul>
         </section>
         </>
       ) : null}

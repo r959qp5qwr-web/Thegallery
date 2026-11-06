@@ -46,7 +46,7 @@ test.describe("status, authority and privacy", () => {
     await signIn(page, OPERATOR.email, OPERATOR.password);
     await page.goto("/operator");
     await expect(page.getByRole("heading", { name: "Makers" })).toBeVisible();
-    await page.getByText("Anika Rao").click();
+    await page.getByRole("link", { name: /Anika Rao/ }).click();
 
     await page.getByLabel("Reason").fill("Reported for impersonation; withheld while it is checked.");
     await page.getByRole("button", { name: "Suspend this maker" }).click();
@@ -128,8 +128,8 @@ test.describe("status, authority and privacy", () => {
     await signIn(page, MAKER_B.email, MAKER_B.password);
     await page.goto("/studio/works/new");
     await page.getByLabel("Title").fill("Unfinished Warp");
-    await page.getByLabel("Material").selectOption("textile");
-    await page.getByLabel("Price", { exact: true }).selectOption("enquire");
+    await page.getByRole("radio", { name: "Textile" }).check();
+    await page.getByRole("radio", { name: "On enquiry" }).check();
     await page.getByRole("button", { name: "Save draft" }).click();
     await expect(page.getByText("The label is saved")).toBeVisible();
 

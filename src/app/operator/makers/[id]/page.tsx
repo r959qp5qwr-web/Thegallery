@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ACTION_LABEL, recordedAt } from "@/lib/format";
 import { redirect, notFound } from "next/navigation";
 import { currentAccount } from "@/lib/auth";
 import { client } from "@/lib/supabase";
@@ -7,6 +8,7 @@ import { ActionForm, Field } from "@/components/ActionForm";
 import { setMakerAccessAction } from "@/app/actions/operator";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Operator: maker" };
 
 export default async function OperatorMaker({ params }: { params: Promise<{ id: string }> }) {
   const account = await currentAccount();
@@ -56,8 +58,9 @@ export default async function OperatorMaker({ params }: { params: Promise<{ id: 
             {history.map((h) => (
               <li key={h.id}>
                 <span className="grow">
-                  <span className="primary">{h.action}</span>
-                  <span className="secondary">{h.reason} · {new Date(h.created_at).toLocaleString("en-IN")}</span>
+                  <span className="primary">{ACTION_LABEL[h.action] ?? h.action}</span>
+                  <span className="secondary">{h.reason}</span>
+                  <span className="secondary meta">{recordedAt(h.created_at)}</span>
                 </span>
               </li>
             ))}

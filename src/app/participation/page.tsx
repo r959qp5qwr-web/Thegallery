@@ -1,4 +1,6 @@
 import { Header, Footer } from "@/components/Chrome";
+
+export const metadata = { title: "Participation" };
 export const dynamic = "force-static";
 
 // GAL-OD-15 as ratified: five report categories, recorded reasons, reversible where
@@ -8,6 +10,7 @@ export default function Participation() {
   return (
     <>
       <Header place="Participation" back="/" />
+      <h1 className="sr-only">How participation works</h1>
       <div className="section">
         <h2 style={{ font: "var(--t-heading)", margin: "0 0 12px" }}>Who may hold a gallery</h2>
         <p className="body">Individual makers, studios and collectives presenting work they created or
