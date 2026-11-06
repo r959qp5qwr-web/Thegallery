@@ -21,7 +21,7 @@ export default function CreateAccount() {
       <ActionForm action={createAccountAction} submitLabel="Create account" busyLabel="Creating…">
         <Field name="email" label="Email" type="email" required autoComplete="email" />
         <Field name="password" label="Password" type="password" required autoComplete="new-password"
-               help="At least 10 characters. Length beats punctuation." />
+               help="At least 10 characters. A longer password is stronger than one full of symbols." />
       </ActionForm>
       <div className="inline-actions">
         <Link className="btn quiet" href="/makers/sign-in"><span>I already have an account</span></Link>

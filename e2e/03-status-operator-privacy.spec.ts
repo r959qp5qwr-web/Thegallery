@@ -119,9 +119,9 @@ test.describe("status, authority and privacy", () => {
     const res = await page.goto(`/studio/works/${work.rows[0].id}`);
     expect(res?.status()).toBe(404);
 
-    // The operator door says "not yours" rather than pretending Maker B is not signed in.
+    // The operator page says only the operator can open it, rather than pretending Maker B is not signed in.
     await page.goto("/operator");
-    await expect(page.getByRole("heading", { name: "This door is not yours" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Only the operator can open this page" })).toBeVisible();
   });
 
   test("a draft work is absent from every anonymous response", async ({ page }) => {
@@ -182,11 +182,11 @@ test.describe("status, authority and privacy", () => {
     await page.getByLabel("Gallery address").fill("closing-soon");
     await page.getByLabel("City").fill("Mysuru");
     await page.getByRole("button", { name: "Save" }).click();
-    await expect(page.getByText("Your identity is saved")).toBeVisible();
+    await expect(page.getByText("Your details are saved")).toBeVisible();
 
     await page.goto("/studio/account");
     // The consequence is stated before the act, in specifics rather than a warning triangle.
-    await expect(page.getByText("Closing is not a dead button")).toBeVisible();
+    await expect(page.getByText("Closing takes effect at once")).toBeVisible();
     await expect(page.getByText("/m/closing-soon")).toBeVisible();
 
     // A mistyped confirmation changes nothing.

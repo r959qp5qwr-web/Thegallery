@@ -4,7 +4,7 @@ import { currentAccount } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "For makers" };
+export const metadata = { title: "For Makers" };
 
 export default async function ForMakers() {
   if (await currentAccount()) redirect("/studio");
@@ -12,7 +12,7 @@ export default async function ForMakers() {
     <>
       <Header place="For Makers" />
       <main id="main" tabIndex={-1}>
-      <div className="context"><span>For makers</span><span className="accent">One gallery of your own</span></div>
+      <div className="context"><span>For Makers</span><span className="accent">One gallery of your own</span></div>
       <div className="section" style={{ paddingTop: 8 }}>
         <h1 style={{ font: "var(--t-display)", margin: "0 0 14px", letterSpacing: "-0.015em" }}>Show your work the way a gallery would</h1>
         <p className="body">One gallery of your own. Your objects at scale, your words, your way of being

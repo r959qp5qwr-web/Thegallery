@@ -15,10 +15,10 @@ export default async function Profile() {
 
   return (
     <>
-      <StudioHeader title="Identity" back="/studio" />
+      <StudioHeader title="Your details" back="/studio" />
       <main id="main" tabIndex={-1}>
       <div className="studio-state">
-        <h1>{maker ? "Your identity" : "Who is showing"}</h1>
+        <h1>{maker ? "Your details" : "Who is showing"}</h1>
         <p className="small" style={{ marginTop: 6 }}>
           Everything on this page is public. Your sign-in email is not on it.
         </p>

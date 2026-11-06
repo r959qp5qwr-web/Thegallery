@@ -35,26 +35,31 @@ test.describe("publish a work and meet it as a visitor", () => {
     // appears only after the server has answered and the form has reset.
     const rows = page.locator("ul.rowlist li");
 
-    await page.getByLabel("Kind").selectOption("whatsapp");
-    await page.getByLabel("The route").fill(ROUTE_WHATSAPP);
-    await page.getByRole("button", { name: "Add route" }).click();
-    await expect(page.getByTestId("form-notice")).toContainText("Route added");
+    await page.getByLabel("Way to contact").selectOption("whatsapp");
+    await page.getByLabel("Number or address").fill(ROUTE_WHATSAPP);
+    await page.getByRole("button", { name: "Add this way to contact you" }).click();
+    await expect(page.getByTestId("form-notice")).toContainText("Visitors can use it from your gallery");
     await expect(rows).toHaveCount(1);
 
-    await page.getByLabel("Kind").selectOption("email");
-    await page.getByLabel("The route").fill(ROUTE_EMAIL);
-    await page.getByRole("button", { name: "Add route" }).click();
+    await page.getByLabel("Way to contact").selectOption("email");
+    await page.getByLabel("Number or address").fill(ROUTE_EMAIL);
+    await page.getByRole("button", { name: "Add this way to contact you" }).click();
     await expect(rows).toHaveCount(2);
     await expect(rows.nth(1)).toContainText(ROUTE_EMAIL);
 
     // A malformed route is refused with a sentence that says how to fix it.
-    await page.getByLabel("Kind").selectOption("whatsapp");
-    await page.getByLabel("The route").fill("98765 43210");
-    await page.getByRole("button", { name: "Add route" }).click();
+    await page.getByLabel("Way to contact").selectOption("whatsapp");
+    await page.getByLabel("Number or address").fill("98765 43210");
+    await page.getByRole("button", { name: "Add this way to contact you" }).click();
     await expect(page.getByTestId("form-error")).toContainText("international form");
   });
 
   test("the maker creates a work with three differently shaped images and publishes it", async ({ page }) => {
+    // The longest walk in the suite: sign-in, a draft, three real uploads and a publish, each a
+    // round trip to the hosted test project. On 2026-11-06 every request completed but each act
+    // took 3–8 s, and the walk passed 60 s on both the Wave 2 and Wave 3 builds (GAL-L0023).
+    // The budget is raised for this walk alone; no assertion is loosened.
+    test.setTimeout(120_000);
     await signIn(page, MAKER_A.email, MAKER_A.password);
     await page.goto("/studio/works/new");
     await page.getByLabel("Title").fill(TITLE);

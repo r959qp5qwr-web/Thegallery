@@ -131,19 +131,19 @@ test.describe("trust and access", () => {
 
     // With no route, the Studio itself shows the task (GAL-PR-01), not only the routes page.
     await page.goto("/studio");
-    await expect(page.getByRole("link", { name: "Add a contact route" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Add a way to contact you" })).toBeVisible();
 
     await page.goto("/studio/contact-routes");
-    await page.getByLabel("Kind").selectOption("website");
-    await page.getByLabel("The route").fill("https://dhaaga.example");
-    await page.getByRole("button", { name: "Add route" }).click();
+    await page.getByLabel("Way to contact").selectOption("website");
+    await page.getByLabel("Number or address").fill("https://dhaaga.example");
+    await page.getByRole("button", { name: "Add this way to contact you" }).click();
     await expect(page.locator("ul.rowlist li")).toHaveCount(1);
 
-    await page.getByRole("link", { name: "Remove Website route" }).click();
-    await expect(page.getByText("This is your only live route")).toBeVisible();
+    await page.getByRole("link", { name: "Remove Website" }).click();
+    await expect(page.getByText("This is the only way visitors can contact you")).toBeVisible();
     await expect(page.getByRole("button", { name: "Remove Website" })).toHaveClass(/alarm/);
     await page.getByRole("button", { name: "Remove Website" }).click();
-    await expect(page.getByText("The route is removed")).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText("Removed. Visitors no longer see it.")).toBeVisible({ timeout: 15_000 });
     await expect(page.locator("ul.rowlist li")).toHaveCount(0);
   });
 

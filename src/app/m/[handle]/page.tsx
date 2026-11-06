@@ -26,7 +26,7 @@ export default async function MakerGallery({ params }: { params: Promise<{ handl
         <div className="centre">
           <div className="lbl">Not available</div>
           <h1>This gallery is not available</h1>
-          <p>It may not be published yet, or it may have been withdrawn.</p>
+          <p>It may not be published yet, or it may no longer be shown.</p>
           <Link className="btn" href="/">Back to the entrance</Link>
         </div>
         </main>

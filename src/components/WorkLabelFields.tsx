@@ -1,5 +1,6 @@
 "use client";
 import { Field, KeptSelect, useFormState } from "./ActionForm";
+import { STATUS_LABEL, STATUS_ORDER } from "@/lib/format";
 
 /** The work as a person writes it, used by Add a work and by Edit label so the two can never
  *  drift apart. Material and price mode are segmented controls (INTERFACE_FOUNDATION §7):
@@ -80,11 +81,7 @@ export function WorkLabelFields({ materials, values = {}, withStatus = true, def
         <div className="field">
           <label htmlFor="status">Status</label>
           <KeptSelect name="status" defaultValue={values.status ?? "available"}>
-            <option value="available">Available</option>
-            <option value="made_to_order">Made to order</option>
-            <option value="enquire">Enquire</option>
-            <option value="on_view">On view</option>
-            <option value="sold">Sold</option>
+            {STATUS_ORDER.map((s) => <option key={s} value={s}>{STATUS_LABEL[s]}</option>)}
           </KeptSelect>
         </div>
       ) : null}

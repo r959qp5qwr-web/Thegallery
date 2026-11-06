@@ -11,7 +11,7 @@ export default function Privacy() {
       <div className="section">
         <h2 style={{ font: "var(--t-heading)", margin: "0 0 12px" }}>Your account email stays private</h2>
         <p className="body">The address you sign in with is never shown on a public page and is not included
-          in any public response. If you want people to email you, add a public email route in your Studio —
+          in any public response. If you want people to email you, add a public email under Ways to contact you in your Studio —
           that is a separate value you choose.</p>
       </div>
       <div className="section">

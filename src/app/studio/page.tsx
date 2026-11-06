@@ -7,10 +7,10 @@ import { StatusChip } from "@/components/StatusChip";
 import { publishGalleryAction, changeStatusAction } from "@/app/actions/studio";
 import { SheetFocus } from "@/components/SheetFocus";
 import { Icon } from "@/components/Icon";
-import { STATUS_LABEL } from "@/lib/format";
+import { STATUS_LABEL, STATUS_ORDER } from "@/lib/format";
 
-// The five statuses in the maker's own order (J-003 picker).
-const STATUSES = ["available", "made_to_order", "enquire", "on_view", "sold"];
+// The five statuses in the maker's own order (J-003 picker), named as every page names them.
+const STATUSES: readonly string[] = STATUS_ORDER;
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Studio" };
@@ -66,7 +66,7 @@ export default async function Studio({ searchParams }: {
           <li><span className="num">2</span><span className="grow done">Add a work with its images</span></li>
           <li><span className="num">3</span><span className="grow done">Publish</span></li>
         </ol>
-        <div className="hint">A public way to be contacted is separate, and you can add it whenever you
+        <div className="hint">A public way to contact you is separate, and you can add it whenever you
           like — it is not needed to publish.</div>
       </main>
       </>
@@ -78,21 +78,21 @@ export default async function Studio({ searchParams }: {
     <>
       <StudioHeader title="Studio" />
       <main id="main" tabIndex={-1}>
-      {saved === "profile" ? <Band label="Saved">Your identity is saved.</Band> : null}
+      {saved === "profile" ? <Band label="Saved">Your details are saved.</Band> : null}
       <div className="studio-state">
         <h1>{maker.display_name}</h1>
         <p className="small">
           {gallery?.lifecycle === "published"
-            ? <>Your gallery is live at <Link href={`/m/${maker.handle}`}>/m/{maker.handle}</Link>.</>
+            ? <>Your gallery is on view at <Link href={`/m/${maker.handle}`}>/m/{maker.handle}</Link>.</>
             : "Your gallery is a draft. Publishing your first work opens it."}
         </p>
       </div>
 
-      {/* GAL-PR-01: Contact is not advertised until a route exists, and the Studio shows the task. */}
+      {/* GAL-PR-01: Contact is not advertised until a way to contact exists, and the Studio shows the task. */}
       {!routes.some((r) => r.enabled && r.validated) ? (
         <Band label="No way to contact you yet">
-          Your work is shown without a Contact button until you add a route.{" "}
-          <Link href="/studio/contact-routes">Add a contact route</Link>
+          Your work is shown without a Contact button until you add a way to contact you.{" "}
+          <Link href="/studio/contact-routes">Add a way to contact you</Link>
         </Band>
       ) : null}
 
@@ -197,8 +197,8 @@ export default async function Studio({ searchParams }: {
         );
       })()}
       <div className="actions secondary">
-        <Link className="btn quiet" href="/studio/profile"><span>Identity</span></Link>
-        <Link className="btn quiet" href="/studio/contact-routes"><span>Contact routes</span></Link>
+        <Link className="btn quiet" href="/studio/profile"><span>Your details</span></Link>
+        <Link className="btn quiet" href="/studio/contact-routes"><span>Ways to contact you</span></Link>
         <Link className="btn quiet" href="/studio/account"><span>Account</span></Link>
       </div>
       </main>

@@ -58,7 +58,7 @@ export default async function Entrance() {
         <>
           <div className="context"><span>On view now</span><span className="accent">Bengaluru</span></div>
           <EmptyPlinth title="The Gallery is being hung"
-                       action={<Action href="/makers" primary>For makers</Action>}>
+                       action={<Action href="/makers" primary>For Makers</Action>}>
             No work is on view yet. The first makers are setting up their galleries, and the
             first one to publish opens the room.
           </EmptyPlinth>
