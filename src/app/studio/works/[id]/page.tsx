@@ -54,6 +54,12 @@ export default async function EditWork(
   const { work, images } = data;
 
   const ready = images.filter((i) => i.state === "ready");
+  // The publish moment (R4): what the work's link will look like when it is shared.
+  const { data: me } = await db.from("makers").select("display_name").limit(1);
+  const makerName = (me?.[0] as { display_name: string } | undefined)?.display_name ?? "";
+  const base = process.env.GALLERY_BASE_URL ?? "";
+  const publicUrl = `${base}/work/${work.public_token}`;
+  const shareText = `${work.title} — ${publicUrl}`;
   const failed = images.filter((i) => i.state === "failed");
   const dims = dimensions(work.height_mm, work.width_mm, work.depth_mm);
 
@@ -172,6 +178,26 @@ export default async function EditWork(
               <Link className="btn quiet" href={`/work/${work.public_token}`}><span>View public page</span></Link>
             </div>
           </form>
+          {!work.taken_down ? (
+            <section className="share" aria-labelledby="share-title" data-testid="share">
+              <div className="group" style={{ margin: "28px 0 0" }}><div className="ghead" id="share-title">Share</div></div>
+              <p className="small" style={{ margin: "8px 0 12px" }}>This is how its link looks when you send it on WhatsApp.</p>
+              {/* Built from the same fields as the page's share tags (generateMetadata in
+                  /work/[token]): the cover, the title with your name, the medium and the status. */}
+              <div className="share-card" aria-hidden>
+                {ready[0] ? <img src={`/img/${ready[0].id}/w640`} alt="" /> : null}
+                <div className="share-text">
+                  <div className="share-title">{work.title} by {makerName}</div>
+                  <div className="share-desc">{[work.medium ?? work.material, STATUS_LABEL[work.status]].filter(Boolean).join(" · ")}</div>
+                  <div className="share-host">{base.replace(/^https?:\/\//, "")}</div>
+                </div>
+              </div>
+              <div className="inline-actions" style={{ padding: "16px 0 0" }}>
+                <a className="btn" href={`https://wa.me/?text=${encodeURIComponent(shareText)}`} target="_blank" rel="noopener noreferrer"
+                   data-testid="share-whatsapp"><span>Share on WhatsApp</span><span className="sr-only"> (opens in a new tab)</span></a>
+              </div>
+            </section>
+          ) : null}
           {/* Retiring takes a work off every public page. It is never one tap: the consequence is
               named first, and the act can be undone from this page (UX_FOUNDATION). */}
           {confirm === "retire" ? (

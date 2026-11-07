@@ -226,3 +226,57 @@ body:has(.contact-scrim) .bar { display: none; }
 @supports not selector(:has(*)) {
   .sheet.contact { padding-bottom: calc(20px + var(--bar-h) + env(safe-area-inset-bottom, 0px)); }
 }
+
+/* Wave 4 — cutting edge (design review R4).
+   1. The desktop hang: from 900 px the work's images hang one under another at up to 85vh while
+      the wall label stays beside them (already sticky, Wave 2), like walking past wall text.
+      The position count belongs to the swiped strip, so it steps aside here. */
+@media (min-width: 900px) {
+  .detail-media .imgstrip { flex-direction: column; overflow: visible; scroll-snap-type: none;
+                            gap: var(--s4); background: transparent; }
+  .detail-media .imgstrip .shot { width: 100%; background: var(--surface-plinth); }
+  .detail-media .imgstrip .shot img { max-height: 85vh; }
+  .detail-media .image-count { display: none; }
+
+  /* A maker's gallery: the lead work large, two beside it, the rest in threes below. */
+  .grid.hang-lead { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+                    grid-auto-flow: row dense; align-items: start; }
+  .grid.hang-lead .tile, .grid.hang-lead .tile.wide { flex: none; min-width: 0; }
+  .grid.hang-lead .tile.wide { grid-column: span 2; }
+  .grid.hang-lead .tile.lead { grid-column: 1 / span 2; grid-row: span 2; }
+}
+
+/* The compact hang's two columns are equal whatever they hold. system.css writes "1fr 1fr",
+   which lets a photograph's own width widen its column and squeeze its neighbour to 80 px
+   (seen 2026-11-07 on a phone gallery of three works). minmax(0, 1fr) keeps the plate's
+   two equal columns. */
+.grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid .tile { min-width: 0; }
+/* A short last row is centred, as it is from 600 px (Wave 2), rather than left half empty. */
+@media (max-width: 599.98px) {
+  .grid > .tile:not(.wide):last-child:nth-child(odd) { grid-column: 1 / -1; justify-self: center;
+                                                     width: calc((100% - 16px) / 2); }
+}
+
+/* 2. One orchestrated motion: a tile becomes the work's hero (ViewTransition.tsx), about
+      280 ms, and nothing else on the site moves. Reduced motion: no animation at all. */
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-group(work-hero) { animation-duration: 280ms; animation-timing-function: cubic-bezier(0.2, 0, 0, 1); }
+  ::view-transition-old(root), ::view-transition-new(root) { animation-duration: 280ms; }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+}
+
+/* 4. Status you can trust: "confirmed 3 days ago" beside the status, in the label's quiet voice. */
+.status .fresh { color: var(--text-muted); text-transform: none; letter-spacing: 0; font: var(--t-body-small); }
+
+/* 3. The publish moment: the work's link as it will look when shared — the work's cover, its
+      title and maker, the medium and status, the address. Drawn in the Studio's own type. */
+.share { padding: 0 var(--pad-x-studio); }
+.share-card { border: 1px solid var(--rule-hair); background: var(--surface); max-width: 420px; }
+.share-card img { display: block; width: 100%; aspect-ratio: 1.91 / 1; object-fit: cover; background: var(--surface-plinth); }
+.share-text { padding: 10px 12px 12px; display: grid; gap: 2px; }
+.share-title { font: var(--t-body); color: var(--text); }
+.share-desc { font: var(--t-body-small); color: var(--text-soft); }
+.share-host { font: var(--t-meta); letter-spacing: var(--track-meta); color: var(--text-muted); }

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { TransitionLink } from "./ViewTransition";
 import { Icon } from "./Icon";
 import { SectionNav } from "./SectionNav";
 import type { PublicImage, PublicWork } from "@/lib/queries";
@@ -105,12 +106,12 @@ export function Hero({ image, alt, href }: { image?: PublicImage; alt: string; h
  *  is honoured on the detail surface where it can be seen whole.
  *  `inGallery`: on the maker's own gallery the maker line would repeat the page heading, so
  *  the tile carries the medium there instead. */
-export function WorkTile({ work, image, wide, inGallery }:
-  { work: PublicWork; image?: PublicImage; wide?: boolean; inGallery?: boolean }) {
+export function WorkTile({ work, image, wide, inGallery, lead }:
+  { work: PublicWork; image?: PublicImage; wide?: boolean; inGallery?: boolean; lead?: boolean }) {
   const src = imgSrc(image, "w640");
   const sold = work.status === "sold";
   return (
-    <Link className={`tile${wide ? " wide" : ""}`} href={`/work/${work.public_token}`}>
+    <TransitionLink className={`tile${wide ? " wide" : ""}${lead ? " lead" : ""}`} href={`/work/${work.public_token}`}>
       <div className={`frame ${wide ? "" : "r45"}`}>
         {src
           ? <img src={src} alt={image?.alt_text ?? ""} loading="lazy" />
@@ -125,7 +126,7 @@ export function WorkTile({ work, image, wide, inGallery }:
         {STATUS_LABEL[work.status] ?? work.status}
         {work.price_mode === "exact" && !sold ? ` · ${price(work.price_mode, work.price_amount)}` : ""}
       </div>
-    </Link>
+    </TransitionLink>
   );
 }
 

@@ -114,6 +114,9 @@ test.describe("one vocabulary", () => {
     await expect(count).toHaveText("1 of 3");
     expect(await visibleText(page)).not.toMatch(/\bviews\b|swipe|\d+ images/i);
 
+    // From 900 px the images hang one under another (Wave 4), so there is no strip to follow and
+    // the count steps aside; e2e/09 holds that hang.
+    if ((page.viewportSize()?.width ?? 0) >= 900) { await expect(count).toBeHidden(); return; }
     const strip = page.locator("#work-images");
     await strip.evaluate((el) => { el.scrollLeft = el.scrollWidth; });
     await expect(count).toHaveText("3 of 3");

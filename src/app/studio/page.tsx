@@ -4,10 +4,10 @@ import { currentAccount } from "@/lib/auth";
 import { studioContext } from "@/lib/queries";
 import { StudioHeader, Band } from "@/components/Chrome";
 import { StatusChip } from "@/components/StatusChip";
-import { publishGalleryAction, changeStatusAction } from "@/app/actions/studio";
+import { publishGalleryAction, changeStatusAction, reconfirmStatusAction } from "@/app/actions/studio";
 import { SheetFocus } from "@/components/SheetFocus";
 import { Icon } from "@/components/Icon";
-import { STATUS_LABEL, STATUS_ORDER } from "@/lib/format";
+import { STATUS_LABEL, STATUS_ORDER, confirmedAgo, statusIsStale } from "@/lib/format";
 
 // The five statuses in the maker's own order (J-003 picker), named as every page names them.
 const STATUSES: readonly string[] = STATUS_ORDER;
@@ -16,10 +16,10 @@ export const dynamic = "force-dynamic";
 export const metadata = { title: "Studio" };
 
 export default async function Studio({ searchParams }: {
-  searchParams: Promise<{ saved?: string; status?: string; changed?: string; from?: string; unchanged?: string; restored_status?: string }> }) {
+  searchParams: Promise<{ saved?: string; status?: string; changed?: string; from?: string; unchanged?: string; restored_status?: string; confirmed?: string }> }) {
   const account = await currentAccount();
   if (!account) redirect("/makers/sign-in?next=/studio");
-  const { saved, status: picking, changed, from, unchanged, restored_status } = await searchParams;
+  const { saved, status: picking, changed, from, unchanged, restored_status, confirmed } = await searchParams;
   const { maker, gallery, works, routes } = await studioContext(account.id);
 
   // A suspended maker is not signed out and not left guessing: the Studio states the
@@ -116,8 +116,11 @@ export default async function Studio({ searchParams }: {
                 <Link className="grow" href={`/studio/works/${w.id}`} style={{ textDecoration: "none" }}>
                   <span className="primary">{w.title}</span>
                   <span className="secondary">
-                    {/* Status is the chip's to say; the row's second line carries the material. */}
+                    {/* Status is the chip's to say; the row's second line carries the material and,
+                        on a published work, when its status was last confirmed (J-003). */}
                     {w.material}
+                    {w.lifecycle === "published" && !w.taken_down && !statusIsStale(w.status_confirmed_at)
+                      ? ` · confirmed ${confirmedAgo(w.status_confirmed_at)}` : ""}
                   </span>
                 </Link>
                 {/* J-003: on a published work the chip is the status control — a button whose name
@@ -142,6 +145,18 @@ export default async function Studio({ searchParams }: {
                     <input type="hidden" name="undo" value="1" />
                     <button className="btn quiet" type="submit"><span>Undo</span></button>
                   </form>
+                ) : null}
+                {/* J-003 reconfirmation: past 90 days the row asks, and one tap answers. */}
+                {w.lifecycle === "published" && !w.taken_down && statusIsStale(w.status_confirmed_at) && confirmed !== w.id ? (
+                  <form action={reconfirmStatusAction} className="undo-line" data-testid="reconfirm">
+                    <span>Status last confirmed {confirmedAgo(w.status_confirmed_at)}</span>
+                    <input type="hidden" name="work_id" value={w.id} />
+                    <button className="btn quiet" type="submit"
+                            aria-label={`Confirm ${w.title} is still ${STATUS_LABEL[w.status] ?? w.status}`}><span>Confirm</span></button>
+                  </form>
+                ) : null}
+                {confirmed === w.id ? (
+                  <p className="undo-line" role="status">Confirmed. Visitors now see {STATUS_LABEL[w.status]} as current.</p>
                 ) : null}
                 {restored_status === w.id ? (
                   <p className="undo-line" role="status">Status put back to {STATUS_LABEL[w.status]}.</p>

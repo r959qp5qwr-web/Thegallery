@@ -67,9 +67,12 @@ export default async function MakerGallery({ params }: { params: Promise<{ handl
       <div className="section">
         <div className="lead">{works.length ? `${works.length} work${works.length === 1 ? "" : "s"}` : "Works"}</div>
         {works.length ? (
-          <div className="grid" style={{ padding: 0 }}>
-            {works.map((w) => (
+          // The curator sets the rhythm, not the image ratio (R4): from three works up, the maker's
+          // first work hangs large with the next two beside it, on a wall wide enough (≥ 900 px).
+          <div className={`grid${works.length >= 3 ? " hang-lead" : ""}`} style={{ padding: 0 }}>
+            {works.map((w, i) => (
               <WorkTile key={w.id} work={w} image={byWork.get(w.id)} inGallery
+                        lead={works.length >= 3 && i === 0}
                         wide={orientation(byWork.get(w.id)) === "landscape"} />
             ))}
           </div>

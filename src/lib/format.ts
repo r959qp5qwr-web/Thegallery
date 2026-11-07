@@ -39,6 +39,21 @@ export function statusIsStale(confirmedAt: string | Date | null): boolean {
   return Date.now() - t > 90 * 86_400_000;
 }
 
+/** How long ago the maker last stated a status, in words a wall label would use: "today",
+ *  "yesterday", "3 days ago", "2 weeks ago", "4 months ago", "over a year ago". Whole units,
+ *  rounded down, so a status is never presented as fresher than it is (P-11). */
+export function confirmedAgo(confirmedAt: string | Date | null, now: number = Date.now()): string | null {
+  if (!confirmedAt) return null;
+  const days = Math.floor((now - new Date(confirmedAt).getTime()) / 86_400_000);
+  if (!Number.isFinite(days)) return null;
+  if (days <= 0) return "today";
+  if (days === 1) return "yesterday";
+  if (days < 14) return `${days} days ago`;
+  if (days < 60) return `${Math.floor(days / 7)} weeks ago`;
+  if (days < 365) return `${Math.floor(days / 30)} months ago`;
+  return "over a year ago";
+}
+
 export type Route = { id: string; kind: string; value: string; label: string | null };
 
 /** How the product addresses a maker in a short action. A person is called by their first
@@ -60,16 +75,19 @@ export function parseIntent(v: string | undefined, sold: boolean): Intent {
   return sold ? "commission" : "ask";
 }
 
-/** A work as a message needs it: its title, and the address that brings the maker back to it. */
-export type MessageWork = { title: string; url: string; intent: Intent };
+/** A work as a message needs it: its title, its status as the visitor saw it, what the visitor
+ *  wants, and the address that brings the maker back to it. The maker can answer from the
+ *  message alone (design review R4). */
+export type MessageWork = { title: string; url: string; intent: Intent; status?: string };
 
 function messageText(work?: MessageWork): string {
   if (!work) return "Hello, I found your work on The Gallery.";
+  const named = work.status ? `"${work.title}" (${work.status})` : `"${work.title}"`;
   const about = work.intent === "commission"
-    ? `I saw "${work.title}" on The Gallery and would like to ask about commissioning something like it.`
+    ? `I saw ${named} on The Gallery and would like to ask about commissioning something like it.`
     : work.intent === "general"
-    ? `I found your work on The Gallery while looking at "${work.title}".`
-    : `I saw "${work.title}" on The Gallery and would like to ask about it.`;
+    ? `I found your work on The Gallery while looking at ${named}.`
+    : `I saw ${named} on The Gallery and would like to ask about it.`;
   return `Hello, ${about} ${work.url}`;
 }
 

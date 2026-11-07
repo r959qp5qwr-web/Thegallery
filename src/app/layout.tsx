@@ -2,8 +2,11 @@ import type { Metadata, Viewport } from "next";
 import { IconSprite } from "@/components/Icon";
 import { SectionNav, SignedIn } from "@/components/SectionNav";
 import { currentAccount } from "@/lib/auth";
+import { ViewTransitions } from "@/components/ViewTransition";
 
 export const metadata: Metadata = {
+  // Absolute addresses for share previews (og:image, og:url); the live Worker sets the domain.
+  metadataBase: new URL(process.env.GALLERY_BASE_URL ?? "http://127.0.0.1:3100"),
   // Every page names itself first, so a screen reader announces where a navigation landed.
   title: { default: "The Gallery", template: "%s · The Gallery" },
   description:
@@ -31,7 +34,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <SignedIn value={!!account}>
           {/* Each page renders its own header, then its <main>, then its footer, so the header
               and footer are landmarks of their own rather than content inside main. */}
-          <div className="phone">{children}</div>
+          <div className="phone"><ViewTransitions>{children}</ViewTransitions></div>
           <SectionNav placement="bar" />
         </SignedIn>
       </body>
