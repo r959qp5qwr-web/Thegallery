@@ -6,7 +6,7 @@ import { Icon } from "@/components/Icon";
 import { ImageCount } from "@/components/ImageCount";
 import { SaveButton } from "@/components/SaveButton";
 import { SheetFocus } from "@/components/SheetFocus";
-import { STATUS_LABEL, price, dimensions, statusIsStale, confirmedAgo, routeHref, routeDisplay, ROUTE_LABEL,
+import { STATUS_LABEL, labelPrice, dimensions, statusIsStale, confirmedAgo, routeHref, routeDisplay, ROUTE_LABEL,
          shortName, INTENTS, parseIntent } from "@/lib/format";
 import type { Metadata } from "next";
 
@@ -78,6 +78,7 @@ export default async function WorkDetail(
   const stale = statusIsStale(work.status_confirmed_at);
   const ago = confirmedAgo(work.status_confirmed_at);
   const sold = work.status === "sold";
+  const shownPrice = labelPrice(work);
   const dims = dimensions(work.height_mm, work.width_mm, work.depth_mm);
   const who = shortName(work.maker_display_name, work.maker_kind);
   const intent = parseIntent(intentParam, sold);
@@ -116,9 +117,9 @@ export default async function WorkDetail(
       <div className="label">
         <div className={`status ${sold ? "sold" : "available"}`}>
           <span><Mark muted={sold} />{STATUS_LABEL[work.status]}</span>
-          {work.price_mode === "exact" && !sold
-            ? <span className="price">{price(work.price_mode, work.price_amount)}</span>
-            : work.price_mode !== "exact" ? <span className="price">{price(work.price_mode, null)}</span> : null}
+          {/* One price rule for every public surface (labelPrice): none beside Sold or Not for
+              sale, and never a repeat of the status. */}
+          {shownPrice ? <span className="price" data-testid="price">{shownPrice}</span> : null}
           {/* Status you can trust (R4): when the maker last stated it, fed by their reconfirmation.
               Past 90 days it reads as a caution, never hidden (DOMAIN_MODEL §2.3, P-11). */}
           {ago ? (stale

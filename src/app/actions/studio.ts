@@ -370,6 +370,26 @@ export async function reconfirmStatusAction(form: FormData): Promise<void> {
   redirect(`/studio?confirmed=${workId}`);
 }
 
+/** Hang this first (governor, 2026-11-07, decision 3): move one published work to the front of
+ *  the maker's own order. Only `position` changes — not `updated_at`, not status, not its
+ *  confirmation — so nothing a visitor reads about the work itself moves. Row-level security
+ *  (writing_maker_id) is what keeps it to the maker's own works and refuses a suspended maker. */
+export async function hangFirstAction(form: FormData): Promise<void> {
+  await requireActiveMaker();
+  const workId = String(form.get("work_id") ?? "");
+  const db = await client();
+  const { data } = await db.from("works").select("gallery_id,position,lifecycle,taken_down").eq("id", workId).limit(1);
+  const w = data?.[0] as { gallery_id: string; position: number; lifecycle: string; taken_down: boolean } | undefined;
+  if (!w || w.lifecycle !== "published" || w.taken_down) redirect(`/studio/works/${workId}?kept=unchanged`);
+  const { data: others } = await db.from("works").select("position").eq("gallery_id", w.gallery_id).neq("id", workId);
+  const front = Math.min(w.position, ...((others ?? []) as { position: number }[]).map((o) => o.position));
+  const { data: moved, error } = await db.from("works").update({ position: front - 1 })
+    .eq("id", workId).eq("lifecycle", "published").select("id");
+  if (error || !moved?.length) redirect(`/studio/works/${workId}?kept=unchanged`);
+  revalidatePath("/", "layout");
+  redirect(`/studio/works/${workId}?hung=1`);
+}
+
 export async function retireWorkAction(form: FormData): Promise<void> {
   await requireActiveMaker();
   const workId = String(form.get("work_id") ?? "");

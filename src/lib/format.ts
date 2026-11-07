@@ -23,6 +23,22 @@ export function price(mode: string, amount: string | number | null, currency = "
   return `${symbol}${n.toLocaleString("en-IN", { maximumFractionDigits: 0 })}`;
 }
 
+/** The price a visitor reads beside a work's status, or null for none. One rule for every public
+ *  surface, keyed on the stored tokens (governor, 2026-11-07, decision 1):
+ *  - "Sold" and "Not for sale" (stored `on_view`) carry no price: there is nothing to buy, and a
+ *    figure beside them reads as an offer the maker is not making.
+ *  - A price never repeats its status: "By enquiry" is not followed by "Price on enquiry", nor
+ *    "Made to order" by "Made to order".
+ *  With `exactOnly` (a wall tile, the entrance) only a stated amount is shown. */
+export function labelPrice(work: { status: string; price_mode: string; price_amount: string | number | null },
+                           opts: { exactOnly?: boolean } = {}): string | null {
+  if (work.status === "sold" || work.status === "on_view") return null;
+  if (work.price_mode === "exact") return price(work.price_mode, work.price_amount);
+  if (opts.exactOnly) return null;
+  if (work.price_mode === work.status) return null;   // enquire/enquire, made_to_order/made_to_order
+  return price(work.price_mode, null);
+}
+
 export function dimensions(h: number | null, w: number | null, d: number | null): string | null {
   const parts = [h, w, d].filter((v): v is number => typeof v === "number" && v > 0);
   if (!parts.length) return null;

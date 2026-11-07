@@ -1,6 +1,6 @@
 import { listRecentWorks, imagesFor, materials, type PublicImage } from "@/lib/queries";
 import { Header, Hero, WorkTile, MaterialRail, Footer, Mark, Action, EmptyPlinth, orientation } from "@/components/Chrome";
-import { STATUS_LABEL, price } from "@/lib/format";
+import { STATUS_LABEL, labelPrice } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 
@@ -37,8 +37,8 @@ export default async function Entrance() {
           <div className="label">
             <div className={`status ${featured.status === "sold" ? "sold" : "available"}`}>
               <span><Mark muted={featured.status === "sold"} />{STATUS_LABEL[featured.status]}</span>
-              {featured.price_mode === "exact" && featured.status !== "sold"
-                ? <span className="price">{price(featured.price_mode, featured.price_amount)}</span> : null}
+              {labelPrice(featured, { exactOnly: true })
+                ? <span className="price">{labelPrice(featured, { exactOnly: true })}</span> : null}
             </div>
             <h1 className="title">{featured.title}</h1>
             <div className="makerline">{featured.maker_display_name} <em>· {featured.medium ?? featured.material}</em></div>
