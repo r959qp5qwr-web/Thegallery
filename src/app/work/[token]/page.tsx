@@ -6,7 +6,7 @@ import { Icon } from "@/components/Icon";
 import { ImageCount } from "@/components/ImageCount";
 import { SaveButton } from "@/components/SaveButton";
 import { SheetFocus } from "@/components/SheetFocus";
-import { STATUS_LABEL, price, dimensions, statusIsStale, routeHref, routeDisplay, ROUTE_LABEL,
+import { STATUS_LABEL, price, dimensions, statusIsStale, confirmedAgo, routeHref, routeDisplay, ROUTE_LABEL,
          shortName, INTENTS, parseIntent } from "@/lib/format";
 import type { Metadata } from "next";
 
@@ -15,7 +15,25 @@ export const dynamic = "force-dynamic";
 export async function generateMetadata({ params }: { params: Promise<{ token: string }> }): Promise<Metadata> {
   const { token } = await params;
   const work = await getWork(token);
-  return { title: work ? `${work.title} by ${work.maker_display_name}` : "No longer on view" };
+  if (!work) return { title: "No longer on view" };
+  // What a link to this work shows when it is shared on WhatsApp or elsewhere: the work's own
+  // cover, its title, the maker and the status as the maker last stated it. Nothing else.
+  const [cover] = await imagesFor([work.id]);
+  const title = `${work.title} by ${work.maker_display_name}`;
+  const description = [work.medium ?? work.material, STATUS_LABEL[work.status]].filter(Boolean).join(" · ");
+  const url = `/work/${work.public_token}`;
+  return {
+    title, description,
+    alternates: { canonical: url },
+    openGraph: {
+      type: "article", siteName: "The Gallery", title, description, url,
+      // The w1280 variant is at most 1280 wide, keeping the image's proportion.
+      images: cover ? [{ url: `/img/${cover.id}/w1280`, width: Math.min(1280, cover.width),
+                         height: Math.round(cover.height * Math.min(1280, cover.width) / cover.width),
+                         alt: cover.alt_text ?? work.title }] : undefined,
+    },
+    twitter: { card: cover ? "summary_large_image" : "summary", title, description },
+  };
 }
 
 export default async function WorkDetail(
@@ -58,12 +76,14 @@ export default async function WorkDetail(
     imagesFor([work.id]), routesFor(work.maker_id), listWorksByMaker(work.maker_handle),
   ]);
   const stale = statusIsStale(work.status_confirmed_at);
+  const ago = confirmedAgo(work.status_confirmed_at);
   const sold = work.status === "sold";
   const dims = dimensions(work.height_mm, work.width_mm, work.depth_mm);
   const who = shortName(work.maker_display_name, work.maker_kind);
   const intent = parseIntent(intentParam, sold);
   const here = `/work/${work.public_token}`;
-  const message = { title: work.title, url: `${process.env.GALLERY_BASE_URL ?? ""}${here}`, intent };
+  const message = { title: work.title, url: `${process.env.GALLERY_BASE_URL ?? ""}${here}`, intent,
+                    status: STATUS_LABEL[work.status] };
 
   return (
     <>
@@ -77,17 +97,19 @@ export default async function WorkDetail(
       {/* Each image keeps its own proportion. Nothing is cropped to a common shape: the
           maker framed the object, and a gallery that re-crops is editing the work. */}
       <div className="imgstrip" id="work-images" role="region" aria-label={`Images of ${work.title}`} tabIndex={0}>
-        {images.length ? images.map((im) => (
+        {images.length ? images.map((im, i) => (
           <figure className="shot" key={im.id} style={{ margin: 0 }}>
+            {/* The first image is the hero a tile becomes (one view transition, R4). */}
             <img src={imgSrc(im, "w1280") ?? undefined} alt={im.alt_text ?? `${work.title}, image ${im.position + 1}`}
-                 width={im.width} height={im.height} />
+                 width={im.width} height={im.height}
+                 style={i === 0 ? { viewTransitionName: "work-hero" } : undefined} />
           </figure>
         )) : <div className="frame r45" style={{ width: "100%" }}><span className="notice">No image yet</span></div>}
       </div>
       <div className="hero" aria-hidden><div className="ledge" /></div>
       {/* Where the visitor is among the images, never "views": a view count is a public
           engagement figure the product refuses (GAL-R07). */}
-      {images.length > 1 ? <div className="context" style={{ paddingTop: 10, paddingBottom: 0 }}><ImageCount stripId="work-images" total={images.length} /></div> : null}
+      {images.length > 1 ? <div className="context image-count" style={{ paddingTop: 10, paddingBottom: 0 }}><ImageCount stripId="work-images" total={images.length} /></div> : null}
 
       </div>
       <div className="detail-label">
@@ -97,7 +119,11 @@ export default async function WorkDetail(
           {work.price_mode === "exact" && !sold
             ? <span className="price">{price(work.price_mode, work.price_amount)}</span>
             : work.price_mode !== "exact" ? <span className="price">{price(work.price_mode, null)}</span> : null}
-          {stale ? <span className="stale">Status last confirmed some time ago</span> : null}
+          {/* Status you can trust (R4): when the maker last stated it, fed by their reconfirmation.
+              Past 90 days it reads as a caution, never hidden (DOMAIN_MODEL §2.3, P-11). */}
+          {ago ? (stale
+            ? <span className="stale" data-testid="freshness">Status last confirmed {ago}</span>
+            : <span className="fresh" data-testid="freshness"><span aria-hidden>· </span>confirmed {ago}</span>) : null}
         </div>
         <h1 className="title">{work.title}</h1>
         <div className="makerline">{work.maker_display_name} <em>· {work.medium ?? work.material}</em></div>

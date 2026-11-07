@@ -39,6 +39,8 @@ export default async function MakerGallery({ params }: { params: Promise<{ handl
   const images = await imagesFor(works.map((w) => w.id));
   const byWork = new Map<string, PublicImage>();
   for (const i of images) if (!byWork.has(i.work_id)) byWork.set(i.work_id, i);
+  const leadHang = works.length >= 3
+    && works.slice(0, 3).every((w) => orientation(byWork.get(w.id)) !== "landscape");
 
   return (
     <>
@@ -67,9 +69,15 @@ export default async function MakerGallery({ params }: { params: Promise<{ handl
       <div className="section">
         <div className="lead">{works.length ? `${works.length} work${works.length === 1 ? "" : "s"}` : "Works"}</div>
         {works.length ? (
-          <div className="grid" style={{ padding: 0 }}>
-            {works.map((w) => (
+          // The gallery's order sets the rhythm, not the image ratio (R4): from three works up, the
+          // first in the maker's order (position, then the most recently published) hangs large with
+          // the next two beside it, on a wall wide enough (≥ 900 px). The order on screen is the
+          // order in the page, so the lead applies only when none of the three is landscape: a
+          // landscape work cannot sit in the third column or fill two rows. Otherwise the plain hang.
+          <div className={`grid${leadHang ? " hang-lead" : ""}`} style={{ padding: 0 }}>
+            {works.map((w, i) => (
               <WorkTile key={w.id} work={w} image={byWork.get(w.id)} inGallery
+                        lead={leadHang && i === 0}
                         wide={orientation(byWork.get(w.id)) === "landscape"} />
             ))}
           </div>

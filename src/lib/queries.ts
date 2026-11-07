@@ -154,7 +154,7 @@ export async function studioContext(_accountId: string) {
 
   const { data: works } = gallery
     ? await db.from("works")
-        .select("id,title,status,lifecycle,taken_down,material,public_token,updated_at")
+        .select("id,title,status,status_confirmed_at,lifecycle,taken_down,material,public_token,updated_at")
         .eq("gallery_id", gallery.id).order("updated_at", { ascending: false })
     : { data: [] };
 
@@ -173,7 +173,7 @@ export async function studioContext(_accountId: string) {
 
   return {
     maker, gallery,
-    works: ((works ?? []) as unknown as { id: string; title: string; status: string; lifecycle: string;
+    works: ((works ?? []) as unknown as { id: string; title: string; status: string; status_confirmed_at: string; lifecycle: string;
                               taken_down: boolean; material: string; public_token: string; updated_at: string }[])
       .map((w) => ({ ...w, cover: coverOf.get(w.id) ?? null })),
     routes: (routes ?? []) as unknown as { id: string; kind: string; value: string; label: string | null;
