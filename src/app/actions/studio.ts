@@ -382,9 +382,11 @@ export async function hangFirstAction(form: FormData): Promise<void> {
   const w = data?.[0] as { gallery_id: string; position: number; lifecycle: string; taken_down: boolean } | undefined;
   if (!w || w.lifecycle !== "published" || w.taken_down) redirect(`/studio/works/${workId}?kept=unchanged`);
   const { data: others } = await db.from("works").select("position").eq("gallery_id", w.gallery_id).neq("id", workId);
-  const front = Math.min(w.position, ...((others ?? []) as { position: number }[]).map((o) => o.position));
-  const { data: moved, error } = await db.from("works").update({ position: front - 1 })
-    .eq("id", workId).eq("lifecycle", "published").select("id");
+  const rest = ((others ?? []) as { position: number }[]).map((o) => o.position);
+  // Already strictly ahead of every other work (a second press, a stale page): nothing to move.
+  if (rest.every((p) => p > w.position)) redirect(`/studio/works/${workId}?hung=1`);
+  const { data: moved, error } = await db.from("works").update({ position: Math.min(w.position, ...rest) - 1 })
+    .eq("id", workId).eq("lifecycle", "published").eq("taken_down", false).select("id");
   if (error || !moved?.length) redirect(`/studio/works/${workId}?kept=unchanged`);
   revalidatePath("/", "layout");
   redirect(`/studio/works/${workId}?hung=1`);

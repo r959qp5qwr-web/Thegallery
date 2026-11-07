@@ -114,7 +114,7 @@ export default async function EditWork(
           {work.price_mode === "exact"
             ? <span className="price">· {price(work.price_mode, work.price_amount)}
                 {work.lifecycle === "published" && !labelPrice(work)
-                  ? <span data-testid="price-hidden">, not shown while {STATUS_LABEL[work.status]}</span> : null}</span> : null}
+                  ? <span className="price-note" data-testid="price-hidden">not shown while {STATUS_LABEL[work.status]}</span> : null}</span> : null}
         </div>
         <h1 className="title">{work.title}</h1>
         <div className="meta">{work.medium ?? work.material}</div>
@@ -202,7 +202,7 @@ export default async function EditWork(
           ) : null}
           {shared ? (
             <section className="share" aria-labelledby="share-title" data-testid="share">
-              <div className="group" style={{ margin: "28px 0 0" }}><div className="ghead" id="share-title">Share</div></div>
+              <div className="group" style={{ margin: "28px 0 0" }}><h2 className="ghead" id="share-title">Share</h2></div>
               <p className="small" style={{ margin: "8px 0 12px" }}>This is how its link looks when you send it on WhatsApp.</p>
               {/* Built from the same fields as the page's share tags (generateMetadata in
                   /work/[token]): the cover, the title with your name, the medium and the status. */}
@@ -220,19 +220,20 @@ export default async function EditWork(
               </div>
             </section>
           ) : null}
-          {/* Only a choice when there is more than one work on the wall. */}
-          {onWall.length > 1 ? (
+          {/* Only a choice when there is more than one work on the wall, and only once the wall is
+              public (the same public read as Share): a hidden wall has no visitor to meet it. */}
+          {shared && onWall.length > 1 ? (
             <section className="hang-order" aria-labelledby="order-title" data-testid="hang-order">
-              <div className="group" style={{ margin: "28px 0 0" }}><div className="ghead" id="order-title">Order</div></div>
+              <div className="group" style={{ margin: "28px 0 0" }}><h2 className="ghead" id="order-title">Order in your gallery</h2></div>
               {hangsFirst ? (
                 <p className="small" style={{ margin: "8px 0 0" }}>First in your gallery. Visitors meet it before
                   your other works.</p>
               ) : (
                 <form action={hangFirstAction}>
-                  <p className="small" style={{ margin: "8px 0 12px" }}>Put it at the start of your gallery, where
-                    visitors begin. The rest keep their order.</p>
+                  <p className="small" id="hang-first-help" style={{ margin: "8px 0 12px" }}>Put it at the start of your
+                    gallery, where visitors begin. The rest keep their order.</p>
                   <input type="hidden" name="work_id" value={work.id} />
-                  <button className="btn quiet" type="submit"><span>Hang this first</span></button>
+                  <button className="btn quiet" type="submit" aria-describedby="hang-first-help"><span>Hang this first</span></button>
                 </form>
               )}
             </section>

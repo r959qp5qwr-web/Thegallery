@@ -30,10 +30,10 @@ export function price(mode: string, amount: string | number | null, currency = "
  *  - A price never repeats its status: "By enquiry" is not followed by "Price on enquiry", nor
  *    "Made to order" by "Made to order".
  *  With `exactOnly` (a wall tile, the entrance) only a stated amount is shown. */
-export function labelPrice(work: { status: string; price_mode: string; price_amount: string | number | null },
+export function labelPrice(work: { status: string; price_mode: string; price_amount: string | number | null; price_currency?: string },
                            opts: { exactOnly?: boolean } = {}): string | null {
   if (work.status === "sold" || work.status === "on_view") return null;
-  if (work.price_mode === "exact") return price(work.price_mode, work.price_amount);
+  if (work.price_mode === "exact") return price(work.price_mode, work.price_amount, work.price_currency);
   if (opts.exactOnly) return null;
   if (work.price_mode === work.status) return null;   // enquire/enquire, made_to_order/made_to_order
   return price(work.price_mode, null);

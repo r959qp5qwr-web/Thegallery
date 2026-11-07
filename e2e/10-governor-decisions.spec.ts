@@ -57,6 +57,13 @@ test.describe("governor decisions", () => {
       ["available", "enquire", null, "Price on enquiry"],
       ["made_to_order", "made_to_order", null, null], // was "Made to order · Made to order"
       ["available", "made_to_order", null, "Made to order"],
+      ["enquire", "exact", 6800, "₹6,800"],
+      ["enquire", "made_to_order", null, "Made to order"],
+      ["made_to_order", "enquire", null, "Price on enquiry"],
+      ["made_to_order", "exact", 6800, "₹6,800"],
+      ["on_view", "enquire", null, null],
+      ["on_view", "made_to_order", null, null],
+      ["sold", "made_to_order", null, null],
     ];
     for (const [status, mode, amount, shown] of cases) {
       await setLabel(w.id, status, mode, amount);
@@ -65,24 +72,38 @@ test.describe("governor decisions", () => {
       await expect(line, `${status}/${mode}`).toBeVisible();
       if (shown) await expect(line.getByTestId("price"), `${status}/${mode}`).toHaveText(shown);
       else await expect(line.getByTestId("price"), `${status}/${mode}`).toHaveCount(0);
+      // Read as textContent (the line is set in label capitals, which innerText would return),
+      // so these hold whether or not the price carries its test id.
       if (!shown?.startsWith("₹")) await expect(line, `${status}/${mode}`).not.toContainText("₹");
-      // The status word appears once on the line, however the price mode reads.
-      const text = await line.innerText();
-      for (const word of ["By enquiry", "Made to order", "Price on enquiry"]) {
-        expect(text.split(word).length - 1, `${status}/${mode}: ${text}`).toBeLessThanOrEqual(1);
-      }
+      if (shown !== "Price on enquiry") await expect(line, `${status}/${mode}`).not.toContainText("Price on enquiry");
+      const text = (await line.textContent()) ?? "";
+      expect(text.split("Made to order").length - 1, `${status}/${mode}: ${text}`).toBeLessThanOrEqual(1);
     }
   });
 
-  test("a tile on the wall carries no price beside Not for sale", async ({ page }) => {
+  test("a tile and the entrance show only a stated amount, and none beside Not for sale", async ({ page }) => {
     const w = await monsoon();
     const tile = () => page.locator(".tile", { has: page.locator(".gt", { hasText: MONSOON }) }).locator(".gs");
+    // Monsoon is the only public work here, so the entrance features it.
+    const entrance = () => page.locator(".featured-label .status");
     await setLabel(w.id, "available", "exact", 6800);
     await page.goto("/m/anika-rao");
     await expect(tile()).toHaveText("Available · ₹6,800");
+    await page.goto("/");
+    await expect(entrance()).toContainText("₹6,800");
     await setLabel(w.id, "on_view", "exact", 6800);
     await page.goto("/m/anika-rao");
     await expect(tile()).toHaveText("Not for sale");
+    await page.goto("/");
+    await expect(entrance()).not.toContainText("₹");
+    // A tile is a glance: words for a price stay on the work's own page.
+    for (const mode of ["enquire", "made_to_order"]) {
+      await setLabel(w.id, "available", mode, null);
+      await page.goto("/m/anika-rao");
+      await expect(tile(), mode).toHaveText("Available");
+      await page.goto("/");
+      await expect(entrance(), mode).not.toContainText(mode === "enquire" ? "Price on enquiry" : "Made to order");
+    }
   });
 
   test("the Studio tells the maker their price is not shown while the work is Not for sale", async ({ page }) => {
@@ -90,10 +111,16 @@ test.describe("governor decisions", () => {
     await setLabel(w.id, "on_view", "exact", 6800);
     await signIn(page, MAKER_A.email, MAKER_A.password);
     await page.goto(`/studio/works/${w.id}`);
-    await expect(page.getByTestId("price-hidden")).toHaveText(", not shown while Not for sale");
+    await expect(page.getByTestId("price-hidden")).toHaveText("not shown while Not for sale");
     await setLabel(w.id, "available", "exact", 6800);
     await page.goto(`/studio/works/${w.id}`);
     await expect(page.locator(".label .status .price")).toHaveText("· ₹6,800");
+    // A sentence, not a label: the note is not set in the label's capitals.
+    await setLabel(w.id, "on_view", "exact", 6800);
+    await page.goto(`/studio/works/${w.id}`);
+    expect(await page.getByTestId("price-hidden").evaluate((e) => getComputedStyle(e).textTransform)).toBe("none");
+    await setLabel(w.id, "available", "exact", 6800);
+    await page.goto(`/studio/works/${w.id}`);
     await expect(page.getByTestId("price-hidden")).toHaveCount(0);
   });
 
@@ -114,6 +141,9 @@ test.describe("governor decisions", () => {
     await page.goto(`/studio/works/${w.id}`);
     const order = page.getByTestId("hang-order");
     await expect(order).toBeVisible();
+    // The same page open in a second tab, left stale.
+    const stale = await page.context().newPage();
+    await stale.goto(`/studio/works/${w.id}`);
     await order.getByRole("button", { name: "Hang this first" }).click();
     await expect(page.getByText("This work now opens your gallery.")).toBeVisible({ timeout: 15_000 });
     // Now first: the page says so instead of offering the act again.
@@ -122,6 +152,12 @@ test.describe("governor decisions", () => {
 
     await page.goto("/m/anika-rao");
     await expect(page.locator(".grid .tile .gt").first()).toHaveText(MONSOON);
+    // A second press from the stale tab moves nothing further.
+    const once = await monsoon();
+    await stale.getByTestId("hang-order").getByRole("button", { name: "Hang this first" }).click();
+    await expect(stale.getByText("This work now opens your gallery.")).toBeVisible({ timeout: 15_000 });
+    expect((await monsoon()).position).toBe(once.position);
+    await stale.close();
     // Only its position moved: nothing a visitor reads about the work changed, and the Studio
     // list (ordered by updated_at) does not reshuffle.
     const now = await monsoon();
@@ -132,6 +168,19 @@ test.describe("governor decisions", () => {
     const other = (await owner((c) => c.query<{ id: string }>("SELECT id FROM works WHERE title = $1", [EXTRA[0]]))).rows[0];
     await page.goto(`/studio/works/${other.id}`);
     await expect(page.getByTestId("hang-order").getByRole("button", { name: "Hang this first" })).toBeVisible();
+  });
+
+  test("a wall no visitor can see is offered no order to set", async ({ page }) => {
+    const w = await monsoon();
+    await owner((c) => c.query("UPDATE galleries SET lifecycle = 'draft' WHERE id = $1", [w.gallery_id]));
+    try {
+      await signIn(page, MAKER_A.email, MAKER_A.password);
+      await page.goto(`/studio/works/${w.id}`);
+      await expect(page.getByTestId("share-not-public")).toBeVisible();
+      await expect(page.getByTestId("hang-order")).toHaveCount(0);
+    } finally {
+      await owner((c) => c.query("UPDATE galleries SET lifecycle = 'published' WHERE id = $1", [w.gallery_id]));
+    }
   });
 
   test("a gallery with one work on its wall is offered no order to set", async ({ page }) => {
