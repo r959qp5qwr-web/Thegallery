@@ -151,6 +151,7 @@ export default async function Studio({ searchParams }: {
                   <form action={reconfirmStatusAction} className="undo-line" data-testid="reconfirm">
                     <span>Status last confirmed {confirmedAgo(w.status_confirmed_at)}</span>
                     <input type="hidden" name="work_id" value={w.id} />
+                    <input type="hidden" name="expected" value={w.status} />
                     <button className="btn quiet" type="submit"
                             aria-label={`Confirm ${w.title} is still ${STATUS_LABEL[w.status] ?? w.status}`}><span>Confirm</span></button>
                   </form>

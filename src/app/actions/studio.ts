@@ -353,16 +353,17 @@ export async function changeStatusAction(form: FormData): Promise<void> {
 }
 
 /** J-003 reconfirmation: "Status last confirmed 4 months ago · Confirm". One tap states the
- *  same status again, so status_confirmed_at becomes now, without opening the picker. The
- *  status itself is read from the database, never from the form, so a stale page cannot
- *  change it. */
+ *  same status again, so status_confirmed_at becomes now, without opening the picker. The form
+ *  carries the status the maker was shown; if the stored status differs (changed on another
+ *  device since the page loaded), nothing is confirmed, because the maker did not see it. The
+ *  status written is the stored one, never a value from the form. */
 export async function reconfirmStatusAction(form: FormData): Promise<void> {
   await requireActiveMaker();
   const workId = String(form.get("work_id") ?? "");
   const db = await client();
   const { data } = await db.from("works").select("status").eq("id", workId).limit(1);
   const current = (data?.[0] as { status: string } | undefined)?.status;
-  if (!current) redirect(`/studio?unchanged=${workId}`);
+  if (!current || current !== String(form.get("expected") ?? "")) redirect(`/studio?unchanged=${workId}`);
   const { error } = await db.rpc("set_work_status", { p_work_id: workId, p_status: current });
   if (error) redirect(`/studio?unchanged=${workId}`);
   revalidatePath("/", "layout");

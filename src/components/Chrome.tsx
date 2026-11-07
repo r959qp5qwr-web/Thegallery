@@ -108,10 +108,11 @@ export function Hero({ image, alt, href }: { image?: PublicImage; alt: string; h
  *  the tile carries the medium there instead. */
 export function WorkTile({ work, image, wide, inGallery, lead }:
   { work: PublicWork; image?: PublicImage; wide?: boolean; inGallery?: boolean; lead?: boolean }) {
-  const src = imgSrc(image, "w640");
+  // The lead of a maker's hang is about twice a tile's width, so it takes the larger variant.
+  const src = imgSrc(image, lead ? "w1280" : "w640");
   const sold = work.status === "sold";
   return (
-    <TransitionLink className={`tile${wide ? " wide" : ""}${lead ? " lead" : ""}`} href={`/work/${work.public_token}`}>
+    <TransitionLink className={`tile${wide ? " wide" : ""}${lead ? " hang-first" : ""}`} href={`/work/${work.public_token}`}>
       <div className={`frame ${wide ? "" : "r45"}`}>
         {src
           ? <img src={src} alt={image?.alt_text ?? ""} loading="lazy" />

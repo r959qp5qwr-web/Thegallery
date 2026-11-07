@@ -6,7 +6,8 @@ import { ViewTransitions } from "@/components/ViewTransition";
 
 export const metadata: Metadata = {
   // Absolute addresses for share previews (og:image, og:url); the live Worker sets the domain.
-  metadataBase: new URL(process.env.GALLERY_BASE_URL ?? "http://127.0.0.1:3100"),
+  // `||`, not `??`: an empty value must not reach new URL() and fail every page.
+  metadataBase: new URL(process.env.GALLERY_BASE_URL || "http://127.0.0.1:3100"),
   // Every page names itself first, so a screen reader announces where a navigation landed.
   title: { default: "The Gallery", template: "%s · The Gallery" },
   description:

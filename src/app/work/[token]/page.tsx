@@ -27,7 +27,9 @@ export async function generateMetadata({ params }: { params: Promise<{ token: st
     alternates: { canonical: url },
     openGraph: {
       type: "article", siteName: "The Gallery", title, description, url,
-      images: cover ? [{ url: `/img/${cover.id}/w1280`, width: cover.width, height: cover.height,
+      // The w1280 variant is at most 1280 wide, keeping the image's proportion.
+      images: cover ? [{ url: `/img/${cover.id}/w1280`, width: Math.min(1280, cover.width),
+                         height: Math.round(cover.height * Math.min(1280, cover.width) / cover.width),
                          alt: cover.alt_text ?? work.title }] : undefined,
     },
     twitter: { card: cover ? "summary_large_image" : "summary", title, description },
@@ -121,7 +123,7 @@ export default async function WorkDetail(
               Past 90 days it reads as a caution, never hidden (DOMAIN_MODEL §2.3, P-11). */}
           {ago ? (stale
             ? <span className="stale" data-testid="freshness">Status last confirmed {ago}</span>
-            : <span className="fresh" data-testid="freshness">confirmed {ago}</span>) : null}
+            : <span className="fresh" data-testid="freshness"><span aria-hidden>· </span>confirmed {ago}</span>) : null}
         </div>
         <h1 className="title">{work.title}</h1>
         <div className="makerline">{work.maker_display_name} <em>· {work.medium ?? work.material}</em></div>

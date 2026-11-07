@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { getWork } from "@/lib/queries";
 import { redirect, notFound } from "next/navigation";
 import { currentAccount } from "@/lib/auth";
 import { client } from "@/lib/supabase";
@@ -54,9 +55,10 @@ export default async function EditWork(
   const { work, images } = data;
 
   const ready = images.filter((i) => i.state === "ready");
-  // The publish moment (R4): what the work's link will look like when it is shared.
-  const { data: me } = await db.from("makers").select("display_name").limit(1);
-  const makerName = (me?.[0] as { display_name: string } | undefined)?.display_name ?? "";
+  // The publish moment (R4): what the work's link will look like when it is shared. Read through
+  // the public view, the same one share tags are built from, so the card shows only what a
+  // visitor would get, and says so when the work is not public (gallery not open, suspension).
+  const shared = work.lifecycle === "published" ? await getWork(work.public_token) : null;
   const base = process.env.GALLERY_BASE_URL ?? "";
   const publicUrl = `${base}/work/${work.public_token}`;
   const shareText = `${work.title} — ${publicUrl}`;
@@ -178,7 +180,12 @@ export default async function EditWork(
               <Link className="btn quiet" href={`/work/${work.public_token}`}><span>View public page</span></Link>
             </div>
           </form>
-          {!work.taken_down ? (
+          {!work.taken_down && !shared ? (
+            <p className="small" data-testid="share-not-public" style={{ margin: "16px var(--pad-x-studio) 0" }}>
+              Its link is not public yet, so a shared link would show nothing. It becomes shareable when
+              your gallery is open.</p>
+          ) : null}
+          {shared ? (
             <section className="share" aria-labelledby="share-title" data-testid="share">
               <div className="group" style={{ margin: "28px 0 0" }}><div className="ghead" id="share-title">Share</div></div>
               <p className="small" style={{ margin: "8px 0 12px" }}>This is how its link looks when you send it on WhatsApp.</p>
@@ -187,8 +194,8 @@ export default async function EditWork(
               <div className="share-card" aria-hidden>
                 {ready[0] ? <img src={`/img/${ready[0].id}/w640`} alt="" /> : null}
                 <div className="share-text">
-                  <div className="share-title">{work.title} by {makerName}</div>
-                  <div className="share-desc">{[work.medium ?? work.material, STATUS_LABEL[work.status]].filter(Boolean).join(" · ")}</div>
+                  <div className="share-title">{shared.title} by {shared.maker_display_name}</div>
+                  <div className="share-desc">{[shared.medium ?? shared.material, STATUS_LABEL[shared.status]].filter(Boolean).join(" · ")}</div>
                   <div className="share-host">{base.replace(/^https?:\/\//, "")}</div>
                 </div>
               </div>
