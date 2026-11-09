@@ -40,23 +40,18 @@ test.describe("the room at every width", () => {
     expect(res.status()).toBe(307);
   });
 
-  test("one Sections navigation at any width, in the header; the sections inline only when wide", async ({ page }) => {
+  test("one Sections navigation at any width: the bar when narrow, the header when wide", async ({ page }) => {
     await page.goto("/saved");
     await expect(page.getByRole("navigation", { name: "Sections" })).toHaveCount(1);
     const nav = page.getByRole("navigation", { name: "Sections" });
-    expect(await nav.evaluate((n) => !!n.closest("header"))).toBe(true);
-    // Wide: Saved is in the header and marked; narrow: it is in the Menu, and the Menu is offered.
-    if (wide(page)) {
-      await expect(nav.getByRole("link", { name: "Saved" })).toHaveAttribute("aria-current", "page");
-      await expect(nav.getByRole("button", { name: "Menu" })).toBeHidden();
-    } else {
-      await expect(nav.getByRole("link", { name: "Saved" })).toBeHidden();
-      await nav.getByRole("button", { name: "Menu" }).click();
-      const menu = page.getByRole("dialog", { name: "Menu" });
-      await expect(menu.getByRole("link", { name: "Saved" })).toHaveAttribute("aria-current", "page");
-      await menu.getByRole("link", { name: "Workshops" }).click();
-      await expect(page).toHaveURL(/\/workshops$/);
-      await expect(menu).toBeHidden();
+    await expect(nav.getByRole("link", { name: "Saved" })).toHaveAttribute("aria-current", "page");
+    // Wide: in the header. Narrow: the bar, fixed to the foot of the screen and in view.
+    expect(await nav.evaluate((n) => !!n.closest("header"))).toBe(wide(page));
+    if (!wide(page)) {
+      expect(await nav.evaluate((n) => getComputedStyle(n).position)).toBe("fixed");
+      await expect(nav).toBeInViewport();
+      await nav.getByRole("link", { name: "Search" }).click();
+      await expect(page).toHaveURL(/\/search$/);
     }
   });
 

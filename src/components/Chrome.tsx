@@ -2,18 +2,17 @@ import Link from "next/link";
 import { TransitionLink } from "./ViewTransition";
 import { Icon } from "./Icon";
 import { SectionNav } from "./SectionNav";
-import { PublicNav } from "./PublicNav";
 import type { PublicImage, PublicWork } from "@/lib/queries";
 import { STATUS_LABEL, labelPrice } from "@/lib/format";
 
-/** The public header (governor, 2026-11-09, option B2): the wordmark, never replaced by a page
- *  title and never centred, then Search and Menu (with the sections inline on a wide screen).
- *  A page names itself in its own heading, once. */
+/** The public header: the wordmark, the way home. The four places are the bar below 900 px and
+ *  sit in the header from 900 px (governor, 2026-11-09: drawing board). A page names itself in
+ *  its own heading, once. */
 export function Header() {
   return (
     <header className="header public">
       <Link className="wordmark" href="/">The Gallery</Link>
-      <PublicNav />
+      <span className="header-end"><SectionNav placement="header" /></span>
     </header>
   );
 }
@@ -30,20 +29,8 @@ export function StudioHeader({ title, back }: { title: string; back?: string }) 
   );
 }
 
-/**
- * The URL for an image at roughly the width a surface needs.
- *
- * `variants` records what was actually written for this image, so this picks the requested
- * width when it exists and otherwise the largest that does. Asking for a width that was never
- * made is how two of three images came back broken the first time this ran.
- */
-export function imgSrc(image: PublicImage | undefined, variant: "w320" | "w640" | "w1280" | "w1920") {
-  if (!image) return null;
-  if (image.variants[variant]) return `/img/${image.id}/${variant}`;
-  const available = ["w1920", "w1280", "w640", "w320"].filter((v) => image.variants[v]);
-  const chosen = available[0] ?? "original";
-  return `/img/${image.id}/${chosen}`;
-}
+export { imgSrc } from "@/lib/images";
+import { imgSrc } from "@/lib/images";
 
 /** The shape of an image, for deciding how it hangs. */
 export function orientation(image?: PublicImage): "portrait" | "landscape" | "square" {
@@ -60,12 +47,12 @@ export function Mark({ muted }: { muted?: boolean }) {
   return <span className={`mark${muted ? " muted" : ""}`} aria-hidden />;
 }
 
-/** An action. The primary is the screen's one filled action (ink, paper text); any other is a
- *  text link. No arrow glyph (governor, 2026-11-09, option A2). */
-export function Action({ href, children, primary }:
-                       { href: string; children: React.ReactNode; primary?: boolean }) {
+/** An action: a line and a label, the primary with the amber edge (the original grammar,
+ *  restored 2026-11-09). A screen's one docked action is solid ink; that is `solid`. */
+export function Action({ href, children, primary, solid }:
+                       { href: string; children: React.ReactNode; primary?: boolean; solid?: boolean }) {
   return (
-    <Link className={primary ? "act primary" : "textlink"} href={href}>{children}</Link>
+    <Link className={solid ? "act solid" : primary ? "act primary" : "textlink"} href={href}>{children}</Link>
   );
 }
 
@@ -107,7 +94,7 @@ export function WorkTile({ work, image, wide, inGallery, lead }:
       {/* Every status but "Available" is said (P-11, GAL-PR-02: a work stays visible with its
           status); for an available work a stated price stands in for the word. */}
       {work.status !== "available" || tilePrice ? (
-        <div className="gs">
+        <div className={`gs${work.status === "available" ? " available" : ""}`}>
           {work.status !== "available" ? STATUS_LABEL[work.status] ?? work.status : null}
           {work.status !== "available" && tilePrice ? " · " : null}
           {tilePrice ? <span className="price">{tilePrice}</span> : null}
@@ -128,8 +115,8 @@ export function MaterialRail({ materials, active }: { materials: { key: string; 
   );
 }
 
-/** The colophon: one line that signs the room. The sections live in the header and the Menu,
- *  so they are not repeated here (Wave 5: say it once). */
+/** The colophon: one line that signs the room. The four places live in the bar (or the header
+ *  when wide), so they are not repeated here: say it once. */
 export function Footer() {
   return (
     <footer className="footer">
@@ -152,15 +139,26 @@ export function Band({ kind, label, children }: { kind?: "warn" | "fail"; label?
   );
 }
 
+/** The empty plinth: limestone wall and a slab with nothing on it. Decoration, hidden from
+ *  assistive technology; it shows a room waiting, never a pretend work. */
+export function Plinth() {
+  return (
+    <div className="plinth" aria-hidden data-testid="plinth">
+      <div className="wall"><div className="slab" /></div>
+    </div>
+  );
+}
+
 /**
- * An empty state in words (Wave 5): what is empty, one line, and only routes that lead somewhere
- * with something in it. No picture of a pretend work, and never a door into another empty room.
+ * An empty state: the plinth (where the room itself is empty), what is empty, one line, and only
+ * routes that lead somewhere with something in it, never a door into another empty room.
  */
-export function EmptyState({ title, children, routes, level = 2 }:
-                           { title: string; children?: React.ReactNode; routes?: React.ReactNode; level?: 1 | 2 }) {
+export function EmptyState({ title, children, routes, level = 2, plinth }:
+                           { title: string; children?: React.ReactNode; routes?: React.ReactNode; level?: 1 | 2; plinth?: boolean }) {
   const H = level === 1 ? "h1" : "h2";
   return (
     <div className="empty">
+      {plinth ? <Plinth /> : null}
       <H>{title}</H>
       {children ? <p>{children}</p> : null}
       {routes ? <div className="routes-on">{routes}</div> : null}

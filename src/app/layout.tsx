@@ -43,7 +43,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           {/* Each page renders its own header, then its <main>, then its footer, so the header
               and footer are landmarks of their own rather than content inside main. */}
           <div className="phone"><ViewTransitions>{children}</ViewTransitions></div>
-          {/* The Studio's bar (it renders nothing on public pages, Wave 5 option B2). */}
+          {/* The bar of four places (drawing board, 2026-11-09); it steps aside on screens that dock their own action. */}
           <SectionNav placement="bar" />
         </SignedIn>
       </body>

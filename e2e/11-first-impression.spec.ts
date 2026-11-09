@@ -2,13 +2,16 @@ import { test, expect, type Page } from "@playwright/test";
 import { inflateSync } from "node:zlib";
 import { owner, signIn, MAKER_A } from "./helpers";
 
-// Wave 5, "first impression" (governor, 2026-11-09: options A2 and B2, design pass approved).
+// Wave 5, "first impression" (2026-11-09), as amended the same day by the drawing board (governor:
+// the original look restored, a bottom bar on public pages, Workshops hidden, 16 screens approved).
 // Each test fails if its change is taken away:
 //  - say it once: a name or a section appears at most once on a screen;
-//  - no route into an empty room, and an empty site that opens on a sentence, not a picture;
-//  - one filled action per screen, and on a work it is on the first phone screen;
-//  - the bar is the Studio's alone; the Studio's photo picker is designed, not the browser's;
-//  - installable: a manifest and icons that are what they say they are.
+//  - no route into an empty room, and an empty site that opens on the empty plinth and a sentence;
+//  - one solid action per screen, and on a work it is the message, on the first phone screen;
+//  - the bar on public screens, off the screens that dock their own action;
+//  - the Studio's photo picker is designed, not the browser's;
+//  - installable: a manifest and icons that are what they say they are;
+//  - The Gallery names no city of its own.
 //
 // The empty-site test takes every public work down for its duration (taken_down, the operator's
 // switch, read by the public views) and puts each back exactly as it was, updated_at included.
@@ -49,12 +52,6 @@ test.describe("first impression", () => {
       await page.goto(path);
       expect(await visibleCount(page, "For Makers"), path).toBeLessThanOrEqual(1);
     }
-    // On a phone the sections live in the Menu: open, it names For Makers once.
-    if (page.viewportSize()!.width < 900) {
-      await page.goto("/");
-      await page.getByRole("button", { name: "Menu" }).click();
-      expect(await visibleCount(page, "For Makers", "#menu")).toBe(1);
-    }
     await page.goto(`/work/${await monsoonToken()}`);
     expect(await visibleCount(page, "Anika Rao", "main")).toBe(1);
   });
@@ -77,7 +74,7 @@ test.describe("first impression", () => {
     await expect(page.locator(".grid .tile").first()).toBeVisible();
   });
 
-  test("the empty site opens on a sentence, with no picture, no rail and only real routes", async ({ page }) => {
+  test("the empty site opens on the empty plinth and a sentence, with no work pictured, no rail and only real routes", async ({ page }) => {
     const live = (await owner((c) => c.query<{ id: string; updated_at: string }>(
       `SELECT id, updated_at::text AS updated_at FROM works WHERE lifecycle = 'published' AND taken_down = false`))).rows;
     try {
@@ -88,7 +85,10 @@ test.describe("first impression", () => {
       await expect(page.getByRole("navigation", { name: "Material" })).toHaveCount(0);
       const routes = await page.getByTestId("opening").getByRole("link").evaluateAll(
         (as) => as.map((a) => new URL((a as HTMLAnchorElement).href).pathname));
-      expect(routes).toEqual(["/about", "/makers"]);
+      expect(routes).toEqual(["/makers"]);
+      // The empty plinth is back (drawing board, screen 1b): decoration, hidden from assistive tech.
+      await expect(page.getByTestId("plinth")).toBeVisible();
+      expect(await page.getByTestId("plinth").getAttribute("aria-hidden")).toBe("true");
       // The Gallery names no city of its own (GAL-OD-04, amended by the governor 2026-11-09).
       expect(await page.locator("body").textContent()).not.toMatch(/bengaluru|bangalore/i);
       // Every empty room says so once and offers no door into another empty room.
@@ -110,7 +110,8 @@ test.describe("first impression", () => {
   });
 
   test("one filled action per screen; on a work it is the message, on the first phone screen", async ({ page }) => {
-    const filled = (p: Page) => p.locator(".btn.primary, .act.primary").evaluateAll(
+    // Filled = solid ink (the docked action). Every other action is the amber-edged line.
+    const filled = (p: Page) => p.locator(".btn.solid, .act.solid").evaluateAll(
       (els) => els.filter((e) => (e as HTMLElement).checkVisibility()).length);
     for (const path of PUBLIC) {
       await page.goto(path);
@@ -156,8 +157,8 @@ test.describe("first impression", () => {
     expect(await img.evaluate((i) => getComputedStyle(i).objectFit)).not.toBe("cover");
   });
 
-  test("The Gallery names no city of its own: no public screen, Menu or manifest says Bengaluru (GAL-OD-04)", async ({ page, request }) => {
-    // Read from textContent, so hidden text (a closed Menu, a colophon) is caught too. A maker's
+  test("The Gallery names no city of its own: no public screen, bar or manifest says Bengaluru (GAL-OD-04)", async ({ page, request }) => {
+    // Read from textContent, so hidden text (a hidden navigation, a colophon) is caught too. A maker's
     // own place may appear on their pages; the seeded makers are elsewhere, so any match is ours.
     for (const path of [...PUBLIC, "/m/dhaaga-studio", `/work/${await monsoonToken()}`]) {
       await page.goto(path);
@@ -170,31 +171,57 @@ test.describe("first impression", () => {
     expect(JSON.stringify(await (await request.get("/manifest.webmanifest")).json())).not.toMatch(/bengaluru|bangalore/i);
   });
 
-  test("the Menu opens onto its Close, closes on Escape and on any tap of its links", async ({ page }) => {
-    test.skip(page.viewportSize()!.width >= 900, "the Menu is offered below 900 px");
-    await page.goto("/saved");
-    const menu = page.getByRole("dialog", { name: "Menu" });
-    await page.getByRole("button", { name: "Menu" }).click();
-    await expect(menu).toBeVisible();
-    await expect(menu.getByRole("button", { name: "Close" })).toBeFocused();
-    await page.keyboard.press("Escape");
-    await expect(menu).toBeHidden();
-    // Tapping the section you are already in leaves the path unchanged: the sheet still closes.
-    await page.getByRole("button", { name: "Menu" }).click();
-    await menu.getByRole("link", { name: "Saved" }).click();
-    await expect(menu).toBeHidden();
-    await expect(page).toHaveURL(/\/saved$/);
-  });
-
-  test("the bar is the Studio's alone", async ({ page }) => {
-    for (const path of PUBLIC) {
+  test("the bar: on every public screen, on the Studio's home, and off the screens that dock their own action", async ({ page }) => {
+    const narrow = page.viewportSize()!.width < 900;
+    for (const path of ["/", "/search", "/saved", "/browse/clay", "/m/anika-rao", "/about", "/makers"]) {
+      await page.goto(path);
+      // Rendered on every one of these screens; shown below 900 px, where the header has no room.
+      await expect(page.locator("nav.bar"), path).toHaveCount(1);
+      if (narrow) await expect(page.locator("nav.bar"), path).toBeVisible();
+      else await expect(page.locator("nav.bar"), path).toBeHidden();
+    }
+    // A work docks its Message; a sign-in form docks its action: no bar beside them.
+    for (const path of [`/work/${await monsoonToken()}`, "/makers/sign-in"]) {
       await page.goto(path);
       await expect(page.locator("nav.bar"), path).toHaveCount(0);
     }
+    // On a phone the work's Message is pinned to the foot of the screen, where the bar would be.
+    if (narrow) {
+      await page.goto(`/work/${await monsoonToken()}`);
+      expect(await page.locator(".workbar").evaluate((e) => getComputedStyle(e).position)).toBe("fixed");
+      const box = (await page.locator(".workbar").boundingBox())!;
+      expect(Math.round(box.y + box.height)).toBe(page.viewportSize()!.height);
+    }
+    // The fourth place is Studio for everyone: a visitor arrives at For Makers, a maker at the Studio.
+    await page.goto("/saved");
+    expect(new URL(await page.getByRole("navigation", { name: "Sections" }).getByRole("link", { name: "Studio" })
+      .evaluate((a) => (a as HTMLAnchorElement).href)).pathname).toBe("/makers");
     await signIn(page, MAKER_A.email, MAKER_A.password);
     await page.goto("/studio");
-    if (page.viewportSize()!.width < 900) await expect(page.locator("nav.bar")).toBeVisible();
-    else await expect(page.locator("nav.bar")).toBeHidden();
+    if (narrow) await expect(page.locator("nav.bar")).toBeVisible();
+    await expect(page.getByRole("navigation", { name: "Sections" }).getByRole("link", { name: "Studio" }))
+      .toHaveAttribute("aria-current", "page");
+  });
+
+  test("Saved is a wall of pictures on the tiles' price rule, kept on this phone", async ({ page }) => {
+    const token = await monsoonToken();
+    await page.goto("/saved");
+    await expect(page.getByRole("heading", { name: "Nothing saved yet" })).toBeVisible();
+    await page.evaluate((t) => localStorage.setItem("gallery.saved.v1", JSON.stringify([t])), token);
+    await page.reload();
+    const tile = page.locator(`a.tile[href="/work/${token}"]`);
+    await expect(tile.locator("img")).toBeVisible();
+    await expect(page.getByText("1 work · on this phone")).toBeVisible();
+    // The seeded work is sold: the status is said, and no price beside it (labelPrice).
+    await expect(tile.locator(".gs")).toHaveText("Sold");
+    expect(await page.locator("main").textContent()).not.toMatch(/\bAvailable\b/);
+  });
+
+  test("search follows the typing, as pictures", async ({ page }) => {
+    await page.goto("/search");
+    await page.getByRole("searchbox", { name: "Search work and makers" }).fill("monsoon");
+    await expect(page).toHaveURL(/\/search\?q=monsoon$/);
+    await expect(page.locator(`a.tile[href="/work/${await monsoonToken()}"] img`)).toBeVisible();
   });
 
   test("the Studio's photo picker is a designed control over the native input", async ({ page }) => {

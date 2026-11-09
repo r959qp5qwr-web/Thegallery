@@ -143,7 +143,7 @@ export default async function WorkDetail(
           one; the same link, so the contact sheet and its disclosure come first either way. */}
       {routes.length ? (
         <div className="workbar">
-          <Link className="btn primary" href={`${here}?contact=1`} id="contact-trigger" scroll={false}>
+          <Link className="btn solid" href={`${here}?contact=1`} id="contact-trigger" scroll={false}>
             <Icon name="chat" /> Message {who}
           </Link>
         </div>
