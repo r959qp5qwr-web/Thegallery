@@ -55,7 +55,8 @@ test("the heart saves the work on this phone, and Saved shows it", async ({ page
   await expect(heart).toHaveAttribute("aria-pressed", "false");
   await heart.click();
   await expect(heart).toHaveAttribute("aria-pressed", "true");
-  await expect(heart).toHaveAccessibleName("Saved");
+  // One name; the state is the pressed state, so a screen reader says it once.
+  await expect(heart).toHaveAccessibleName("Save");
   expect(await heart.locator("use").getAttribute("href")).toBe("#i-heart-on");
   await page.goto("/saved");
   await expect(page.locator(`a.tile[href="/work/${w.public_token}"]`)).toBeVisible();
@@ -82,7 +83,7 @@ test("the wall label reads status, title, maker and medium, then one line of fac
 
 test("the maker's words fold away under one row and open in place", async ({ page }) => {
   const w = await monsoon();
-  test.skip(!w.process, "the seeded work carries no words of the maker");
+  expect(w.process, "the seeded work carries the maker's words").toBeTruthy();
   await page.goto(`/work/${w.public_token}`);
   const row = page.locator("details.fold", { has: page.locator("summary", { hasText: "In Anika’s words" }) });
   await expect(row).toHaveCount(1);
@@ -110,8 +111,17 @@ test("the Message sheet: the handoff sentence first, then one row per way to rea
   const said = sheet.getByTestId("disclosure");
   await expect(said).toHaveText("You are contacting the maker directly. Payment, delivery, returns and any dispute are arranged with them; The Gallery does not process the transaction.");
   expect((await said.boundingBox())!.y).toBeLessThan((await rows.first().boundingBox())!.y);
-  // Focus is in the sheet, and Escape gives it back to the Message button.
+  // Focus is in the sheet and Tab never reaches the page behind it (inert); Escape gives it
+  // back to the Message button.
   expect(await page.evaluate(() => !!document.activeElement?.closest("#contact"))).toBe(true);
+  for (let i = 0; i < 10; i++) {
+    await page.keyboard.press("Tab");
+    const outside = await page.evaluate(() => {
+      const a = document.activeElement;
+      return !!a && a !== document.body && !a.closest("#contact") ? (a.textContent || a.tagName).trim().slice(0, 30) : null;
+    });
+    expect(outside, `Tab ${i + 1} left the sheet`).toBeNull();
+  }
   await page.keyboard.press("Escape");
   await expect(sheet).toBeHidden();
   await expect(page.getByRole("link", { name: "Message Anika" })).toBeFocused();
@@ -130,13 +140,15 @@ test("a maker's gallery is a profile: label, name, their words, one Message, the
   const sheet = page.getByRole("dialog", { name: "Message Anika" });
   await expect(sheet.getByTestId("disclosure")).toHaveText("You’re talking to Anika directly. Payment, delivery, returns and any dispute are arranged between you; The Gallery takes no part in the sale.");
   await expect(sheet.locator("a[data-route-kind]").first()).toBeVisible();
-  // A maker with no work and no way to be reached gets no Message button.
+  // The Message button is offered exactly when the maker has a way to be reached (GAL-PR-01).
   await page.goto("/m/dhaaga-studio");
-  if (await page.getByRole("heading", { level: 1, name: "Dhaaga Studio" }).count()) {
-    const routes = (await owner((c) => c.query<{ n: number }>(
-      `SELECT count(*)::int AS n FROM public_contact_routes r JOIN public_makers m ON m.id = r.maker_id WHERE m.handle = 'dhaaga-studio'`))).rows[0].n;
-    await expect(page.getByRole("link", { name: "Message", exact: true })).toHaveCount(routes ? 1 : 0);
-  }
+  await expect(page.getByRole("heading", { level: 1, name: "Dhaaga Studio" })).toBeVisible();
+  const routes = (await owner((c) => c.query<{ n: number }>(
+    // The public view applies the rule (enabled and validated), as the page does.
+    `SELECT count(*)::int AS n FROM public_contact_routes r JOIN public_makers m ON m.id = r.maker_id
+      WHERE m.handle = 'dhaaga-studio'`))).rows[0].n;
+  await expect(page.getByRole("link", { name: "Message", exact: true })).toHaveCount(routes ? 1 : 0);
+  if (!routes) await expect(page.getByTestId("no-contact")).toHaveText("Dhaaga Studio is not taking enquiries here yet.");
 });
 
 test("About is one screen: a short lead, then the full policy text folded under three rows", async ({ page, request }) => {
@@ -175,5 +187,35 @@ test("on the wall label only Available is in amber; every other status is said i
     }
   } finally {
     await owner((c) => c.query("UPDATE works SET status = $1 WHERE id = $2", [was, w.id]));
+  }
+});
+
+test("Back steps back to where the visitor was once they have moved inside The Gallery", async ({ page }) => {
+  const w = await monsoon();
+  // Opened cold (no referrer), then into the work from Search: Back returns to Search, not to the
+  // maker's gallery its link names.
+  await page.goto("/search?q=monsoon");
+  await page.locator(`a.tile[href="/work/${w.public_token}"]`).click();
+  await page.waitForURL(`**/work/${w.public_token}`);
+  const back = page.getByTestId("back").first();
+  if (!(await back.isVisible())) return;   // from 900 px the header is the way back
+  await back.click();
+  await page.waitForURL(/\/search\?q=monsoon$/);
+});
+
+test("a maker's square says a stated price beside every status that keeps one", async ({ page }) => {
+  const w = await monsoon();
+  const was = (await owner((c) => c.query<{ status: string; price_mode: string; price_amount: string | null }>(
+    "SELECT status, price_mode, price_amount::text AS price_amount FROM works WHERE id = $1", [w.id]))).rows[0];
+  try {
+    for (const [status, shown] of [["available", "₹6,800"], ["made_to_order", "Made to order · ₹6,800"],
+                                   ["sold", "Sold"], ["on_view", "Not for sale"]] as const) {
+      await owner((c) => c.query("UPDATE works SET status = $1, price_mode = 'exact', price_amount = 6800 WHERE id = $2", [status, w.id]));
+      await page.goto("/m/anika-rao");
+      await expect(page.locator(`.grid3 a.tile[href="/work/${w.public_token}"] .flag`), status).toHaveText(shown);
+    }
+  } finally {
+    await owner((c) => c.query("UPDATE works SET status = $1, price_mode = $2, price_amount = $3 WHERE id = $4",
+      [was.status, was.price_mode, was.price_amount, w.id]));
   }
 });

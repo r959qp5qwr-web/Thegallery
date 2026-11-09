@@ -84,7 +84,9 @@ export default async function MakerGallery(
               const im = byWork.get(w.id);
               const src = imgSrc(im, "w640");
               const tilePrice = labelPrice(w, { exactOnly: true });
-              const flag = w.status !== "available" ? STATUS_LABEL[w.status] ?? w.status : tilePrice;
+              // The tiles' rule (WorkTile): the status unless Available, then any stated price.
+              const flag = [w.status !== "available" ? STATUS_LABEL[w.status] ?? w.status : null, tilePrice]
+                .filter(Boolean).join(" · ");
               return (
                 <TransitionLink key={w.id} className="tile sq" href={`/work/${w.public_token}`}>
                   {src ? <img src={src} alt="" loading="lazy" data-hero={imgSrc(im, "w1280") ?? undefined} /> : <span className="notice">No image yet</span>}

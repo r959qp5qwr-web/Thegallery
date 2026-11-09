@@ -26,9 +26,12 @@ const Shared = createContext<{ current: Pending } | null>(null);
 export function ViewTransitions({ children }: { children: ReactNode }) {
   const pending = useRef<Pending>(null);
   const pathname = usePathname();
+  const first = useRef(pathname);
   useEffect(() => {
     // The new route has committed: let the browser capture it.
     pending.current?.arrive();
+    // Back (PageTools) steps back rather than reloading once the visitor has moved inside the app.
+    if (pathname !== first.current) (window as unknown as { __galleryMoved?: boolean }).__galleryMoved = true;
   }, [pathname]);
   return <Shared.Provider value={pending}>{children}</Shared.Provider>;
 }
