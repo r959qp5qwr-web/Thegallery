@@ -42,7 +42,7 @@ async function main() {
     const maker = await c.query<{ id: string }>(
       `INSERT INTO makers (user_id, handle, display_name, kind, city)
        VALUES ($1,$2,$3,$4,$5)
-       ON CONFLICT (user_id) DO UPDATE SET display_name = EXCLUDED.display_name
+       ON CONFLICT (user_id) DO UPDATE SET display_name = EXCLUDED.display_name, city = EXCLUDED.city
        RETURNING id`, [uid, m.handle, m.name, m.kind, m.city]);
     await c.query(
       `INSERT INTO galleries (maker_id) VALUES ($1) ON CONFLICT (maker_id) DO NOTHING`,

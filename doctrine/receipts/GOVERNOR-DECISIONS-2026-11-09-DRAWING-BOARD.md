@@ -28,3 +28,16 @@ Layer 4: sixteen rendered phone screens with rewritten copy at `drawing-board/sc
 
 ## Learning (GAL-L0031, to be entered in the ledger with the fix)
 Wave 5 ran rule-based design checks (type floor, one action, no duplication, no decoration) and passed them all. Nothing checked the gallery character or compared the screens against real apps. Each check passed while the product's identity was removed. From now on, a design review compares rendered screens against named external references and the original foundation's proposition, and lists what each change removes.
+
+## Later the same day
+| # | Question | Answer |
+|---|---|---|
+| 5 | The 16 rendered screens (https://claude.ai/artifact/NhfhLaQztV53zwQpYaho7g), including the solid ink bars for Message, Continue and Publish | "Approved." |
+| 6 | Geography | "One thing really important. This is not a Bengaluru centric store. Remove such references if they exist anywhere." |
+
+Decision 6 amends GAL-OD-04 (`amendment_2026_11_09`):
+- The Gallery names no city of its own on any surface.
+- A place appears only as a maker's own field.
+- Demonstration content spans several places.
+
+The fix ships as its own change set ahead of the rebuild (ledger GAL-L0032). The design reference surfaces in `ux/reference/interface/surfaces/` are cleaned too, so a rebuild cannot copy a city line back. Historical receipts stay as they were.

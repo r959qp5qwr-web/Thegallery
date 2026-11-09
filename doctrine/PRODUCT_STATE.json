@@ -505,7 +505,7 @@
     },
     {
       "id": "GAL-OD-04",
-      "summary": "Launch geography: Bengaluru is used for realistic demonstration content and the first real makers, while geography stays a configurable field. The product makes no Bengaluru-only and no India-wide launch claim. Option A of the Stage 1 instrument, ratified.",
+      "summary": "Launch geography (the Bengaluru wording in this sentence is superseded by amendment_2026_11_09): Bengaluru is used for realistic demonstration content and the first real makers, while geography stays a configurable field. The product makes no Bengaluru-only and no India-wide launch claim. Option A of the Stage 1 instrument, ratified.",
       "question": "Launch geography and how location shapes discovery.",
       "source": "THE_GALLERY_FABLE_5_BUILD_COMMISSION_v1.1.md §17; THE_GALLERY_CONCEPT_NOTE_v0.1.docx §07",
       "decided_at": "2026-09-06",
@@ -520,7 +520,7 @@
       "enforcement_locus": "Location is a configurable field rather than a hard-coded boundary in the domain model; rendered copy carries no geographic launch claim, and the claim sweep over rendered surfaces is the check that holds it.",
       "enforcement_state": "UNARMED",
       "proof_state": "INTENDED",
-      "amendment_2026_11_09": "Governor, 2026-11-09: 'This is not a Bengaluru centric store. Remove such references if they exist anywhere.' The Gallery names no city of its own on any surface (colophon, entrance, About, manifest). A place appears only as a maker's own field. Demonstration content spans several places. Enforced by journey 11 (no public page or the manifest names Bengaluru). Receipt doctrine/receipts/GOVERNOR-DECISIONS-2026-11-09-DRAWING-BOARD.md."
+      "amendment_2026_11_09": "Governor, 2026-11-09: 'This is not a Bengaluru centric store. Remove such references if they exist anywhere.' The Gallery names no city of its own on any surface (colophon, entrance, About, manifest). A place appears only as a maker's own field. Demonstration content spans several places. A journey 11 check (no public page, Menu, description or the manifest names Bengaluru) is added; enforcement_state and proof_state stay as they are until a run receipt shows it passing. Receipt doctrine/receipts/GOVERNOR-DECISIONS-2026-11-09-DRAWING-BOARD.md."
     },
     {
       "id": "GAL-OD-06",
