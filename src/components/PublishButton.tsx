@@ -8,7 +8,7 @@ import { Icon } from "./Icon";
 function Button({ can }: { can: boolean }) {
   const { pending } = useFormStatus();
   return (
-    <button className="btn block" type="submit" disabled={pending || !can} data-testid="publish">
+    <button className="btn block primary" type="submit" disabled={pending || !can} data-testid="publish">
       {pending ? "Publishing…" : "Publish"}
     </button>
   );

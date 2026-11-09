@@ -27,7 +27,7 @@ export default async function ForMakers() {
           <ol className="how">
             <li><span><b>Make an account</b>With the email you sign in with. It is never shown.</span></li>
             <li><span><b>Hang your work</b>Photographs from your phone, a title, a few words.</span></li>
-            <li><span><b>Open your gallery</b>Publish, and share its link wherever you like.</span></li>
+            <li><span><b>Publish</b>Your gallery opens. Share its link wherever you like.</span></li>
           </ol>
           <p className="fine">Who can open a gallery, and what we act on: <Link href="/participation">Participation</Link>.</p>
         </div>

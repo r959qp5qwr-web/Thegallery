@@ -49,10 +49,14 @@ test.describe("first impression", () => {
       await page.goto(path);
       expect(await visibleCount(page, "For Makers"), path).toBeLessThanOrEqual(1);
     }
+    // On a phone the sections live in the Menu: open, it names For Makers once.
+    if (page.viewportSize()!.width < 900) {
+      await page.goto("/");
+      await page.getByRole("button", { name: "Menu" }).click();
+      expect(await visibleCount(page, "For Makers", "#menu")).toBe(1);
+    }
     await page.goto(`/work/${await monsoonToken()}`);
     expect(await visibleCount(page, "Anika Rao", "main")).toBe(1);
-    // The header never names the page: on a work it is the wordmark and the sections, no title.
-    expect(await visibleCount(page, MONSOON, "header")).toBe(0);
   });
 
   test("no door into an empty room: the rail offers only materials with work, and an empty one leads to work", async ({ page }) => {
@@ -80,8 +84,7 @@ test.describe("first impression", () => {
       for (const w of live) await owner((c) => c.query("UPDATE works SET taken_down = true WHERE id = $1", [w.id]));
       await page.goto("/");
       await expect(page.getByRole("heading", { level: 1, name: "The first works are being hung." })).toBeVisible();
-      await expect(page.getByText("On view now")).toHaveCount(0);
-      await expect(page.locator(".plinth, .hero")).toHaveCount(0);
+      await expect(page.locator(".hero, main img")).toHaveCount(0);
       await expect(page.getByRole("navigation", { name: "Material" })).toHaveCount(0);
       const routes = await page.getByTestId("opening").getByRole("link").evaluateAll(
         (as) => as.map((a) => new URL((a as HTMLAnchorElement).href).pathname));
@@ -127,7 +130,9 @@ test.describe("first impression", () => {
   test("the maker's gallery keeps the handoff disclosure's whole meaning before its routes (GAL-C1)", async ({ page }) => {
     await page.goto("/m/anika-rao");
     const said = page.getByTestId("disclosure");
-    for (const term of ["directly", "Payment", "delivery", "returns", "dispute"]) await expect(said, term).toContainText(term);
+    for (const term of ["directly", "Payment", "delivery", "returns", "dispute", "no part in the sale"]) {
+      await expect(said, term).toContainText(term);
+    }
     // Said before the first way to contact, in reading order.
     const order = await page.evaluate(() => {
       const d = document.querySelector('[data-testid="disclosure"]');
@@ -135,6 +140,34 @@ test.describe("first impression", () => {
       return d && r ? d.compareDocumentPosition(r) & Node.DOCUMENT_POSITION_FOLLOWING : 0;
     });
     expect(order).toBeTruthy();
+  });
+
+  test("the featured work is shown whole, never cropped", async ({ page }) => {
+    await page.goto("/");
+    const img = page.locator(".hero img");
+    await expect(img).toBeVisible();
+    const [shown, natural] = await img.evaluate((i) => {
+      const im = i as HTMLImageElement; const r = im.getBoundingClientRect();
+      return [r.width / r.height, im.naturalWidth / im.naturalHeight];
+    });
+    expect(Math.abs(shown - natural) / natural).toBeLessThan(0.02);
+    expect(await img.evaluate((i) => getComputedStyle(i).objectFit)).not.toBe("cover");
+  });
+
+  test("the Menu opens onto its Close, closes on Escape and on any tap of its links", async ({ page }) => {
+    test.skip(page.viewportSize()!.width >= 900, "the Menu is offered below 900 px");
+    await page.goto("/saved");
+    const menu = page.getByRole("dialog", { name: "Menu" });
+    await page.getByRole("button", { name: "Menu" }).click();
+    await expect(menu).toBeVisible();
+    await expect(menu.getByRole("button", { name: "Close" })).toBeFocused();
+    await page.keyboard.press("Escape");
+    await expect(menu).toBeHidden();
+    // Tapping the section you are already in leaves the path unchanged: the sheet still closes.
+    await page.getByRole("button", { name: "Menu" }).click();
+    await menu.getByRole("link", { name: "Saved" }).click();
+    await expect(menu).toBeHidden();
+    await expect(page).toHaveURL(/\/saved$/);
   });
 
   test("the bar is the Studio's alone", async ({ page }) => {
@@ -158,6 +191,14 @@ test.describe("first impression", () => {
     await expect(page.getByText("No photograph chosen yet")).toBeVisible();
     await input.setInputFiles({ name: "kiln-study.jpg", mimeType: "image/jpeg", buffer: Buffer.from([0xff, 0xd8, 0xff, 0xd9]) });
     await expect(page.getByText("kiln-study.jpg")).toBeVisible();
+    // React resets the form after a refused save; the line must not keep naming a file the input
+    // no longer holds.
+    await input.evaluate((i) => (i as HTMLInputElement).form!.reset());
+    await expect(page.getByText("No photograph chosen yet")).toBeVisible();
+    // Keyboard focus on the hidden input shows on the designed button.
+    await input.focus();
+    await page.keyboard.press("Shift+Tab"); await page.keyboard.press("Tab");
+    expect(await page.locator("label.picker-btn").evaluate((l) => getComputedStyle(l).boxShadow)).not.toBe("none");
   });
 });
 
@@ -184,7 +225,8 @@ test("installable: a manifest whose icons are what they say they are", async ({ 
   for (const need of ["192x192 any", "512x512 any", "192x192 maskable", "512x512 maskable"]) {
     expect(m.icons.map((i) => `${i.sizes} ${i.purpose}`), need).toContain(need);
   }
-  for (const icon of m.icons) {
+  for (const icon of [...m.icons, { src: "/icons/favicon-32.png", sizes: "32x32", type: "image/png", purpose: "any" },
+                      { src: "/icons/apple-touch-icon.png", sizes: "180x180", type: "image/png", purpose: "any" }]) {
     const r = await request.get(icon.src);
     expect(r.status(), icon.src).toBe(200);
     expect(r.headers()["content-type"], icon.src).toContain("image/png");

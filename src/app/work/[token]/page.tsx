@@ -138,8 +138,7 @@ export default async function WorkDetail(
       <div className="actions secondary">
         <SaveButton token={work.public_token} />
       </div>
-      {/* Contact is offered only once there is a way to be contacted (GAL-PR-01). A button
-          that opens onto "no route yet" is a promise the page cannot keep. The one filled
+      {/* Contact is offered only once there is a way to be contacted (GAL-PR-01). The one filled
           action of the page: pinned to the foot of a phone screen, beside the label on a wide
           one; the same link, so the contact sheet and its disclosure come first either way. */}
       {routes.length ? (
@@ -162,7 +161,7 @@ export default async function WorkDetail(
           <SheetFocus sheetId="contact" closeHref={here} returnFocusTo="contact-trigger" />
           <div className="handle" />
           <div className="head">
-            <h2 id="contact-title">Contact {work.maker_display_name}</h2>
+            <h2 id="contact-title">Message {work.maker_display_name}</h2>
             <Link className="iconbtn" href={here} aria-label="Close" data-autofocus scroll={false}><Icon name="close" /></Link>
           </div>
           {/* The choice is real: it changes the message the maker receives. Each option is a link

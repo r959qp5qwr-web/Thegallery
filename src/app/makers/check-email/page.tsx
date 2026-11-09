@@ -19,7 +19,7 @@ export default async function CheckEmail({ searchParams }: { searchParams: Promi
       </div>
       <ActionForm action={resendConfirmAction} submitLabel="Send it again" busyLabel="Sending…"
                   hidden={{ email: e }}>
-        <div className="hint" style={{ padding: "24px 0 0" }}>Nothing arrived? Check the spam folder first.</div>
+        <div className="hint follow">Nothing arrived? Check the spam folder first.</div>
       </ActionForm>
       <div className="inline-actions">
         <Link className="textlink" href="/makers/sign-in">Back to sign in</Link>

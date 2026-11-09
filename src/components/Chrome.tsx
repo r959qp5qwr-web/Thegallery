@@ -73,9 +73,11 @@ export function Action({ href, children, primary }:
 export function Hero({ image, alt, href }: { image?: PublicImage; alt: string; href: string }) {
   const src = imgSrc(image, "w1280");
   return (
-    <Link href={href} className="hero-link">
+    // The title beside it is the work's link for keyboard and screen reader; the picture is the
+    // same link for a tap, kept out of the tab order so the work is not offered twice.
+    <Link href={href} className="hero-link" tabIndex={-1} aria-hidden>
       <div className="hero">
-        {src ? <img src={src} alt={alt} width={image?.width} height={image?.height} />
+        {src ? <img src={src} alt={alt} width={image?.width} height={image?.height} loading="eager" />
              : <div className="frame r43" style={{ width: "100%" }}><span className="notice">No image yet</span></div>}
       </div>
     </Link>
@@ -86,13 +88,12 @@ export function Hero({ image, alt, href }: { image?: PublicImage; alt: string; h
  *  portrait frame; the rest keep the 4:5 frame, covered inside it. The work's own proportion
  *  is honoured on the detail surface where it can be seen whole.
  *  The caption is the title, then the maker (left out on the maker's own gallery, where it
- *  would repeat the page), then only "Sold" or a stated price (Wave 5: a status that needs no
- *  word says none on the wall; the work's own page states it). */
+ *  would repeat the page), then the status and any stated price, quietly (Wave 5). "Available"
+ *  is the one status left unsaid on the wall: a stated price says it, and the work's page names it. */
 export function WorkTile({ work, image, wide, inGallery, lead }:
   { work: PublicWork; image?: PublicImage; wide?: boolean; inGallery?: boolean; lead?: boolean }) {
   // The lead of a maker's hang is about twice a tile's width, so it takes the larger variant.
   const src = imgSrc(image, lead ? "w1280" : "w640");
-  const sold = work.status === "sold";
   const tilePrice = labelPrice(work, { exactOnly: true });
   return (
     <TransitionLink className={`tile${wide ? " wide" : ""}${lead ? " hang-first" : ""}`} href={`/work/${work.public_token}`}>
@@ -103,8 +104,15 @@ export function WorkTile({ work, image, wide, inGallery, lead }:
       </div>
       <div className="gt">{work.title}</div>
       {inGallery ? null : <div className="gm">{work.maker_display_name}</div>}
-      {sold ? <div className="gs">{STATUS_LABEL.sold}</div>
-            : tilePrice ? <div className="gs"><span className="price">{tilePrice}</span></div> : null}
+      {/* Every status but "Available" is said (P-11, GAL-PR-02: a work stays visible with its
+          status); for an available work a stated price stands in for the word. */}
+      {work.status !== "available" || tilePrice ? (
+        <div className="gs">
+          {work.status !== "available" ? STATUS_LABEL[work.status] ?? work.status : null}
+          {work.status !== "available" && tilePrice ? " · " : null}
+          {tilePrice ? <span className="price">{tilePrice}</span> : null}
+        </div>
+      ) : null}
     </TransitionLink>
   );
 }

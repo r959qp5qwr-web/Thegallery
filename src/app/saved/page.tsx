@@ -9,7 +9,7 @@ export default function Saved() {
     <>
       <Header />
       <main id="main" tabIndex={-1}>
-      <div className="page-head"><h1>Saved</h1><p>Only on this phone. There is no account.</p></div>
+      <div className="page-head"><h1>Saved</h1><p>Kept on this device only. There is no account.</p></div>
       <SavedShelf />
       </main>
       <Footer />

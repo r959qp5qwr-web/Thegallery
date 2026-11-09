@@ -100,12 +100,15 @@ export async function materials() {
  *  only into a room with something in it (Wave 5: no route into an empty room). */
 export async function materialsOnView() {
   const db = await anon();
-  const [all, rows] = await Promise.all([
-    materials(),
-    db.from("public_works").select("material").limit(2000),
-  ]);
-  const present = new Set(((must(rows, "materials on view") as unknown) as { material: string }[]).map((r) => r.material));
-  return all.filter((m) => present.has(m.key));
+  const all = await materials();
+  // One existence check per material (there are five), so the answer cannot be cut short by a
+  // row limit however many works hang.
+  const present = await Promise.all(all.map(async (m) => {
+    const { count, error } = await db.from("public_works").select("id", { count: "exact", head: true }).eq("material", m.key);
+    if (error) throw new Error(`materials on view: ${error.message}`);
+    return (count ?? 0) > 0;
+  }));
+  return all.filter((_, i) => present[i]);
 }
 
 /**

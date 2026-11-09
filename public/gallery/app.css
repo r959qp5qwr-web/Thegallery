@@ -17,7 +17,7 @@
 .header-spacer { width: 44px; }
 .topnav { display: none; }
 .topnav a { display: inline-flex; align-items: center; min-height: var(--target); padding: 0 12px;
-  font: var(--t-nav); letter-spacing: var(--track-nav); text-transform: uppercase; text-decoration: none;
+  font: var(--t-nav); letter-spacing: var(--track-nav); text-decoration: none;
   color: var(--text-muted); border-bottom: 2px solid transparent; }
 .topnav a:hover { color: var(--text); }
 /* Active: amber and underlined, so the state is not carried by colour alone (§11). */
@@ -105,7 +105,7 @@ main { display: block; }
 .seg label span { flex: 1; display: flex; align-items: center; justify-content: center; text-align: center; }
 .seg input { position: absolute; inset: 0; width: 100%; height: 100%; min-height: 0; margin: 0; padding: 0;
   border: 0; opacity: 0; cursor: pointer; }
-.seg input:checked + span { border-bottom-color: var(--accent); color: var(--accent-text); }
+.seg input:checked + span { border-bottom-color: var(--accent); color: var(--text); }
 .seg input:focus-visible + span { box-shadow: var(--focus-ring); }
 .dims-inputs { display: flex; gap: 8px; }
 .dims-inputs .sub { flex: 1; display: grid; gap: 4px; margin: 0; min-width: 0; }
@@ -123,7 +123,7 @@ main { display: block; }
    labels shrink before they collide. */
 .rowlist li { flex-wrap: wrap; }
 .rowlist .grow { min-width: 0; overflow-wrap: anywhere; }
-@media (max-width: 340px) { .bar a { letter-spacing: 0; font-size: 9.5px; } }
+@media (max-width: 340px) { .bar a { letter-spacing: 0; } }   /* the 12 px floor holds (Wave 5) */
 @media (max-width: 260px) { .bar a { font-size: 0; gap: 0; } .bar a svg.icon { width: 22px; height: 22px; } }
 
 /* Wave 2 — the hang. Compact and medium keep the two-column grid of the plates, a landscape
@@ -171,7 +171,7 @@ main { display: block; }
 .rowlist.works .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .chip-form { margin: 0; }
 .rowlist button.chip { min-height: var(--target); cursor: pointer; background: transparent; }
-.rowlist button.chip::after { content: "▾"; margin-left: 8px; font-size: 10px; letter-spacing: 0; }
+.rowlist button.chip::after { content: "▾"; margin-left: 8px; font-size: 12px; letter-spacing: 0; }
 .undo-line { flex-basis: 100%; display: flex; align-items: center; gap: 4px; margin: 0;
   font: var(--t-body-small); color: var(--text-soft); padding: 0 0 6px 70px; }
 .choice button { display: flex; align-items: center; justify-content: space-between; width: 100%;
@@ -294,6 +294,7 @@ body:has(.contact-scrim) .bar { display: none; }
 .page-head h1 { font: var(--t-display); letter-spacing: var(--track-display); margin: 0; max-width: 16ch; text-wrap: balance; }
 .page-head p { font: var(--t-lead); color: var(--text-soft); margin: var(--s4) 0 0; max-width: 40ch; }
 .section h2.lead { margin: 0 0 12px; }
+.wall .lead { font: var(--t-lead); color: var(--text); margin: 0 0 var(--s4); }
 .empty h1 { font: var(--t-display); letter-spacing: var(--track-display); }
 
 /* The entrance while nothing is on view: the sentence is the image. */
@@ -332,7 +333,6 @@ body:has(.contact-scrim) .bar { display: none; }
   .grid .tile { grid-column: span 4; }
   .grid .tile.wide { grid-column: span 8; }
 }
-.grid .tile.wide .frame img { aspect-ratio: 3 / 2; object-fit: cover; height: auto; }
 
 /* The materials with something on view, at the foot of the wall. */
 .materials-line { padding: var(--s6) var(--pad-x) 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 20px; font: var(--t-body); }
@@ -349,13 +349,15 @@ body:has(.contact-scrim) .bar { display: none; }
 .facts .dims { margin: 0; }
 .image-count { padding: 10px var(--pad-x) 0; }
 .progress { display: flex; gap: 4px; }
-.progress i { flex: 1; height: 2px; background: var(--stone); }
+.progress i { flex: 1; height: 2px; background: var(--stone-strong); }
 .progress i.on { background: var(--ink); }
 .imgstrip .shot img { max-height: 68vh; }
 /* The work's one filled action: pinned to the foot of a phone screen; in the label from 900 px. */
-main.has-workbar { padding-bottom: 76px; }
+main.has-workbar { padding-bottom: 0; }
+/* The pinned bar must never sit over the colophon's links: the page's foot makes room for it. */
+body:has(main.has-workbar) .footer { padding-bottom: calc(var(--s5) + 76px + env(safe-area-inset-bottom, 0px)); }
 @media (min-width: 900px) {
-  main.has-workbar { padding-bottom: 0; }
+  body:has(main.has-workbar) .footer { padding-bottom: var(--s5); }
   .workbar { position: static; padding: var(--s5) 0 0; border: 0; background: none; }
   .detail { grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 0 32px; }
   .detail-media { grid-column: 1 / span 7; }
@@ -416,3 +418,12 @@ body:has(.contact-scrim) .workbar { display: none; }
   .maker-head ~ .grid .tile .frame { aspect-ratio: auto; }
   .maker-head ~ .grid .tile .frame img { height: auto; object-fit: contain; }
 }
+
+/* Small layout helpers that replace inline styles on public pages (Wave 5). */
+.flush { padding-left: 0; padding-right: 0; }
+.rowlist.flush, .grid.flush { padding: 0; }
+.inline-actions.flush { padding: 12px 0 0; }
+.follow { margin-top: 12px; }
+.hint.follow { padding: 24px 0 0; margin: 0; }
+.search-form { padding-top: 16px; }
+a.plain { text-decoration: none; color: inherit; }

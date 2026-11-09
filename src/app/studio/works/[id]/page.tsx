@@ -118,7 +118,7 @@ export default async function EditWork(
                   ? <span className="price-note" data-testid="price-hidden">not shown while {STATUS_LABEL[work.status]}</span> : null}</span> : null}
         </div>
         <h1 className="title">{work.title}</h1>
-        <div className="meta">{work.medium ?? work.material}</div>
+        <div className="makerline">{work.medium ?? work.material}</div>
         {dims ? <div className="dims">{dims}</div> : null}
       </div>
 

@@ -88,20 +88,23 @@ test.describe("governor decisions", () => {
     const entrance = () => page.locator(".featured-label");
     await setLabel(w.id, "available", "exact", 6800);
     await page.goto("/m/anika-rao");
-    // Wave 5: a tile carries the stated amount alone; the status word is on the work's page.
+    // Wave 5: "Available" is the one status left unsaid on the wall; the stated amount says it.
     await expect(tile()).toHaveText("₹6,800");
     await page.goto("/");
     await expect(entrance()).toContainText("₹6,800");
     await setLabel(w.id, "on_view", "exact", 6800);
     await page.goto("/m/anika-rao");
-    await expect(tile()).toHaveCount(0);
+    await expect(tile()).toHaveText("Not for sale");
     await page.goto("/");
     await expect(entrance()).not.toContainText("₹");
     // A tile is a glance: words for a price stay on the work's own page.
     for (const mode of ["enquire", "made_to_order"]) {
       await setLabel(w.id, "available", mode, null);
       await page.goto("/m/anika-rao");
-      await expect(tile(), mode).toHaveCount(0);
+      // An available work with no stated amount carries no caption line: nothing to say on a glance.
+      const card = page.locator(".tile", { has: page.locator(".gt", { hasText: MONSOON }) });
+      await expect(card, mode).toBeVisible();
+      await expect(card, mode).not.toContainText(/Available|Price on enquiry|Made to order|₹/);
       await page.goto("/");
       await expect(entrance(), mode).not.toContainText(mode === "enquire" ? "Price on enquiry" : "Made to order");
     }

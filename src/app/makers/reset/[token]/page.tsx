@@ -13,7 +13,7 @@ export default async function ResetWithToken({ params }: { params: Promise<{ tok
       <main id="main" tabIndex={-1}>
       <div className="studio-state">
         <h1>Choose a new password</h1>
-        <p className="small" style={{ marginTop: 6 }}>Setting it signs out every other session.</p>
+        <p className="small">Setting it signs out every other session.</p>
       </div>
       <ActionForm action={completeRecoveryAction} submitLabel="Set password" busyLabel="Saving…"
                   hidden={{ token }}>

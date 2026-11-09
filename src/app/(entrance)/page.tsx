@@ -25,8 +25,8 @@ export default async function Entrance() {
         <main id="main" tabIndex={-1}>
           <section className="opening" data-testid="opening">
             <h1>The first works are being hung.</h1>
-            <p>The Gallery shows art and craft by makers in Bengaluru, potters, weavers, woodworkers and
-              metalworkers, each in a room of their own. The first rooms open soon.</p>
+            <p>The Gallery shows art and craft by makers in Bengaluru, in clay, textile, wood, metal and
+              paper, each in a room of their own. The first rooms open soon.</p>
             <div className="routes-on">
               <Link className="textlink" href="/about">What The Gallery is</Link>
               <Link className="textlink quiet" href="/makers">Are you a maker? Open your gallery</Link>
@@ -56,9 +56,9 @@ export default async function Entrance() {
               <div className="makerline">
                 <Link href={`/m/${featured.maker_handle}`}>{featured.maker_display_name}</Link>, {featured.medium ?? featured.material}
               </div>
-              {featured.status === "sold" || featuredPrice ? (
+              {featured.status !== "available" || featuredPrice ? (
                 <div className={`status ${featured.status === "sold" ? "sold" : "available"}`}>
-                  {featured.status === "sold" ? <span>{STATUS_LABEL.sold}</span> : null}
+                  {featured.status !== "available" ? <span>{STATUS_LABEL[featured.status]}</span> : null}
                   {featuredPrice ? <span className="price">{featuredPrice}</span> : null}
                 </div>
               ) : null}

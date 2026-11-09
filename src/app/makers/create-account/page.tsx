@@ -14,7 +14,8 @@ export default function CreateAccount() {
       <div className="studio-state">
         <h1>Create your account</h1>
         <p className="small">Your email is only for signing in to your Studio, where you hang your work. It stays
-          private: it is never shown on your gallery.</p>
+          private: it is never shown on any public page. To be emailed by visitors, you add a separate public
+          address in your Studio.</p>
       </div>
       <ActionForm action={createAccountAction} submitLabel="Create account" busyLabel="Creating…">
         <Field name="email" label="Email" type="email" required autoComplete="email" />

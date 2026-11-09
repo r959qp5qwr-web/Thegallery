@@ -165,7 +165,8 @@ test.describe("publish a work and meet it as a visitor", () => {
     expect(decoded.map((d) => Number((d.w / d.h).toFixed(2)))).toEqual([0.75, 1.5, 1]);
 
     // Worded "The gallery, N works" since the visual system revision of 2026-09-06.
-    // The maker is named once on the work, as the link to their gallery (Wave 5).
+    // The maker is named once on the work, as the link to their gallery (Wave 5); it replaced
+    // the old "The gallery, N works" link.
     await page.locator(".makerline").getByRole("link", { name: "Anika Rao" }).click();
     await expect(page).toHaveURL(/\/m\/anika-rao/);
     await expect(page.getByRole("heading", { name: "Anika Rao" })).toBeVisible();

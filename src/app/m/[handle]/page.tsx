@@ -56,7 +56,7 @@ export default async function MakerGallery({ params }: { params: Promise<{ handl
         <div className="where">
           {maker.city}{maker.region ? `, ${maker.region}` : ""}, {maker.country}
           {maker.exact_address ? <><br />{maker.exact_address}</> : null}
-          {maker.commissions_open ? <><br />Open to commissions</> : null}
+          {maker.commissions_open && !maker.commissions_note ? <><br />Open to commissions</> : null}
         </div>
         {maker.practice_note ? <p className="practice">{maker.practice_note}</p> : null}
         {maker.gallery_intro ? <p className="intro">{maker.gallery_intro}</p> : null}
@@ -75,7 +75,7 @@ export default async function MakerGallery({ params }: { params: Promise<{ handl
         </section>
       ) : (
         <EmptyState title="Nothing hung yet">
-          {maker.display_name} has opened a gallery and has not hung any work in it yet.
+          Work appears here as soon as it is published.
         </EmptyState>
       )}
 
@@ -87,7 +87,7 @@ export default async function MakerGallery({ params }: { params: Promise<{ handl
       ) : null}
 
       <section className="section contact-end" aria-labelledby="talk">
-        <h2 className="lead" id="talk">Talk to {who}</h2>
+        <h2 className="lead" id="talk">Get in touch</h2>
         {routes.length ? (
           <>
             {/* GAL-C1, fixed in meaning (payment, delivery, returns and disputes are the maker's and
@@ -96,7 +96,7 @@ export default async function MakerGallery({ params }: { params: Promise<{ handl
               dispute are arranged between you; The Gallery takes no part in the sale.</p>
             {whatsapp ? (
               <a className="btn primary" href={routeHref(whatsapp)} rel="noopener noreferrer" data-route-kind="whatsapp">
-                <Icon name="chat" /> Message {who} on WhatsApp
+                <Icon name="chat" /> Message on WhatsApp
               </a>
             ) : null}
             {others.length ? (

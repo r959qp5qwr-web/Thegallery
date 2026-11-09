@@ -27,7 +27,7 @@ export default function Participation() {
       </div>
       <div className="section">
         <h2 className="lead">What we act on</h2>
-        <ul className="rowlist" style={{ padding: 0 }}>
+        <ul className="rowlist flush">
           <li><span className="grow"><span className="primary">Impersonation</span>
             <span className="secondary">Presenting someone else&rsquo;s identity or work as your own</span></span></li>
           <li><span className="grow"><span className="primary">Prohibited or unlawful content</span>
@@ -45,7 +45,7 @@ export default function Participation() {
         <p className="body">Every action carries a written reason. A take-down can be restored and a
           suspension can be reinstated. If you think a decision is wrong, reply by email to the address in
           the notice and it will be looked at again.</p>
-        <p className="small" style={{ marginTop: 12 }}>We do not judge whether work is good, and we do not
+        <p className="small follow">We do not judge whether work is good, and we do not
           verify that a maker is who they say they are.</p>
       </div>
       </main>

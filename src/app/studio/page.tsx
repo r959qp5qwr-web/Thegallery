@@ -174,7 +174,7 @@ export default async function Studio({ searchParams }: {
       </div>
 
       <div className="actions">
-        <Link className="btn block" href="/studio/works/new">Add a work</Link>
+        <Link className="btn block primary" href="/studio/works/new">Add a work</Link>
       </div>
 
       {(() => {

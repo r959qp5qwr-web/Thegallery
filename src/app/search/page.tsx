@@ -18,13 +18,13 @@ export default async function Search({ searchParams }: { searchParams: Promise<{
       <Header />
       <main id="main" tabIndex={-1}>
       <h1 className="sr-only">Search work and makers</h1>
-      <form className="form" action="/search" method="get" style={{ paddingTop: 16 }}>
+      <form className="form search-form" action="/search" method="get">
         <div className="field">
           <label htmlFor="q">Search work and makers</label>
           <input id="q" name="q" defaultValue={q} placeholder="A title, a maker, a material"
                  autoFocus autoComplete="off" />
         </div>
-        <div className="inline-actions" style={{ padding: "12px 0 0" }}>
+        <div className="inline-actions flush">
           <button className="btn" type="submit">Search</button>
           {q ? <Link className="btn quiet" href="/search">Clear</Link> : null}
         </div>
@@ -41,10 +41,10 @@ export default async function Search({ searchParams }: { searchParams: Promise<{
           {makers.length ? (
             <div className="section">
               <h2 className="lead">Makers</h2>
-              <ul className="rowlist" style={{ padding: 0 }}>
+              <ul className="rowlist flush">
                 {makers.map((m) => (
                   <li key={m.id}>
-                    <Link className="grow" href={`/m/${m.handle}`} style={{ textDecoration: "none" }}>
+                    <Link className="grow plain" href={`/m/${m.handle}`}>
                       <div className="primary">{m.display_name}</div>
                       <div className="secondary">{KIND_LABEL[m.kind]} · {m.city}</div>
                     </Link>
@@ -56,7 +56,7 @@ export default async function Search({ searchParams }: { searchParams: Promise<{
           {works.length ? (
             <div className="section">
               <h2 className="lead">Work</h2>
-              <div className="grid" style={{ padding: 0 }}>
+              <div className="grid flush">
                 {works.map((w) => <WorkTile key={w.id} work={w} image={byWork.get(w.id)} />)}
               </div>
             </div>
