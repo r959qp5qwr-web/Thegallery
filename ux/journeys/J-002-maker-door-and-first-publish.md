@@ -19,9 +19,9 @@ For Makers (bottom bar) → Create account; or Sign in for a returning maker; or
 - **Cancellation:** leave at any step; every entered field is kept as a draft; nothing partially publishes.
 
 ## 4. Consequence chain
-- **Know:** what The Gallery is and is not (no payment, no cut, no certification), what becomes public (name, kind, city, practice note, contact routes, work), what stays private (account email, exact address unless opted in).
-- **Decide:** identity kind; which contact routes to expose; price mode and status for the first work.
-- **Do:** create account → confirm email → profile → contact routes → add work → preview → publish.
+- **Know:** what The Gallery is and is not (no payment, no cut, no certification), what becomes public (name, kind, city, practice note, ways to contact, work), what stays private (account email, exact address unless opted in).
+- **Decide:** maker kind; which ways to contact to make public; price mode and status for the first work.
+- **Do:** create account → confirm email → your details → ways to contact you → add work → preview → publish.
 - **System:** sends the confirmation; creates the maker and gallery; stores originals and generates variants; publishes transactionally; makes the work discoverable; renders the share preview.
 - **Other actor:** visitors can now encounter the work; the operator sees nothing unless reported.
 
@@ -37,9 +37,9 @@ For Makers (bottom bar) → Create account; or Sign in for a returning maker; or
 ## 6. Primary flow
 1. For Makers: two paragraphs (what it is; what it is not), participation rules link, Create account / Sign in.
 2. Create account: email, password (rule shown), one line on what becomes public → "Check your email" (resend after 60 s).
-3. Confirmation link → Studio set-up: three steps shown as a list — Your identity · Contact routes · First work — each a plain form.
-4. Identity: display name, kind (individual · studio · collective), city, region, practice note (optional, attributed), exact address (off by default).
-5. Contact routes: add WhatsApp / public email / phone / website / form; each validated on save; a preview shows exactly how the public will see them; zero routes is allowed and named.
+3. Confirmation link → Studio set-up: three steps shown as a list — Your details · Ways to contact you · First work — each a plain form.
+4. Your details: display name, kind (individual · studio · collective), city, region, practice note (optional, attributed), exact address (off by default).
+5. Ways to contact you: add WhatsApp / public email / phone / website / form; each validated on save; a preview shows exactly how the public will see them; zero routes is allowed and named.
 6. Add work: images first (add up to 8; reorder; set focal point; alt text per image); then title, material (five), medium, process (optional), dimensions, year, price mode (exact · enquire · made to order) with amount when exact, status; Save draft is automatic; Preview.
 7. Preview: the public work page as it will render, with a "Publish" bar. Publish is one transaction.
 8. Published: "Your work is now shown" with View public work and Share; the dashboard lists it with its status.
@@ -57,7 +57,7 @@ For Makers (bottom bar) → Create account; or Sign in for a returning maker; or
 | Unsupported or unsafe file | refused at selection with the accepted formats and limits | choose another |
 | Publish failed | "Not published — saved as a draft"; no half-published object | retry |
 | Duplicate tap | one work | — |
-| No contact route at publish | publish proceeds; the public page states routes are not yet published; Studio shows the task | add a route |
+| No way to contact at publish | publish proceeds; the work shows no Contact button; Studio shows the task | add a way to contact you |
 
 ## 8. Navigation semantics
 Studio has its own header (Studio · maker name) and no bottom bar inside forms; Back from a form asks only when there are unsaved changes; Cancel discards after confirmation; the set-up list is always reachable from the dashboard; sign-out returns to the entrance.
@@ -68,8 +68,8 @@ Studio has its own header (Studio · maker name) and no bottom bar inside forms;
 | For Makers | understand the boundary; enter | Create account |
 | Create account / Check email / Sign in | pass the door | Create account / Resend / Sign in |
 | Studio dashboard | see the gallery's state and the next step | Add work |
-| Identity form | say who is responsible | Save |
-| Contact routes | choose what the public may use | Save |
+| Your details form | say who is responsible | Save |
+| Ways to contact you | choose what the public may use | Save |
 | Add work | put one truthful object in front of people | Preview |
 | Preview | confirm the exact public rendering | Publish |
 | Published | verify and share | View public work |
