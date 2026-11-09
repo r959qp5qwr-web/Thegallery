@@ -133,7 +133,7 @@ export function MaterialRail({ materials, active }: { materials: { key: string; 
 export function Footer() {
   return (
     <footer className="footer">
-      <span className="sign">The Gallery, Bengaluru</span>
+      <span className="sign">The Gallery</span>
       <Link href="/about">About</Link>
       <Link href="/participation">Participation</Link>
       <Link href="/privacy">Privacy</Link>

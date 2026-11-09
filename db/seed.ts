@@ -16,7 +16,7 @@ const SCHEMA = process.env.GALLERY_SCHEMA ?? "gallery";
 
 const MAKERS = [
   { email: "anika.rao@makers.example", handle: "anika-rao", name: "Anika Rao",
-    kind: "individual", city: "Bengaluru" },
+    kind: "individual", city: "Khurja" },
   { email: "studio@dhaaga.example", handle: "dhaaga-studio", name: "Dhaaga Studio",
     kind: "studio", city: "Jaipur" },
 ];

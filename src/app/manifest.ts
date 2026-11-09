@@ -6,7 +6,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "The Gallery",
     short_name: "The Gallery",
-    description: "Art and craft by makers in Bengaluru, shown by the makers themselves.",
+    description: "Art and craft, shown by the makers themselves.",
     start_url: "/",
     scope: "/",
     display: "standalone",

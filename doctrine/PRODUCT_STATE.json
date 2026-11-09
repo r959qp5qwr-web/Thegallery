@@ -519,7 +519,8 @@
       "reopen_condition": "A governor decision to make a public geographic claim, which requires the discovery behaviour that would make the claim true.",
       "enforcement_locus": "Location is a configurable field rather than a hard-coded boundary in the domain model; rendered copy carries no geographic launch claim, and the claim sweep over rendered surfaces is the check that holds it.",
       "enforcement_state": "UNARMED",
-      "proof_state": "INTENDED"
+      "proof_state": "INTENDED",
+      "amendment_2026_11_09": "Governor, 2026-11-09: 'This is not a Bengaluru centric store. Remove such references if they exist anywhere.' The Gallery names no city of its own on any surface (colophon, entrance, About, manifest). A place appears only as a maker's own field. Demonstration content spans several places. Enforced by journey 11 (no public page or the manifest names Bengaluru). Receipt doctrine/receipts/GOVERNOR-DECISIONS-2026-11-09-DRAWING-BOARD.md."
     },
     {
       "id": "GAL-OD-06",

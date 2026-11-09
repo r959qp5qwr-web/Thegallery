@@ -19,10 +19,10 @@ const KEY = process.env.SUPABASE_PUBLISHABLE_KEY ?? "sb_publishable_0KNPc4WopVsL
 const REDIRECT = `${process.env.GALLERY_BASE_URL ?? "http://127.0.0.1:3100"}/makers/confirm`;
 
 const PROFILES = [
-  { who: MAKER_A, handle: "anika-rao", display_name: "Anika Rao", kind: "individual", city: "Bengaluru",
+  { who: MAKER_A, handle: "anika-rao", display_name: "Anika Rao", kind: "individual", city: "Khurja",
     practice_note: "I fire in a wood kiln outside the city. Ash settles where it wants to; I decide "
                  + "only where the pot stands in the fire." },
-  { who: MAKER_B, handle: "dhaaga-studio", display_name: "Dhaaga Studio", kind: "collective", city: "Bengaluru",
+  { who: MAKER_B, handle: "dhaaga-studio", display_name: "Dhaaga Studio", kind: "collective", city: "Jaipur",
     practice_note: "Six weavers, one loom room, natural dyes." },
 ];
 
@@ -65,7 +65,7 @@ for (const p of PROFILES) {
     `INSERT INTO makers (user_id, handle, display_name, kind, city, practice_note)
      VALUES ($1, $2, $3, $4, $5, $6)
      ON CONFLICT (user_id) DO UPDATE SET status = 'active', status_reason = NULL,
-       display_name = EXCLUDED.display_name, practice_note = EXCLUDED.practice_note;
+       display_name = EXCLUDED.display_name, city = EXCLUDED.city, practice_note = EXCLUDED.practice_note;
      INSERT INTO galleries (maker_id) SELECT id FROM makers WHERE user_id = $1
      ON CONFLICT (maker_id) DO NOTHING`,
     [uid, p.handle, p.display_name, p.kind, p.city, p.practice_note]);

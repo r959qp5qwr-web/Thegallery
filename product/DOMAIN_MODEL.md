@@ -87,10 +87,10 @@ Stable UUIDs internally; a short `public_token` for works and workshops in URLs;
 
 | Persona | Kind | Material | City | Purpose |
 |---|---|---|---|---|
-| Anika Rao | individual | clay | Bengaluru | Maker A: the Stage 2 slice maker (already the persona of the approved landing reference) |
-| Dhaaga Studio | collective | textile | Bengaluru | Maker B: isolation tests; collective kind |
+| Anika Rao | individual | clay | Khurja | Maker A: the Stage 2 slice maker (already the persona of the approved landing reference) |
+| Dhaaga Studio | collective | textile | Jaipur | Maker B: isolation tests; collective kind |
 | Tarun Pillai | individual | wood | Mysuru | Stage 3 discovery fixtures (second city) |
-| Kabir Lohar Works | studio | metal | Bengaluru | Stage 3 fixtures |
-| Folded Hours | studio | paper | Bengaluru | Stage 3 fixtures; workshop publisher |
+| Kabir Lohar Works | studio | metal | Moradabad | Stage 3 fixtures |
+| Folded Hours | studio | paper | Kolkata | Stage 3 fixtures; workshop publisher |
 
 All names, places and works are invented; addresses, phone numbers and emails in fixtures use reserved test values only.
