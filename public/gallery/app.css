@@ -429,3 +429,16 @@ body:has(.contact-scrim) .workbar { display: none; }
 a.plain { text-decoration: none; color: inherit; }
 /* The picker's button is a label: .field label (block, margin) must not shape it. */
 .field.picker label.picker-btn { display: inline-flex; align-items: center; margin: 0; font: var(--t-action); color: var(--text); }
+
+/* Wave 5 design pass on the build (design-critique, 2026-11-09). */
+/* The material rail: tabs from the content margin with a fixed gap, its rule on the grid. */
+.rail { justify-content: flex-start; gap: 28px; padding: 0; margin: 0 var(--pad-x); }
+.rail a { text-align: left; }   /* keeps the 44 px target; the word starts on the margin */
+@media (min-width: 900px) { .rail { gap: 40px; } }
+/* One frame rule for a work's image: left on the grid, whole, with no pale bands beside it. */
+@media (min-width: 900px) { .featured .hero img { margin-inline: 0; } }
+.detail-media .imgstrip .shot { background: transparent; }
+.detail-media .imgstrip .shot img { background: transparent; }
+@media (min-width: 900px) { .detail-media .imgstrip .shot img { width: auto; max-width: 100%; } }
+/* A maker with a single work: it takes the wide column, not a third of the room. */
+@media (min-width: 900px) { .maker-head ~ .grid .tile:only-child { grid-column: 1 / span 7; } }
