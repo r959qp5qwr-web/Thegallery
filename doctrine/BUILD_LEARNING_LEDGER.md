@@ -681,6 +681,34 @@ A fixed product decision was broken on every public page, and nothing would have
 
 ---
 
+### GAL-L0033
+
+**Date:** 2026-11-09  
+**Observed event:**  
+Part 1 of the drawing-board rebuild restored `system.css` from its 2026-09-06 version. The pinned work bar's rule lived only in Wave 5's `system.css`, so it was lost. On a phone, a work page then had neither the bar nor a pinned Message. The independent review found it (H1).
+
+A second issue came from the app layer's hero rule (`width: 100%` with `max-height`). It stretched the image's box, so the "shown whole" check failed even though nothing was cropped. Journey 11 found that one on the first phone run.
+
+**Evidence:**  
+- `doctrine/receipts/DRAWING-BOARD-PART1-2026-11-09.md`.
+- The first phone run: 1 failed ("the featured work is shown whole", ratio off by 0.0227).
+- Review finding H1.
+
+**Why it mattered:**  
+Restoring an older file silently drops every later rule that lived in it. The pinned Message is the one action on a work page.
+
+**What changed:**  
+- The work bar is back in the app layer.
+- Journey 11 now asserts that on a phone the Message bar is fixed to the foot of the viewport.
+- The hero keeps the work's own ratio.
+- Practice: before restoring a file from history, list the rules added after that point and carry each one forward or drop it on purpose.
+
+**Status:** RESOLVED  
+**Related finding / decision IDs:** drawing board part 1; GAL-L0031  
+**Harvest status:** UNHARVESTED
+
+---
+
 ## Ledger rules
 
 - Capture the event in the governed change that fixes or formally records it where feasible.
