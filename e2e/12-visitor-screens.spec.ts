@@ -160,3 +160,20 @@ test("About is one screen: a short lead, then the full policy text folded under 
     expect(await res.text(), path).toContain(words);
   }
 });
+
+test("on the wall label only Available is in amber; every other status is said in the label's quiet colour", async ({ page }) => {
+  const w = await monsoon();
+  const was = (await owner((c) => c.query<{ status: string }>("SELECT status FROM works WHERE id = $1", [w.id]))).rows[0].status;
+  try {
+    for (const [status, amber] of [["available", true], ["made_to_order", false], ["enquire", false], ["on_view", false], ["sold", false]] as const) {
+      await owner((c) => c.query("UPDATE works SET status = $1 WHERE id = $2", [status, w.id]));
+      await page.goto(`/work/${w.public_token}`);
+      const line = page.locator(".detail-label .label .status");
+      const colour = await line.evaluate((e) => getComputedStyle(e).color);
+      // --accent-text is the amber of the label (rgb(138, 63, 20), amber-deep); the quiet label is not.
+      expect(colour === "rgb(138, 63, 20)", `${status}: ${colour}`).toBe(amber);
+    }
+  } finally {
+    await owner((c) => c.query("UPDATE works SET status = $1 WHERE id = $2", [was, w.id]));
+  }
+});

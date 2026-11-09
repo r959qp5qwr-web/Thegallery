@@ -125,7 +125,7 @@ export default async function WorkDetail(
       {/* The wall label (drawing board, screen 2): status first, then the title, the maker and
           the medium, then one line of facts ending in when the status was last stated. */}
       <div className="label">
-        <div className={`status ${sold ? "sold" : "available"}`}>
+        <div className={`status${sold ? " sold" : work.status === "available" ? " available" : ""}`}>
           <span>{STATUS_LABEL[work.status]}</span>
           {/* One price rule for every public surface (labelPrice): none beside Sold or Not for
               sale, and never a repeat of the status. */}

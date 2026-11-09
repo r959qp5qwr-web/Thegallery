@@ -70,7 +70,7 @@ export default async function MakerGallery(
               <Icon name="chat" /> Message
             </Link>
           </div>
-        ) : <p className="where" data-testid="no-contact">Not taking messages here yet.</p>}
+        ) : <p className="small" data-testid="no-contact">{maker.display_name} is not taking enquiries here yet.</p>}
       </section>
 
       {works.length ? (

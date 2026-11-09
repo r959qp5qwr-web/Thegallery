@@ -471,7 +471,7 @@ body:not(:has(nav.bar)) .actionbar { bottom: 0; }
 /* A round control over a photograph: Back, Share, the heart. 44 px, paper at 88 %. */
 .roundbtn { width: var(--target); height: var(--target); border-radius: 50%; border: 0; padding: 0; cursor: pointer;
   display: inline-flex; align-items: center; justify-content: center; color: var(--ink);
-  background: rgba(248, 243, 234, 0.88); text-decoration: none; }
+  background: color-mix(in srgb, var(--paper) 88%, transparent); text-decoration: none; }
 .roundbtn:hover { background: var(--paper); }
 .roundbtn.on { color: var(--accent); }
 
@@ -551,9 +551,10 @@ body:not(:has(nav.bar)) .actionbar { bottom: 0; }
 .maker-head .intro { margin: var(--s3) 0 0; }
 .maker-head .where { font: var(--t-meta); letter-spacing: var(--track-meta); color: var(--text-muted); margin: var(--s3) 0 0; }
 .maker-head .maker-act { margin-top: var(--s4); }
+.maker-head .small { margin: var(--s3) 0 0; }
 .maker-head .maker-act .btn { width: 100%; }
 @media (min-width: 900px) {
-  .maker-head { padding-top: 72px; }
+  .maker-head { padding-top: var(--s7); }
   .maker-head .lbl { grid-column: 1 / -1; }
   .maker-head .practice { grid-column: 1 / span 7; margin-top: 18px; }
   .maker-head .intro { grid-column: 1 / span 7; }
@@ -566,7 +567,7 @@ body:not(:has(nav.bar)) .actionbar { bottom: 0; }
 .grid3 .tile.sq { position: relative; display: block; aspect-ratio: 1; overflow: hidden; background: var(--surface-plinth); color: var(--text); text-decoration: none; }
 .grid3 .tile.sq img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .grid3 .tile.sq .notice { position: absolute; inset: 0; display: grid; place-items: center; font: var(--t-caption); color: var(--text-muted); }
-.grid3 .flag { position: absolute; left: 6px; top: 6px; padding: 4px 6px; background: var(--paper);
+.grid3 .flag { position: absolute; left: var(--s2); top: var(--s2); margin: 0; padding: var(--s1) 6px; background: var(--paper);
   font: var(--t-label); letter-spacing: var(--track-label); text-transform: uppercase; color: var(--text-muted); }
 .grid3 .flag.available { color: var(--accent-text); }
 @media (min-width: 600px) {

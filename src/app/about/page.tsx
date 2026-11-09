@@ -11,7 +11,7 @@ export const dynamic = "force-static";
 export default function About() {
   return (
     <>
-      <Header />
+      <Header back="/" />
       <main id="main" tabIndex={-1}>
       <div className="page-head about">
         <h1>About</h1>
