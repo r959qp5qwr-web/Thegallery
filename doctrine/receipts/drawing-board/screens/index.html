@@ -1,0 +1,517 @@
+<meta charset="utf-8">
+<title>Gallery App Screens</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Board: a neutral reading room around phone-sized plates. The phones carry The Gallery's
+   original system (2026-09-06 tokens), light only, because the product is light only. */
+@font-face{font-family:"Newsreader";src:url("fonts/Newsreader-Variable.woff2") format("woff2");font-weight:200 800;font-style:normal}
+@font-face{font-family:"Newsreader";src:url("fonts/Newsreader-Italic-Variable.woff2") format("woff2");font-weight:200 800;font-style:italic}
+@font-face{font-family:"IBM Plex Mono";src:url("fonts/IBMPlexMono-Regular.woff2") format("woff2");font-weight:400}
+@font-face{font-family:"IBM Plex Mono";src:url("fonts/IBMPlexMono-Medium.woff2") format("woff2");font-weight:500}
+@font-face{font-family:"IBM Plex Sans";src:url("fonts/IBMPlexSans-Variable.woff2") format("woff2");font-weight:100 700}
+:root{
+  --board:#E9E4DB; --board-ink:#2A2622; --board-muted:#6B635A; --board-rule:#CFC6B8;
+  --paper:#F8F3EA; --paper-deep:#F0E9DC; --limestone:#E7DECF; --stone:#D5CAB8; --stone-strong:#857A6B;
+  --ink:#221E1A; --ink-soft:#3D3630; --ink-muted:#675F56; --amber:#A5501F; --amber-deep:#8A3F14;
+  --scrim:rgba(34,30,26,.42); --hair:rgba(34,30,26,.16);
+  --serif:"Newsreader","Iowan Old Style","Times New Roman",serif;
+  --mono:"IBM Plex Mono","Courier New",monospace;
+  --sans:"IBM Plex Sans","Helvetica Neue",Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--board:#1B1916;--board-ink:#EDE6DA;--board-muted:#A79E92;--board-rule:#3A352F;color-scheme:dark}}
+:root[data-theme="dark"]{--board:#1B1916;--board-ink:#EDE6DA;--board-muted:#A79E92;--board-rule:#3A352F;color-scheme:dark}
+body{background:var(--board);color:var(--board-ink);font-family:var(--sans);margin:0}
+.wrap{max-width:1760px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 80px}
+.intro{max-width:62ch;display:grid;gap:10px;margin-bottom:40px}
+.intro h1{font:400 clamp(30px,4vw,44px)/1.05 var(--serif);margin:0;text-wrap:balance}
+.intro p{margin:0;font-size:15px;line-height:1.55;color:var(--board-muted)}
+.intro .mono{font:500 11.5px/1.2 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--board-muted)}
+h2.journey{font:italic 400 22px/1.2 var(--serif);margin:48px 0 20px;display:flex;align-items:center;gap:12px}
+h2.journey::before{content:"";width:24px;height:1px;background:var(--amber)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:40px 28px;align-items:start}
+.plate{display:grid;gap:12px;min-width:0}
+.cap{display:flex;justify-content:space-between;gap:12px;align-items:baseline;font-size:14px}
+.cap b{font:400 18px/1.2 var(--serif)}
+.cap .wc{font:400 12px/1 var(--mono);color:var(--board-muted);white-space:nowrap}
+.cap-note{font-size:13px;line-height:1.5;color:var(--board-muted);margin:0}
+.fit{width:100%;overflow:hidden}
+
+/* ——— The phone: the Gallery's original system ——— */
+.phone{width:390px;height:844px;position:relative;overflow:hidden;background:var(--paper);color:var(--ink);
+  border-radius:28px;box-shadow:0 0 0 1px var(--hair),0 30px 60px -30px rgba(0,0,0,.35);font:400 16px/1.55 var(--sans);transform-origin:0 0}
+.phone *{box-sizing:border-box}
+.scroll{position:absolute;inset:0 0 0 0;overflow:hidden}
+.sb{height:28px;display:flex;justify-content:space-between;align-items:center;padding:0 22px;font:500 12px/1 var(--sans);color:var(--ink)}
+.top{height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;border-bottom:1px solid var(--hair)}
+.wm{font:500 14px/1 var(--mono);letter-spacing:.2em;text-transform:uppercase}
+.top .ic{width:22px;height:22px}
+.ctx{display:flex;justify-content:space-between;align-items:baseline;padding:14px 20px 12px;font:italic 400 16px/1.3 var(--serif);color:var(--ink-soft)}
+.ctx .lbl{font-style:normal}
+.lbl{font:500 11.5px/1.2 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-muted)}
+.lbl.av{color:var(--amber-deep)}
+.meta{font:400 13px/1.45 var(--mono);letter-spacing:.04em;color:var(--ink-muted)}
+.display{font:350 40px/1.04 var(--serif);margin:0;letter-spacing:-.005em}
+.heading{font:400 30px/1.1 var(--serif);margin:0}
+.maker{font:italic 400 17px/1.35 var(--serif);color:var(--ink-soft);margin:0}
+.lead{display:flex;align-items:center;gap:12px;font:italic 400 17px/1.3 var(--serif);color:var(--ink-soft);margin:0}
+.lead::before{content:"";width:20px;height:1px;background:var(--amber);flex:none}
+.pad{padding:0 20px}
+.stack{display:grid;gap:8px}
+.plinth{background:var(--limestone);display:flex;align-items:flex-end;justify-content:center;overflow:hidden}
+.plinth img{display:block;width:100%;height:100%;object-fit:cover}
+.plinth.whole{background:#D9CBB6}
+.plinth.whole img{object-fit:contain}
+.chips{display:flex;gap:22px;padding:16px 20px;border-bottom:1px solid var(--stone);overflow:hidden;white-space:nowrap}
+.chips span{font:500 11.5px/1.2 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);padding-bottom:6px}
+.chips span.on{color:var(--amber-deep);box-shadow:inset 0 -2px 0 var(--amber)}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:22px 14px;padding:0 20px}
+.tile{display:grid;gap:6px;min-width:0}
+.tile .plinth{aspect-ratio:4/5}
+.tile .t{font:400 17px/1.22 var(--serif)}
+.tile .m{font:italic 400 14px/1.3 var(--serif);color:var(--ink-muted)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:48px;padding:0 22px;font:500 15px/1 var(--sans);color:var(--ink);
+  background:transparent;border:1px solid var(--ink);border-left:3px solid var(--amber)}
+.btn.full{width:100%}
+.btn.solid{background:var(--ink);color:var(--paper);border:0}
+.tlink{font:500 15px/1 var(--sans);color:var(--ink);text-decoration:underline;text-decoration-color:var(--stone-strong);text-underline-offset:4px}
+.tabbar{position:absolute;left:0;right:0;bottom:0;height:78px;background:var(--paper);border-top:1px solid var(--hair);display:grid;grid-template-columns:repeat(4,1fr);padding-bottom:18px}
+.tab{display:grid;justify-items:center;align-content:center;gap:6px;font:500 10.5px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-muted);position:relative}
+.tab svg{width:22px;height:22px}
+.tab.on{color:var(--amber-deep)}
+.tab.on::before{content:"";position:absolute;top:-1px;width:22px;height:2px;background:var(--amber)}
+.ic{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.rows{border-top:1px solid var(--stone);margin:0 20px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:54px;border-bottom:1px solid var(--stone);font:400 16px/1.35 var(--sans)}
+.row .v{color:var(--ink-muted);font-size:15px}
+.row .ic{width:18px;height:18px;color:var(--ink-muted)}
+.field{display:grid;gap:6px}
+.field label{font:500 13px/1.3 var(--sans)}
+.field .in{height:50px;border:1px solid var(--stone-strong);background:var(--paper);display:flex;align-items:center;padding:0 14px;font:400 16px/1 var(--sans);color:var(--ink)}
+.field .in.ph{color:var(--ink-muted)}
+.help{font:400 14px/1.5 var(--sans);color:var(--ink-muted);margin:0}
+.dock{position:absolute;left:0;right:0;bottom:0;padding:12px 20px 30px;background:var(--paper);border-top:1px solid var(--hair);display:flex;gap:12px;align-items:center}
+.pick{display:flex;flex-wrap:wrap;gap:8px}
+.pick span{height:36px;display:inline-flex;align-items:center;padding:0 14px;border:1px solid var(--stone-strong);font:400 14px/1 var(--sans);color:var(--ink-soft)}
+.pick span.on{border-color:var(--ink);background:var(--ink);color:var(--paper)}
+.dots{display:flex;gap:4px;padding:10px 20px 0}
+.dots i{flex:1;height:2px;background:var(--stone)}
+.dots i.on{background:var(--ink)}
+.over{position:absolute;top:40px;left:16px;right:16px;display:flex;justify-content:space-between}
+.over span{width:40px;height:40px;border-radius:50%;background:rgba(248,243,234,.88);display:grid;place-items:center;color:var(--ink)}
+.over .r{display:flex;gap:8px;width:auto;height:auto;background:none}
+.note{font:italic 400 19px/1.45 var(--serif);margin:0;color:var(--ink)}
+.scrim{position:absolute;inset:0;background:var(--scrim)}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:var(--paper);border-radius:18px 18px 0 0;padding:12px 20px 34px;display:grid;gap:18px}
+.grab{width:40px;height:4px;border-radius:2px;background:var(--stone);justify-self:center}
+.disclosure{font:400 14px/1.5 var(--sans);color:var(--ink-soft);margin:0;padding:12px 14px;background:var(--paper-deep)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:3px}
+.grid3 .plinth{aspect-ratio:1}
+.add{aspect-ratio:4/5;border:1px dashed var(--stone-strong);display:grid;place-items:center;align-content:center;gap:8px;color:var(--ink);font:500 15px/1 var(--sans);background:var(--paper-deep)}
+.thumbs{display:flex;gap:8px;padding:0 20px;overflow:hidden}
+.thumbs .plinth{width:96px;height:120px;flex:none}
+.thumbs .add{width:96px;height:120px;aspect-ratio:auto;flex:none;font-size:13px}
+.flag{position:absolute;left:8px;top:8px;background:var(--paper);padding:4px 7px}
+.task{margin:0 20px;padding:14px;border-left:3px solid var(--amber);background:var(--paper-deep);display:flex;justify-content:space-between;align-items:center;gap:12px;font:400 15px/1.4 var(--sans)}
+.center{display:grid;justify-items:center;text-align:center}
+.decided{margin-top:56px;max-width:70ch;display:grid;gap:10px;font-size:15px;line-height:1.55}
+.decided h2{font:400 26px/1.15 var(--serif);margin:0}
+.decided ul{margin:0;padding-left:20px;display:grid;gap:6px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3.5 10.5 12 4l8.5 6.5V20h-5.5v-6h-6v6H3.5z"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7.5-4.6-7.5-10A4.3 4.3 0 0 1 12 7.3 4.3 4.3 0 0 1 19.5 10c0 5.4-7.5 10-7.5 10z"/></symbol>
+  <symbol id="i-heart-f" viewBox="0 0 24 24"><path fill="currentColor" d="M12 20s-7.5-4.6-7.5-10A4.3 4.3 0 0 1 12 7.3 4.3 4.3 0 0 1 19.5 10c0 5.4-7.5 10-7.5 10z"/></symbol>
+  <symbol id="i-studio" viewBox="0 0 24 24"><path d="M6 21 9.5 4h5L18 21M8 13h8M12 4V2"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></symbol>
+  <symbol id="i-share" viewBox="0 0 24 24"><path d="M12 15V4m0 0-4 4m4-4 4 4M5 13v6h14v-6"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="m5 9 7 7 7-7"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 19.5 5.3 15A8 8 0 1 1 9 18.7z"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3.5" y="5.5" width="17" height="13"/><path d="m4 6 8 7 8-7"/></symbol>
+  <symbol id="i-cam" viewBox="0 0 24 24"><path d="M4 8h3.5L9 5.5h6L16.5 8H20v11H4z"/><circle cx="12" cy="13" r="3.5"/></symbol>
+</svg>
+
+<div class="wrap">
+  <header class="intro">
+    <span class="mono">Drawing board · Layer 4 · 9 November 2026</span>
+    <h1>The Gallery, as an app</h1>
+    <p>Sixteen screens on a phone, in The Gallery's original look: spaced capitals, wall labels, the italic curator line and amber. App controls are added: a bottom bar, image grids, a heart, a fixed Message button and short sign-up steps. The photographs are invented objects, rendered for these drawings. The number beside each screen counts its words.</p>
+  </header>
+
+  <h2 class="journey">Visitor</h2>
+  <div class="grid">
+
+  <!-- 1 Home -->
+  <figure class="plate"><figcaption class="cap"><b>1 · Home</b><span class="wc"></span></figcaption>
+  <div class="fit"><div class="phone"><div class="scroll">
+    <div class="sb"><span>9:41</span><span>●●●</span></div>
+    <div class="top"><span class="wm">The Gallery</span></div>
+    <div class="ctx"><span>On view now</span><span class="lbl">Bengaluru</span></div>
+    <div class="plinth whole" style="height:300px"><img src="img/vessel-3.jpg" alt=""></div>
+    <div class="pad stack" style="padding-top:16px">
+      <span class="lbl av">Available · ₹6,800</span>
+      <h3 class="display" style="font-size:36px">Ash Vessel No. 2</h3>
+      <p class="maker">Anika Rao · wood-fired stoneware</p>
+    </div>
+    <div class="chips" style="margin-top:6px"><span>Clay</span><span>Textile</span><span>Wood</span><span>Metal</span><span>Paper</span></div>
+    <div class="pad" style="padding-top:18px;padding-bottom:14px"><p class="lead">Recently hung</p></div>
+    <div class="tiles">
+      <div class="tile"><div class="plinth"><img src="img/textile.jpg" alt=""></div></div>
+      <div class="tile"><div class="plinth"><img src="img/bowl.jpg" alt=""></div></div>
+    </div>
+  </div>
+  <nav class="tabbar">
+    <span class="tab on"><svg class="ic"><use href="#i-home"/></svg>Home</span>
+    <span class="tab"><svg class="ic"><use href="#i-search"/></svg>Search</span>
+    <span class="tab"><svg class="ic"><use href="#i-heart"/></svg>Saved</span>
+    <span class="tab"><svg class="ic"><use href="#i-studio"/></svg>Studio</span>
+  </nav></div></div>
+  <p class="cap-note">One featured work, then the materials, then the newest works as a grid. A tap on a material filters the grid in place.</p></figure>
+
+  <!-- 1b Home, empty -->
+  <figure class="plate"><figcaption class="cap"><b>1b · Home, before the first work</b><span class="wc"></span></figcaption>
+  <div class="fit"><div class="phone"><div class="scroll">
+    <div class="sb"><span>9:41</span><span>●●●</span></div>
+    <div class="top"><span class="wm">The Gallery</span></div>
+    <div class="ctx"><span>Opening soon</span><span class="lbl">Bengaluru</span></div>
+    <div class="plinth" style="height:320px;align-items:flex-end;padding-bottom:70px;background:linear-gradient(var(--paper-deep),var(--limestone))">
+      <div style="width:62%;height:26px;background:#EFE7DA;box-shadow:0 1px 0 rgba(34,30,26,.08),0 14px 28px -18px rgba(34,30,26,.35)"></div>
+    </div>
+    <div class="pad stack" style="padding-top:24px;gap:14px">
+      <h3 class="display">The first works are being hung.</h3>
+      <p class="maker">Makers in Bengaluru are setting up their rooms.</p>
+      <div style="padding-top:10px"><span class="btn">Open your gallery</span></div>
+    </div>
+  </div>
+  <nav class="tabbar">
+    <span class="tab on"><svg class="ic"><use href="#i-home"/></svg>Home</span>
+    <span class="tab"><svg class="ic"><use href="#i-search"/></svg>Search</span>
+    <span class="tab"><svg class="ic"><use href="#i-heart"/></svg>Saved</span>
+    <span class="tab"><svg class="ic"><use href="#i-studio"/></svg>Studio</span>
+  </nav></div></div>
+  <p class="cap-note">This is what the live site shows today. The empty plinth comes back. One line, one action for makers.</p></figure>
+
+  <!-- 2 Work -->
+  <figure class="plate"><figcaption class="cap"><b>2 · A work</b><span class="wc"></span></figcaption>
+  <div class="fit"><div class="phone"><div class="scroll">
+    <div class="plinth whole" style="height:470px"><img src="img/vessel-3.jpg" alt=""></div>
+    <div class="over"><span><svg class="ic"><use href="#i-back"/></svg></span><span class="r"><span><svg class="ic"><use href="#i-share"/></svg></span><span><svg class="ic"><use href="#i-heart"/></svg></span></span></div>
+    <div class="dots"><i class="on"></i><i></i><i></i></div>
+    <div class="pad stack" style="padding-top:16px">
+      <span class="lbl av">Available · ₹6,800</span>
+      <h3 class="display" style="font-size:36px">Ash Vessel No. 2</h3>
+      <p class="maker"><u style="text-decoration-color:var(--stone-strong);text-underline-offset:3px">Anika Rao</u> · wood-fired stoneware</p>
+      <span class="meta">31 × 22 cm · 2026 · updated 2 days ago</span>
+    </div>
+    <div class="rows" style="margin-top:14px">
+      <div class="row"><span>In Anika’s words</span><svg class="ic"><use href="#i-down"/></svg></div>
+    </div>
+  </div>
+  <div class="dock"><span class="btn solid full"><svg class="ic" style="width:20px;height:20px"><use href="#i-chat"/></svg>Message Anika</span></div>
+  </div></div>
+  <p class="cap-note">The photograph takes the first screen. Swipe for more photographs. The heart saves the work. Message stays at the bottom.</p></figure>
+
+  <!-- 2b Message sheet -->
+  <figure class="plate"><figcaption class="cap"><b>2b · Message the maker</b><span class="wc"></span></figcaption>
+  <div class="fit"><div class="phone"><div class="scroll">
+    <div class="plinth whole" style="height:470px"><img src="img/vessel-3.jpg" alt=""></div>
+  </div>
+  <div class="scrim"></div>
+  <div class="sheet">
+    <div class="grab"></div>
+    <h3 class="heading" style="font-size:26px">Message Anika</h3>
+    <div class="rows" style="margin:0">
+      <div class="row"><span style="display:flex;gap:12px;align-items:center"><svg class="ic"><use href="#i-chat"/></svg>WhatsApp</span><svg class="ic"><use href="#i-chev"/></svg></div>
+      <div class="row"><span style="display:flex;gap:12px;align-items:center"><svg class="ic"><use href="#i-mail"/></svg>Email</span><svg class="ic"><use href="#i-chev"/></svg></div>
+    </div>
+    <p class="disclosure">You are contacting the maker directly. Payment, delivery, returns and any dispute are arranged with them; The Gallery does not process the transaction.</p>
+  </div>
+  </div></div>
+  <p class="cap-note">A sheet, not a new page. The fixed handoff sentence stays word for word, here and nowhere else.</p></figure>
+
+  <!-- 3 Maker gallery -->
+  <figure class="plate"><figcaption class="cap"><b>3 · A maker’s gallery</b><span class="wc"></span></figcaption>
+  <div class="fit"><div class="phone"><div class="scroll">
+    <div class="sb"><span>9:41</span><span>●●●</span></div>
+    <div class="top"><svg class="ic"><use href="#i-back"/></svg><span class="wm">The Gallery</span><svg class="ic"><use href="#i-share"/></svg></div>
+    <div class="pad stack" style="padding-top:26px;gap:10px">
+      <span class="lbl">Clay · Bengaluru</span>
+      <h3 class="display">Anika Rao</h3>
+      <p class="note" style="font-size:18px">“I fire in a wood kiln outside the city.”</p>
+    </div>
+    <div class="pad" style="display:flex;gap:10px;padding-top:18px;padding-bottom:22px">
+      <span class="btn solid" style="flex:1"><svg class="ic" style="width:20px;height:20px"><use href="#i-chat"/></svg>Message</span>
+    </div>
+    <div style="display:flex;justify-content:space-between;padding:0 20px 10px"><span class="lbl">6 works</span><span class="lbl">Newest</span></div>
+    <div class="grid3">
+      <div class="plinth"><img src="img/vessel.jpg" alt=""></div>
+      <div class="plinth"><img src="img/bowl.jpg" alt=""></div>
+      <div class="plinth"><img src="img/bottle.jpg" alt=""></div>
+      <div class="plinth"><img src="img/vessel-3.jpg" alt=""></div>
+      <div class="plinth"><img src="img/salt.jpg" alt=""></div>
+      <div class="plinth"><img src="img/vessel-2.jpg" alt=""></div>
+    </div>
+  </div>
+  <nav class="tabbar">
+    <span class="tab on"><svg class="ic"><use href="#i-home"/></svg>Home</span>
+    <span class="tab"><svg class="ic"><use href="#i-search"/></svg>Search</span>
+    <span class="tab"><svg class="ic"><use href="#i-heart"/></svg>Saved</span>
+    <span class="tab"><svg class="ic"><use href="#i-studio"/></svg>Studio</span>
+  </nav></div></div>
+  <p class="cap-note">Built like a profile: who, where, one line in their words, one button, then the work.</p></figure>
+
+  <!-- 4 Search -->
+  <figure class="plate"><figcaption class="cap"><b>4 · Search</b><span class="wc"></span></figcaption>
+  <div class="fit"><div class="phone"><div class="scroll">
+    <div class="sb"><span>9:41</span><span>●●●</span></div>
+    <div class="pad" style="padding-top:12px"><div class="field"><div class="in" style="gap:10px;border-color:var(--ink)"><svg class="ic" style="width:18px;height:18px"><use href="#i-search"/></svg>bowl</div></div></div>
+    <div class="chips"><span class="on">All</span><span>Clay</span><span>Textile</span><span>Wood</span><span>Metal</span></div>
+    <div class="pad" style="padding-top:14px;padding-bottom:12px"><span class="lbl">2 works</span></div>
+    <div class="tiles">
+      <div class="tile"><div class="plinth"><img src="img/bowl.jpg" alt=""></div><span class="t">Green Rain Bowl</span><span class="m">Anika Rao</span><span class="lbl">Made to order</span></div>
+      <div class="tile"><div class="plinth"><img src="img/wood.jpg" alt=""></div><span class="t">Teak Shallow Bowl</span><span class="m">Kaveri Woodworks</span><span class="lbl av">₹3,600</span></div>
+    </div>
+  </div>
+  <nav class="tabbar">
+    <span class="tab"><svg class="ic"><use href="#i-home"/></svg>Home</span>
+    <span class="tab on"><svg class="ic"><use href="#i-search"/></svg>Search</span>
+    <span class="tab"><svg class="ic"><use href="#i-heart"/></svg>Saved</span>
+    <span class="tab"><svg class="ic"><use href="#i-studio"/></svg>Studio</span>
+  </nav></div></div>
+  <p class="cap-note">Results appear as you type, as pictures. A tile shows its status, or the price when the work is available.</p></figure>
+
+  <!-- 5 Saved -->
+  <figure class="plate"><figcaption class="cap"><b>5 · Saved</b><span class="wc"></span></figcaption>
+  <div class="fit"><div class="phone"><div class="scroll">
+    <div class="sb"><span>9:41</span><span>●●●</span></div>
+    <div class="top"><span class="wm">The Gallery</span></div>
+    <div class="pad stack" style="padding-top:22px;padding-bottom:18px"><h3 class="heading">Saved</h3><span class="lbl">3 works · on this phone</span></div>
+    <div class="tiles">
+      <div class="tile"><div class="plinth"><img src="img/textile.jpg" alt=""></div><span class="t">Indigo Runner</span><span class="m">Dhaaga Studio</span><span class="lbl av">₹4,200</span></div>
+      <div class="tile"><div class="plinth"><img src="img/lota.jpg" alt=""></div><span class="t">Brass Lota</span><span class="m">Tamra Works</span><span class="lbl">Not for sale</span></div>
+      <div class="tile"><div class="plinth"><img src="img/paper.jpg" alt=""></div><span class="t">Folded Study II</span><span class="m">Kagaz Studio</span><span class="lbl">Sold</span></div>
+    </div>
+  </div>
+  <nav class="tabbar">
+    <span class="tab"><svg class="ic"><use href="#i-home"/></svg>Home</span>
+    <span class="tab"><svg class="ic"><use href="#i-search"/></svg>Search</span>
+    <span class="tab on"><svg class="ic"><use href="#i-heart"/></svg>Saved</span>
+    <span class="tab"><svg class="ic"><use href="#i-studio"/></svg>Studio</span>
+  </nav></div></div>
+  <p class="cap-note">No account needed. A sold work stays, marked Sold.</p></figure>
+
+  <!-- 6 About -->
+  <figure class="plate"><figcaption class="cap"><b>6 · About</b><span class="wc"></span></figcaption>
+  <div class="fit"><div class="phone"><div class="scroll">
+    <div class="sb"><span>9:41</span><span>●●●</span></div>
+    <div class="top"><svg class="ic"><use href="#i-back"/></svg><span class="wm">The Gallery</span><span style="width:22px"></span></div>
+    <div class="pad stack" style="padding-top:26px;gap:14px">
+      <h3 class="heading">About</h3>
+      <p style="margin:0;font:400 19px/1.45 var(--serif)">Art and craft by makers in Bengaluru. You see the work here and talk to the maker yourself. The Gallery takes no commission.</p>
+    </div>
+    <div class="rows" style="margin-top:26px">
+      <div class="row"><span>Who can open a gallery</span><svg class="ic"><use href="#i-down"/></svg></div>
+      <div class="row"><span>What we act on</span><svg class="ic"><use href="#i-down"/></svg></div>
+      <div class="row"><span>Privacy</span><svg class="ic"><use href="#i-down"/></svg></div>
+      <div class="row"><span>Report a gallery or a work</span><svg class="ic"><use href="#i-chev"/></svg></div>
+    </div>
+    <p class="meta pad" style="padding-top:22px">The Gallery · Bengaluru</p>
+  </div>
+  <nav class="tabbar">
+    <span class="tab on"><svg class="ic"><use href="#i-home"/></svg>Home</span>
+    <span class="tab"><svg class="ic"><use href="#i-search"/></svg>Search</span>
+    <span class="tab"><svg class="ic"><use href="#i-heart"/></svg>Saved</span>
+    <span class="tab"><svg class="ic"><use href="#i-studio"/></svg>Studio</span>
+  </nav></div></div>
+  <p class="cap-note">About, Participation and Privacy on one screen. The full text stays and opens per row; the count covers only what shows closed.</p></figure>
+  </div>
+
+  <h2 class="journey">Maker</h2>
+  <div class="grid">
+
+  <!-- 7 For Makers -->
+  <figure class="plate"><figcaption class="cap"><b>7 · For makers</b><span class="wc"></span></figcaption>
+  <div class="fit"><div class="phone"><div class="scroll">
+    <div class="sb"><span>9:41</span><span>●●●</span></div>
+    <div class="top"><span class="wm">The Gallery</span></div>
+    <div style="display:grid;grid-template-columns:1.25fr 1fr;gap:3px;height:330px">
+      <div class="plinth"><img src="img/vessel-3.jpg" alt=""></div>
+      <div style="display:grid;gap:3px"><div class="plinth"><img src="img/textile.jpg" alt=""></div><div class="plinth"><img src="img/lota.jpg" alt=""></div></div>
+    </div>
+    <div class="pad stack" style="padding-top:24px;gap:14px">
+      <span class="lbl">For makers</span>
+      <h3 class="display">A gallery of your own.</h3>
+      <p class="maker">Hang your work from your phone. Visitors message you on WhatsApp. No commission.</p>
+    </div>
+  </div>
+  <div class="dock" style="display:grid;gap:14px;justify-items:center"><span class="btn solid full">Open your gallery</span><span class="tlink">I already have a gallery</span></div>
+  </div></div>
+  <p class="cap-note">Pictures first. One button. The three numbered steps are gone, and with them the “Make an account” text that looked like a button.</p></figure>
+
+  <!-- 8 Join -->
+  <figure class="plate"><figcaption class="cap"><b>8 · Join</b><span class="wc"></span></figcaption>
+  <div class="fit"><div class="phone"><div class="scroll">
+    <div class="sb"><span>9:41</span><span>●●●</span></div>
+    <div class="top"><svg class="ic"><use href="#i-back"/></svg><span class="lbl">Step 1 of 3</span><span style="width:22px"></span></div>
+    <div class="pad stack" style="padding-top:30px;gap:24px">
+      <h3 class="heading">Open your gallery</h3>
+      <div class="field"><label>Email</label><div class="in">anika.rao@makers.example</div><p class="help">For signing in. Never shown.</p></div>
+      <div class="field"><label>Password</label><div class="in">••••••••••••</div><p class="help">At least 10 characters.</p></div>
+    </div>
+  </div>
+  <div class="dock"><span class="btn solid full">Continue</span></div>
+  </div></div>
+  <p class="cap-note">Three short steps: account, then your name and place, then WhatsApp. One question at a time.</p></figure>
+
+  <!-- 9 Check email -->
+  <figure class="plate"><figcaption class="cap"><b>9 · Check your email</b><span class="wc"></span></figcaption>
+  <div class="fit"><div class="phone"><div class="scroll">
+    <div class="sb"><span>9:41</span><span>●●●</span></div>
+    <div class="top"><svg class="ic"><use href="#i-back"/></svg><span class="lbl">Step 1 of 3</span><span style="width:22px"></span></div>
+    <div class="pad center" style="padding-top:150px;gap:18px">
+      <svg class="ic" style="width:44px;height:44px;color:var(--amber)"><use href="#i-mail"/></svg>
+      <h3 class="heading">Check your email</h3>
+      <p class="maker" style="max-width:28ch">Tap the link we sent to anika.rao@makers.example.</p>
+      <span class="tlink" style="margin-top:14px">Send it again</span>
+    </div>
+  </div>
+  </div></div>
+  <p class="cap-note">One line. The link brings the maker straight back to step 2.</p></figure>
+
+  <!-- 10 Sign in -->
+  <figure class="plate"><figcaption class="cap"><b>10 · Sign in</b><span class="wc"></span></figcaption>
+  <div class="fit"><div class="phone"><div class="scroll">
+    <div class="sb"><span>9:41</span><span>●●●</span></div>
+    <div class="top"><svg class="ic"><use href="#i-back"/></svg><span class="wm">The Gallery</span><span style="width:22px"></span></div>
+    <div class="pad stack" style="padding-top:30px;gap:24px">
+      <h3 class="heading">Sign in</h3>
+      <div class="field"><label>Email</label><div class="in ph">you@example.com</div></div>
+      <div class="field"><label>Password</label><div class="in"></div></div>
+      <span class="tlink">Forgot password?</span>
+    </div>
+  </div>
+  <div class="dock"><span class="btn solid full">Sign in</span></div>
+  </div></div>
+  <p class="cap-note">The minimum.</p></figure>
+
+  <!-- 11 Reset -->
+  <figure class="plate"><figcaption class="cap"><b>11 · Reset password</b><span class="wc"></span></figcaption>
+  <div class="fit"><div class="phone"><div class="scroll">
+    <div class="sb"><span>9:41</span><span>●●●</span></div>
+    <div class="top"><svg class="ic"><use href="#i-back"/></svg><span class="wm">The Gallery</span><span style="width:22px"></span></div>
+    <div class="pad stack" style="padding-top:30px;gap:24px">
+      <h3 class="heading">Reset password</h3>
+      <div class="field"><label>Email</label><div class="in ph">you@example.com</div><p class="help">We’ll send a link if it has a gallery.</p></div>
+    </div>
+  </div>
+  <div class="dock"><span class="btn solid full">Send link</span></div>
+  </div></div>
+  <p class="cap-note">The second step, “New password”, is the same screen with one field.</p></figure>
+
+  <!-- 12 Studio -->
+  <figure class="plate"><figcaption class="cap"><b>12 · Studio</b><span class="wc"></span></figcaption>
+  <div class="fit"><div class="phone"><div class="scroll">
+    <div class="sb"><span>9:41</span><span>●●●</span></div>
+    <div class="top"><span class="wm">Studio</span><svg class="ic"><use href="#i-share"/></svg></div>
+    <div class="pad stack" style="padding-top:20px;gap:6px">
+      <h3 class="heading">Anika Rao</h3>
+      <span class="meta">atthegallery.in/m/anika-rao</span>
+    </div>
+    <div class="task" style="margin-top:18px"><span>Add WhatsApp so visitors can message you</span><svg class="ic" style="width:18px;height:18px"><use href="#i-chev"/></svg></div>
+    <div class="tiles" style="padding-top:20px">
+      <div class="add"><svg class="ic" style="width:28px;height:28px"><use href="#i-plus"/></svg>Add a work</div>
+      <div class="tile" style="position:relative"><div class="plinth"><img src="img/vessel.jpg" alt=""></div><span class="lbl av flag">On view</span></div>
+      <div class="tile" style="position:relative"><div class="plinth"><img src="img/bowl.jpg" alt=""></div><span class="lbl flag">Draft</span></div>
+      <div class="tile" style="position:relative"><div class="plinth"><img src="img/bottle.jpg" alt=""></div><span class="lbl av flag">On view</span></div>
+    </div>
+  </div>
+  <nav class="tabbar">
+    <span class="tab"><svg class="ic"><use href="#i-home"/></svg>Home</span>
+    <span class="tab"><svg class="ic"><use href="#i-search"/></svg>Search</span>
+    <span class="tab"><svg class="ic"><use href="#i-heart"/></svg>Saved</span>
+    <span class="tab on"><svg class="ic"><use href="#i-studio"/></svg>Studio</span>
+  </nav></div></div>
+  <p class="cap-note">Your gallery as a grid, with Add first. A missing step shows as one task, here until it is done.</p></figure>
+
+  <!-- 13 Add a work -->
+  <figure class="plate"><figcaption class="cap"><b>13 · Add a work</b><span class="wc"></span></figcaption>
+  <div class="fit"><div class="phone"><div class="scroll">
+    <div class="sb"><span>9:41</span><span>●●●</span></div>
+    <div class="top"><span class="tlink" style="text-decoration:none">Cancel</span><span class="lbl">New work</span><span class="tlink">Save draft</span></div>
+    <div class="thumbs" style="padding-top:16px">
+      <div class="plinth"><img src="img/vessel-2.jpg" alt=""></div>
+      <div class="plinth"><img src="img/vessel-3.jpg" alt=""></div>
+      <div class="add"><svg class="ic"><use href="#i-cam"/></svg>Add photo</div>
+    </div>
+    <div class="pad stack" style="padding-top:20px;gap:18px">
+      <div class="field"><label>Title</label><div class="in">Ash Vessel No. 3</div></div>
+      <div class="field"><label>Material</label><div class="pick"><span class="on">Clay</span><span>Textile</span><span>Wood</span><span>Metal</span><span>Paper</span></div></div>
+      <div class="field"><label>Status</label><div class="pick"><span class="on">Available</span><span>Made to order</span><span>By enquiry</span><span>Sold</span><span>Not for sale</span></div></div>
+      <div class="field"><label>Price</label><div class="in">₹ 7,200</div></div>
+    </div>
+  </div>
+  <div class="dock"><span class="btn solid full">Publish</span></div>
+  </div></div>
+  <p class="cap-note">Photos first. Choices are taps, not typing. Size and a few words sit further down, optional.</p></figure>
+
+  <!-- 14 Settings -->
+  <figure class="plate"><figcaption class="cap"><b>14 · Settings</b><span class="wc"></span></figcaption>
+  <div class="fit"><div class="phone"><div class="scroll">
+    <div class="sb"><span>9:41</span><span>●●●</span></div>
+    <div class="top"><svg class="ic"><use href="#i-back"/></svg><span class="wm">Studio</span><span style="width:22px"></span></div>
+    <div class="pad" style="padding-top:22px;padding-bottom:16px"><h3 class="heading">Settings</h3></div>
+    <div class="pad" style="padding-bottom:8px"><span class="lbl">Your gallery</span></div>
+    <div class="rows">
+      <div class="row"><span>Name</span><span class="v">Anika Rao</span></div>
+      <div class="row"><span>Place</span><span class="v">Bengaluru</span></div>
+      <div class="row"><span>A line about your work</span><svg class="ic"><use href="#i-chev"/></svg></div>
+      <div class="row"><span>WhatsApp</span><span class="v" style="color:var(--amber-deep)">Add</span></div>
+      <div class="row"><span>Email for visitors</span><span class="v">Off</span></div>
+    </div>
+    <div class="pad" style="padding-top:22px;padding-bottom:8px"><span class="lbl">Account</span></div>
+    <div class="rows">
+      <div class="row"><span>Sign-in email</span><svg class="ic"><use href="#i-chev"/></svg></div>
+      <div class="row"><span>Password</span><svg class="ic"><use href="#i-chev"/></svg></div>
+      <div class="row"><span>Sign out</span></div>
+    </div>
+  </div>
+  <nav class="tabbar">
+    <span class="tab"><svg class="ic"><use href="#i-home"/></svg>Home</span>
+    <span class="tab"><svg class="ic"><use href="#i-search"/></svg>Search</span>
+    <span class="tab"><svg class="ic"><use href="#i-heart"/></svg>Saved</span>
+    <span class="tab on"><svg class="ic"><use href="#i-studio"/></svg>Studio</span>
+  </nav></div></div>
+  <p class="cap-note">Three Studio pages (your details, ways to contact you, account) become one list.</p></figure>
+  </div>
+
+  <section class="decided">
+    <h2>Recorded</h2>
+    <ul>
+      <li>The original Gallery look comes back as the base (governor, option 1).</li>
+      <li>Bottom bar with icons on public pages: yes. Workshops: hidden until the first workshop exists. About, Participation and Privacy: one screen.</li>
+      <li>Unchanged in meaning: the handoff sentence, every status shown except Available, sold works stay visible, no contact shown until the maker adds a way.</li>
+      <li>One choice to confirm: Message, Continue and Publish are solid ink bars fixed to the bottom, as in the references. Other actions keep the original amber-edged line.</li>
+      <li>Operator screens (2) are internal and not drawn.</li>
+    </ul>
+  </section>
+</div>
+
+<script>
+// Count visible words inside each phone (text that is not clipped away), write it beside the title.
+document.querySelectorAll('.plate').forEach(function(p){
+  var ph=p.querySelector('.phone'); var box=ph.getBoundingClientRect(); var n=0;
+  var w=document.createTreeWalker(ph,NodeFilter.SHOW_TEXT);
+  while(w.nextNode()){var t=w.currentNode; var s=t.textContent.trim(); if(!s) continue;
+    var r=document.createRange(); r.selectNodeContents(t); var b=r.getBoundingClientRect();
+    if(b.height===0||b.top>=box.bottom||b.bottom<=box.top) continue;
+    if(/^[0-9:●]+$/.test(s)) continue; n+=s.split(/\s+/).length;}
+  p.querySelector('.wc').textContent=n+' words';
+});
+// Fit each 390 px phone to its column.
+function fit(){document.querySelectorAll('.fit').forEach(function(f){var k=Math.min(1,f.clientWidth/390);var ph=f.firstElementChild;ph.style.transform='scale('+k+')';f.style.height=(844*k)+'px';});}
+fit(); addEventListener('resize',fit);
+</script>
