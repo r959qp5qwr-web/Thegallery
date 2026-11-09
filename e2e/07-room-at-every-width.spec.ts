@@ -40,14 +40,24 @@ test.describe("the room at every width", () => {
     expect(res.status()).toBe(307);
   });
 
-  test("one Sections navigation at any width, in the bar or in the header", async ({ page }) => {
-    await page.goto("/");
-    // Exactly one is exposed: the other is display:none, so it is not in the accessibility tree.
+  test("one Sections navigation at any width, in the header; the sections inline only when wide", async ({ page }) => {
+    await page.goto("/saved");
     await expect(page.getByRole("navigation", { name: "Sections" })).toHaveCount(1);
     const nav = page.getByRole("navigation", { name: "Sections" });
-    await expect(nav.getByRole("link", { name: "Browse" })).toHaveAttribute("aria-current", "page");
-    const inHeader = await nav.evaluate((n) => !!n.closest("header"));
-    expect(inHeader).toBe(wide(page));
+    expect(await nav.evaluate((n) => !!n.closest("header"))).toBe(true);
+    // Wide: Saved is in the header and marked; narrow: it is in the Menu, and the Menu is offered.
+    if (wide(page)) {
+      await expect(nav.getByRole("link", { name: "Saved" })).toHaveAttribute("aria-current", "page");
+      await expect(nav.getByRole("button", { name: "Menu" })).toBeHidden();
+    } else {
+      await expect(nav.getByRole("link", { name: "Saved" })).toBeHidden();
+      await nav.getByRole("button", { name: "Menu" }).click();
+      const menu = page.getByRole("dialog", { name: "Menu" });
+      await expect(menu.getByRole("link", { name: "Saved" })).toHaveAttribute("aria-current", "page");
+      await menu.getByRole("link", { name: "Workshops" }).click();
+      await expect(page).toHaveURL(/\/workshops$/);
+      await expect(menu).toBeHidden();
+    }
   });
 
   test("header and footer are landmarks of their own, outside main", async ({ page }) => {
@@ -128,7 +138,7 @@ test.describe("the room at every width", () => {
     await clearStarted();
     await signIn(page, MAKER_B.email, MAKER_B.password);
     await page.goto("/studio/works/new");
-    await page.getByLabel("Image file").setInputFiles(join(process.cwd(), "e2e/fixtures/square-1x1.jpg"));
+    await page.getByLabel("Choose a photograph").setInputFiles(join(process.cwd(), "e2e/fixtures/square-1x1.jpg"));
     await page.getByLabel("Medium").fill("Kept medium probe");
     await page.getByRole("radio", { name: "Fixed price" }).check();       // fixed price, no amount: refused
     await page.getByRole("button", { name: "Save draft" }).click();
@@ -150,7 +160,7 @@ test.describe("the room at every width", () => {
     });
     expect(order).toBe(true);
 
-    await page.getByLabel("Image file").setInputFiles(join(process.cwd(), "e2e/fixtures/square-1x1.jpg"));
+    await page.getByLabel("Choose a photograph").setInputFiles(join(process.cwd(), "e2e/fixtures/square-1x1.jpg"));
     await page.getByRole("button", { name: "Save draft" }).click();
     await expect(page.getByText("Draft work")).toBeVisible({ timeout: 20_000 });
     await expect(page.getByText("saved with its first image")).toBeVisible();

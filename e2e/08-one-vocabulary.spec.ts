@@ -39,10 +39,12 @@ test.describe("one vocabulary", () => {
       const status = page.locator(".label .status");
       await expect(status).toContainText(shown);
       await expect(status).not.toContainText(new RegExp(`^${old}`));
-      // The maker's own gallery shows the same word on this work's tile.
+      // A tile is a glance (Wave 5): it carries only "Sold" or a stated price, so neither word,
+      // and certainly not the old one, appears on the wall.
       await page.goto("/m/anika-rao");
       const tile = page.locator(".tile", { has: page.locator(".gt", { hasText: MONSOON }) });
-      await expect(tile.locator(".gs")).toContainText(shown);
+      await expect(tile).not.toContainText(old);
+      await expect(tile.locator(".gs")).toHaveCount(0);
     }
   });
 

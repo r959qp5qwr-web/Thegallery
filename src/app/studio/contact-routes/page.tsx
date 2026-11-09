@@ -34,7 +34,7 @@ export default async function ContactRoutes({ searchParams }: { searchParams: Pr
       {live.length === 0 ? (
         <Band label="No way to contact you yet">
           Until you add one, your work is shown with &ldquo;not taking enquiries here yet&rdquo; and no
-          Contact button. You can publish without one and add it later.
+          Message button. You can publish without one and add it later.
         </Band>
       ) : null}
 
@@ -61,15 +61,15 @@ export default async function ContactRoutes({ searchParams }: { searchParams: Pr
                   <input type="hidden" name="id" value={r.id} />
                   <p className="small" id={`remove-${r.id}`} style={{ margin: "0 0 8px" }}>
                     {live.length === 1 && r.enabled && r.validated
-                      ? "This is the only way visitors can contact you. Removing it takes the Contact button off every work until you add another. This cannot be undone."
+                      ? "This is the only way visitors can contact you. Removing it takes the Message button off every work until you add another. This cannot be undone."
                       : "Visitors will no longer see this. This cannot be undone; you can turn it off instead and keep it."}
                   </p>
                   <button className="btn alarm" type="submit">Remove {ROUTE_LABEL[r.kind]}</button>
                   <Link className="btn quiet" href="/studio/contact-routes"><span>Keep</span></Link>
                 </form>
               ) : (
-                <Link className="btn quiet" href={`/studio/contact-routes?remove=${r.id}`}
-                      aria-label={`Remove ${ROUTE_LABEL[r.kind]}`}><span>Remove…</span></Link>
+                <Link className="btn quiet" href={`/studio/contact-routes?remove=${r.id}`}>
+                  <span>Remove {ROUTE_LABEL[r.kind]}</span></Link>
               )}
             </li>
           ))}

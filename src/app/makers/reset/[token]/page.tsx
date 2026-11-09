@@ -1,4 +1,4 @@
-import { StudioHeader } from "@/components/Chrome";
+import { Header } from "@/components/Chrome";
 import { ActionForm, Field } from "@/components/ActionForm";
 import { completeRecoveryAction } from "@/app/actions/account";
 
@@ -9,7 +9,7 @@ export default async function ResetWithToken({ params }: { params: Promise<{ tok
   const { token } = await params;
   return (
     <>
-      <StudioHeader title="Set a new password" />
+      <Header />
       <main id="main" tabIndex={-1}>
       <div className="studio-state">
         <h1>Choose a new password</h1>

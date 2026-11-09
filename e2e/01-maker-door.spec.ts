@@ -11,7 +11,7 @@ test.describe("the maker door", () => {
 
   test("create an account, confirm the email, sign in, sign out", async ({ page }) => {
     await page.goto("/makers");
-    await page.getByRole("link", { name: "Create an account" }).click();
+    await page.getByRole("link", { name: "Open your gallery" }).click();
     await expect(page.getByRole("heading", { name: "Your email opens the Studio" })).toBeVisible();
 
     // The door says plainly that this address stays private.

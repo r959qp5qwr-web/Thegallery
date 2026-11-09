@@ -85,22 +85,23 @@ test.describe("governor decisions", () => {
     const w = await monsoon();
     const tile = () => page.locator(".tile", { has: page.locator(".gt", { hasText: MONSOON }) }).locator(".gs");
     // Monsoon is the only public work here, so the entrance features it.
-    const entrance = () => page.locator(".featured-label .status");
+    const entrance = () => page.locator(".featured-label");
     await setLabel(w.id, "available", "exact", 6800);
     await page.goto("/m/anika-rao");
-    await expect(tile()).toHaveText("Available · ₹6,800");
+    // Wave 5: a tile carries the stated amount alone; the status word is on the work's page.
+    await expect(tile()).toHaveText("₹6,800");
     await page.goto("/");
     await expect(entrance()).toContainText("₹6,800");
     await setLabel(w.id, "on_view", "exact", 6800);
     await page.goto("/m/anika-rao");
-    await expect(tile()).toHaveText("Not for sale");
+    await expect(tile()).toHaveCount(0);
     await page.goto("/");
     await expect(entrance()).not.toContainText("₹");
     // A tile is a glance: words for a price stay on the work's own page.
     for (const mode of ["enquire", "made_to_order"]) {
       await setLabel(w.id, "available", mode, null);
       await page.goto("/m/anika-rao");
-      await expect(tile(), mode).toHaveText("Available");
+      await expect(tile(), mode).toHaveCount(0);
       await page.goto("/");
       await expect(entrance(), mode).not.toContainText(mode === "enquire" ? "Price on enquiry" : "Made to order");
     }

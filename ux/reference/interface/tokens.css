@@ -4,7 +4,12 @@
    Revised 2026-09-06 under the governor's visual mandate: the work supplies the colour, the
    interface supplies the room. Luminous ivory and limestone for the ground; a softened,
    warm near-black for ink; burnt amber as the curatorial mark rather than a technical
-   indicator; natural material tones drawn from the five materials, used only as fragments. */
+   indicator; natural material tones drawn from the five materials, used only as fragments.
+
+   Revised 2026-11-09 (Wave 5, governor option A2; palette unchanged): the wordmark is set in the
+   serif; mono is kept for dimensions and price only; labels are sentence-case sans with a 12 px
+   floor; the section opener is a roman serif line; display type reaches 104 px for the one name
+   or sentence that stands in for an image. */
 :root {
   /* direction — ground */
   --paper: #F8F3EA;          /* luminous warm ivory: the wall */
@@ -55,26 +60,30 @@
   --shadow-plinth: 0 1px 0 rgba(34, 30, 26, 0.08), 0 14px 28px -18px rgba(34, 30, 26, 0.35);
 
   /* type roles */
-  --t-wordmark: 500 14px/1 var(--font-mono);
-  --t-display: 350 40px/1.04 var(--font-serif);
-  --t-heading: 400 30px/1.1 var(--font-serif);
-  --t-subheading: 400 22px/1.2 var(--font-serif);
-  --t-grid-title: 400 18px/1.22 var(--font-serif);
-  --t-lead: italic 400 17px/1.3 var(--font-serif);      /* curatorial lead: section titles, context */
-  --t-maker: italic 400 17px/1.35 var(--font-serif);    /* the maker line under a title */
-  --t-meta: 400 13px/1.45 var(--font-mono);
-  --t-label: 500 11.5px/1.2 var(--font-mono);
+  --t-wordmark: 400 22px/1 var(--font-serif);
+  --t-display: 300 42px/1.02 var(--font-serif);
+  --t-monument: 300 52px/0.98 var(--font-serif);       /* the one name or sentence that is the image */
+  --t-heading: 400 26px/1.15 var(--font-serif);
+  --t-subheading: 400 21px/1.25 var(--font-serif);
+  --t-grid-title: 400 17px/1.25 var(--font-serif);
+  --t-lead: 400 19px/1.3 var(--font-serif);             /* section heading: roman, no rule */
+  --t-maker: 400 15px/1.45 var(--font-sans);            /* the byline under a title; status */
+  --t-meta: 400 13px/1.45 var(--font-mono);             /* mono: dimensions and price only */
+  --t-label: 500 12px/1.3 var(--font-sans);             /* 12 px floor; sentence case */
+  --t-caption: 400 13px/1.4 var(--font-sans);           /* tile status, colophon, row detail */
   --t-body: 400 16px/1.55 var(--font-sans);
   --t-body-small: 400 14px/1.5 var(--font-sans);
   --t-action: 500 15px/1 var(--font-sans);
-  --t-nav: 500 10.5px/1 var(--font-sans);
+  --t-nav: 400 15px/1 var(--font-sans);
+  --t-menu: 400 30px/1.15 var(--font-serif);            /* the menu's sections */
   --t-field: 400 16px/1.4 var(--font-sans);
   --t-field-label: 500 13px/1.3 var(--font-sans);
-  --t-note: italic 400 19px/1.45 var(--font-serif);
-  --track-wordmark: 0.2em;
+  --t-note: 400 20px/1.5 var(--font-serif);             /* the maker's own words */
+  --track-wordmark: -0.01em;
+  --track-display: -0.02em;
   --track-meta: 0.04em;
-  --track-label: 0.14em;
-  --track-nav: 0.1em;
+  --track-label: 0.01em;
+  --track-nav: 0;
   /* rhythm */
   --s1: 4px; --s2: 8px; --s3: 16px; --s4: 24px; --s5: 32px; --s6: 48px; --s7: 64px;
   --pad-x: 20px;
@@ -85,5 +94,5 @@
   --bar-h: 66px;
   --target: 44px;
 }
-@media (min-width: 600px) { :root { --t-display: 350 48px/1.03 var(--font-serif); --t-heading: 400 34px/1.1 var(--font-serif); --pad-x: 32px; } }
-@media (min-width: 900px) { :root { --t-display: 350 56px/1.02 var(--font-serif); --pad-x: 48px; } }
+@media (min-width: 600px) { :root { --t-display: 300 56px/1.0 var(--font-serif); --t-monument: 300 76px/0.96 var(--font-serif); --t-heading: 400 30px/1.12 var(--font-serif); --pad-x: 32px; } }
+@media (min-width: 900px) { :root { --t-display: 300 72px/0.98 var(--font-serif); --t-monument: 300 104px/0.94 var(--font-serif); --pad-x: 48px; } }

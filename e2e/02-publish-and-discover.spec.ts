@@ -83,7 +83,7 @@ test.describe("publish a work and meet it as a visitor", () => {
 
     for (const shape of ["portrait-3x4.jpg", "landscape-3x2.jpg", "square-1x1.jpg"]) {
       await page.goto(workUrl);
-      await page.getByLabel("Image file").setInputFiles(join(FIXTURES, shape));
+      await page.getByLabel("Choose a photograph").setInputFiles(join(FIXTURES, shape));
       await page.getByLabel("Describe the image").fill(`${TITLE}, ${shape.split("-")[0]} view`);
       await page.getByRole("button", { name: "Add image" }).click();
       await expect(page.getByTestId("form-notice")).toContainText("Image added");
@@ -165,7 +165,8 @@ test.describe("publish a work and meet it as a visitor", () => {
     expect(decoded.map((d) => Number((d.w / d.h).toFixed(2)))).toEqual([0.75, 1.5, 1]);
 
     // Worded "The gallery, N works" since the visual system revision of 2026-09-06.
-    await page.getByRole("link", { name: /The gallery, 1 work/ }).click();
+    // The maker is named once on the work, as the link to their gallery (Wave 5).
+    await page.locator(".makerline").getByRole("link", { name: "Anika Rao" }).click();
     await expect(page).toHaveURL(/\/m\/anika-rao/);
     await expect(page.getByRole("heading", { name: "Anika Rao" })).toBeVisible();
     await expect(page.getByText("I fire in a wood kiln")).toBeVisible();
@@ -175,7 +176,7 @@ test.describe("publish a work and meet it as a visitor", () => {
     const token = (await owner((c) => c.query<{ public_token: string }>(
       "SELECT public_token FROM works WHERE title = $1", [TITLE]))).rows[0].public_token;
     await page.goto(`/work/${token}`);
-    await page.getByRole("link", { name: /Contact Anika/ }).click();
+    await page.getByRole("link", { name: /Message Anika/ }).click();
 
     await expect(page.getByText("You are contacting the maker directly")).toBeVisible();
     await expect(page.getByText("The Gallery does not process the transaction")).toBeVisible();

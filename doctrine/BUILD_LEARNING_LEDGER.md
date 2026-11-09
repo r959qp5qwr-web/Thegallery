@@ -514,6 +514,69 @@ Text checks read `textContent` (`toContainText`), with a comment giving the reas
 
 ---
 
+### GAL-L0026
+
+**Date:** 2026-11-09  
+**Observed event:**  
+Waves 1–4 and the governor's decisions of 7 November shipped without any of the installed design skills being run, and no receipt named one. The live site, which has no published work, was never reviewed as a visitor first meets it. On seeing it, the governor called the interface "novice" with "duplication". A five-reviewer review then found 98 issues (17 P0): an empty site that looped between empty rooms, "For Makers" three to four times on one screen, three navigations on a phone, and contact below the first screen of a work.
+
+**Evidence:**  
+`doctrine/receipts/wave5-review/` (five reports, brief, contact sheets of the live site at 390 and 1440 px). The receipts of PRs #4–#8 name no design skill.
+
+**Why it mattered:**  
+Functional journeys and accessibility checks were green while the first impression failed. A design claim made without a design review is the same failure as a green claim made without a receipt.
+
+**What changed:**  
+Wave 5 started from that review. The governor chose the scope (A2, B2, C later) and approved a rendered design pass before the build. The receipt names the skills run. `e2e/11-first-impression.spec.ts` pins the outcomes that read as novice: say it once, no door into an empty room, one filled action, and contact on the first phone screen. The empty site is rendered and tested as a state, not assumed.
+
+**Status:** RESOLVED  
+**Related finding / decision IDs:** governor decisions 2026-11-09, Wave 5 review  
+**Harvest status:** UNHARVESTED
+
+---
+
+### GAL-L0027
+
+**Date:** 2026-11-09  
+**Observed event:**  
+The approved design pass showed, on the maker's gallery, the contact line "Price, delivery and payment are agreed between you." That drops "returns and any dispute" from the governed handoff disclosure (GAL-C1, FIXED: "Wording may be refined for clarity, never in meaning"). It was caught during the build, when PRODUCT_STATE.json was read before the maker gallery's contact section was written.
+
+**Evidence:**  
+`doctrine/PRODUCT_STATE.json` GAL-C1 and GAL-15; P-15's evidence names the maker gallery's contact section as a surface carrying the disclosure. The design-pass page (`wave5-design-pass/design-pass.html`, question 2).
+
+**Why it mattered:**  
+A visual approval would have silently changed a fixed decision through copy. Rule: do not settle a fixed or open decision through code.
+
+**What changed:**  
+The maker gallery keeps the full meaning in plain words: "You're talking to {name} directly. Payment, delivery, returns and any dispute are arranged between you; The Gallery takes no part in the sale." The contact sheet keeps the governed sentence verbatim. A journey asserts all four terms on the maker gallery. The governor is told in the change set's summary.
+
+**Status:** RESOLVED  
+**Related finding / decision IDs:** GAL-C1, GAL-15, P-15  
+**Harvest status:** UNHARVESTED
+
+---
+
+### GAL-L0028
+
+**Date:** 2026-11-09  
+**Observed event:**  
+The Studio's designed photo picker hides the native file input with a class (`.picker-input`). The older rule `input[type="file"] { border: 1px dashed; padding: 14px }` in `app.css` is more specific (an attribute selector plus an element outranks one class), so the input still drew a 30 px box beside the new button. The Wave 5 journey caught it (input width 30, expected at most 1).
+
+**Evidence:**  
+`e2e/11-first-impression.spec.ts`, "the Studio's photo picker…", first run failed, 2026-11-09. The selectors are in `public/gallery/app.css`.
+
+**Why it mattered:**  
+It is the same kind of slip as Wave 4's tile class `lead` colliding with `.section .lead`: invisible in a code review, and cheap to catch once something measures the rendered page.
+
+**What changed:**  
+The rule is now written as `.picker input.picker-input`. The journey measures the rendered box, not the class.
+
+**Status:** RESOLVED  
+**Related finding / decision IDs:** Wave 4 tile class collision (receipt WAVE4-CUTTING-EDGE-2026-11-07.md)  
+**Harvest status:** UNHARVESTED
+
+---
+
 ## Ledger rules
 
 - Capture the event in the governed change that fixes or formally records it where feasible.

@@ -30,7 +30,7 @@ test.describe("failure endings", () => {
       "SELECT id FROM works WHERE title = 'Unfinished Warp'"));
     await page.goto(`/studio/works/${work.rows[0].id}`);
 
-    await page.getByLabel("Image file").setInputFiles({
+    await page.getByLabel("Choose a photograph").setInputFiles({
       name: "not-an-image.txt", mimeType: "text/plain", buffer: Buffer.from("this is not a photograph"),
     });
     await page.getByRole("button", { name: "Add image" }).click();
@@ -59,7 +59,7 @@ test.describe("failure endings", () => {
 
     // Add a real image, then abandon the page mid-way (a closed tab, a lost signal) and come
     // back: the draft, its label and its images are all still there.
-    await page.getByLabel("Image file").setInputFiles(join(process.cwd(), "e2e/fixtures/square-1x1.jpg"));
+    await page.getByLabel("Choose a photograph").setInputFiles(join(process.cwd(), "e2e/fixtures/square-1x1.jpg"));
     await page.getByRole("button", { name: "Add image" }).click();
     await expect(page.getByTestId("form-notice")).toContainText("Image added");
     await page.goto("/");            // walk away mid-journey
@@ -169,10 +169,16 @@ test.describe("boundaries the product must not cross", () => {
     expect(banned.test(refusal) && negated.test(refusal)).toBe(true);
   });
 
-  test("the served navigation offers only the four accepted sections", async ({ page }) => {
+  test("the served navigation offers only the accepted sections", async ({ page }) => {
+    // Public pages (governor, 2026-11-09, option B2): the wordmark is the way home; the sections
+    // are Saved, Workshops and For Makers, then Search and the Menu. No bar on a public page.
     await page.goto("/");
-    const labels = await page.locator("nav.bar a").allTextContents();
-    expect(labels).toEqual(["Browse", "Saved", "Workshops", "For Makers"]);
+    const labels = (await page.getByRole("navigation", { name: "Sections" }).locator("a, button").allTextContents())
+      .map((t) => t.trim());
+    expect(labels).toEqual(["Saved", "Workshops", "For Makers", "Search", "Menu"]);
+    await expect(page.locator("nav.bar")).toHaveCount(0);
+    const menu = await page.locator("#menu li a").allTextContents();
+    expect(menu).toEqual(["Saved", "Workshops", "For Makers"]);
   });
 
   test("no real contact value is committed in fixtures or seeds", async () => {

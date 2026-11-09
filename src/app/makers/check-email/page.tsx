@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { StudioHeader } from "@/components/Chrome";
+import { Header } from "@/components/Chrome";
 import { ActionForm } from "@/components/ActionForm";
 import { resendConfirmAction } from "@/app/actions/account";
 
@@ -10,10 +10,9 @@ export default async function CheckEmail({ searchParams }: { searchParams: Promi
   const { e = "" } = await searchParams;
   return (
     <>
-      <StudioHeader title="Confirm your email" back="/makers/create-account" />
+      <Header />
       <main id="main" tabIndex={-1}>
       <div className="centre">
-        <div className="lbl">One step left</div>
         <h1>Check your email</h1>
         <p>If {e ? <strong>{e}</strong> : "that address"} can receive mail, a confirmation link is on its
           way. It is good for 24 hours.</p>
@@ -23,7 +22,7 @@ export default async function CheckEmail({ searchParams }: { searchParams: Promi
         <div className="hint" style={{ padding: "24px 0 0" }}>Nothing arrived? Check the spam folder first.</div>
       </ActionForm>
       <div className="inline-actions">
-        <Link className="btn quiet" href="/makers/sign-in"><span>Back to sign in</span></Link>
+        <Link className="textlink" href="/makers/sign-in">Back to sign in</Link>
       </div>
       </main>
     </>

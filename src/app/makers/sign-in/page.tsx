@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { StudioHeader, Band } from "@/components/Chrome";
+import { Header, Band } from "@/components/Chrome";
 import { ActionForm, Field } from "@/components/ActionForm";
 import { signInAction } from "@/app/actions/account";
 
@@ -12,10 +12,9 @@ export default async function SignIn(
   const { next = "/studio", reset, expired } = await searchParams;
   return (
     <>
-      <StudioHeader title="Sign in" back="/makers" />
+      <Header />
       <main id="main" tabIndex={-1}>
-      <h1 className="sr-only">Sign in to your Studio</h1>
-      <div className="context"><span>Your Studio</span><span className="accent">Makers only</span></div>
+      <div className="studio-state"><h1>Sign in to your Studio</h1></div>
       {reset ? <Band label="Password set">Your new password is in place. Sign in with it.</Band> : null}
       {expired ? <Band label="Session ended">You were signed out because the session expired. Sign in to carry on where you were.</Band> : null}
       <ActionForm action={signInAction} submitLabel="Sign in" busyLabel="Signing in…" hidden={{ next }}>
@@ -23,10 +22,10 @@ export default async function SignIn(
         <Field name="password" label="Password" type="password" required autoComplete="current-password" />
       </ActionForm>
       <div className="inline-actions">
-        <Link className="btn quiet" href="/makers/reset"><span>I have forgotten my password</span></Link>
+        <Link className="textlink" href="/makers/reset">Forgot your password?</Link>
       </div>
       <div className="inline-actions">
-        <Link className="btn quiet" href="/makers/create-account"><span>Create an account</span></Link>
+        <Link className="textlink" href="/makers/create-account">New here? Create an account</Link>
       </div>
       </main>
     </>

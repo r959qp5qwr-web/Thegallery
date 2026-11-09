@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { readSaved } from "./SaveButton";
-import { EmptyPlinth, Action } from "./Chrome";
+import { EmptyState } from "./Chrome";
 import { STATUS_LABEL } from "@/lib/format";
 
 type Row = { public_token: string; title: string; maker_display_name: string; status: string; gone: boolean };
@@ -23,10 +23,12 @@ export function SavedShelf() {
 
   if (rows === null) return <div className="hint">Reading your shelf…</div>;
   if (!rows.length) {
+    // No route onward: the entrance is one tap away in the header, and on an empty site it has
+    // nothing to show either (Wave 5: no door into an empty room).
     return (
-      <EmptyPlinth material="paper" title="Nothing saved yet" action={<Action href="/">See all work</Action>}>
-        Save a work and it waits here. The list is kept in this browser, with no account.
-      </EmptyPlinth>
+      <EmptyState title="Nothing saved yet">
+        Tap Save on any work and it waits here.
+      </EmptyState>
     );
   }
   return (

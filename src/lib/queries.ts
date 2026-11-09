@@ -96,6 +96,18 @@ export async function materials() {
     .order("position"), "materials") as unknown as { key: string; label: string }[];
 }
 
+/** The materials that have at least one work on view, in the theme's order. A door is offered
+ *  only into a room with something in it (Wave 5: no route into an empty room). */
+export async function materialsOnView() {
+  const db = await anon();
+  const [all, rows] = await Promise.all([
+    materials(),
+    db.from("public_works").select("material").limit(2000),
+  ]);
+  const present = new Set(((must(rows, "materials on view") as unknown) as { material: string }[]).map((r) => r.material));
+  return all.filter((m) => present.has(m.key));
+}
+
 /**
  * Search across published works and active makers. Title, maker name, material and medium —
  * the fields a visitor actually types. Ranking is by recency, never by popularity: there is

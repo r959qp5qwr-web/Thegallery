@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { search, imagesFor, type PublicImage } from "@/lib/queries";
-import { Header, WorkTile, Footer, EmptyPlinth, Action } from "@/components/Chrome";
+import { Header, WorkTile, Footer, EmptyState } from "@/components/Chrome";
 import { KIND_LABEL } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
@@ -15,7 +15,7 @@ export default async function Search({ searchParams }: { searchParams: Promise<{
 
   return (
     <>
-      <Header place="Search" back="/" action={<span style={{ width: 44 }} />} />
+      <Header />
       <main id="main" tabIndex={-1}>
       <h1 className="sr-only">Search work and makers</h1>
       <form className="form" action="/search" method="get" style={{ paddingTop: 16 }}>
@@ -33,14 +33,14 @@ export default async function Search({ searchParams }: { searchParams: Promise<{
       {!q ? (
         <div className="hint">Search looks at titles, makers, materials and medium.</div>
       ) : works.length === 0 && makers.length === 0 ? (
-        <EmptyPlinth title={`Nothing found for “${q}”`} action={<Action href="/browse/clay">Browse by material</Action>}>
-          No work or maker matches that. Try a shorter term, or browse by material.
-        </EmptyPlinth>
+        <EmptyState title={`Nothing found for “${q}”`}>
+          Try a maker&rsquo;s name, or a material such as clay or brass.
+        </EmptyState>
       ) : (
         <>
           {makers.length ? (
             <div className="section">
-              <div className="lead">Makers</div>
+              <h2 className="lead">Makers</h2>
               <ul className="rowlist" style={{ padding: 0 }}>
                 {makers.map((m) => (
                   <li key={m.id}>
@@ -55,7 +55,7 @@ export default async function Search({ searchParams }: { searchParams: Promise<{
           ) : null}
           {works.length ? (
             <div className="section">
-              <div className="lead">{works.length} work{works.length === 1 ? "" : "s"}</div>
+              <h2 className="lead">Work</h2>
               <div className="grid" style={{ padding: 0 }}>
                 {works.map((w) => <WorkTile key={w.id} work={w} image={byWork.get(w.id)} />)}
               </div>

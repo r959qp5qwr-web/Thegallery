@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { StudioHeader } from "@/components/Chrome";
+import { Header } from "@/components/Chrome";
 import { ActionForm, Field } from "@/components/ActionForm";
 import { createAccountAction } from "@/app/actions/account";
 
@@ -9,14 +9,12 @@ export const metadata = { title: "Create an account" };
 export default function CreateAccount() {
   return (
     <>
-      <StudioHeader title="Create account" back="/makers" />
+      <Header />
       <main id="main" tabIndex={-1}>
       <div className="studio-state">
-        <h1>Your email opens the Studio</h1>
-        <p className="small" style={{ marginTop: 6 }}>
-          This address is how you sign in. It stays private — it is never shown on your gallery and never
-          appears in a public page. If you want people to email you, you add a separate public address later.
-        </p>
+        <h1>Create your account</h1>
+        <p className="small">Your email is only for signing in to your Studio, where you hang your work. It stays
+          private: it is never shown on your gallery.</p>
       </div>
       <ActionForm action={createAccountAction} submitLabel="Create account" busyLabel="Creating…">
         <Field name="email" label="Email" type="email" required autoComplete="email" />
@@ -24,7 +22,7 @@ export default function CreateAccount() {
                help="At least 10 characters. A longer password is stronger than one full of symbols." />
       </ActionForm>
       <div className="inline-actions">
-        <Link className="btn quiet" href="/makers/sign-in"><span>I already have an account</span></Link>
+        <Link className="textlink" href="/makers/sign-in">I already have an account</Link>
       </div>
       </main>
     </>

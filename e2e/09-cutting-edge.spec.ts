@@ -179,7 +179,7 @@ test.describe("cutting edge", () => {
     await owner((c) => c.query(
       "UPDATE works SET status = 'available', status_confirmed_at = now() - interval '3 days' WHERE id = $1", [w.id]));
     await page.goto(`/work/${w.public_token}`);
-    await expect(page.getByTestId("freshness")).toHaveText("· confirmed 3 days ago");
+    await expect(page.getByTestId("freshness")).toHaveText("Updated 3 days ago");
 
     await owner((c) => c.query("UPDATE works SET status_confirmed_at = now() - interval '125 days' WHERE id = $1", [w.id]));
     await page.goto(`/work/${w.public_token}`);
@@ -199,7 +199,7 @@ test.describe("cutting edge", () => {
     expect(after).toEqual({ status: "available", fresh: true });   // confirmed, not changed
 
     await page.goto(`/work/${w.public_token}`);
-    await expect(page.getByTestId("freshness")).toHaveText("· confirmed today");
+    await expect(page.getByTestId("freshness")).toHaveText("Updated today");
   });
 
   test("Confirm refuses a status the maker did not see, and changes nothing", async ({ page }) => {
