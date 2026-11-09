@@ -1,0 +1,243 @@
+<title>Gallery First Impression Review</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,400&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a review dossier, one column of themes, each with evidence beside its findings on wide screens. */
+:root {
+  --paper: #F8F3EA; --sunken: #F0E9DC; --ink: #221E1A; --soft: #3D3630; --muted: #675F56; --rule: #D5CAB8;
+  --accent: #8A3F14; --p0: #7E2A17; --p0bg: #F3DDD5; --p1: #6B4A12; --p1bg: #F1E6CF; --p2: #4A5340; --p2bg: #E4E7DA;
+  --serif: "Newsreader", "Iowan Old Style", Georgia, serif; --sans: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono: "IBM Plex Mono", "Courier New", monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #1B1815; --sunken: #25211D; --ink: #EEE7DC; --soft: #D2C9BC; --muted: #A79D90; --rule: #3C362F;
+  --accent: #E3976A; --p0: #F0A08A; --p0bg: #3B2019; --p1: #E3C27E; --p1bg: #352B17; --p2: #B9C5A6; --p2bg: #262C1F; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --paper: #1B1815; --sunken: #25211D; --ink: #EEE7DC; --soft: #D2C9BC; --muted: #A79D90; --rule: #3C362F;
+  --accent: #E3976A; --p0: #F0A08A; --p0bg: #3B2019; --p1: #E3C27E; --p1bg: #352B17; --p2: #B9C5A6; --p2bg: #262C1F; color-scheme: dark }
+body { background: var(--paper); color: var(--ink); font: 16px/1.55 var(--sans); }
+.wrap { max-width: 1040px; margin: 0 auto; padding-block: 32px 72px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.eyebrow { font: 500 11px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+h1 { font: 300 clamp(36px, 8vw, 64px)/1.02 var(--serif); letter-spacing: -.02em; margin: 8px 0 16px; text-wrap: balance; }
+h2 { font: 400 clamp(26px, 5vw, 34px)/1.12 var(--serif); margin: 0 0 8px; text-wrap: balance; }
+h3 { font: 500 15px/1.4 var(--sans); margin: 18px 0 6px; }
+p { margin: 0 0 12px; max-width: 68ch; }
+.lede { font: 400 19px/1.5 var(--serif); color: var(--soft); max-width: 62ch; }
+.stats { display: flex; flex-wrap: wrap; gap: 8px 28px; font: 13px/1.5 var(--mono); color: var(--muted); border-block: 1px solid var(--rule); padding-block: 12px; margin: 20px 0 8px; }
+.stats b { color: var(--ink); font-weight: 500; font-variant-numeric: tabular-nums; }
+section.theme { border-top: 1px solid var(--rule); padding-block: 36px 8px; display: grid; gap: 20px 40px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 860px) { section.theme { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); } }
+.head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.sev { font: 500 11px var(--mono); letter-spacing: .1em; padding: 2px 7px; }
+.P0 { color: var(--p0); background: var(--p0bg); } .P1 { color: var(--p1); background: var(--p1bg); } .P2 { color: var(--p2); background: var(--p2bg); }
+.sys { font: 500 11px var(--mono); letter-spacing: .08em; color: var(--accent); border: 1px solid var(--accent); padding: 1px 6px; }
+ul.f { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+ul.f li { display: grid; grid-template-columns: 34px minmax(0,1fr); gap: 10px; }
+ul.f li .sev { justify-self: start; align-self: start; margin-top: 3px; }
+.src { font: 12px var(--mono); color: var(--muted); }
+.fix { background: var(--sunken); padding: 12px 14px; margin-top: 14px; }
+.fix b { font: 500 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 4px; }
+.fix p { margin: 0 0 6px; }
+figure { margin: 0; display: grid; gap: 10px; align-content: start; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+figure.one { grid-template-columns: minmax(0, 1fr); }
+figure img { width: 100%; height: auto; display: block; border: 1px solid var(--rule); }
+figcaption { grid-column: 1 / -1; font: 12.5px/1.45 var(--mono); color: var(--muted); }
+.decisions { border-top: 2px solid var(--ink); margin-top: 40px; padding-top: 28px; }
+.dec { border-top: 1px solid var(--rule); padding-block: 22px 6px; }
+.opts { display: grid; gap: 10px; margin-top: 10px; grid-template-columns: minmax(0,1fr); }
+@media (min-width: 760px) { .opts { grid-template-columns: repeat(3, minmax(0,1fr)); } }
+.opt { border: 1px solid var(--rule); padding: 12px 14px; min-width: 0; }
+.opt.rec { border-color: var(--ink); border-width: 2px; }
+.opt h4 { font: 500 15px var(--sans); margin: 0 0 4px; }
+.opt .tag { font: 500 11px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+.opt p { font-size: 14.5px; margin: 0; }
+ol.plan { padding-left: 20px; display: grid; gap: 8px; max-width: 70ch; }
+.note { font: 13.5px/1.5 var(--mono); color: var(--muted); margin-top: 28px; border-top: 1px solid var(--rule); padding-top: 14px; }
+code { font: 13.5px var(--mono); background: var(--sunken); padding: 0 4px; overflow-wrap: anywhere; }
+</style>
+
+<div class="wrap">
+  <div class="eyebrow">atthegallery.in · design review · 9 Nov 2026</div>
+  <h1>Why it looks novice, and what fixes it</h1>
+  <p class="lede">Five independent reviewers looked at all 29 pages at phone, tablet and desktop width: the live site as it is today (empty) and the same build with works on the wall. Each used a different installed design skill. They agree on the cause. The site repeats itself, its empty states loop and look broken, and the visual system leans on the defaults that make a site read as generated.</p>
+  <div class="stats">
+    <span><b>5</b> reviewers</span><span><b>98</b> findings</span><span><b>17</b> P0 (trust or first impression)</span><span><b>9</b> themes below</span><span><b>174</b> captures</span>
+  </div>
+  <p class="src">Skills used: ux-ui-audit · vectorlab (anti-slop, empty-states, typography, spacing, page-patterns, labels, viewports) · design-critique, design-elevation, frontend-design · ui-consistency (finding-patterns, verifying) · ux-writing, ux-copy, journey-mapping. IDs: U = audit, V = vectorlab, AD = art direction, C = consistency, W = writing.</p>
+
+  <section class="theme">
+    <div>
+      <div class="head"><h2>1. The empty site looks broken and goes in circles</h2><span class="sev P0">P0</span></div>
+      <p>This is what every visitor sees today.</p>
+      <ul class="f">
+        <li><span class="sev P0">P0</span><span>“On view now · Bengaluru” sits directly above “No work is on view yet”. <span class="src">W-01 V02 AD-01</span></span></li>
+        <li><span class="sev P0">P0</span><span>The same beige box-and-shelf picture is the hero of six pages. It reads as an image that failed to load. <span class="src">U02 V01 AD-02</span></span></li>
+        <li><span class="sev P0">P0</span><span>Every empty page’s one button leads to another empty page: clay → textile → clay, Saved → empty entrance, Search → empty clay. The browse code meant to pick “a material with work” picks any other material. <span class="src">U01 V03 W-03 W-04</span></span></li>
+        <li><span class="sev P0">P0</span><span>The entrance offers five material doors to five empty rooms, and its only button is for makers, not the visitor who came from WhatsApp. <span class="src">AD-03 W-02</span></span></li>
+        <li><span class="sev P1">P1</span><span>Two hairlines with an empty band between them under the rail. <span class="src">U06 V04 C-15</span></span></li>
+      </ul>
+      <div class="fix"><b>Fix (no system change)</b>
+        <p>Empty states become type only: one line naming what is empty, one sentence, one action that leads somewhere real. No picture of a pretend object.</p>
+        <p>The empty entrance is an honest launch page: “The Gallery” set large, “Opening in Bengaluru. The first makers are hanging their work.”, and one link for makers. No context line, no rail.</p>
+        <p>Materials with no works are not offered. The loop bug is fixed.</p>
+      </div>
+    </div>
+    <figure><img src="img/live-entrance.jpg" alt="Live entrance on a phone: On view now above No work is on view yet, beige placeholder box"><img src="img/live-browse.jpg" alt="Live clay page: the same placeholder, with a See textile button"><figcaption>Live today, 390 px: entrance and Clay. The same placeholder, and a button into another empty room.</figcaption></figure>
+  </section>
+
+  <section class="theme">
+    <div>
+      <div class="head"><h2>2. Everything is said two to five times</h2><span class="sev P0">P0</span></div>
+      <ul class="f">
+        <li><span class="sev P0">P0</span><span>“For Makers” appears 3 times on the entrance and 4 times on the For Makers page: header title, label, active tab, footer. <span class="src">C-01 V05 U04 W-05</span></span></li>
+        <li><span class="sev P0">P0</span><span>Every phone page has three navigations: header, icon tab bar and a footer link row that repeats the tab bar. <span class="src">C-02 AD-08</span></span></li>
+        <li><span class="sev P1">P1</span><span>The maker’s name appears 5 times on one work page. <span class="src">AD-06 C-04</span></span></li>
+        <li><span class="sev P1">P1</span><span>Labels repeat the heading under them: “NOT AVAILABLE / This gallery is not available”, “Nothing on view / Nothing in clay yet / No work in this material is on view”, “ONE GALLERY OF YOUR OWN / One gallery of your own.” <span class="src">V06 V07 V08 W-18 W-21 C-05</span></span></li>
+        <li><span class="sev P1">P1</span><span>The same paragraphs are copied across About, For Makers and Participation (“hosts the encounter… owns the transaction”, “Who may hold a gallery”). <span class="src">U05 W-13 W-14</span></span></li>
+        <li><span class="sev P1">P1</span><span>Studio headers repeat the page heading: “Account / Account”, “Your details / Your details”. <span class="src">C-09</span></span></li>
+      </ul>
+      <div class="fix"><b>Fix</b><p>A written rule, “say each name and each fact once per screen”, added to the interface foundation and checked by a journey that counts repeats. Most of these lines are deleted, not rewritten.</p></div>
+    </div>
+    <figure><img src="img/live-for-makers.jpg" alt="Live For Makers page: For Makers in header, label and tab; one gallery of your own twice"><img src="img/live-unknown.jpg" alt="Not available page: NOT AVAILABLE above This gallery is not available"><figcaption>For Makers names itself four times. “Not available” is said twice, 8 px apart.</figcaption></figure>
+  </section>
+
+  <section class="theme">
+    <div>
+      <div class="head"><h2>3. One page, five templates</h2><span class="sev P0">P0</span></div>
+      <ul class="f">
+        <li><span class="sev P0">P0</span><span>The header has five shapes. The wordmark is missing on 13 of 29 pages, including the work page, the one most shared on WhatsApp. <span class="src">C-03 U18</span></span></li>
+        <li><span class="sev P1">P1</span><span>The header title sits about 40 px off centre. <span class="src">U08</span></span></li>
+        <li><span class="sev P1">P1</span><span>Sign-up switches from the public template to the Studio template halfway: header, footer and margins all change. Forms have three different left edges. <span class="src">C-08 V13</span></span></li>
+        <li><span class="sev P1">P1</span><span>Three empty-state components, three looks for the same “Back to the entrance”, five different gaps above the first heading, and 82 inline styles in 26 files. <span class="src">C-06 C-07 C-13 C-14</span></span></li>
+        <li><span class="sev P1">P1</span><span>The work’s status-title-maker block is built three ways (entrance, work page, Studio). <span class="src">C-12</span></span></li>
+      </ul>
+      <div class="fix"><b>Fix</b><p>One page template, one header with the wordmark always present, one empty-state component, one wall-label component, no inline styles (a check refuses new ones).</p></div>
+    </div>
+    <figure class="one"><img src="img/sign-in.jpg" alt="Sign in page: no heading, labels stacked, three left edges"><figcaption>Sign in: no heading, “Your Studio · MAKERS ONLY” stacked labels, three left edges.</figcaption></figure>
+  </section>
+
+  <section class="theme">
+    <div>
+      <div class="head"><h2>4. The work page hides the one thing it is for</h2><span class="sev P0">P0</span></div>
+      <ul class="f">
+        <li><span class="sev P0">P0</span><span>On a phone, “Contact Anika” starts below the first screen. The foundation’s 60 vh image rule causes it. <span class="src">U03 AD-07</span></span></li>
+        <li><span class="sev P1">P1</span><span>The image sits in a thin beige matte that looks misaligned, and “1 of 3” does not show that the images swipe. <span class="src">AD-07 U19</span></span></li>
+        <li><span class="sev P1">P1</span><span>The status line mixes five type styles, and “confirmed 3 days ago” reads to a visitor like an order confirmation or a verification badge. <span class="src">U10 W-11</span></span></li>
+        <li><span class="sev P2">P2</span><span>In the contact sheet, WhatsApp is the fourth thing down, after a radio list and a legal-sounding paragraph. <span class="src">AD-14 W-12</span></span></li>
+      </ul>
+      <div class="fix"><b>Fix</b><p>Contact visible on the first screen of every work. The image goes full width with no matte, plus a progress line that shows the swipe. One status line in one voice; the freshness signal is kept but reworded. WhatsApp comes first in the sheet.</p></div>
+    </div>
+    <figure class="one"><img src="img/work-phone.jpg" alt="Work page on a phone: image, status line, title; contact below the fold"><figcaption>Work page, 390 × 844: the Contact button is below this screen.</figcaption></figure>
+  </section>
+
+  <section class="theme">
+    <div>
+      <div class="head"><h2>5. It speaks in policy, not to a potter</h2><span class="sev P1">P1</span></div>
+      <ul class="f">
+        <li><span class="sev P1">P1</span><span>For Makers reads as terms of service: “materially produced”, “own the transaction”, “claim to have verified you”. <span class="src">W-06 AD-12</span></span></li>
+        <li><span class="sev P1">P1</span><span>“Studio” is used before it is explained (“Your email opens the Studio”). Sign in has no heading. Reset says “Set a new password” above “Send yourself a link”. <span class="src">W-07 U15 U16 U22 W-16 W-17</span></span></li>
+        <li><span class="sev P1">P1</span><span>Developer language in the Studio: “full international form”, “https:// address”, “Every page reads this one setting”. <span class="src">W-10 W-24</span></span></li>
+        <li><span class="sev P1">P1</span><span>About is mostly negations. Privacy greets a visitor with makers’ account email. <span class="src">W-15 W-20</span></span></li>
+      </ul>
+      <div class="fix"><b>Fix</b><p>A one-page voice sheet: allowed words, banned words, “say it once”. Then every screen is rewritten against it. The writing review supplies exact replacement copy for each line.</p></div>
+    </div>
+    <figure class="one"><img src="img/maker-gallery.jpg" alt="Maker gallery: MAKER eyebrow, Practice, In Anika Rao's words, 6 works"><figcaption>A maker’s gallery opens on five labels before the first object.</figcaption></figure>
+  </section>
+
+  <section class="theme">
+    <div>
+      <div class="head"><h2>6. The Studio looks unfinished</h2><span class="sev P1">P1</span></div>
+      <ul class="f">
+        <li><span class="sev P1">P1</span><span>Image upload is the browser’s grey “Choose File / No file chosen”. <span class="src">U11 V14</span></span></li>
+        <li><span class="sev P1">P1</span><span>“Remove 1…” labels are cut off; status chips are four different widths; mono sentences wrap over three lines (“clay · confirmed 5 / days ago”). <span class="src">U12 U13 V12 C-11 W-08</span></span></li>
+        <li><span class="sev P1">P1</span><span>The price “On enquiry” and the status “By enquiry” are the same idea in two controls. This is a product decision, listed below. <span class="src">W-09</span></span></li>
+      </ul>
+      <div class="fix"><b>Fix</b><p>A designed image picker (tap a large tile to add a photo). Full labels (“Remove image 1”). Status shown as text with one change control. Sentences in sans, never mono.</p></div>
+    </div>
+    <figure class="one"><img src="img/studio-work.jpg" alt="Studio work page with native file input and truncated Remove labels"><figcaption>Studio work page: “Remove 1…”, and the browser’s own file control.</figcaption></figure>
+  </section>
+
+  <section class="theme">
+    <div>
+      <div class="head"><h2>7. Desktop is a stretched phone</h2><span class="sev P1">P1</span></div>
+      <ul class="f">
+        <li><span class="sev P0">P0</span><span>The featured work takes 33% of a 1440 screen; the empty space beside it is larger than the work. <span class="src">AD-04</span></span></li>
+        <li><span class="sev P1">P1</span><span>Wall rows are centred, so tiles float and one sits orphaned in the middle. <span class="src">U07</span></span></li>
+        <li><span class="sev P1">P1</span><span>Desktop navigation is set at the phone’s 10.5 px. Prose pages leave two-thirds of the screen empty. <span class="src">U14 V16 AD-15</span></span></li>
+      </ul>
+      <div class="fix"><b>Fix</b><p>The featured image is about 60% of the width and up to 80 vh, with the label beside it. A left-aligned 12-column wall with no centred orphans. Desktop navigation in readable sizes.</p></div>
+    </div>
+    <figure class="one"><img src="img/entrance-desktop.jpg" alt="Entrance at 1440 with small featured work and centred tiles"><figcaption>Entrance with works, 1440: a small work, a large void, centred orphans.</figcaption></figure>
+  </section>
+
+  <section class="theme">
+    <div>
+      <div class="head"><h2>8. No app icon</h2><span class="sev P1">P1</span></div>
+      <ul class="f">
+        <li><span class="sev P1">P1</span><span>No favicon, no app icon and no manifest. Chrome shows a grey “A”, offers to install, then says “This app cannot be installed”. <span class="src">your screenshot · found at capture</span></span></li>
+      </ul>
+      <div class="fix"><b>Fix</b><p>A typographic mark (from the new wordmark) as favicon and app icon, plus a manifest, so a saved shortcut looks like The Gallery. No install push.</p></div>
+    </div>
+    <div></div>
+  </section>
+
+  <section class="theme">
+    <div>
+      <div class="head"><h2>9. The look is the generated default</h2><span class="sev P1">P1</span><span class="sys">SYSTEM CHANGE</span></div>
+      <p>The art-direction and vectorlab reviews both trace the “template” feel to the accepted system itself, not to a bug:</p>
+      <ul class="f">
+        <li><span class="sev P1">P1</span><span>Cream ground, light serif, terracotta accent, tracked mono caps on every label, an amber rule plus italic heading before every section, and “→” on every button: the catalogue of generated-site tells. <span class="src">AD-05</span></span></li>
+        <li><span class="sev P1">P1</span><span>The wordmark “THE GALLERY” is set in the same mono label face as “SOLD” and “CLAY”, so the institution has no mark. <span class="src">U09 AD-09</span></span></li>
+        <li><span class="sev P1">P1</span><span>Every action is the same outlined box with an amber edge, so nothing is primary: “Contact Anika” looks like “Back to the entrance”. The foundation forbids a filled button. <span class="src">V09 AD-13</span></span></li>
+        <li><span class="sev P1">P1</span><span>Labels at 11.5 px and nav at 10.5 px (9.5 px on small phones), below the 12 px floor. Display type stops at 56 px on desktop. <span class="src">V10 V11 AD-16</span></span></li>
+      </ul>
+      <div class="fix"><b>Direction from the art-direction review</b><p>One full-width image, one large name, one WhatsApp action, nothing said twice, and type in place of a fake image when a page is empty. References named: David Zwirner, Hauser &amp; Wirth, Experimenter (Kolkata), Chemould Prescott Road, The New Craftsmen. Study their discipline, not their layouts.</p></div>
+    </div>
+    <figure class="one"><img src="img/live-saved.jpg" alt="Saved page: label pair, placeholder, outlined button with arrow"><figcaption>Mono labels, the shared placeholder, an outlined amber-edged button with “→”.</figcaption></figure>
+  </section>
+
+  <div class="decisions">
+    <div class="eyebrow">For the governor</div>
+    <h2>Three decisions before building</h2>
+    <p>Themes 1–8 need no system change and are built in any case. These three set how far Wave 5 goes.</p>
+
+    <div class="dec">
+      <h3>A. How far to change the visual system (theme 9)</h3>
+      <div class="opts">
+        <div class="opt"><span class="tag">Option 1</span><h4>Keep the system</h4><p>Fix themes 1–8 only. Cleaner and honest, but the generated look stays.</p></div>
+        <div class="opt rec"><span class="tag">Recommended</span><h4>Targeted system change</h4><p>A serif wordmark. One filled primary action per screen (WhatsApp on a work). No “→” on buttons. Mono only for dimensions and price. No rule-plus-italic opener on every section. A 12 px type floor. Display up to about 104 px on desktop. Palette unchanged.</p></div>
+        <div class="opt"><span class="tag">Option 3</span><h4>Full recomposition</h4><p>Option 2 plus a new accent colour (indigo from the textile token) and a full re-plating of the reference set. Largest change; the most new risk.</p></div>
+      </div>
+    </div>
+
+    <div class="dec">
+      <h3>B. Navigation on public pages (theme 2)</h3>
+      <div class="opts">
+        <div class="opt"><span class="tag">Option 1</span><h4>Keep the tab bar</h4><p>Remove the footer row that repeats it. The smallest change; the site still reads as an app.</p></div>
+        <div class="opt rec"><span class="tag">Recommended</span><h4>Gallery header, Studio keeps its bar</h4><p>Public pages: wordmark, Search, Menu. The menu holds Browse, Saved, Workshops, For Makers and the colophon. The tab bar stays in the Studio, where it is a tool. One colophon line at the foot of each page.</p></div>
+        <div class="opt"><span class="tag">Option 3</span><h4>Header only, everywhere</h4><p>No bar in the Studio either. Simpler, but the Studio loses quick switching on a phone.</p></div>
+      </div>
+    </div>
+
+    <div class="dec">
+      <h3>C. Price “On enquiry” beside status “By enquiry” (W-09)</h3>
+      <div class="opts">
+        <div class="opt rec"><span class="tag">Recommended</span><h4>Later, its own change</h4><p>It changes what makers choose, not how the site looks. Settle it after Wave 5 with its own proof.</p></div>
+        <div class="opt"><span class="tag">Option 2</span><h4>Fold into Wave 5</h4><p>Rename or merge now. Wave 5 gets larger and mixes a product rule with visual work.</p></div>
+        <div class="opt"><span class="tag">Option 3</span><h4>Leave as is</h4><p>The overlap stays and makers keep meeting two words for one idea.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <section style="padding-top:32px">
+    <h2>How Wave 5 is built and proved</h2>
+    <ol class="plan">
+      <li>A short design pass first: the empty entrance, a work page, a maker’s gallery and For Makers, rendered at 390 and 1440 for you to see before the rest is built.</li>
+      <li>Then every page, against one template, one header and the voice sheet.</li>
+      <li>Proof as before: the full suite on phone and desktop, new journeys that fail if a repeat, a dead-end empty state or a hidden Contact comes back, axe and reflow, an independent review, and before/after renders of the live empty state.</li>
+      <li>Merge only on your word; then I confirm on the live site.</li>
+    </ol>
+    <p class="note">Not checked: the new maker’s first Studio screen was not captured (W-25), and the bottom bar drawn mid-page in the full-page captures is a capture artefact (V17). Neither changes the ranking. The full findings tables (98 rows with exact copy and CSS values) are kept with the session and go into the Wave 5 receipt.</p>
+  </section>
+</div>
