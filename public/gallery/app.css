@@ -482,7 +482,11 @@ body:not(:has(nav.bar)) .actionbar { bottom: 0; }
 .photo-tools > *, .photo-tools-end > * { pointer-events: auto; }
 .photo-tools-end { display: inline-flex; gap: 8px; }
 @media (max-width: 899.98px) {
-  .header.over-work { display: none; }
+  /* The header stays a landmark (journey 07) and the way home, out of sight above the photograph;
+     reached by keyboard it shows over the top of the screen, as the skip link does. */
+  .header.over-work { position: absolute; top: 0; left: 0; right: 0; z-index: 40; width: 1px; height: 1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .header.over-work:focus-within { width: auto; height: var(--header-h); overflow: visible; clip: auto; }
   .work-page .imgstrip { gap: 0; }
   .work-page .imgstrip .shot { height: min(58vh, 125vw); display: flex; align-items: center; justify-content: center;
     background: var(--surface-plinth); }

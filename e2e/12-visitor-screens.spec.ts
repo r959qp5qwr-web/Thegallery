@@ -37,9 +37,14 @@ test("a work opens on its photograph on a phone, with Back, Share and the heart 
     expect(b.width).toBeGreaterThanOrEqual(44);
   }
   if (narrow) {
-    // The photograph takes the top of the screen: no header above it, Back over it.
-    await expect(page.locator("header.header")).toBeHidden();
+    // The photograph takes the top of the screen: the header takes no room above it, but stays a
+    // landmark and shows when the keyboard reaches it.
+    const header = page.getByRole("banner");
+    await expect(header).toHaveCount(1);
+    expect((await header.boundingBox())!.height).toBeLessThanOrEqual(1);
     expect(p.y).toBeLessThan(2);
+    await page.getByRole("banner").getByRole("link", { name: "The Gallery" }).focus();
+    expect((await header.boundingBox())!.height).toBeGreaterThan(40);
     await expect(page.getByRole("link", { name: "Back" })).toBeVisible();
     await expect(page.getByRole("link", { name: "Back" })).toHaveAttribute("href", "/m/anika-rao");
   } else {
