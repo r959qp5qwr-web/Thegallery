@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { getMaker, listWorksByMaker, imagesFor, routesFor, type PublicImage } from "@/lib/queries";
-import { Header, WorkTile, Footer, Mark, EmptyPlinth, orientation } from "@/components/Chrome";
+import { Header, WorkTile, Footer, EmptyState, orientation } from "@/components/Chrome";
 import { Icon } from "@/components/Icon";
-import { KIND_LABEL, ROUTE_LABEL, routeHref, routeDisplay } from "@/lib/format";
+import { KIND_LABEL, ROUTE_LABEL, routeHref, routeDisplay, shortName } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 
@@ -21,16 +21,14 @@ export default async function MakerGallery({ params }: { params: Promise<{ handl
   if (!maker) {
     return (
       <>
-        <Header back="/" />
-      <main id="main" tabIndex={-1}>
-        <div className="centre">
-          <div className="lbl">Not available</div>
-          <h1>This gallery is not available</h1>
-          <p>It may not be published yet, or it may no longer be shown.</p>
-          <Link className="btn" href="/">Back to the entrance</Link>
-        </div>
+        <Header />
+        <main id="main" tabIndex={-1}>
+          <EmptyState level={1} title="This gallery is not available"
+                      routes={<Link className="textlink" href="/">Back to The Gallery</Link>}>
+            It may not be published yet, or the maker has closed it.
+          </EmptyState>
         </main>
-      <Footer />
+        <Footer />
       </>
     );
   }
@@ -42,88 +40,84 @@ export default async function MakerGallery({ params }: { params: Promise<{ handl
   const leadHang = works.length >= 3
     && works.slice(0, 3).every((w) => orientation(byWork.get(w.id)) !== "landscape");
 
+  const whatsapp = routes.find((r) => r.kind === "whatsapp");
+  const who = shortName(maker.display_name, maker.kind);
+  const others = routes.filter((r) => r !== whatsapp);
+
   return (
     <>
-      {/* The place is stated once, under the maker's name. */}
-      <Header back="/" />
+      <Header />
       <main id="main" tabIndex={-1}>
-      <div className="label">
-        <div className="status"><span><Mark muted />{KIND_LABEL[maker.kind]}</span></div>
-        <h1 className="title">{maker.display_name}</h1>
-        <div className="makerline"><em>{maker.city}{maker.region ? `, ${maker.region}` : ""} · {maker.country}</em></div>
-        {maker.exact_address ? <div className="dims">{maker.exact_address}</div> : null}
-      </div>
-
-      {maker.practice_note ? (
-        <div className="section">
-          <div className="lead">Practice</div>
-          <p className="note">{maker.practice_note}</p>
-          <div className="attrib">In {maker.display_name}&rsquo;s words</div>
+      {/* The page opens on the maker: the name at display size, the place, their own words
+          (Wave 5). The kind is said only when it is not an individual maker. */}
+      <section className="maker-head">
+        {maker.kind !== "individual" ? <div className="kind">{KIND_LABEL[maker.kind]}</div> : null}
+        <h1>{maker.display_name}</h1>
+        <div className="where">
+          {maker.city}{maker.region ? `, ${maker.region}` : ""}, {maker.country}
+          {maker.exact_address ? <><br />{maker.exact_address}</> : null}
+          {maker.commissions_open && !maker.commissions_note ? <><br />Open to commissions</> : null}
         </div>
+        {maker.practice_note ? <p className="practice">{maker.practice_note}</p> : null}
+        {maker.gallery_intro ? <p className="intro">{maker.gallery_intro}</p> : null}
+      </section>
+
+      {works.length ? (
+        // The gallery's order sets the rhythm, not the image ratio (R4): from three works up, the
+        // first in the maker's order hangs large with the next two beside it, on a wall wide
+        // enough (>= 900 px), unless one of the three is landscape. Otherwise the plain hang.
+        <section className={`grid${leadHang ? " hang-lead" : ""}`} aria-label="Work">
+          {works.map((w, i) => (
+            <WorkTile key={w.id} work={w} image={byWork.get(w.id)} inGallery
+                      lead={leadHang && i === 0}
+                      wide={orientation(byWork.get(w.id)) === "landscape"} />
+          ))}
+        </section>
+      ) : (
+        <EmptyState title="Nothing hung yet">
+          Work appears here as soon as it is published.
+        </EmptyState>
+      )}
+
+      {maker.commissions_open && maker.commissions_note ? (
+        <section className="section">
+          <h2 className="lead">Commissions</h2>
+          <p className="body">{maker.commissions_note}</p>
+        </section>
       ) : null}
 
-      {maker.gallery_intro ? (
-        <div className="section"><p className="body">{maker.gallery_intro}</p></div>
-      ) : null}
-
-      <div className="section">
-        <div className="lead">{works.length ? `${works.length} work${works.length === 1 ? "" : "s"}` : "Works"}</div>
-        {works.length ? (
-          // The gallery's order sets the rhythm, not the image ratio (R4): from three works up, the
-          // first in the maker's order (position, then the most recently published) hangs large with
-          // the next two beside it, on a wall wide enough (≥ 900 px). The order on screen is the
-          // order in the page, so the lead applies only when none of the three is landscape: a
-          // landscape work cannot sit in the third column or fill two rows. Otherwise the plain hang.
-          <div className={`grid${leadHang ? " hang-lead" : ""}`} style={{ padding: 0 }}>
-            {works.map((w, i) => (
-              <WorkTile key={w.id} work={w} image={byWork.get(w.id)} inGallery
-                        lead={leadHang && i === 0}
-                        wide={orientation(byWork.get(w.id)) === "landscape"} />
-            ))}
-          </div>
-        ) : (
-          <div style={{ margin: "0 calc(-1 * var(--pad-x))" }}>
-            <EmptyPlinth title="Nothing on view yet">
-              {maker.display_name} has a gallery and has not hung anything in it yet.
-            </EmptyPlinth>
-          </div>
-        )}
-      </div>
-
-      {maker.commissions_open ? (
-        <div className="section">
-          <div className="lead">Commissions</div>
-          <p className="body">{maker.commissions_note ?? "Open to commissions."}</p>
-        </div>
-      ) : null}
-
-      <div className="section">
-        <div className="lead">Contact</div>
+      <section className="section contact-end" aria-labelledby="talk">
+        <h2 className="lead" id="talk">Get in touch</h2>
         {routes.length ? (
           <>
-            <p className="disclosure" style={{ padding: "0 0 4px" }}>
-              You are contacting the maker directly. Payment, delivery, returns and any dispute are
-              arranged with them; The Gallery does not process the transaction.
-            </p>
-            <ul className="routes" style={{ padding: 0 }}>
-              {routes.map((r) => (
-                <li key={r.id}>
-                  <Icon name={r.kind === "whatsapp" ? "chat" : r.kind === "email" ? "mail"
-                           : r.kind === "phone" ? "phone" : r.kind === "form" ? "form" : "globe"} />
-                  <span className="kind">{ROUTE_LABEL[r.kind]}</span>
-                  <a className="val" href={routeHref(r)} rel="noopener noreferrer"
-                     target={r.kind === "website" || r.kind === "form" ? "_blank" : undefined}>
-                    {routeDisplay(r, maker.display_name, false, maker.kind)}
-                  </a>
-                  <Icon name="external" small />
-                </li>
-              ))}
-            </ul>
+            {/* GAL-C1, fixed in meaning (payment, delivery, returns and disputes are the maker's and
+                the visitor's): said plainly here, before any route on this page is opened. */}
+            <p className="disclosure" data-testid="disclosure">You&rsquo;re talking to {who} directly. Payment, delivery, returns and any
+              dispute are arranged between you; The Gallery takes no part in the sale.</p>
+            {whatsapp ? (
+              <a className="btn primary" href={routeHref(whatsapp)} rel="noopener noreferrer" data-route-kind="whatsapp">
+                <Icon name="chat" /> Message on WhatsApp
+              </a>
+            ) : null}
+            {others.length ? (
+              <ul className="routes">
+                {others.map((r) => (
+                  <li key={r.id}>
+                    <span className="kind">{ROUTE_LABEL[r.kind]}</span>
+                    <a className="val" href={routeHref(r)} rel="noopener noreferrer"
+                       target={r.kind === "website" || r.kind === "form" ? "_blank" : undefined}>
+                      {routeDisplay(r, maker.display_name, false, maker.kind)}
+                      {r.kind === "website" || r.kind === "form" ? <span className="sr-only"> (opens in a new tab)</span> : null}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
           </>
         ) : (
           <p className="body">This maker has not published a way to be contacted.</p>
         )}
-      </div>
+      </section>
       </main>
       <Footer />
     </>

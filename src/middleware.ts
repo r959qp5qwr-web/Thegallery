@@ -32,5 +32,5 @@ export async function middleware(request: NextRequest) {
 export const config = {
   // Everything except static assets and the image route, which does its own permission check
   // and has no session to refresh.
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|img/).*)"],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|icons/|manifest.webmanifest|img/).*)"],
 };

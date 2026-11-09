@@ -91,7 +91,7 @@ export default async function Studio({ searchParams }: {
       {/* GAL-PR-01: Contact is not advertised until a way to contact exists, and the Studio shows the task. */}
       {!routes.some((r) => r.enabled && r.validated) ? (
         <Band label="No way to contact you yet">
-          Your work is shown without a Contact button until you add a way to contact you.{" "}
+          Your work is shown without a Message button until you add a way to contact you.{" "}
           <Link href="/studio/contact-routes">Add a way to contact you</Link>
         </Band>
       ) : null}
@@ -174,7 +174,7 @@ export default async function Studio({ searchParams }: {
       </div>
 
       <div className="actions">
-        <Link className="btn block" href="/studio/works/new">Add a work</Link>
+        <Link className="btn block primary" href="/studio/works/new">Add a work</Link>
       </div>
 
       {(() => {

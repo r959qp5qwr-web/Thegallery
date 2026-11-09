@@ -9,7 +9,7 @@
    own breakpoints (tokens.css: 600 and 900). The page is transparent so the paper grain in
    system.css covers the whole viewport, not only a column. */
 .phone { width: 100%; max-width: 1200px; min-height: 100vh; margin: 0 auto; overflow: visible;
-         background: transparent; padding-bottom: calc(var(--bar-h) + env(safe-area-inset-bottom, 0px) + 12px); }
+         background: transparent; }
 
 /* The bottom bar below 900 px; from 900 px the same four sections sit in the header (§7). */
 .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; padding-bottom: env(safe-area-inset-bottom, 0px); height: calc(var(--bar-h) + env(safe-area-inset-bottom, 0px)); }
@@ -17,7 +17,7 @@
 .header-spacer { width: 44px; }
 .topnav { display: none; }
 .topnav a { display: inline-flex; align-items: center; min-height: var(--target); padding: 0 12px;
-  font: var(--t-nav); letter-spacing: var(--track-nav); text-transform: uppercase; text-decoration: none;
+  font: var(--t-nav); letter-spacing: var(--track-nav); text-decoration: none;
   color: var(--text-muted); border-bottom: 2px solid transparent; }
 .topnav a:hover { color: var(--text); }
 /* Active: amber and underlined, so the state is not carried by colour alone (§11). */
@@ -25,7 +25,6 @@
 @media (min-width: 900px) {
   .bar { display: none; }
   .topnav { display: flex; align-items: center; gap: 4px; }
-  .phone { padding-bottom: 0; }
   html { scroll-padding-bottom: 0; }
 }
 
@@ -106,7 +105,7 @@ main { display: block; }
 .seg label span { flex: 1; display: flex; align-items: center; justify-content: center; text-align: center; }
 .seg input { position: absolute; inset: 0; width: 100%; height: 100%; min-height: 0; margin: 0; padding: 0;
   border: 0; opacity: 0; cursor: pointer; }
-.seg input:checked + span { border-bottom-color: var(--accent); color: var(--accent-text); }
+.seg input:checked + span { border-bottom-color: var(--accent); color: var(--text); }
 .seg input:focus-visible + span { box-shadow: var(--focus-ring); }
 .dims-inputs { display: flex; gap: 8px; }
 .dims-inputs .sub { flex: 1; display: grid; gap: 4px; margin: 0; min-width: 0; }
@@ -124,7 +123,7 @@ main { display: block; }
    labels shrink before they collide. */
 .rowlist li { flex-wrap: wrap; }
 .rowlist .grow { min-width: 0; overflow-wrap: anywhere; }
-@media (max-width: 340px) { .bar a { letter-spacing: 0; font-size: 9.5px; } }
+@media (max-width: 340px) { .bar a { letter-spacing: 0; } }   /* the 12 px floor holds (Wave 5) */
 @media (max-width: 260px) { .bar a { font-size: 0; gap: 0; } .bar a svg.icon { width: 22px; height: 22px; } }
 
 /* Wave 2 — the hang. Compact and medium keep the two-column grid of the plates, a landscape
@@ -132,9 +131,6 @@ main { display: block; }
    all, and a short row is centred rather than left half empty (design review 2026-11-06). */
 /* Medium (§10): two columns hung from the centre; the work's image at 60 % beside its label. */
 @media (min-width: 600px) {
-  .grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 40px 24px; }
-  .grid .tile { flex: 0 0 calc((100% - 24px) / 2); min-width: 0; }
-  .grid .tile.wide { flex-basis: 100%; }
 
   .detail { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 0 32px;
             padding: var(--s4) var(--pad-x) 0; align-items: start; }
@@ -143,11 +139,6 @@ main { display: block; }
   .detail-label .label { padding-top: 0; }
 }
 @media (min-width: 900px) {
-  .grid { gap: 48px 32px; }
-  .grid .tile { flex-basis: calc((100% - 64px) / 3); }
-  /* Half a pixel of slack: one tile plus a wide tile is exactly a row, and subpixel rounding
-     must not push the wide one down. */
-  .grid .tile.wide { flex-basis: calc((100% - 64px) / 3 * 2 + 32px - 0.5px); }
 
   /* Work detail: image 7 parts beside the wall label 5 parts; the label stays beside the work. */
   .detail { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 0 48px; padding-top: var(--s5); }
@@ -155,9 +146,6 @@ main { display: block; }
   .detail-label { position: sticky; top: calc(var(--header-h) + var(--s4)); }   /* §10: sticky is expanded only */
   .rail { justify-content: flex-start; gap: 40px; }
 
-  /* The entrance's featured work hangs larger on a wall that can hold it. */
-  .hero .wall { max-height: 64vh; }
-  .hero img { max-height: 64vh; }
 }
 
 /* Studio and operator: a working column, not a stretched list. The header keeps the room's width. */
@@ -168,12 +156,6 @@ main { display: block; }
   .sheet.contact { top: 50%; bottom: auto; transform: translate(-50%, -50%); }
 }
 
-@media (min-width: 900px) {
-  .featured { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 0 48px;
-              padding: 0 var(--pad-x); align-items: end; }
-  .featured-label .label, .featured-label .actions { padding-left: 0; padding-right: 0; }
-  .featured-label .row-end { justify-content: flex-start; padding-left: 0; }
-}
 
 /* The header's ground and hairline run the full width of the window, whatever the page width:
    a sticky band that stopped at the column's edge read as a phone pasted onto a desktop.
@@ -189,7 +171,7 @@ main { display: block; }
 .rowlist.works .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .chip-form { margin: 0; }
 .rowlist button.chip { min-height: var(--target); cursor: pointer; background: transparent; }
-.rowlist button.chip::after { content: "▾"; margin-left: 8px; font-size: 10px; letter-spacing: 0; }
+.rowlist button.chip::after { content: "▾"; margin-left: 8px; font-size: 12px; letter-spacing: 0; }
 .undo-line { flex-basis: 100%; display: flex; align-items: center; gap: 4px; margin: 0;
   font: var(--t-body-small); color: var(--text-soft); padding: 0 0 6px 70px; }
 .choice button { display: flex; align-items: center; justify-content: space-between; width: 100%;
@@ -240,10 +222,7 @@ body:has(.contact-scrim) .bar { display: none; }
 
   /* A maker's gallery: the lead work large, two beside it, the rest in threes below. */
   /* No "dense" packing: the order on screen stays the order of the page and of focus (1.3.2). */
-  .grid.hang-lead { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; }
-  .grid.hang-lead .tile, .grid.hang-lead .tile.wide { flex: none; min-width: 0; }
-  .grid.hang-lead .tile.wide { grid-column: span 2; }
-  .grid.hang-lead .tile.hang-first { grid-column: 1 / span 2; grid-row: span 2; }
+  .grid.hang-lead .tile.hang-first { grid-column: 1 / span 8; grid-row: span 2; }
 }
 
 /* On a short window (a 1024 × 600 laptop) the wall label is taller than the room under the
@@ -259,12 +238,6 @@ body:has(.contact-scrim) .bar { display: none; }
    two equal columns. */
 .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .grid .tile { min-width: 0; }
-/* A short last row is centred, as it is from 600 px (Wave 2), rather than left half empty. */
-@media (max-width: 599.98px) {
-  /* Counted from the start, so it holds only while no landscape tile has taken a row before it. */
-  .grid > .tile:not(.wide):not(.wide ~ .tile):last-child:nth-child(odd) { grid-column: 1 / -1; justify-self: center;
-                                                     width: calc((100% - 16px) / 2); }
-}
 
 /* 2. One orchestrated motion: a tile becomes the work's hero (ViewTransition.tsx), about
       280 ms. No other movement is added (the entrance's loading skeleton predates this).
@@ -277,8 +250,8 @@ body:has(.contact-scrim) .bar { display: none; }
   ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
 }
 
-/* 4. Status you can trust: "confirmed 3 days ago" beside the status, in the label's quiet voice. */
-.status .fresh { color: var(--text-muted); text-transform: none; letter-spacing: 0; font: var(--t-body-small); }
+/* 4. Status you can trust: "Updated 3 days ago" on its own quiet line under the facts (Wave 5). */
+.facts .fresh, .facts .stale { font: var(--t-caption); color: var(--text-muted); }
 /* The Studio's note beside a stored price the status keeps off public pages: a sentence, not a label. */
 .status .price-note { margin-left: 6px; color: var(--text-muted); text-transform: none; letter-spacing: 0; font: var(--t-body-small); }
 /* A section heading that is a real heading (h2) keeps the group style and drops the h2's margins. */
@@ -293,3 +266,179 @@ body:has(.contact-scrim) .bar { display: none; }
 .share-title { font: var(--t-body); color: var(--text); }
 .share-desc { font: var(--t-body-small); color: var(--text-soft); }
 .share-host { font: var(--t-meta); letter-spacing: var(--track-meta); color: var(--text-muted); }
+
+
+/* ===== Wave 5 — first impression (governor, 2026-11-09: A2, B2). Page layout only; the grammar
+   is in system.css. ===== */
+
+/* Public header: the wordmark left; Search and Menu right; the sections inline from 900 px. */
+.header.public .header-end { display: flex; align-items: center; gap: 0; margin-right: -12px; }
+.navlink.wide { display: none; }
+@media (min-width: 900px) { .navlink.wide { display: inline-flex; } .navlink.menu-btn { display: none; } }
+.menu .header .header-end { margin-right: -12px; }
+.menu li a[aria-current="page"] { text-decoration: underline; text-underline-offset: 8px; text-decoration-thickness: 1px; text-decoration-color: var(--accent); }
+
+/* The Studio keeps its bar; its pages make room for it below 900 px. */
+.header.studio ~ main { padding-bottom: calc(var(--bar-h) + env(safe-area-inset-bottom, 0px) + 12px); }
+@media (min-width: 900px) { .header.studio ~ main { padding-bottom: 0; } }
+
+/* Text links and their quiet variant. */
+.textlink { color: var(--text); }
+.textlink.quiet { color: var(--text-muted); }
+.routes-on { display: flex; flex-direction: column; align-items: flex-start; }
+.title a { color: inherit; text-decoration: none; }
+.hero-link { display: block; color: inherit; text-decoration: none; }
+
+/* A page's own heading, once (the header never names the page). */
+.page-head { padding: var(--s6) var(--pad-x) 0; }
+.page-head h1 { font: var(--t-display); letter-spacing: var(--track-display); margin: 0; max-width: 16ch; text-wrap: balance; }
+.page-head p { font: var(--t-lead); color: var(--text-soft); margin: var(--s4) 0 0; max-width: 40ch; }
+.section h2.lead { margin: 0 0 12px; }
+.wall .lead { font: var(--t-lead); color: var(--text); margin: 0 0 var(--s4); }
+.empty h1 { font: var(--t-display); letter-spacing: var(--track-display); }
+
+/* The entrance while nothing is on view: the sentence is the image. */
+.opening { padding: var(--s7) var(--pad-x) 0; }
+.opening h1 { font: var(--t-monument); letter-spacing: var(--track-display); margin: 0; max-width: 11ch; text-wrap: balance; }
+.opening p { font: var(--t-lead); color: var(--text-soft); max-width: 30ch; margin: var(--s5) 0 var(--s4); }
+@media (min-width: 900px) {
+  .opening { padding-top: 120px; min-height: calc(100vh - var(--header-h) - 160px); }
+  .opening h1 { max-width: 13ch; } .opening p { max-width: 38ch; }
+}
+
+/* The featured work: edge to edge on a phone; seven of twelve columns from 900 px, the label at
+   the foot of the image. */
+.featured-label .label { padding-top: var(--s4); }
+.featured-label .status { margin-top: 4px; }
+@media (min-width: 900px) {
+  .featured { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 32px;
+              padding: var(--s5) var(--pad-x) 0; align-items: end; }
+  .featured-media { grid-column: 1 / span 7; }
+  .featured-label { grid-column: 9 / span 4; padding-bottom: 6px; }
+  .featured-label .label { padding: 0; }
+  .hero img { max-height: 80vh; }
+}
+
+/* The wall: a left-aligned grid, never centred and never orphaned in the middle. */
+.wall { padding: var(--s7) var(--pad-x) 0; }
+.wall .grid, .grid.browse-grid { padding: 0; }
+.grid.browse-grid { padding: var(--s4) var(--pad-x) 0; }
+@media (min-width: 600px) {
+  .grid { grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 48px 24px; }
+  .grid .tile { grid-column: span 6; }
+  .grid .tile.wide { grid-column: span 12; }
+}
+@media (min-width: 900px) {
+  .grid { gap: 64px 32px; }
+  .grid .tile { grid-column: span 4; }
+  .grid .tile.wide { grid-column: span 8; }
+}
+
+/* The materials with something on view, at the foot of the wall. */
+.materials-line { padding: var(--s6) var(--pad-x) 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 20px; font: var(--t-body); }
+.materials-line span { color: var(--text-muted); font: var(--t-caption); width: 100%; }
+.materials-line a { min-height: var(--target); display: inline-flex; align-items: center; color: var(--text);
+  text-underline-offset: 5px; text-decoration-color: var(--stone-strong); }
+@media (min-width: 900px) { .materials-line span { width: auto; } }
+
+/* A work. The label: title, byline, status, the maker's note, then the facts. */
+.detail-label .label .title { margin-top: 0; }
+.detail-label .status { margin-top: 6px; }
+.detail-label .note { margin: var(--s4) 0 0; max-width: 34ch; }
+.facts { margin-top: var(--s4); display: grid; gap: 4px; }
+.facts .dims { margin: 0; }
+.image-count { padding: 10px var(--pad-x) 0; }
+.progress { display: flex; gap: 4px; }
+.progress i { flex: 1; height: 2px; background: var(--stone-strong); }
+.progress i.on { background: var(--ink); }
+.imgstrip .shot img { max-height: 68vh; }
+/* The work's one filled action: pinned to the foot of a phone screen; in the label from 900 px. */
+main.has-workbar { padding-bottom: 0; }
+/* The pinned bar must never sit over the colophon's links: the page's foot makes room for it. */
+body:has(main.has-workbar) .footer { padding-bottom: calc(var(--s5) + 76px + env(safe-area-inset-bottom, 0px)); }
+@media (min-width: 900px) {
+  body:has(main.has-workbar) .footer { padding-bottom: var(--s5); }
+  .workbar { position: static; padding: var(--s5) 0 0; border: 0; background: none; }
+  .detail { grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 0 32px; }
+  .detail-media { grid-column: 1 / span 7; }
+  .detail-label { grid-column: 8 / span 5; padding-left: 24px; }
+}
+body:has(.contact-scrim) .workbar { display: none; }
+
+/* A maker's gallery: the name at display size, the place, their own words, then the work. */
+.maker-head { padding: var(--s6) var(--pad-x) 0; }
+.maker-head .kind { font: var(--t-label); color: var(--text-muted); margin-bottom: 10px; }
+.maker-head h1 { font: var(--t-monument); letter-spacing: var(--track-display); margin: 0; text-wrap: balance; }
+.maker-head .where { font: var(--t-maker); color: var(--text-muted); margin-top: 14px; }
+.maker-head .practice { font: var(--t-note); max-width: 34ch; margin: var(--s5) 0 0; }
+.maker-head .intro { font: var(--t-body); max-width: 60ch; margin: var(--s4) 0 0; color: var(--text-soft); }
+.maker-head + .grid { padding-top: var(--s6); }
+@media (min-width: 900px) {
+  .maker-head { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 32px; padding-top: 96px; }
+  .maker-head .kind, .maker-head h1 { grid-column: 1 / -1; }
+  .maker-head .where { grid-column: 1 / span 4; margin-top: 24px; }
+  .maker-head .practice { grid-column: 5 / span 6; margin-top: 18px; }
+  .maker-head .intro { grid-column: 5 / span 6; }
+  .maker-head + .grid { padding-top: 96px; }
+}
+.contact-end { padding-top: var(--s7); max-width: 640px; }
+.contact-end .disclosure { padding: 0 0 var(--s4); max-width: 52ch; }
+.contact-end .routes { padding: 0; margin-top: var(--s4); }
+@media (min-width: 900px) { .contact-end { padding-top: 120px; } }
+
+/* For Makers. */
+.for-makers { padding: var(--s7) var(--pad-x) 0; }
+.for-makers h1 { font: var(--t-display); letter-spacing: var(--track-display); margin: 0; max-width: 14ch; text-wrap: balance; }
+.for-makers .intro p { font: var(--t-lead); color: var(--text-soft); max-width: 34ch; margin: var(--s5) 0 0; }
+.for-makers .do { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; margin-top: var(--s5); }
+.for-makers .how { list-style: none; padding: 0; margin: var(--s7) 0 0; max-width: 640px; counter-reset: step; }
+.for-makers .how li { display: grid; grid-template-columns: 40px minmax(0, 1fr); padding: 18px 0; border-top: 1px solid var(--rule-soft); font: var(--t-body); counter-increment: step; }
+.for-makers .how li:last-child { border-bottom: 1px solid var(--rule-soft); }
+.for-makers .how li::before { content: counter(step); font: var(--t-lead); color: var(--text-muted); }
+.for-makers .how b { font-weight: 500; display: block; }
+.for-makers .fine { font: var(--t-body-small); color: var(--text-muted); margin-top: var(--s4); max-width: 52ch; }
+@media (min-width: 900px) {
+  .for-makers { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 32px; padding-top: 120px; }
+  .for-makers .intro { grid-column: 1 / span 7; }
+  .for-makers .how-wrap { grid-column: 9 / span 4; align-self: end; }
+  .for-makers .how { margin-top: 0; }
+}
+
+/* The Studio's photo picker: the native input stays the control, visually replaced. */
+.picker { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; }
+.picker input.picker-input { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); border: 0; min-height: 0; }
+.picker-input:focus-visible + .picker-btn { box-shadow: var(--focus-ring); }
+.picker-btn { cursor: pointer; }
+.picker-name { font: var(--t-body-small); color: var(--text-muted); min-width: 0; overflow-wrap: anywhere; }
+.picker-help { margin-top: 6px; }
+
+/* A maker's gallery on a phone: one column, each work at its own proportion, nothing cropped. */
+@media (max-width: 599.98px) {
+  .maker-head ~ .grid { grid-template-columns: minmax(0, 1fr); gap: 48px; }
+  .maker-head ~ .grid .tile .frame { aspect-ratio: auto; }
+  .maker-head ~ .grid .tile .frame img { height: auto; object-fit: contain; }
+}
+
+/* Small layout helpers that replace inline styles on public pages (Wave 5). */
+.flush { padding-left: 0; padding-right: 0; }
+.rowlist.flush, .grid.flush { padding: 0; }
+.inline-actions.flush { padding: 12px 0 0; }
+.follow { margin-top: 12px; }
+.hint.follow { padding: 24px 0 0; margin: 0; }
+.search-form { padding-top: 16px; }
+a.plain { text-decoration: none; color: inherit; }
+/* The picker's button is a label: .field label (block, margin) must not shape it. */
+.field.picker label.picker-btn { display: inline-flex; align-items: center; margin: 0; font: var(--t-action); color: var(--text); }
+
+/* Wave 5 design pass on the build (design-critique, 2026-11-09). */
+/* The material rail: tabs from the content margin with a fixed gap, its rule on the grid. */
+.rail { justify-content: flex-start; gap: 28px; padding: 0; margin: 0 var(--pad-x); }
+.rail a { text-align: left; }   /* keeps the 44 px target; the word starts on the margin */
+@media (min-width: 900px) { .rail { gap: 40px; } }
+/* One frame rule for a work's image: left on the grid, whole, with no pale bands beside it. */
+@media (min-width: 900px) { .featured .hero img { margin-inline: 0; } }
+.detail-media .imgstrip .shot { background: transparent; }
+.detail-media .imgstrip .shot img { background: transparent; }
+@media (min-width: 900px) { .detail-media .imgstrip .shot img { width: auto; max-width: 100%; } }
+/* A maker with a single work: it takes the wide column, not a third of the room. */
+@media (min-width: 900px) { .maker-head ~ .grid .tile:only-child { grid-column: 1 / span 7; } }

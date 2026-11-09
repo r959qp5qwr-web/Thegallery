@@ -1,3 +1,4 @@
+import { PhotoPicker } from "@/components/PhotoPicker";
 import Link from "next/link";
 import { getWork } from "@/lib/queries";
 import { redirect, notFound } from "next/navigation";
@@ -117,7 +118,7 @@ export default async function EditWork(
                   ? <span className="price-note" data-testid="price-hidden">not shown while {STATUS_LABEL[work.status]}</span> : null}</span> : null}
         </div>
         <h1 className="title">{work.title}</h1>
-        <div className="meta">{work.medium ?? work.material}</div>
+        <div className="makerline">{work.medium ?? work.material}</div>
         {dims ? <div className="dims">{dims}</div> : null}
       </div>
 
@@ -151,8 +152,8 @@ export default async function EditWork(
               <Link className="btn quiet" href={`/studio/works/${work.id}`}><span>Keep</span></Link>
             </form>
           ) : (
-            <Link key={im.id} className="btn quiet" href={`/studio/works/${work.id}?confirm=remove-${im.id}`}
-                  aria-label={`Remove image ${im.position + 1}`}><span>Remove {im.position + 1}…</span></Link>
+            <Link key={im.id} className="btn quiet" href={`/studio/works/${work.id}?confirm=remove-${im.id}`}>
+              <span>Remove image {im.position + 1}</span></Link>
           ))}
         </div>
       ) : null}
@@ -165,12 +166,9 @@ export default async function EditWork(
 
       <ActionForm action={addImageAction} submitLabel="Add image" busyLabel="Uploading…"
                   hidden={{ work_id: work.id }}>
-        <div className="field">
-          <label htmlFor="image">Image file</label>
-          <input id="image" name="image" type="file" accept="image/*" required />
-          <div className="help">Portrait, landscape or square — the shape you shot is the shape shown.
-            Nothing is cropped.</div>
-        </div>
+        <PhotoPicker required />
+        <div className="help picker-help">Portrait, landscape or square: the shape you shot is the shape shown.
+          Nothing is cropped.</div>
         <Field name="alt_text" label="Describe the image" help="For anyone who cannot see it." />
       </ActionForm>
 

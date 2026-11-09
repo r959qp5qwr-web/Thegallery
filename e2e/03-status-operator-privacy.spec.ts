@@ -17,12 +17,16 @@ test.describe("status, authority and privacy", () => {
     const { token } = await surfaces();
     const work = await owner((c) => c.query<{ id: string }>("SELECT id FROM works WHERE title = $1", [TITLE]));
 
-    // Before: the entrance, the material page, search, the detail and the maker's gallery all
-    // say Available. Recording the "before" is what makes the "after" mean something.
+    // Before: every surface offers it at its stated price, and the work's page says Available
+    // (since Wave 5 the wall and the entrance carry the price alone). Recording the "before" is
+    // what makes the "after" mean something.
     for (const url of ["/", "/browse/clay", "/search?q=Monsoon", `/work/${token}`, "/m/anika-rao"]) {
       await page.goto(url);
-      await expect(page.getByText("Available").first()).toBeVisible();
+      await expect(page.getByText("₹6,800").first(), url).toBeVisible();
+      await expect(page.getByText("Sold"), url).toHaveCount(0);
     }
+    await page.goto(`/work/${token}`);
+    await expect(page.getByText("Available").first()).toBeVisible();
 
     await signIn(page, MAKER_A.email, MAKER_A.password);
     await page.goto(`/studio/works/${work.rows[0].id}`);
@@ -32,8 +36,9 @@ test.describe("status, authority and privacy", () => {
 
     for (const url of ["/", "/browse/clay", "/search?q=Monsoon", `/work/${token}`, "/m/anika-rao"]) {
       await page.goto(url);
-      await expect(page.getByText("Sold").first()).toBeVisible();
-      await expect(page.getByText("Available")).toHaveCount(0);
+      await expect(page.getByText("Sold").first(), url).toBeVisible();
+      await expect(page.getByText("Available"), url).toHaveCount(0);
+      await expect(page.getByText("₹6,800"), url).toHaveCount(0);
     }
 
     // The saved shelf reads the same view, so a saved reference follows too.

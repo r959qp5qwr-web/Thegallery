@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 
-/** Where the visitor is in a work's images: "1 of 3", following the strip as it is swiped,
+/** Where the visitor is in a work's images: a segmented line, and "1 of 3" for assistive technology, following the strip as it is swiped,
  *  scrolled or arrowed. A position, never "views": a view count is a public engagement figure
  *  the product refuses (GAL-R07; design review vocabulary table). Without script it stays at
  *  "1 of n", which is true when the page opens. */
@@ -35,5 +35,14 @@ export function ImageCount({ stripId, total }: { stripId: string; total: number 
     };
   }, [stripId]);
 
-  return <span data-testid="image-count">{at} of {total}</span>;
+  // Visible: a 2 px line, one segment per image, the current one in ink: it shows the position
+  // and that the strip swipes (Wave 5). The words stay for assistive technology.
+  return (
+    <>
+      <span className="progress" aria-hidden>
+        {Array.from({ length: total }, (_, i) => <i key={i} className={i + 1 === at ? "on" : undefined} />)}
+      </span>
+      <span className="sr-only" data-testid="image-count">{at} of {total}</span>
+    </>
+  );
 }

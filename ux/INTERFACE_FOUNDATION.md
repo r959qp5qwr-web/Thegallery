@@ -5,6 +5,15 @@
 **Status:** DRAFT for governor review (Stage 1)  
 **Reference set:** `ux/reference/interface/INTERFACE_REFERENCE_SET.md`
 
+> **Amendment, 2026-11-09 (Wave 5; governor options A2 and B2, `doctrine/receipts/GOVERNOR-DECISIONS-2026-11-09-WAVE5.md`).**
+> Where this document and the amendment differ, the amendment governs; `public/gallery/tokens.css` and `system.css` carry it.
+> - **Type.** The wordmark is set in the serif (22 px, sentence case), not the mono. Mono is for dimensions and price only. Labels, status, rail, chips and navigation are sans in sentence case. No text is set below 12 px. The section opener is a roman serif line, with no amber rule and no italic. The maker line (byline) and the status are sans. Display type steps 42 / 56 / 72 px, plus a "monument" step (52 / 76 / 104 px) for the one name or sentence that stands in for an image.
+> - **Actions.** Each screen has at most one filled action: ink ground, paper text. It is "Message {maker}" on a work, WhatsApp on a maker's gallery and "Open your gallery" on For Makers. Every other action is a text link or an outlined control. No arrow glyph anywhere. This supersedes §1 "never a filled block" and the amber edge.
+> - **Navigation (§7).** Public pages carry the wordmark (left, never replaced by a page title, never centred), then Search and a Menu sheet. From 900 px, Saved, Workshops and For Makers sit inline. The bottom bar belongs to the Studio only. One colophon line closes each page.
+> - **Media (§10).** The featured work is shown whole and never cropped: no matte, no ledge. On a phone a work's own page pins its one filled action to the foot of the screen, so contact is on the first screen.
+> - **Empty states (§9).** Words only: what is empty, one line, and routes that lead somewhere with something in it. No plinth illustration, and no door into another empty room.
+> - **Palette.** Unchanged. Amber stays for focus, the active place and the current menu entry.
+
 ## 1. Interface proposition
 The interface behaves like a quiet, well-lit exhibition space rendered as a precise application. The work supplies the colour; the interface supplies the room. A luminous ivory wall and limestone plinths give the work its ground; a softened, warm near-black is the ink; burnt amber is the Gallery's curatorial mark — availability, the active place, the lead's short rule, the primary action's edge — visible and disciplined. Three typographic registers do the work of hierarchy, each with a job and a scale of its own: an editorial serif for the object, the maker and the curatorial voice (the lead and the maker line are serif italic); a small typewriter mono for the institution's labels — material, status, place, the wordmark — and only those; a plain sans for anything the person must operate. Actions are a line and a label with an amber edge, never a filled block. Rules are hairlines, and few. Chrome recedes but stays obvious: every control is labelled, sized for a thumb and drawn from familiar platform grammar. Nothing is boxed that light, a plinth and space can separate.
 

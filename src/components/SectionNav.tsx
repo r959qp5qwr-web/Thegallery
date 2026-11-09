@@ -12,20 +12,22 @@ const ITEMS = [
   { href: "/workshops", label: "Workshops", icon: "workshops", match: (p: string) => p.startsWith("/workshops") },
 ];
 
-const SignedInContext = createContext(false);
+export const SignedInContext = createContext(false);
 export function SignedIn({ value, children }: { value: boolean; children: React.ReactNode }) {
   return <SignedInContext.Provider value={value}>{children}</SignedInContext.Provider>;
 }
 
 /**
- * The four sections, in one of two places: the bottom bar below 900 px, the header from 900 px
- * (INTERFACE_FOUNDATION §7). Both are rendered; CSS shows exactly one, and the hidden one is
- * display:none, so assistive technology meets a single "Sections" navigation at any width.
+ * The Studio's four sections, in one of two places: the bottom bar below 900 px, the header from
+ * 900 px (INTERFACE_FOUNDATION §7). Both are rendered; CSS shows exactly one, and the hidden one
+ * is display:none, so assistive technology meets a single "Sections" navigation at any width.
+ * Since Wave 5 (governor option B2) the bar is the Studio's alone: public pages carry the
+ * wordmark, Search and Menu (PublicNav).
  */
 export function SectionNav({ placement }: { placement: "bar" | "header" }) {
   const path = usePathname();
   const signedIn = useContext(SignedInContext);
-  if (path.startsWith("/operator")) return null;
+  if (!path.startsWith("/studio")) return null;
   const last = signedIn
     ? { href: "/studio", label: "Studio", icon: "makers", match: (p: string) => p.startsWith("/studio") }
     : { href: "/makers", label: "For Makers", icon: "makers", match: (p: string) => p.startsWith("/makers") };

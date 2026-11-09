@@ -96,6 +96,21 @@ export async function materials() {
     .order("position"), "materials") as unknown as { key: string; label: string }[];
 }
 
+/** The materials that have at least one work on view, in the theme's order. A door is offered
+ *  only into a room with something in it (Wave 5: no route into an empty room). */
+export async function materialsOnView() {
+  const db = await anon();
+  const all = await materials();
+  // One existence check per material (there are five), so the answer cannot be cut short by a
+  // row limit however many works hang.
+  const present = await Promise.all(all.map(async (m) => {
+    const { count, error } = await db.from("public_works").select("id", { count: "exact", head: true }).eq("material", m.key);
+    if (error) throw new Error(`materials on view: ${error.message}`);
+    return (count ?? 0) > 0;
+  }));
+  return all.filter((_, i) => present[i]);
+}
+
 /**
  * Search across published works and active makers. Title, maker name, material and medium —
  * the fields a visitor actually types. Ranking is by recency, never by popularity: there is

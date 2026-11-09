@@ -1,22 +1,21 @@
-import { Header, Footer, EmptyPlinth, Action } from "@/components/Chrome";
+import Link from "next/link";
+import { Header, Footer, EmptyState } from "@/components/Chrome";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Workshops" };
 
 // Workshops are a Stage 3 journey (product/STAGE_2_VERTICAL_SLICE.md §6). The route exists
-// because the navigation names it, and it states its own emptiness rather than pretending to
-// a programme that has not been built.
+// because the navigation names it, and it states its own emptiness once, with a way on that
+// leads somewhere with something in it.
 export default function Workshops() {
   return (
     <>
-      <Header place="Workshops" />
+      <Header />
       <main id="main" tabIndex={-1}>
-      <h1 className="sr-only">Workshops</h1>
-      <div className="context"><span>Programme</span><span className="accent">Nothing scheduled</span></div>
-      <EmptyPlinth title="No workshops yet" action={<Action href="/">Back to the entrance</Action>}>
-        Makers will publish workshops here — dates, place and how to register. Nothing is
-        scheduled at the moment.
-      </EmptyPlinth>
+        <EmptyState level={1} title="No workshops yet"
+                    routes={<Link className="textlink" href="/about">What The Gallery is</Link>}>
+          Makers will list workshops here, with dates, the place and how to register.
+        </EmptyState>
       </main>
       <Footer />
     </>

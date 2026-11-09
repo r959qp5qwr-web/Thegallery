@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getWork, getWorkEnding, imagesFor, routesFor, listWorksByMaker } from "@/lib/queries";
-import { Header, Band, Footer, Mark, imgSrc } from "@/components/Chrome";
+import { getWork, getWorkEnding, imagesFor, routesFor } from "@/lib/queries";
+import { Header, Footer, EmptyState, imgSrc } from "@/components/Chrome";
 import { Icon } from "@/components/Icon";
 import { ImageCount } from "@/components/ImageCount";
 import { SaveButton } from "@/components/SaveButton";
@@ -56,25 +56,21 @@ export default async function WorkDetail(
       : "This work is not on view.";
     return (
       <>
-        <Header place={ending.maker_status === "active" ? ending.maker_display_name : undefined} back="/" />
-      <main id="main" tabIndex={-1}>
-        <div className="centre">
-          <div className="lbl">No longer on view</div>
-          <h1>{ending.title}</h1>
-          <p>{reason}</p>
-          {ending.maker_status === "active"
-            ? <Link className="btn" href={`/m/${ending.maker_handle}`}>Visit {ending.maker_display_name}</Link>
-            : <Link className="btn" href="/">Back to the entrance</Link>}
-        </div>
+        <Header />
+        <main id="main" tabIndex={-1}>
+          <EmptyState level={1} title={ending.title}
+                      routes={ending.maker_status === "active"
+                        ? <Link className="textlink" href={`/m/${ending.maker_handle}`}>Visit {ending.maker_display_name}</Link>
+                        : <Link className="textlink" href="/">Back to The Gallery</Link>}>
+            {reason}
+          </EmptyState>
         </main>
-      <Footer />
+        <Footer />
       </>
     );
   }
 
-  const [images, routes, siblings] = await Promise.all([
-    imagesFor([work.id]), routesFor(work.maker_id), listWorksByMaker(work.maker_handle),
-  ]);
+  const [images, routes] = await Promise.all([imagesFor([work.id]), routesFor(work.maker_id)]);
   const stale = statusIsStale(work.status_confirmed_at);
   const ago = confirmedAgo(work.status_confirmed_at);
   const sold = work.status === "sold";
@@ -88,8 +84,8 @@ export default async function WorkDetail(
 
   return (
     <>
-      <Header place={work.maker_display_name} back="/" />
-      <main id="main" tabIndex={-1}>
+      <Header />
+      <main id="main" tabIndex={-1} className={routes.length ? "has-workbar" : undefined}>
 
       {/* Compact: one column. Expanded (§10): the image column (7 parts) beside the wall label
           (5 parts), the label sticky so it stays beside the work as the images scroll. */}
@@ -107,62 +103,53 @@ export default async function WorkDetail(
           </figure>
         )) : <div className="frame r45" style={{ width: "100%" }}><span className="notice">No image yet</span></div>}
       </div>
-      <div className="hero" aria-hidden><div className="ledge" /></div>
       {/* Where the visitor is among the images, never "views": a view count is a public
-          engagement figure the product refuses (GAL-R07). */}
-      {images.length > 1 ? <div className="context image-count" style={{ paddingTop: 10, paddingBottom: 0 }}><ImageCount stripId="work-images" total={images.length} /></div> : null}
+          engagement figure the product refuses (GAL-R07). A 2 px line shows the position and that
+          the strip swipes; the words stay for assistive technology. */}
+      {images.length > 1 ? <div className="image-count"><ImageCount stripId="work-images" total={images.length} /></div> : null}
 
       </div>
       <div className="detail-label">
       <div className="label">
+        <h1 className="title">{work.title}</h1>
+        {/* The maker is named once on the page, as the way to their gallery (Wave 5). */}
+        <div className="makerline">
+          <Link href={`/m/${work.maker_handle}`}>{work.maker_display_name}</Link>, {work.medium ?? work.material}
+        </div>
         <div className={`status ${sold ? "sold" : "available"}`}>
-          <span><Mark muted={sold} />{STATUS_LABEL[work.status]}</span>
+          <span>{STATUS_LABEL[work.status]}</span>
           {/* One price rule for every public surface (labelPrice): none beside Sold or Not for
               sale, and never a repeat of the status. */}
           {shownPrice ? <span className="price" data-testid="price">{shownPrice}</span> : null}
+        </div>
+        {work.process ? <p className="note">{work.process}</p> : null}
+        <div className="facts">
+          {dims ? <div className="dims">{dims}{work.year ? ` · ${work.year}` : ""}</div> : null}
           {/* Status you can trust (R4): when the maker last stated it, fed by their reconfirmation.
               Past 90 days it reads as a caution, never hidden (DOMAIN_MODEL §2.3, P-11). */}
           {ago ? (stale
-            ? <span className="stale" data-testid="freshness">Status last confirmed {ago}</span>
-            : <span className="fresh" data-testid="freshness"><span aria-hidden>· </span>confirmed {ago}</span>) : null}
+            ? <div className="stale" data-testid="freshness">Status last confirmed {ago}</div>
+            : <div className="fresh" data-testid="freshness">Updated {ago}</div>) : null}
         </div>
-        <h1 className="title">{work.title}</h1>
-        <div className="makerline">{work.maker_display_name} <em>· {work.medium ?? work.material}</em></div>
-        {dims ? <div className="dims">{dims}{work.year ? ` · ${work.year}` : ""}</div> : null}
       </div>
 
       {/* Contact is offered only once there is a way to be contacted (GAL-PR-01). A button
           that opens onto "no route yet" is a promise the page cannot keep. */}
-      <div className="actions">
-        {routes.length ? (
-          <Link className="btn block" href={`${here}?contact=1`} id="contact-trigger" scroll={false}>
-            <Icon name="chat" /> Contact {who} <span className="arrow" aria-hidden>→</span>
-          </Link>
-        ) : (
-          <p className="small" data-testid="no-contact">{work.maker_display_name} is not taking enquiries here yet.</p>
-        )}
-      </div>
       <div className="actions secondary">
         <SaveButton token={work.public_token} />
       </div>
-
-      {work.process ? (
-        <div className="section">
-          <div className="lead">About this work</div>
-          <p className="body">{work.process}</p>
-        </div>
-      ) : null}
-
-      <div className="section">
-        <div className="lead">The maker</div>
-        <h2 style={{ margin: "0 0 4px" }}>{work.maker_display_name}</h2>
-        <div className="makerline"><em>{work.maker_city}</em></div>
-        <div className="inline-actions" style={{ padding: "14px 0 0" }}>
-          <Link className="textlink" href={`/m/${work.maker_handle}`}>
-            The gallery, {siblings.length} work{siblings.length === 1 ? "" : "s"} <span className="arrow" aria-hidden>→</span>
+      {/* Contact is offered only once there is a way to be contacted (GAL-PR-01). The one filled
+          action of the page: pinned to the foot of a phone screen, beside the label on a wide
+          one; the same link, so the contact sheet and its disclosure come first either way. */}
+      {routes.length ? (
+        <div className="workbar">
+          <Link className="btn primary" href={`${here}?contact=1`} id="contact-trigger" scroll={false}>
+            <Icon name="chat" /> Message {who}
           </Link>
         </div>
-      </div>
+      ) : (
+        <div className="actions"><p className="small" data-testid="no-contact">{work.maker_display_name} is not taking enquiries here yet.</p></div>
+      )}
       </div>
       </div>
 
@@ -174,7 +161,7 @@ export default async function WorkDetail(
           <SheetFocus sheetId="contact" closeHref={here} returnFocusTo="contact-trigger" />
           <div className="handle" />
           <div className="head">
-            <h2 id="contact-title">Contact {work.maker_display_name}</h2>
+            <h2 id="contact-title">Message {work.maker_display_name}</h2>
             <Link className="iconbtn" href={here} aria-label="Close" data-autofocus scroll={false}><Icon name="close" /></Link>
           </div>
           {/* The choice is real: it changes the message the maker receives. Each option is a link

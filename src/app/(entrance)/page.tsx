@@ -1,85 +1,89 @@
-import { listRecentWorks, imagesFor, materials, type PublicImage } from "@/lib/queries";
-import { Header, Hero, WorkTile, MaterialRail, Footer, Mark, Action, EmptyPlinth, orientation } from "@/components/Chrome";
+import Link from "next/link";
+import { listRecentWorks, imagesFor, materialsOnView, type PublicImage } from "@/lib/queries";
+import { Header, Hero, WorkTile, Footer, orientation } from "@/components/Chrome";
 import { STATUS_LABEL, labelPrice } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 
 // The entrance: one published work at substantial scale before any feature tile (GAL-01),
-// then the material rail, then recent work. A gallery opens on an object, not on a grid of
-// controls — and the object supplies the colour; the room around it stays quiet.
+// then recent work, then the materials that have something on view (GAL-OD-05). A gallery
+// opens on an object; while there is none, it opens on a sentence that says so plainly.
 export default async function Entrance() {
-  const [works, mats] = await Promise.all([listRecentWorks(13), materials()]);
+  const [works, mats] = await Promise.all([listRecentWorks(13), materialsOnView()]);
   const images = await imagesFor(works.map((w) => w.id));
   const byWork = new Map<string, PublicImage>();
   for (const i of images) if (!byWork.has(i.work_id)) byWork.set(i.work_id, i);
 
   const [featured, ...rest] = works;
 
+  if (!featured) {
+    // Nothing on view (the live site before its first maker publishes). No picture of a pretend
+    // work, no material doors into empty rooms; the one sentence is the image (Wave 5).
+    return (
+      <>
+        <Header />
+        <main id="main" tabIndex={-1}>
+          <section className="opening" data-testid="opening">
+            <h1>The first works are being hung.</h1>
+            <p>The Gallery shows art and craft by makers in Bengaluru, in clay, textile, wood, metal and
+              paper, each in a room of their own. The first rooms open soon.</p>
+            <div className="routes-on">
+              <Link className="textlink" href="/about">What The Gallery is</Link>
+              <Link className="textlink quiet" href="/makers">Are you a maker? Open your gallery</Link>
+            </div>
+          </section>
+        </main>
+        <Footer />
+      </>
+    );
+  }
+
+  const featuredPrice = labelPrice(featured, { exactOnly: true });
   return (
     <>
-      {/* The place is stated once, on the context line (INTERFACE_FOUNDATION §8 metadata policy). */}
       <Header />
       <main id="main" tabIndex={-1}>
-      {featured ? (
-        <>
-          <div className="context">
-            <span>On view now</span>
-            <span className="accent">Bengaluru</span>
-          </div>
-          {/* Expanded: the featured work hangs beside its label, as on the work's own page. */}
-          <div className="featured">
+        {/* Expanded: the featured work takes seven of twelve columns, its label at the foot of it. */}
+        <div className="featured">
           <div className="featured-media">
-          <Hero image={byWork.get(featured.id)}
-                alt={byWork.get(featured.id)?.alt_text ?? featured.title}
-                href={`/work/${featured.public_token}`} />
+            <Hero image={byWork.get(featured.id)}
+                  alt={byWork.get(featured.id)?.alt_text ?? featured.title}
+                  href={`/work/${featured.public_token}`} />
           </div>
           <div className="featured-label">
-          <div className="label">
-            <div className={`status ${featured.status === "sold" ? "sold" : "available"}`}>
-              <span><Mark muted={featured.status === "sold"} />{STATUS_LABEL[featured.status]}</span>
-              {labelPrice(featured, { exactOnly: true })
-                ? <span className="price">{labelPrice(featured, { exactOnly: true })}</span> : null}
+            <div className="label">
+              <h1 className="title"><Link href={`/work/${featured.public_token}`}>{featured.title}</Link></h1>
+              <div className="makerline">
+                <Link href={`/m/${featured.maker_handle}`}>{featured.maker_display_name}</Link>, {featured.medium ?? featured.material}
+              </div>
+              {featured.status !== "available" || featuredPrice ? (
+                <div className={`status ${featured.status === "sold" ? "sold" : "available"}`}>
+                  {featured.status !== "available" ? <span>{STATUS_LABEL[featured.status]}</span> : null}
+                  {featuredPrice ? <span className="price">{featuredPrice}</span> : null}
+                </div>
+              ) : null}
             </div>
-            <h1 className="title">{featured.title}</h1>
-            <div className="makerline">{featured.maker_display_name} <em>· {featured.medium ?? featured.material}</em></div>
-          </div>
-          <div className="actions">
-            <Action href={`/work/${featured.public_token}`} primary>View the work</Action>
-          </div>
-          <div className="row-end" style={{ paddingTop: 10 }}>
-            <a className="textlink" href={`/m/${featured.maker_handle}`}>
-              {featured.maker_display_name}&rsquo;s gallery <span className="arrow" aria-hidden>→</span>
-            </a>
-          </div>
-          </div>
-          </div>
-        </>
-      ) : (
-        <>
-          <div className="context"><span>On view now</span><span className="accent">Bengaluru</span></div>
-          <EmptyPlinth title="The Gallery is being hung"
-                       action={<Action href="/makers" primary>For Makers</Action>}>
-            No work is on view yet. The first makers are setting up their galleries, and the
-            first one to publish opens the room.
-          </EmptyPlinth>
-        </>
-      )}
-
-      <div style={{ marginTop: 28 }}>
-        <MaterialRail materials={mats} />
-      </div>
-
-      {rest.length ? (
-        <div className="section">
-          <div className="lead">Recently added</div>
-          <div className="grid" style={{ padding: 0 }}>
-            {rest.map((w) => (
-              <WorkTile key={w.id} work={w} image={byWork.get(w.id)}
-                        wide={orientation(byWork.get(w.id)) === "landscape"} />
-            ))}
           </div>
         </div>
-      ) : null}
+
+        {rest.length ? (
+          <section className="wall" aria-labelledby="recent">
+            <h2 className="lead" id="recent">Recently hung</h2>
+            <div className="grid">
+              {rest.map((w) => (
+                <WorkTile key={w.id} work={w} image={byWork.get(w.id)}
+                          wide={orientation(byWork.get(w.id)) === "landscape"} />
+              ))}
+            </div>
+          </section>
+        ) : null}
+
+        {mats.length ? (
+          <nav className="materials-line" aria-label="Material">
+            <span>By material</span>
+            {mats.map((m) => <Link key={m.key} href={`/browse/${m.key}`}>{m.label}</Link>)}
+          </nav>
+        ) : null}
       </main>
       <Footer />
     </>

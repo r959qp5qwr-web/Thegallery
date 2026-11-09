@@ -9,22 +9,25 @@ export const dynamic = "force-static";
 export default function Participation() {
   return (
     <>
-      <Header place="Participation" back="/" />
+      <Header />
       <main id="main" tabIndex={-1}>
-      <h1 className="sr-only">How participation works</h1>
-      <div className="section">
-        <h2 style={{ font: "var(--t-heading)", margin: "0 0 12px" }}>Who may hold a gallery</h2>
-        <p className="body">Individual makers, studios and collectives presenting work they created or
-          materially produced. Retailers and ordinary resellers are not admitted.</p>
+      <div className="page-head">
+        <h1>Fair use of The Gallery</h1>
+        <p>Anyone can open a gallery. These are the few things we act on, and how.</p>
       </div>
       <div className="section">
-        <div className="lead">How admission works</div>
+        <h2 className="lead">Who can hold a gallery</h2>
+        <p className="body">Individual makers, studios and collectives showing work they created or materially
+          produced. Retailers and ordinary resellers are not admitted.</p>
+      </div>
+      <div className="section">
+        <h2 className="lead">Opening a gallery</h2>
         <p className="body">Anyone may create an account with an email address and open a gallery. Nobody
           reviews your work before you publish it, and nothing here is a mark of approval.</p>
       </div>
       <div className="section">
-        <div className="lead">What we act on</div>
-        <ul className="rowlist" style={{ padding: 0 }}>
+        <h2 className="lead">What we act on</h2>
+        <ul className="rowlist flush">
           <li><span className="grow"><span className="primary">Impersonation</span>
             <span className="secondary">Presenting someone else&rsquo;s identity or work as your own</span></span></li>
           <li><span className="grow"><span className="primary">Prohibited or unlawful content</span>
@@ -38,11 +41,11 @@ export default function Participation() {
         </ul>
       </div>
       <div className="section">
-        <div className="lead">How a decision is made and undone</div>
+        <h2 className="lead">How a decision is made and undone</h2>
         <p className="body">Every action carries a written reason. A take-down can be restored and a
           suspension can be reinstated. If you think a decision is wrong, reply by email to the address in
           the notice and it will be looked at again.</p>
-        <p className="small" style={{ marginTop: 12 }}>We do not judge whether work is good, and we do not
+        <p className="small follow">We do not judge whether work is good, and we do not
           verify that a maker is who they say they are.</p>
       </div>
       </main>

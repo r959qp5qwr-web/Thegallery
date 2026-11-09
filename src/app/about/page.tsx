@@ -2,32 +2,32 @@ import { Header, Footer } from "@/components/Chrome";
 
 export const metadata = { title: "About" };
 export const dynamic = "force-static";
+
+// Say each policy once (Wave 5): what The Gallery does and does not do is stated here, in plain
+// words, and linked from elsewhere rather than repeated.
 export default function About() {
   return (
     <>
-      <Header place="About" back="/" />
+      <Header />
       <main id="main" tabIndex={-1}>
-      <h1 className="sr-only">About The Gallery</h1>
-      <div className="section">
-        <h2 style={{ font: "var(--t-heading)", margin: "0 0 12px" }}>What The Gallery is</h2>
-        <p className="body">A maker-led digital gallery for art and craft objects. Makers present their own
-          work with the dignity of an exhibition. Visitors discover the object, understand who made it, and
-          approach the maker directly to buy, commission or learn.</p>
-        <p className="note" style={{ marginTop: 16 }}>The Gallery hosts the encounter. The maker owns the
-          transaction.</p>
+      <div className="page-head">
+        <h1>What The Gallery is</h1>
+        <p>A quiet place to see art and craft by makers in Bengaluru, in clay, textile, wood, metal and
+          paper, and to talk to the person who made it.</p>
       </div>
-      <div className="section">
-        <div className="lead">What it is not</div>
-        <p className="body">There is no cart, no checkout and no payment here. The Gallery takes no
-          percentage, carries no advertising and sells no ranking. It makes no claim about a maker&rsquo;s
-          identity, the quality of their work, or their reliability as a seller — what you read is what the
-          maker wrote.</p>
-      </div>
-      <div className="section">
-        <div className="lead">No counts</div>
-        <p className="body">There are no public follower counts, likes, comments or popularity charts. A work
-          is shown because a maker published it, not because it performed.</p>
-      </div>
+      <section className="section">
+        <h2 className="lead">How it works</h2>
+        <p className="body">Find a piece you like. Read who made it and how. Message the maker directly, on
+          WhatsApp or by email. Each maker presents their own work, in their own words.</p>
+      </section>
+      <section className="section">
+        <h2 className="lead">What you won&rsquo;t find here</h2>
+        <p className="body">No cart, no checkout and no payment: anything you buy, you arrange with the maker.
+          The Gallery takes no percentage, carries no advertising and sells no ranking. There are no
+          follower counts, likes or popularity charts; a work is here because its maker chose to show it.</p>
+        <p className="body follow">The Gallery makes no claim about a maker&rsquo;s identity,
+          the quality of their work, or their reliability as a seller. What you read is what the maker wrote.</p>
+      </section>
       </main>
       <Footer />
     </>

@@ -2,25 +2,18 @@ import Link from "next/link";
 import { TransitionLink } from "./ViewTransition";
 import { Icon } from "./Icon";
 import { SectionNav } from "./SectionNav";
+import { PublicNav } from "./PublicNav";
 import type { PublicImage, PublicWork } from "@/lib/queries";
 import { STATUS_LABEL, labelPrice } from "@/lib/format";
 
-export function Header({ place, back, action }: { place?: string; back?: string; action?: React.ReactNode }) {
+/** The public header (governor, 2026-11-09, option B2): the wordmark, never replaced by a page
+ *  title and never centred, then Search and Menu (with the sections inline on a wide screen).
+ *  A page names itself in its own heading, once. */
+export function Header() {
   return (
-    <header className="header">
-      {back
-        ? <Link className="iconbtn lead" href={back} aria-label="Back"><Icon name="back" /></Link>
-        : <Link className="wordmark" href="/">The Gallery</Link>}
-      {/* With Back in the lead slot, the wordmark moves to the centre (reference I-1), so a
-          page without a place still says where the visitor is. */}
-      {place ? <span className="place">{place}</span>
-             : back ? <Link className="wordmark" href="/">The Gallery</Link> : <span />}
-      <span className="header-end">
-        {/* Expanded: the four sections sit in the header beside search (§7); below 900 px they
-            are the bottom bar, and only one of the two is ever shown. */}
-        <SectionNav placement="header" />
-        {action ?? <Link className="iconbtn" href="/search" aria-label="Search"><Icon name="search" /></Link>}
-      </span>
+    <header className="header public">
+      <Link className="wordmark" href="/">The Gallery</Link>
+      <PublicNav />
     </header>
   );
 }
@@ -67,35 +60,25 @@ export function Mark({ muted }: { muted?: boolean }) {
   return <span className={`mark${muted ? " muted" : ""}`} aria-hidden />;
 }
 
-/** An editorial action: a line and a label, the arrow in amber. Never a filled block. */
-export function Action({ href, children, primary, block }:
-                       { href: string; children: React.ReactNode; primary?: boolean; block?: boolean }) {
+/** An action. The primary is the screen's one filled action (ink, paper text); any other is a
+ *  text link. No arrow glyph (governor, 2026-11-09, option A2). */
+export function Action({ href, children, primary }:
+                       { href: string; children: React.ReactNode; primary?: boolean }) {
   return (
-    <Link className={`act${primary ? " primary" : ""}${block ? " block" : ""}`} href={href}
-          style={block ? { width: "100%" } : undefined}>
-      <span>{children}</span><span className="arrow" aria-hidden>→</span>
-    </Link>
+    <Link className={primary ? "act primary" : "textlink"} href={href}>{children}</Link>
   );
 }
 
-/**
- * One work at scale, on the wall.
- *
- * The image keeps its own proportion. A landscape image fills the width; a portrait or square
- * one stands on the limestone ground at the height it needs — that ground is the wall it hangs
- * on, not letterboxing, and it is the same limestone the plinths are made of.
- */
+/** One work at scale, edge to edge on a phone: no matte and no ledge (Wave 5). */
 export function Hero({ image, alt, href }: { image?: PublicImage; alt: string; href: string }) {
   const src = imgSrc(image, "w1280");
-  const o = orientation(image);
   return (
-    <Link href={href} style={{ textDecoration: "none", color: "inherit", display: "block" }}>
-      <div className={`hero ${o}`}>
-        <div className="wall">
-          {src ? <img src={src} alt={alt} width={image?.width} height={image?.height} />
-               : <div className="frame r43" style={{ width: "100%" }}><span className="notice">No image yet</span></div>}
-        </div>
-        <div className="ledge" aria-hidden />
+    // The title beside it is the work's link for keyboard and screen reader; the picture is the
+    // same link for a tap, kept out of the tab order so the work is not offered twice.
+    <Link href={href} className="hero-link" tabIndex={-1} aria-hidden>
+      <div className="hero">
+        {src ? <img src={src} alt={alt} width={image?.width} height={image?.height} loading="eager" />
+             : <div className="frame r43" style={{ width: "100%" }}><span className="notice">No image yet</span></div>}
       </div>
     </Link>
   );
@@ -104,13 +87,13 @@ export function Hero({ image, alt, href }: { image?: PublicImage; alt: string; h
 /** A grid tile. A landscape image is given the full row so it is not squeezed into a
  *  portrait frame; the rest keep the 4:5 frame, covered inside it. The work's own proportion
  *  is honoured on the detail surface where it can be seen whole.
- *  `inGallery`: on the maker's own gallery the maker line would repeat the page heading, so
- *  the tile carries the medium there instead. */
+ *  The caption is the title, then the maker (left out on the maker's own gallery, where it
+ *  would repeat the page), then the status and any stated price, quietly (Wave 5). "Available"
+ *  is the one status left unsaid on the wall: a stated price says it, and the work's page names it. */
 export function WorkTile({ work, image, wide, inGallery, lead }:
   { work: PublicWork; image?: PublicImage; wide?: boolean; inGallery?: boolean; lead?: boolean }) {
   // The lead of a maker's hang is about twice a tile's width, so it takes the larger variant.
   const src = imgSrc(image, lead ? "w1280" : "w640");
-  const sold = work.status === "sold";
   const tilePrice = labelPrice(work, { exactOnly: true });
   return (
     <TransitionLink className={`tile${wide ? " wide" : ""}${lead ? " hang-first" : ""}`} href={`/work/${work.public_token}`}>
@@ -120,14 +103,16 @@ export function WorkTile({ work, image, wide, inGallery, lead }:
           : <span className="notice">No image yet</span>}
       </div>
       <div className="gt">{work.title}</div>
-      <div className="gm">
-        {/* Place belongs to the maker gallery and the entrance context line only (§8). */}
-        {inGallery ? (work.medium ?? work.material) : work.maker_display_name}
-      </div>
-      <div className={`gs ${sold ? "" : "available"}`}>
-        {STATUS_LABEL[work.status] ?? work.status}
-        {tilePrice ? ` · ${tilePrice}` : ""}
-      </div>
+      {inGallery ? null : <div className="gm">{work.maker_display_name}</div>}
+      {/* Every status but "Available" is said (P-11, GAL-PR-02: a work stays visible with its
+          status); for an available work a stated price stands in for the word. */}
+      {work.status !== "available" || tilePrice ? (
+        <div className="gs">
+          {work.status !== "available" ? STATUS_LABEL[work.status] ?? work.status : null}
+          {work.status !== "available" && tilePrice ? " · " : null}
+          {tilePrice ? <span className="price">{tilePrice}</span> : null}
+        </div>
+      ) : null}
     </TransitionLink>
   );
 }
@@ -143,13 +128,15 @@ export function MaterialRail({ materials, active }: { materials: { key: string; 
   );
 }
 
+/** The colophon: one line that signs the room. The sections live in the header and the Menu,
+ *  so they are not repeated here (Wave 5: say it once). */
 export function Footer() {
   return (
     <footer className="footer">
+      <span className="sign">The Gallery, Bengaluru</span>
       <Link href="/about">About</Link>
       <Link href="/participation">Participation</Link>
       <Link href="/privacy">Privacy</Link>
-      <Link href="/makers">For Makers</Link>
     </footer>
   );
 }
@@ -166,25 +153,17 @@ export function Band({ kind, label, children }: { kind?: "warn" | "fail"; label?
 }
 
 /**
- * An empty state as a gallery moment rather than a field of text: a lit wall, a plinth with
- * nothing on it yet, optionally a fragment of the material in question, and then the truth of
- * the matter in words with a route onward. The plinth is not decoration — it is what an empty
- * gallery actually looks like, and it says "waiting" without inventing a work.
+ * An empty state in words (Wave 5): what is empty, one line, and only routes that lead somewhere
+ * with something in it. No picture of a pretend work, and never a door into another empty room.
  */
-export function EmptyPlinth({ material, title, children, action }:
-                            { material?: "clay" | "textile" | "wood" | "metal" | "paper";
-                              title: string; children: React.ReactNode; action?: React.ReactNode }) {
+export function EmptyState({ title, children, routes, level = 2 }:
+                           { title: string; children?: React.ReactNode; routes?: React.ReactNode; level?: 1 | 2 }) {
+  const H = level === 1 ? "h1" : "h2";
   return (
     <div className="empty">
-      <div className="plinth" aria-hidden>
-        <div className="wall">
-          {material ? <div className={`fragment ${material}`} /> : null}
-          <div className="slab" />
-        </div>
-      </div>
-      <h2>{title}</h2>
-      <p>{children}</p>
-      {action}
+      <H>{title}</H>
+      {children ? <p>{children}</p> : null}
+      {routes ? <div className="routes-on">{routes}</div> : null}
     </div>
   );
 }
