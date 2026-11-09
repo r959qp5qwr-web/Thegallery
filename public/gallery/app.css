@@ -279,10 +279,14 @@ body:has(.contact-scrim) .bar { display: none; }
 
 /* 4. Status you can trust: "confirmed 3 days ago" beside the status, in the label's quiet voice. */
 .status .fresh { color: var(--text-muted); text-transform: none; letter-spacing: 0; font: var(--t-body-small); }
+/* The Studio's note beside a stored price the status keeps off public pages: a sentence, not a label. */
+.status .price-note { margin-left: 6px; color: var(--text-muted); text-transform: none; letter-spacing: 0; font: var(--t-body-small); }
+/* A section heading that is a real heading (h2) keeps the group style and drops the h2's margins. */
+.group h2.ghead { margin: 0; }
 
 /* 3. The publish moment: the work's link as it will look when shared — the work's cover, its
       title and maker, the medium and status, the address. Drawn in the Studio's own type. */
-.share { padding: 0 var(--pad-x-studio); }
+.share, .hang-order { padding: 0 var(--pad-x-studio); }
 .share-card { border: 1px solid var(--rule-hair); background: var(--surface); max-width: 420px; }
 .share-card img { display: block; width: 100%; aspect-ratio: 1.91 / 1; object-fit: cover; background: var(--surface-plinth); }
 .share-text { padding: 10px 12px 12px; display: grid; gap: 2px; }

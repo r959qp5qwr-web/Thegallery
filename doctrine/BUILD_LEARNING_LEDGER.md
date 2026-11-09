@@ -472,6 +472,48 @@ That one journey's budget is 120 s (`test.setTimeout`), with the reason in a com
 
 ---
 
+### GAL-L0024
+
+**Date:** 2026-11-07  
+**Observed event:**  
+The phone and desktop suites were chained in one background command (phone, then desktop). The session's background limit for a command (30 minutes by default) stopped it partway through the desktop run. Phone had finished; the desktop run had no result.
+
+**Evidence:**  
+The phone log ends "67 passed, 1 skipped, EXIT 0". The desktop log has no summary line. The task notice reads "stopped after reaching its background time limit".
+
+**Why it mattered:**  
+Two suites take about 38 minutes. A partial desktop run could have been mistaken for a pass, or a stopped run for a product failure.
+
+**What changed:**  
+Each suite runs as its own background command, with a limit above its length (60 minutes). A run without a summary line and an exit code is reported as no result, never as a pass or a fail. The desktop suite was rerun alone on the same served build: 68 passed.
+
+**Status:** RESOLVED  
+**Related finding / decision IDs:** GAL-L0020, governor decisions 2026-11-07  
+**Harvest status:** UNHARVESTED
+
+---
+
+### GAL-L0025
+
+**Date:** 2026-11-07  
+**Observed event:**  
+The first draft of `e2e/10-governor-decisions.spec.ts` checked that a status word did not repeat by counting it in `innerText`. The status line is set in label capitals (`text-transform: uppercase`, `system.css`), and `innerText` returns the uppercased text. The check counted 0 every time and could never fail. The independent review found it before any run was claimed.
+
+**Evidence:**  
+Reviewer's report, defect 1. `.status` in `public/gallery/system.css` sets `text-transform: uppercase`. The same review found that the "tiles show only a stated amount" rule and the entrance were not tested at all.
+
+**Why it mattered:**  
+A green journey would have claimed that "By enquiry · Price on enquiry" cannot come back when nothing guarded against it. This is the GAL-L0019 failure again: a claim without a test that fails without it.
+
+**What changed:**  
+Text checks read `textContent` (`toContainText`), with a comment giving the reason. The journey now covers all 15 combinations of status and price mode, the tile and entrance rule, a press from a stale tab, and a wall no visitor can see.
+
+**Status:** RESOLVED  
+**Related finding / decision IDs:** GAL-L0019, governor decisions 2026-11-07  
+**Harvest status:** UNHARVESTED
+
+---
+
 ## Ledger rules
 
 - Capture the event in the governed change that fixes or formally records it where feasible.

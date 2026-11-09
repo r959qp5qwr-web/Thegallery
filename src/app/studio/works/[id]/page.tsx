@@ -7,8 +7,8 @@ import { StudioHeader, Band } from "@/components/Chrome";
 import { ActionForm, Field } from "@/components/ActionForm";
 import { PublishButton } from "@/components/PublishButton";
 import { addImageAction, removeImageAction, setStatusAction, retireWorkAction, restoreWorkAction,
-         updateWorkLabelAction } from "@/app/actions/studio";
-import { STATUS_LABEL, STATUS_ORDER, price, dimensions } from "@/lib/format";
+         updateWorkLabelAction, hangFirstAction } from "@/app/actions/studio";
+import { STATUS_LABEL, STATUS_ORDER, price, labelPrice, dimensions } from "@/lib/format";
 import { materials } from "@/lib/queries";
 import { WorkLabelFields } from "@/components/WorkLabelFields";
 
@@ -26,24 +26,24 @@ type Row = {
   id: string; title: string; material: string; medium: string | null; process: string | null;
   height_mm: number | null; width_mm: number | null; depth_mm: number | null; year: number | null;
   price_mode: string; price_amount: string | null; status: string; lifecycle: string;
-  public_token: string; taken_down: boolean;
+  public_token: string; taken_down: boolean; gallery_id: string;
 };
 type Img = { id: string; position: number; width: number; height: number; alt_text: string | null; state: string };
 
 export default async function EditWork(
   { params, searchParams }: { params: Promise<{ id: string }>;
-    searchParams: Promise<{ created?: string; confirm?: string; retired?: string; restored?: string; kept?: string; removed?: string; image_problem?: string }> },
+    searchParams: Promise<{ created?: string; confirm?: string; retired?: string; restored?: string; kept?: string; removed?: string; image_problem?: string; hung?: string }> },
 ) {
   const account = await currentAccount();
   if (!account) redirect("/makers/sign-in");
   const { id } = await params;
-  const { created, confirm, retired, restored, kept, removed, image_problem } = await searchParams;
+  const { created, confirm, retired, restored, kept, removed, image_problem, hung } = await searchParams;
   const mats = await materials();
 
   const db = await client();
   const { data: workRows } = await db.from("works")
     .select("id,title,material,medium,process,height_mm,width_mm,depth_mm,year," +
-            "price_mode,price_amount,status,lifecycle,public_token,taken_down")
+            "price_mode,price_amount,status,lifecycle,public_token,taken_down,gallery_id")
     .eq("id", id).limit(1);
   const w = (workRows?.[0] as unknown as Row | undefined) ?? null;
   const { data: imageRows } = w
@@ -63,6 +63,16 @@ export default async function EditWork(
   const publicUrl = `${base}/work/${work.public_token}`;
   const shareText = `${work.title} — ${publicUrl}`;
   const failed = images.filter((i) => i.state === "failed");
+  // Hang this first (governor, 2026-11-07, decision 3): the maker's gallery hangs in their order
+  // (position, then most recently published), and its first work leads the wall. Read in that
+  // same order over the works a visitor can see, so "first" here is first there.
+  const { data: wall } = work.lifecycle === "published" && !work.taken_down
+    ? await db.from("works").select("id").eq("gallery_id", work.gallery_id)
+        .eq("lifecycle", "published").eq("taken_down", false)
+        .order("position").order("published_at", { ascending: false }).limit(2)
+    : { data: [] };
+  const onWall = (wall ?? []) as { id: string }[];
+  const hangsFirst = onWall[0]?.id === work.id;
   const dims = dimensions(work.height_mm, work.width_mm, work.depth_mm);
 
   // A fresh idempotency key per render of the page. Two presses of Publish in the same page
@@ -79,6 +89,7 @@ export default async function EditWork(
       {image_problem && IMAGE_PROBLEM[image_problem] ? <Band kind="fail" label="The image did not go up">Your draft is saved. {IMAGE_PROBLEM[image_problem]} Add the image again below.</Band> : null}
       {retired ? <Band label="Retired">This work is no longer on view. Its link now says so. You can restore it below.</Band> : null}
       {restored ? <Band label="Restored">This work is on view again, with its status as it was.</Band> : null}
+      {hung ? <Band label="Hung first">This work now opens your gallery.</Band> : null}
       {removed === "image" ? <Band label="Removed">The image is removed. The others are unchanged.</Band> : null}
       {kept === "last-image" ? (
         <Band kind="warn" label="Image kept">A published work keeps at least one image. Add another first, or retire the work.</Band>
@@ -98,8 +109,12 @@ export default async function EditWork(
       <div className="label" style={{ paddingTop: 16 }}>
         <div className={`status ${work.status === "sold" ? "sold" : "available"}`}>
           {work.lifecycle === "published" ? STATUS_LABEL[work.status] : work.lifecycle === "retired" ? "Retired" : "Draft"}
+          {/* The maker sees the price they stored; when the status keeps it off public pages
+              (Sold, Not for sale) the page says so, rather than let them believe it is shown. */}
           {work.price_mode === "exact"
-            ? <span className="price">· {price(work.price_mode, work.price_amount)}</span> : null}
+            ? <span className="price">· {price(work.price_mode, work.price_amount)}
+                {work.lifecycle === "published" && !labelPrice(work)
+                  ? <span className="price-note" data-testid="price-hidden">not shown while {STATUS_LABEL[work.status]}</span> : null}</span> : null}
         </div>
         <h1 className="title">{work.title}</h1>
         <div className="meta">{work.medium ?? work.material}</div>
@@ -187,7 +202,7 @@ export default async function EditWork(
           ) : null}
           {shared ? (
             <section className="share" aria-labelledby="share-title" data-testid="share">
-              <div className="group" style={{ margin: "28px 0 0" }}><div className="ghead" id="share-title">Share</div></div>
+              <div className="group" style={{ margin: "28px 0 0" }}><h2 className="ghead" id="share-title">Share</h2></div>
               <p className="small" style={{ margin: "8px 0 12px" }}>This is how its link looks when you send it on WhatsApp.</p>
               {/* Built from the same fields as the page's share tags (generateMetadata in
                   /work/[token]): the cover, the title with your name, the medium and the status. */}
@@ -203,6 +218,24 @@ export default async function EditWork(
                 <a className="btn" href={`https://wa.me/?text=${encodeURIComponent(shareText)}`} target="_blank" rel="noopener noreferrer"
                    data-testid="share-whatsapp"><span>Share on WhatsApp</span><span className="sr-only"> (opens in a new tab)</span></a>
               </div>
+            </section>
+          ) : null}
+          {/* Only a choice when there is more than one work on the wall, and only once the wall is
+              public (the same public read as Share): a hidden wall has no visitor to meet it. */}
+          {shared && onWall.length > 1 ? (
+            <section className="hang-order" aria-labelledby="order-title" data-testid="hang-order">
+              <div className="group" style={{ margin: "28px 0 0" }}><h2 className="ghead" id="order-title">Order in your gallery</h2></div>
+              {hangsFirst ? (
+                <p className="small" style={{ margin: "8px 0 0" }}>First in your gallery. Visitors meet it before
+                  your other works.</p>
+              ) : (
+                <form action={hangFirstAction}>
+                  <p className="small" id="hang-first-help" style={{ margin: "8px 0 12px" }}>Put it at the start of your
+                    gallery, where visitors begin. The rest keep their order.</p>
+                  <input type="hidden" name="work_id" value={work.id} />
+                  <button className="btn quiet" type="submit" aria-describedby="hang-first-help"><span>Hang this first</span></button>
+                </form>
+              )}
             </section>
           ) : null}
           {/* Retiring takes a work off every public page. It is never one tap: the consequence is

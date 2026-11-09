@@ -3,7 +3,7 @@ import { TransitionLink } from "./ViewTransition";
 import { Icon } from "./Icon";
 import { SectionNav } from "./SectionNav";
 import type { PublicImage, PublicWork } from "@/lib/queries";
-import { STATUS_LABEL, price } from "@/lib/format";
+import { STATUS_LABEL, labelPrice } from "@/lib/format";
 
 export function Header({ place, back, action }: { place?: string; back?: string; action?: React.ReactNode }) {
   return (
@@ -111,6 +111,7 @@ export function WorkTile({ work, image, wide, inGallery, lead }:
   // The lead of a maker's hang is about twice a tile's width, so it takes the larger variant.
   const src = imgSrc(image, lead ? "w1280" : "w640");
   const sold = work.status === "sold";
+  const tilePrice = labelPrice(work, { exactOnly: true });
   return (
     <TransitionLink className={`tile${wide ? " wide" : ""}${lead ? " hang-first" : ""}`} href={`/work/${work.public_token}`}>
       <div className={`frame ${wide ? "" : "r45"}`}>
@@ -125,7 +126,7 @@ export function WorkTile({ work, image, wide, inGallery, lead }:
       </div>
       <div className={`gs ${sold ? "" : "available"}`}>
         {STATUS_LABEL[work.status] ?? work.status}
-        {work.price_mode === "exact" && !sold ? ` · ${price(work.price_mode, work.price_amount)}` : ""}
+        {tilePrice ? ` · ${tilePrice}` : ""}
       </div>
     </TransitionLink>
   );
