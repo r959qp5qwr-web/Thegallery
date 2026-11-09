@@ -96,7 +96,7 @@ export function WorkTile({ work, image, wide, inGallery, lead }:
     <TransitionLink className={`tile${wide ? " wide" : ""}${lead ? " hang-first" : ""}`} href={`/work/${work.public_token}`}>
       <div className={`frame ${wide ? "" : "r45"}`}>
         {src
-          ? <img src={src} alt={image?.alt_text ?? ""} loading="lazy" />
+          ? <img src={src} alt={image?.alt_text ?? ""} loading="lazy" data-hero={imgSrc(image, "w1280") ?? undefined} />
           : <span className="notice">No image yet</span>}
       </div>
       <div className="gt">{work.title}</div>

@@ -57,6 +57,11 @@ export function TransitionLink({ href, className, children }: { href: string; cl
     if (pending.current?.named) pending.current.named.style.viewTransitionName = "";
     const img = e.currentTarget.querySelector("img");
     if (img) img.style.viewTransitionName = "work-hero";
+    // The work's own hero (data-hero, the large variant) starts loading now, beside the page
+    // rather than after it, so the morph lands within its budget (part 2: the square tiles
+    // carry only the small variant).
+    const hero = img?.dataset.hero;
+    if (hero) { const pre = new Image(); pre.decoding = "async"; pre.src = hero; }
 
     const began = performance.now();
     let settle: () => void = () => {};

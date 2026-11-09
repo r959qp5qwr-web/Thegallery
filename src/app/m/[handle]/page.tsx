@@ -87,8 +87,9 @@ export default async function MakerGallery(
               const flag = w.status !== "available" ? STATUS_LABEL[w.status] ?? w.status : tilePrice;
               return (
                 <TransitionLink key={w.id} className="tile sq" href={`/work/${w.public_token}`}>
-                  {src ? <img src={src} alt="" loading="lazy" /> : <span className="notice">No image yet</span>}
+                  {src ? <img src={src} alt="" loading="lazy" data-hero={imgSrc(im, "w1280") ?? undefined} /> : <span className="notice">No image yet</span>}
                   <span className="gt sr-only">{w.title}</span>
+                  {flag ? <span className="sr-only">, </span> : null}
                   {flag ? <span className={`flag gs${w.status === "available" ? " available" : ""}`}>{flag}</span> : null}
                 </TransitionLink>
               );
