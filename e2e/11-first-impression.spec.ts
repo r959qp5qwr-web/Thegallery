@@ -157,8 +157,8 @@ test.describe("first impression", () => {
     expect(await img.evaluate((i) => getComputedStyle(i).objectFit)).not.toBe("cover");
   });
 
-  test("The Gallery names no city of its own: no public screen, Menu or manifest says Bengaluru (GAL-OD-04)", async ({ page, request }) => {
-    // Read from textContent, so hidden text (a closed Menu, a colophon) is caught too. A maker's
+  test("The Gallery names no city of its own: no public screen, bar or manifest says Bengaluru (GAL-OD-04)", async ({ page, request }) => {
+    // Read from textContent, so hidden text (a hidden navigation, a colophon) is caught too. A maker's
     // own place may appear on their pages; the seeded makers are elsewhere, so any match is ours.
     for (const path of [...PUBLIC, "/m/dhaaga-studio", `/work/${await monsoonToken()}`]) {
       await page.goto(path);
@@ -173,15 +173,24 @@ test.describe("first impression", () => {
 
   test("the bar: on every public screen, on the Studio's home, and off the screens that dock their own action", async ({ page }) => {
     const narrow = page.viewportSize()!.width < 900;
-    for (const path of ["/", "/search", "/saved", "/browse/clay", "/m/anika-rao", "/about"]) {
+    for (const path of ["/", "/search", "/saved", "/browse/clay", "/m/anika-rao", "/about", "/makers"]) {
       await page.goto(path);
+      // Rendered on every one of these screens; shown below 900 px, where the header has no room.
+      await expect(page.locator("nav.bar"), path).toHaveCount(1);
       if (narrow) await expect(page.locator("nav.bar"), path).toBeVisible();
       else await expect(page.locator("nav.bar"), path).toBeHidden();
     }
-    // A work docks its Message; sign-up docks its Continue: no bar beside them.
-    for (const path of [`/work/${await monsoonToken()}`, "/makers", "/makers/sign-in"]) {
+    // A work docks its Message; a sign-in form docks its action: no bar beside them.
+    for (const path of [`/work/${await monsoonToken()}`, "/makers/sign-in"]) {
       await page.goto(path);
       await expect(page.locator("nav.bar"), path).toHaveCount(0);
+    }
+    // On a phone the work's Message is pinned to the foot of the screen, where the bar would be.
+    if (narrow) {
+      await page.goto(`/work/${await monsoonToken()}`);
+      expect(await page.locator(".workbar").evaluate((e) => getComputedStyle(e).position)).toBe("fixed");
+      const box = (await page.locator(".workbar").boundingBox())!;
+      expect(Math.round(box.y + box.height)).toBe(page.viewportSize()!.height);
     }
     // The fourth place is Studio for everyone: a visitor arrives at For Makers, a maker at the Studio.
     await page.goto("/saved");
@@ -192,6 +201,27 @@ test.describe("first impression", () => {
     if (narrow) await expect(page.locator("nav.bar")).toBeVisible();
     await expect(page.getByRole("navigation", { name: "Sections" }).getByRole("link", { name: "Studio" }))
       .toHaveAttribute("aria-current", "page");
+  });
+
+  test("Saved is a wall of pictures on the tiles' price rule, kept on this phone", async ({ page }) => {
+    const token = await monsoonToken();
+    await page.goto("/saved");
+    await expect(page.getByRole("heading", { name: "Nothing saved yet" })).toBeVisible();
+    await page.evaluate((t) => localStorage.setItem("gallery.saved.v1", JSON.stringify([t])), token);
+    await page.reload();
+    const tile = page.locator(`a.tile[href="/work/${token}"]`);
+    await expect(tile.locator("img")).toBeVisible();
+    await expect(page.getByText("1 work · on this phone")).toBeVisible();
+    // The seeded work is sold: the status is said, and no price beside it (labelPrice).
+    await expect(tile.locator(".gs")).toHaveText("Sold");
+    expect(await page.locator("main").textContent()).not.toMatch(/\bAvailable\b/);
+  });
+
+  test("search follows the typing, as pictures", async ({ page }) => {
+    await page.goto("/search");
+    await page.getByRole("searchbox", { name: "Search work and makers" }).fill("monsoon");
+    await expect(page).toHaveURL(/\/search\?q=monsoon$/);
+    await expect(page.locator(`a.tile[href="/work/${await monsoonToken()}"] img`)).toBeVisible();
   });
 
   test("the Studio's photo picker is a designed control over the native input", async ({ page }) => {

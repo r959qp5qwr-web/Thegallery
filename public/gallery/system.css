@@ -242,7 +242,7 @@ svg.icon.sm { width: 20px; height: 20px; }
 
 /* A work is shown whole on the wall: scaled down, never cut. */
 .hero .wall { max-height: none; min-height: 0; }
-.hero img, .hero.landscape img { object-fit: contain; width: 100%; height: auto; max-height: 64vh; }
+.hero img, .hero.landscape img { display: block; object-fit: contain; width: auto; max-width: 100%; height: auto; max-height: 64vh; margin-inline: auto; }
 
 /* The docked action: the one solid block a screen may carry (Message, Continue, Publish). Every
    other action keeps the line and the amber edge. */
