@@ -96,9 +96,7 @@
 :root {
   --t-monument: 350 42px/1.03 var(--font-serif);
   --t-caption: 400 13px/1.45 var(--font-mono);
-  --t-menu: 400 30px/1.1 var(--font-serif);
   --track-display: -0.015em;
-  --tab-h: 64px;
 }
 @media (min-width: 600px) { :root { --t-monument: 350 56px/1.02 var(--font-serif); } }
 @media (min-width: 900px) { :root { --t-monument: 350 72px/1.0 var(--font-serif); } }

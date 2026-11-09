@@ -29,20 +29,8 @@ export function StudioHeader({ title, back }: { title: string; back?: string }) 
   );
 }
 
-/**
- * The URL for an image at roughly the width a surface needs.
- *
- * `variants` records what was actually written for this image, so this picks the requested
- * width when it exists and otherwise the largest that does. Asking for a width that was never
- * made is how two of three images came back broken the first time this ran.
- */
-export function imgSrc(image: PublicImage | undefined, variant: "w320" | "w640" | "w1280" | "w1920") {
-  if (!image) return null;
-  if (image.variants[variant]) return `/img/${image.id}/${variant}`;
-  const available = ["w1920", "w1280", "w640", "w320"].filter((v) => image.variants[v]);
-  const chosen = available[0] ?? "original";
-  return `/img/${image.id}/${chosen}`;
-}
+export { imgSrc } from "@/lib/images";
+import { imgSrc } from "@/lib/images";
 
 /** The shape of an image, for deciding how it hangs. */
 export function orientation(image?: PublicImage): "portrait" | "landscape" | "square" {
@@ -127,8 +115,8 @@ export function MaterialRail({ materials, active }: { materials: { key: string; 
   );
 }
 
-/** The colophon: one line that signs the room. The sections live in the header and the Menu,
- *  so they are not repeated here (Wave 5: say it once). */
+/** The colophon: one line that signs the room. The four places live in the bar (or the header
+ *  when wide), so they are not repeated here: say it once. */
 export function Footer() {
   return (
     <footer className="footer">

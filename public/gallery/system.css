@@ -248,3 +248,7 @@ svg.icon.sm { width: 20px; height: 20px; }
    other action keeps the line and the amber edge. */
 .act.solid, .btn.solid { background: var(--ink); color: var(--paper); border: 0; min-height: 52px; justify-content: center; }
 .act.solid:hover, .btn.solid:hover { background: var(--ink-soft); color: var(--paper); }
+
+/* The work's one docked action: Message, pinned to the foot of a work on a phone. */
+.workbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; padding: 10px var(--pad-x) calc(10px + env(safe-area-inset-bottom, 0px)); background: var(--surface); border-top: 1px solid var(--rule-hair); }
+.workbar .btn { width: 100%; }
