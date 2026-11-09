@@ -21,12 +21,12 @@ A place now appears only as a maker's own field. Historical receipts are unchang
 | New journey 11 check: no public screen (including the work page and both makers), Menu, any meta content or the manifest names Bengaluru; the empty entrance is checked too | added | SEEN |
 | The check can fail | planted "The Gallery, Bengaluru" in the colophon, rebuilt (`HFQlF7c5kav9cqzmTTq4Y`): 1 failed, "Expected pattern: not /bengaluru\|bangalore/i"; restored | SEEN |
 | Desktop suite, clean build `t6MqlzCLviv9YqlEtt5RJ` | 79 passed, 1 skipped, exit 0 (19.3 min) | SEEN |
-| Phone suite, clean build `t6MqlzCLviv9YqlEtt5RJ`, final test head | PHONE_RESULT | PHONE_STATUS |
+| Phone suite, clean build `t6MqlzCLviv9YqlEtt5RJ`, final test head | 79 passed, 1 skipped, exit 0 (20.1 min). An earlier attempt was void: the app server stopped at its 30-minute background limit mid-run; restarted with a 2-hour limit, BUILD_ID re-verified | SEEN |
 | Earlier phone suite (before the check was tightened), build `bqWu98HBh3foqXtNWaR00` | 79 passed, 1 skipped, exit 0 (20.1 min) | SEEN |
 | Independent review (builder-reviewer agent, did not write the code) | no blocking defect; 3 medium findings (db seed city, receipt citation, GAL-OD-04 main text) and 2 test weaknesses (meta read, coverage) fixed in this change set; city-name regex limited to Bengaluru/Bangalore (accepted, stated) | SEEN |
 | Design skill | `design:ux-copy` on the four replacement strings: clear and terse. The About lead reads a little stiff; it is rewritten in the approved rebuild | SEEN |
-| Axe, keyboard, reflow | AXE_RESULT | AXE_STATUS |
-| Before/after renders | `no-city/` | RENDER_STATUS |
+| Axe, keyboard, reflow | `/`, `/about`, `/makers`, `/privacy` on `t6MqlzCLviv9YqlEtt5RJ`: axe 0 violations (WCAG 2.1 A/AA, axe-core 4.10.2); scrollWidth 320 at 320 px; first Tab lands on "Skip to content" | SEEN |
+| Before/after renders | `no-city/sheet-ba-390.jpg`: About and For Makers, live (before) and the build (after); the colophon and About lead change, nothing else moves | SEEN |
 
 ## Not seen / unknown
 - The live database's maker rows (no live access from this environment; a 403 on live config). Any real maker's own city is theirs to state.
