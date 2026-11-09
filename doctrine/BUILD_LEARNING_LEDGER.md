@@ -709,6 +709,36 @@ Restoring an older file silently drops every later rule that lived in it. The pi
 
 ---
 
+### GAL-L0034
+
+**Date:** 2026-11-09  
+**Observed event:**  
+Part 2 first ran a subset of the journeys (02, 06, 08, 09, 10, 11, 12) to iterate faster. Five failures came back. Four of them came from that choice, not from the code:
+- Journey 06 expects a failed image that journey 04 leaves behind.
+- Journey 11 expects the seeded work "Sold", which journey 03 sets.
+The subset left out 04 and 03.
+
+The fifth was a timing miss. A tile's morph into the work has a 1.5 s budget, and measured transitions ran 0.6–1.45 s from both Search and the maker's grid. The budget is tight under a loaded suite, whatever the source page.
+
+**Evidence:**  
+- `doctrine/receipts/DRAWING-BOARD-PART2-2026-11-09.md`.
+- The targeted run: 86 passed, 5 failed.
+- The fixture code: `e2e/04…:47` makes the failed image; `e2e/03…:33` marks the work Sold.
+- The timing measurements in the receipt.
+
+**Why it mattered:**  
+A subset run reads as red for reasons unrelated to the change, and it invites a fix in the wrong place. A tight budget can turn a working morph into a skipped one on a slow network.
+
+**What changed:**  
+- Practice: a subset run includes the journeys whose fixtures it reads (03 and 04 for anything that touches the seeded work's status or images), or it is reported as indicative only. The full suite is the receipt.
+- The tile now starts loading the work's large picture as it is tapped (`data-hero`, `ViewTransition.tsx`), beside the page instead of after it. The budget is unchanged.
+
+**Status:** RESOLVED  
+**Related finding / decision IDs:** drawing board part 2; GAL-L0023  
+**Harvest status:** UNHARVESTED
+
+---
+
 ## Ledger rules
 
 - Capture the event in the governed change that fixes or formally records it where feasible.
