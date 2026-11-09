@@ -427,3 +427,5 @@ body:has(.contact-scrim) .workbar { display: none; }
 .hint.follow { padding: 24px 0 0; margin: 0; }
 .search-form { padding-top: 16px; }
 a.plain { text-decoration: none; color: inherit; }
+/* The picker's button is a label: .field label (block, margin) must not shape it. */
+.field.picker label.picker-btn { display: inline-flex; align-items: center; margin: 0; font: var(--t-action); color: var(--text); }
