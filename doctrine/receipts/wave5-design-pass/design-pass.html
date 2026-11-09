@@ -1,0 +1,201 @@
+<title>Wave 5 Design Pass</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono&display=swap">
+<style>
+/* Layout: a review sheet. Each surface is one row: before (phone), after (phone), after (desktop). */
+:root {
+  --bg: #F8F3EA; --panel: #F0E9DC; --fg: #221E1A; --muted: #675F56; --rule: #D5CAB8; --mark: #A5501F;
+  --serif: "Newsreader", "Iowan Old Style", Georgia, serif;
+  --sans: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono: "IBM Plex Mono", "Courier New", monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #1B1815; --panel: #25211D; --fg: #EFE8DC; --muted: #A99F92; --rule: #3D3630; --mark: #D98A5B; color-scheme: dark } }
+:root[data-theme="dark"] { --bg: #1B1815; --panel: #25211D; --fg: #EFE8DC; --muted: #A99F92; --rule: #3D3630; --mark: #D98A5B; color-scheme: dark }
+body { background: var(--bg); color: var(--fg); font: 400 15px/1.55 var(--sans); }
+.wrap { max-width: 1240px; margin: 0 auto; padding-block: 40px 80px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1 { font: 300 clamp(40px, 7vw, 76px)/0.98 var(--serif); letter-spacing: -0.02em; margin: 0; text-wrap: balance; }
+h2 { font: 400 clamp(26px, 3.4vw, 34px)/1.1 var(--serif); letter-spacing: -0.01em; margin: 0 0 8px; text-wrap: balance; }
+h3 { font: 500 15px/1.3 var(--sans); margin: 0 0 6px; }
+p { margin: 0; max-width: 68ch; }
+.sub { color: var(--muted); margin-top: 16px; max-width: 70ch; }
+section { padding-top: 64px; }
+section + section { border-top: 1px solid var(--rule); margin-top: 64px; }
+.decided { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 20px; }
+.decided div { padding-top: 12px; border-top: 2px solid var(--fg); }
+.decided b { font: 400 22px/1.2 var(--serif); display: block; margin-bottom: 4px; }
+.decided span { color: var(--muted); font-size: 14px; }
+.row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 2.6fr); gap: 20px; margin-top: 24px; align-items: start; }
+figure { margin: 0; min-width: 0; }
+figure img { display: block; width: 100%; height: auto; max-width: 100%; border: 1px solid var(--rule); background: var(--panel); }
+figcaption { font: 500 12px/1.4 var(--sans); color: var(--muted); margin-top: 8px; letter-spacing: 0.01em; }
+figcaption.after { color: var(--fg); }
+ul.changes { margin: 14px 0 0; padding: 0 0 0 18px; max-width: 80ch; }
+ul.changes li { margin: 4px 0; }
+.full { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2.2fr); gap: 20px; margin-top: 24px; align-items: start; }
+.scroll { max-height: 920px; overflow: auto; border: 1px solid var(--rule); }
+.scroll img { border: 0; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+.tbl { overflow-x: auto; margin-top: 18px; }
+th, td { text-align: left; padding: 10px 12px 10px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font-weight: 500; color: var(--muted); font-size: 12px; }
+td code, .mono { font: 13px/1.45 var(--mono); }
+.ask { counter-reset: q; list-style: none; padding: 0; margin: 20px 0 0; display: grid; gap: 0; }
+.ask li { counter-increment: q; display: grid; grid-template-columns: 36px minmax(0, 1fr); padding: 16px 0; border-top: 1px solid var(--rule); }
+.ask li:last-child { border-bottom: 1px solid var(--rule); }
+.ask li::before { content: counter(q); font: 400 22px/1 var(--serif); color: var(--muted); }
+.ask p + p { margin-top: 6px; }
+.rec { color: var(--fg); font-weight: 500; }
+.note { color: var(--muted); font-size: 13px; margin-top: 10px; }
+.seen { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 18px; font-size: 14px; }
+.seen h3 { border-top: 2px solid var(--fg); padding-top: 10px; }
+.seen ul { margin: 0; padding-left: 18px; }
+@media (max-width: 760px) {
+  .row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .row figure.desk { grid-column: 1 / -1; }
+  .full { grid-template-columns: minmax(0, 1fr); }
+}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Wave 5 design pass</h1>
+    <p class="sub">The four surfaces the review named, redrawn under your decisions of 9 November 2026. These are static pages that use the product's own stylesheets plus the proposed change, rendered at 390 px (phone) and 1440 px (desktop). The objects are rendered 3D studio pieces made for this pass; they are not anyone's work. Nothing has changed in the product yet.</p>
+  </header>
+
+  <section>
+    <h2>What you decided</h2>
+    <div class="decided">
+      <div><b>A · Option 2</b><span>Targeted system change: a serif wordmark, one filled action per screen, no arrows, mono only for dimensions and price, no rule-and-italic section opener, a 12 px type floor, display type up to 104 px. The palette is unchanged.</span></div>
+      <div><b>B · Option 2</b><span>Public pages get the wordmark, Search and Menu (with Saved, Workshops and For Makers inline on desktop). The tab bar stays in the Studio. One colophon line at the foot.</span></div>
+      <div><b>C · Later</b><span>"On enquiry" (price) versus "By enquiry" (status) is left as it is. It comes back as its own change.</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>The entrance today: nothing on view</h2>
+    <p>This is what every visitor sees now. The beige box with a shelf goes. The sentence is the image, and the two routes lead somewhere real instead of into empty rooms.</p>
+    <div class="row">
+      <figure><img src="i/before-entrance-empty.jpg" alt="Before: live empty entrance on a phone, a beige box with a shelf under 'On view now'" loading="lazy"><figcaption>Before · live, phone</figcaption></figure>
+      <figure><img src="i/entrance-empty-390.jpg" alt="After: empty entrance on a phone, a large serif sentence, one paragraph and two text links" loading="lazy"><figcaption class="after">After · phone</figcaption></figure>
+      <figure class="desk"><img src="i/entrance-empty-1440.jpg" alt="After: empty entrance on desktop" loading="lazy"><figcaption class="after">After · desktop</figcaption></figure>
+    </div>
+    <ul class="changes">
+      <li>"On view now · BENGALURU" is removed. It contradicted the next line.</li>
+      <li>The material rail is hidden while no material has work, so there are no five doors into empty rooms.</li>
+      <li>"For Makers" appears once, as the quiet second link, instead of three times on the screen.</li>
+      <li>The tab bar and the footer link row are replaced by the header and one colophon line.</li>
+    </ul>
+    <div class="row" style="grid-template-columns:minmax(0,1fr) minmax(0,3.6fr)">
+      <figure><img src="i/menu-390.jpg" alt="After: the menu open on a phone, Saved, Workshops and For Makers set large" loading="lazy"><figcaption class="after">After · Menu open, phone</figcaption></figure>
+      <p style="align-self:center">The menu replaces the four-icon tab bar on public pages. The sections are set large in the serif, and the colophon sits at the foot. On desktop the same three sections sit in the header beside Search, so the Menu button is not needed there.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>The entrance with work on view</h2>
+    <p>The work is the largest thing on the screen. On a phone it runs edge to edge with no matte. On desktop it takes 7 of 12 columns, and the label sits at the foot of the image. The wall is a left-aligned grid, so nothing is centred or orphaned.</p>
+    <div class="row">
+      <figure><img src="i/entrance-390.jpg" alt="After: populated entrance, phone, first screen" loading="lazy"><figcaption class="after">After · phone, first screen</figcaption></figure>
+      <figure><div class="scroll"><img src="i/entrance-390-full.jpg" alt="After: populated entrance, phone, whole page" loading="lazy"></div><figcaption class="after">After · phone, whole page (scroll)</figcaption></figure>
+      <figure class="desk"><div class="scroll"><img src="i/entrance-1440-full.jpg" alt="After: populated entrance, desktop, whole page" loading="lazy"></div><figcaption class="after">After · desktop, whole page (scroll)</figcaption></figure>
+    </div>
+    <ul class="changes">
+      <li>Removed: the context line, "View the work" (the image and title are the link), the second link to the maker, and the amber "AVAILABLE" caps.</li>
+      <li>Tiles show the title, the maker and only a stated price, as the price rule already says. Sold shows as plain "Sold". Nothing is amber.</li>
+      <li>"By material" moves to the foot of the wall and lists only materials that have work. The entrance keeps its material filters (GAL-OD-05).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>A work</h2>
+    <p>Contact is now on the first screen of a phone: one filled bar, "Message Anika", pinned at the foot. It opens the same contact sheet, so the governed disclosure still comes before any route. The maker's name is said once, as the link in the byline.</p>
+    <div class="row">
+      <figure><img src="i/before-work.jpg" alt="Before: work page on a phone, Contact below the fold" loading="lazy"><figcaption>Before · phone</figcaption></figure>
+      <figure><img src="i/work-390.jpg" alt="After: work page on a phone, full-bleed image, progress line, title, byline, pinned Message Anika bar" loading="lazy"><figcaption class="after">After · phone</figcaption></figure>
+      <figure class="desk"><img src="i/work-1440.jpg" alt="After: work page on desktop, image left, label and filled Message Anika button right" loading="lazy"><figcaption class="after">After · desktop</figcaption></figure>
+    </div>
+    <ul class="changes">
+      <li>The image has no matte. "1 of 3" becomes a 2 px progress line that also shows the image can be swiped; the words stay for screen readers.</li>
+      <li>Removed: the place in the header, "About this work" (the note sits under the title in the maker's own serif), "The maker" block, and "The gallery, 6 works".</li>
+      <li>Mono type is used only for "₹6,800" and "H 34 × W 26 cm". "Confirmed 3 days ago" becomes its own quiet line, "Updated 3 days ago" (see question 1).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>A maker's gallery</h2>
+    <p>The page opens on the maker. The name is set at display size, then the city, then their own words in a roman serif. The work follows at its own proportions, with nothing cropped.</p>
+    <div class="row">
+      <figure><img src="i/before-maker.jpg" alt="Before: maker gallery on a phone, MAKER eyebrow, Practice lead, attribution line" loading="lazy"><figcaption>Before · phone</figcaption></figure>
+      <figure><div class="scroll"><img src="i/maker-390-full.jpg" alt="After: maker gallery on a phone, whole page" loading="lazy"></div><figcaption class="after">After · phone, whole page (scroll)</figcaption></figure>
+      <figure class="desk"><div class="scroll"><img src="i/maker-1440-full.jpg" alt="After: maker gallery on desktop, whole page" loading="lazy"></div><figcaption class="after">After · desktop, whole page (scroll)</figcaption></figure>
+    </div>
+    <ul class="changes">
+      <li>Removed: the "MAKER" eyebrow and square, "— Practice", "In Anika Rao's words", and the "6 works" count.</li>
+      <li>On desktop the first work hangs at 7 columns with the second beside it. The rest follow in threes, and a landscape work takes two.</li>
+      <li>Contact is one filled WhatsApp action, with the other ways as text links and one plain sentence about dealing directly (see question 2).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>For Makers</h2>
+    <p>Pitched to a potter, not written as terms of service. The page has one paragraph, one filled action and three steps. The rules about who can open a gallery live on Participation and are linked once.</p>
+    <div class="row">
+      <figure><img src="i/before-for-makers.jpg" alt="Before: For Makers on a phone, For Makers named three times, policy sections" loading="lazy"><figcaption>Before · live, phone</figcaption></figure>
+      <figure><img src="i/for-makers-390.jpg" alt="After: For Makers on a phone, headline, paragraph, Open your gallery, three steps" loading="lazy"><figcaption class="after">After · phone</figcaption></figure>
+      <figure class="desk"><img src="i/for-makers-1440.jpg" alt="After: For Makers on desktop" loading="lazy"><figcaption class="after">After · desktop</figcaption></figure>
+    </div>
+    <ul class="changes">
+      <li>"For Makers" is said once: as the current section in the header on desktop, and as the page's subject on a phone.</li>
+      <li>"No commission on your sales" is kept from the current copy. "Free" is not claimed, because nothing in the product state fixes it.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>The system change (A2), exactly</h2>
+    <p>These go into <span class="mono">tokens.css</span> and <span class="mono">system.css</span>, with the reference copies in <span class="mono">ux/reference/interface/</span> kept byte-identical. Colours do not change.</p>
+    <div class="tbl"><table>
+      <thead><tr><th>Role</th><th>Now</th><th>Proposed</th></tr></thead>
+      <tbody>
+        <tr><td>Wordmark</td><td><code>500 14px mono, caps, +0.2em</code></td><td><code>400 22px serif, sentence case</code></td></tr>
+        <tr><td>Display (title)</td><td><code>350 · 40 / 48 / 56 px</code></td><td><code>300 · 42 / 56 / 72 px, −0.02em</code></td></tr>
+        <tr><td>Monument (new: the one name or sentence)</td><td>—</td><td><code>300 · 52 / 76 / 104 px</code></td></tr>
+        <tr><td>Section opener</td><td>amber rule + italic 17 px</td><td>roman serif 19 px, no rule</td></tr>
+        <tr><td>Labels, status, rail, chips</td><td><code>11.5px mono caps, +0.14em</code></td><td><code>12–15 px sans, sentence case</code></td></tr>
+        <tr><td>Mono</td><td>labels, status, wordmark, dimensions, price</td><td>dimensions and price only</td></tr>
+        <tr><td>Primary action</td><td>outlined box, amber left edge, "→"</td><td>filled ink, paper text, one per screen; others are text links</td></tr>
+        <tr><td>Desktop nav</td><td><code>10.5px caps</code></td><td><code>15px sans</code>, active underlined</td></tr>
+        <tr><td>Smallest type</td><td>9.5 px (bar at 320 px)</td><td>12 px</td></tr>
+        <tr><td>Empty state</td><td>plinth illustration</td><td>words only: heading, one line, routes that lead somewhere</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <h2>Your word on four things</h2>
+    <ol class="ask">
+      <li><div><p><b>Freshness wording on a work.</b> "· confirmed 3 days ago" reads to a visitor like an order or a verification.</p><p class="rec">Recommended: "Updated 3 days ago" on its own quiet line. The stale caution after 90 days stays exactly as it is.</p></div></li>
+      <li><div><p><b>The contact disclosure (GAL-C1).</b> The governed sentence, "Payment, delivery, returns and any dispute are arranged with them; The Gallery does not process the transaction", reads like a legal warning at the moment someone messages an artist.</p><p class="rec">Recommended: keep it word for word in the contact sheet, where the rule requires it, and use the plain line "You'll be talking to Anika directly. Price, delivery and payment are agreed between you." only on the maker's gallery.</p></div></li>
+      <li><div><p><b>CI token (<span class="mono">DOCTRINE_READ_TOKEN</span>).</b> You said "go with your recommendations", which is to set it. Only you can create it: a fine-grained, read-only GitHub token on <span class="mono">builders-doctrine</span> (Contents: read), saved as a repository secret on Thegallery. It takes about 5 minutes.</p><p class="rec">Reply "token set" when it's done. Until then PRs stay red on that check alone, and each merge message says so.</p></div></li>
+      <li><div><p><b>Live operator account.</b> It is unknown whether the live project has one. It is needed for the suspension walk after Wave 5.</p><p class="rec">One word: yes / no / don't know.</p></div></li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>On your yes</h2>
+    <p>The full build follows this pass, as one change set:</p>
+    <ul class="changes">
+      <li>One public header, one empty state and one colophon. The tab bar is in the Studio only.</li>
+      <li>The same treatment on the other public pages (browse, saved, search, workshops, about, participation, privacy, not found, sign-in).</li>
+      <li>No route into an empty room: the browse loop bug is fixed, and empty materials are hidden.</li>
+      <li>Designed Studio controls: the photo picker and the full "Remove image 1".</li>
+      <li>An app icon and manifest.</li>
+      <li>A written "say it once" rule with a journey that counts repeats.</li>
+    </ul>
+    <p class="note">Proof as always: the full suite on phone and desktop, independent review, the design skills re-run on the result, axe, keyboard and reflow checks, before and after renders, a receipt, a PR, and a merge only on your word.</p>
+    <div class="seen">
+      <div><h3>Seen</h3><ul><li>These renders, from the real stylesheets plus the proposed overlay.</li><li>Your A2 / B2 / C decisions, recorded.</li></ul></div>
+      <div><h3>Not seen</h3><ul><li>The changes in the running product.</li><li>Any test run for this wave.</li></ul></div>
+      <div><h3>Unknown</h3><ul><li>Live operator account.</li><li>Live Supabase auth settings (403 from here).</li></ul></div>
+    </div>
+  </section>
+</div>
