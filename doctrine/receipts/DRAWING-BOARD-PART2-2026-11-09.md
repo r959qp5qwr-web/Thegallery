@@ -31,8 +31,9 @@ Not a SYSTEM CHANGE: `tokens.css` and `system.css` are untouched and byte-identi
 ## Proof
 | Check | Result | Status |
 |---|---|---|
-| Phone suite, build `QRdLEjL0sUPlglMRNBfkZ` (code `eb2cf52`) | PHONE_RESULT | PHONE_STATUS |
-| Desktop suite, same build | DESKTOP_RESULT | DESKTOP_STATUS |
+| Phone suite, build `QRdLEjL0sUPlglMRNBfkZ` (code `eb2cf52`) | **90 passed, 1 skipped, exit 0** (24.8 min) | SEEN |
+| Earlier phone runs on the same build | Run 1: 87 passed, 1 failed, 1 skipped. Journey 10, "Hang this first": the last step did not find the button on another work, and the test hit its 60 s timeout. A control run of journey 10 alone failed at the same step; the next control (trace on, clean state) passed 6/6. **Cause UNKNOWN.** A scripted repro of the same steps offered the button on both works. Run 2: 81 passed, 1 failed, 8 did not run; the test helper's database call returned HTTP 502 from the management API (infrastructure), and serial mode stopped journey 12. Journey 10 passed in runs 2 and 3 | SEEN |
+| Desktop suite, same build | **91 passed, exit 0** (24.0 min) | SEEN |
 | Phone suite on the build before (`6acYWtftuarvZDhiOxwfn`) | 86 passed, 1 failed, exit 1: journey 07, "header and footer are landmarks": the phone work page hid its header with `display:none`, so it had no banner landmark. Fixed: the header stays a landmark and the way home, out of sight above the photograph, and shows when the keyboard reaches it (rendered: `drawing-board-part2/hdr-rest-and-focus.png`). Journey 12 now asserts both; this run is its control | SEEN |
 | Targeted run on an earlier build (7 journeys, both devices) | 86 passed, 5 failed: 4 from the subset leaving out fixture journeys 03 and 04, 1 a view-transition timing miss. Ledger GAL-L0034 | SEEN |
 | New and changed tests fail without their change | On the build before the review fixes (`z9U0wYgyjdf-Q_UKeW29u`): the heart's one name, amber only for Available, a square's price beside its status, Back steps back — each **failed**. With the sheet's focus trap removed (planted, build `AC4r1Mi5P3YUW0ThrKPKL`): "Tab 4 left the sheet" — **failed**. All pass on the final build | SEEN |
@@ -60,6 +61,7 @@ Not a SYSTEM CHANGE: `tokens.css` and `system.css` are untouched and byte-identi
   - The sentence comes before the routes in reading order.
 
 ## Not seen
+- The cause of the two journey 10 failures in phone run 1 (above). Open item: if it recurs, rerun with traces on and keep the trace.
 - The live result (after merge).
 - Real devices and a real share sheet (Share is tested for presence only; the phone walk follows part 3).
 - Share's clipboard fallback on a desktop without `navigator.share`.
