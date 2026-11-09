@@ -51,7 +51,7 @@ No account is ever required (GAL-11).
 | Retired work | "This work is no longer shown" with the maker strip | maker's gallery |
 | Taken down / maker suspended | "This work is not available" / "This gallery is not available" | entrance |
 | Stale status | label adds "status last confirmed {n} months ago" | — |
-| No contact route on a published gallery | Contact action absent; line reads "The maker has not published a contact route yet"; Save and Share remain | — |
+| No way to contact on a published gallery | Contact action absent (GAL-PR-01); line reads "<Maker> is not taking enquiries here yet."; Save and Share remain | — |
 | Single route | the sheet shows it alone with the disclosure | — |
 | Offline / unreachable | named state with retry; saved shelf still opens | retry |
 | Unknown link | entrance with a one-line notice | — |
