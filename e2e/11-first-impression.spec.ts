@@ -159,11 +159,13 @@ test.describe("first impression", () => {
   test("The Gallery names no city of its own: no public screen, Menu or manifest says Bengaluru (GAL-OD-04)", async ({ page, request }) => {
     // Read from textContent, so hidden text (a closed Menu, a colophon) is caught too. A maker's
     // own place may appear on their pages; the seeded makers are elsewhere, so any match is ours.
-    for (const path of PUBLIC) {
+    for (const path of [...PUBLIC, "/m/dhaaga-studio", `/work/${await monsoonToken()}`]) {
       await page.goto(path);
       expect(await page.locator("html").textContent(), path).not.toMatch(/bengaluru|bangalore/i);
-      expect(await page.locator('meta[name="description"]').getAttribute("content").catch(() => "") ?? "", path)
-        .not.toMatch(/bengaluru|bangalore/i);
+      // Every meta description (name or property, so og: and twitter: too), read without waiting.
+      const metas = await page.evaluate(() => Array.from(document.querySelectorAll("meta[content]"),
+        (m) => m.getAttribute("content") ?? "").join(" | "));
+      expect(metas, path).not.toMatch(/bengaluru|bangalore/i);
     }
     expect(JSON.stringify(await (await request.get("/manifest.webmanifest")).json())).not.toMatch(/bengaluru|bangalore/i);
   });
