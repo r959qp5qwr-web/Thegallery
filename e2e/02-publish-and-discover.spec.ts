@@ -127,7 +127,7 @@ test.describe("publish a work and meet it as a visitor", () => {
   test("an anonymous visitor meets the work at the entrance, in Clay and in search", async ({ page }) => {
     await page.goto("/");
     await expect(page.getByRole("heading", { name: TITLE })).toBeVisible();
-    await expect(page.getByText("Available")).toBeVisible();
+    // The entrance carries the stated amount; the status word is on the work's own page (Wave 5).
     await expect(page.getByText("₹6,800")).toBeVisible();
 
     await page.goto("/browse/clay");

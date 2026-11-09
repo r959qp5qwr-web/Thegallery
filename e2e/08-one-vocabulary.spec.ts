@@ -43,8 +43,9 @@ test.describe("one vocabulary", () => {
       // and certainly not the old one, appears on the wall.
       await page.goto("/m/anika-rao");
       const tile = page.locator(".tile", { has: page.locator(".gt", { hasText: MONSOON }) });
+      await expect(tile).toBeVisible();
       await expect(tile).not.toContainText(old);
-      await expect(tile.locator(".gs")).toHaveCount(0);
+      await expect(tile).not.toContainText(shown);
     }
   });
 
