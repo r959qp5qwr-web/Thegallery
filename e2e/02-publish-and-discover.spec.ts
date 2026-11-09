@@ -86,7 +86,9 @@ test.describe("publish a work and meet it as a visitor", () => {
       await page.getByLabel("Choose a photograph").setInputFiles(join(FIXTURES, shape));
       await page.getByLabel("Describe the image").fill(`${TITLE}, ${shape.split("-")[0]} view`);
       await page.getByRole("button", { name: "Add image" }).click();
-      await expect(page.getByTestId("form-notice")).toContainText("Image added");
+      // An upload to the test project takes 6–8 s (measured 2026-11-09, the same on the live
+      // build): the 10 s default left no room (GAL-L0029).
+      await expect(page.getByTestId("form-notice")).toContainText("Image added", { timeout: 30_000 });
     }
 
     await page.goto(workUrl);

@@ -577,6 +577,31 @@ The rule is now written as `.picker input.picker-input`. The journey measures th
 
 ---
 
+### GAL-L0029
+
+**Date:** 2026-11-09  
+**Observed event:**  
+Two full Wave 5 suite runs each lost one journey at the same step: after "Add image", the "Image added" notice did not appear within the 10 s expect timeout, and later journeys that needed that work failed or did not run. The runs were phone (02, then 7 failures downstream) and desktop (04, then 06). The same journeys passed when rerun alone. One full phone run passed 77 of 77.
+
+**Evidence:**  
+A diagnostic probe timed eight "Add image" actions on each build against the test project:
+- Wave 5 build `njBeMoHo-oqzbxTCKElVB1`: 5.9–7.4 s.
+- Live build `C019BiWtkr74F0tTHwmhF` (`5a23906`), the control: 6.4–7.9 s.
+
+The trace of the desktop failure shows the upload request still pending. A sign-in POST in the same trace took 3.5 s.
+
+**Why it mattered:**  
+A timing margin of two or three seconds was being read as a product failure. Per GAL-L0023 no cause was named until the control run on the previous build had been made. The control shows the latency is the test project's storage path, not Wave 5.
+
+**What changed:**  
+The two "Image added" waits allow 30 s, with the measurement in a comment. The probe was diagnostic and is not committed.
+
+**Status:** RESOLVED  
+**Related finding / decision IDs:** GAL-L0023, GAL-L0024  
+**Harvest status:** UNHARVESTED
+
+---
+
 ## Ledger rules
 
 - Capture the event in the governed change that fixes or formally records it where feasible.

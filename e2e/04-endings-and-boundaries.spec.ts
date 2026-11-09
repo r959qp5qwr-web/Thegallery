@@ -61,7 +61,9 @@ test.describe("failure endings", () => {
     // back: the draft, its label and its images are all still there.
     await page.getByLabel("Choose a photograph").setInputFiles(join(process.cwd(), "e2e/fixtures/square-1x1.jpg"));
     await page.getByRole("button", { name: "Add image" }).click();
-    await expect(page.getByTestId("form-notice")).toContainText("Image added");
+    // An upload to the test project takes 6–8 s (measured 2026-11-09, the same on the live
+    // build): the 10 s default left no room (GAL-L0029).
+    await expect(page.getByTestId("form-notice")).toContainText("Image added", { timeout: 30_000 });
     await page.goto("/");            // walk away mid-journey
     await page.goto(url);            // and come back
 
