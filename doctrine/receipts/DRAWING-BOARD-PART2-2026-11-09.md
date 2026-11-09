@@ -31,8 +31,9 @@ Not a SYSTEM CHANGE: `tokens.css` and `system.css` are untouched and byte-identi
 ## Proof
 | Check | Result | Status |
 |---|---|---|
-| Phone suite, build `6acYWtftuarvZDhiOxwfn` | PHONE_RESULT | PHONE_STATUS |
+| Phone suite, build `QRdLEjL0sUPlglMRNBfkZ` (code `eb2cf52`) | PHONE_RESULT | PHONE_STATUS |
 | Desktop suite, same build | DESKTOP_RESULT | DESKTOP_STATUS |
+| Phone suite on the build before (`6acYWtftuarvZDhiOxwfn`) | 86 passed, 1 failed, exit 1: journey 07, "header and footer are landmarks": the phone work page hid its header with `display:none`, so it had no banner landmark. Fixed: the header stays a landmark and the way home, out of sight above the photograph, and shows when the keyboard reaches it (rendered: `drawing-board-part2/hdr-rest-and-focus.png`). Journey 12 now asserts both; this run is its control | SEEN |
 | Targeted run on an earlier build (7 journeys, both devices) | 86 passed, 5 failed: 4 from the subset leaving out fixture journeys 03 and 04, 1 a view-transition timing miss. Ledger GAL-L0034 | SEEN |
 | New and changed tests fail without their change | On the build before the review fixes (`z9U0wYgyjdf-Q_UKeW29u`): the heart's one name, amber only for Available, a square's price beside its status, Back steps back — each **failed**. With the sheet's focus trap removed (planted, build `AC4r1Mi5P3YUW0ThrKPKL`): "Tab 4 left the sheet" — **failed**. All pass on the final build | SEEN |
 | Independent review (builder-reviewer agent; did not write the code) | M1 second handoff sentence: kept (pre-existing, approved maker variant, decision log). M2 no-contact line: restored to "{maker} is not taking enquiries here yet." M3 square dropped the price beside Made to order: fixed + test. M4 tests that could not fail: focus trap, folds and Dhaaga tightened. L5 Share without script: shown only once it works. L6 Back after an outside landing: fixed + test. L7 heart named twice: fixed. L8 no Home on a cold work page (Back → maker → bar): recorded. L9 About row and heading repeat: recorded | SEEN |
@@ -49,7 +50,7 @@ Not a SYSTEM CHANGE: `tokens.css` and `system.css` are untouched and byte-identi
 - **Usability:**
   - 🟡 The Email row no longer shows the address before it opens. On a phone with no mail app set up, the tap goes nowhere visible. *Option:* show the address under "Email" in the meta style.
   - 🟢 A maker's gallery with one work shows one small square on a wide page. It reads sparse until there are three or more.
-  - 🟢 From a work opened cold, the way home is Back (to the maker), then the bar.
+  - 🟢 From a work opened cold, the way home is Back (to the maker), then the bar. A keyboard or screen reader also has the header, which shows on focus.
 - **Hierarchy:** photograph, status, title, maker, facts, then the one action. The sheet: heading, the sentence on paper-deep, then the ways.
 - **Consistency:** labels and counts are mono capitals; the maker's line and words are italic serif; one solid action per screen; rows are the same 54–56 px hairline rows across the work, the sheet and About.
 - **Accessibility:**
