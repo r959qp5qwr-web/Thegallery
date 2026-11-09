@@ -464,3 +464,118 @@ body:not(:has(nav.bar)) .actionbar { bottom: 0; }
   .phone { padding-bottom: calc(var(--bar-h) + env(safe-area-inset-bottom, 0px)); }
   @media (min-width: 900px) { .phone { padding-bottom: 0; } }
 }
+
+/* ===== Drawing board, part 2 (governor, 2026-11-09): a work, the Message sheet, a maker's
+   gallery as a profile, About as one screen. Layout only; the grammar is system.css. ===== */
+
+/* A round control over a photograph: Back, Share, the heart. 44 px, paper at 88 %. */
+.roundbtn { width: var(--target); height: var(--target); border-radius: 50%; border: 0; padding: 0; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center; color: var(--ink);
+  background: rgba(248, 243, 234, 0.88); text-decoration: none; }
+.roundbtn:hover { background: var(--paper); }
+.roundbtn.on { color: var(--accent); }
+
+/* A work on a phone: the photograph takes the top of the screen, the controls float over it. */
+.detail-media { position: relative; }
+.photo-tools { position: absolute; top: 12px; left: var(--pad-x); right: var(--pad-x); z-index: 2;
+  display: flex; justify-content: space-between; pointer-events: none; }
+.photo-tools > *, .photo-tools-end > * { pointer-events: auto; }
+.photo-tools-end { display: inline-flex; gap: 8px; }
+@media (max-width: 899.98px) {
+  .header.over-work { display: none; }
+  .work-page .imgstrip { gap: 0; }
+  .work-page .imgstrip .shot { height: min(58vh, 125vw); display: flex; align-items: center; justify-content: center;
+    background: var(--surface-plinth); }
+  .work-page .imgstrip .shot img { width: 100%; height: 100%; max-height: none; object-fit: contain; }
+}
+@media (min-width: 600px) and (max-width: 899.98px) {
+  .work-page .detail { padding-top: 0; }
+  .photo-tools { left: 12px; right: 12px; }
+}
+@media (min-width: 900px) {
+  /* The photograph sits at the column's left edge and may be narrower than the column, so the
+     controls hang from its top-left corner, where they are always over the picture. */
+  .photo-tools { top: 16px; left: 16px; right: auto; }
+  .photo-tools .back { display: none; }   /* the header is the way back from 900 px */
+}
+
+/* The wall label: status, title, maker · medium, then one line of facts. */
+.work-page .label { padding-top: var(--s4); }
+.work-page .label .status { margin: 0; gap: 8px; }
+.work-page .label .status .price { font: inherit; letter-spacing: inherit; color: inherit; }
+.work-page .label .title { margin: 10px 0 8px; }
+.work-page .makerline a { color: inherit; text-decoration: underline; text-decoration-color: var(--stone-strong); text-underline-offset: 3px; }
+.work-page .facts { margin-top: 10px; }
+.work-page .facts .dims { margin: 0; }
+.work-page .facts .fresh { font: inherit; letter-spacing: inherit; }
+.work-page .actions { padding: var(--s4) var(--pad-x) 0; }
+@media (min-width: 600px) { .work-page .detail-label .actions { padding-left: 0; padding-right: 0; } }
+
+/* A row that opens in place (the maker's words on a work; the policies under About). */
+.folds { margin: var(--s4) var(--pad-x) 0; border-top: 1px solid var(--rule-soft); }
+.detail-label .folds { margin-left: var(--pad-x); margin-right: var(--pad-x); }
+@media (min-width: 600px) { .detail-label .folds { margin-left: 0; margin-right: 0; } }
+.fold { border-bottom: 1px solid var(--rule-soft); }
+.fold > summary { list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  min-height: 54px; font: var(--t-body); color: var(--text); cursor: pointer; }
+.fold > summary::-webkit-details-marker { display: none; }
+.fold > summary .icon { flex: none; width: 18px; height: 18px; color: var(--text-muted); transform: rotate(90deg); transition: transform 160ms ease; }
+.fold[open] > summary .icon { transform: rotate(-90deg); }
+.fold > .note { padding: 0 0 var(--s4); max-width: 34ch; }
+.fold > .section { padding: 0 0 var(--s4); }
+.fold > .section h3.lead { margin: 0 0 10px; }
+
+/* The Message sheet: heading, the handoff sentence, then one row per way to reach the maker. */
+.sheet.contact .disclosure { margin: var(--s3) var(--pad-x) 0; padding: 12px 14px; background: var(--paper-deep); color: var(--text-soft); }
+.sheet.contact .routes.rows { margin-top: var(--s3); }
+.routes.rows li { min-height: 0; border-top-color: var(--rule-soft); }
+.routes.rows li a { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 56px; color: var(--text);
+  text-decoration: none; font: var(--t-body); }
+.routes.rows li a .kind { flex: 1; width: auto; font: var(--t-body); letter-spacing: 0; text-transform: none; color: var(--text); }
+.routes.rows li a .icon { flex: none; width: 22px; height: 22px; color: var(--text-soft); }
+.routes.rows li a .icon:last-child { width: 18px; height: 18px; color: var(--text-muted); }
+.routes.rows li a:hover .kind { text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--stone-strong); }
+
+/* A maker's gallery, built like a profile: who, where, one line in their words, one button,
+   then the work three across. The header carries Back and Share on a phone. */
+.header.tools .back { display: inline-flex; }
+@media (max-width: 899.98px) {
+  .header.tools { display: grid; grid-template-columns: var(--target) 1fr var(--target); align-items: center; }
+  .header.tools .wordmark { justify-self: center; }
+  .header.tools .header-end { justify-self: end; margin-right: -10px; }
+  .header.tools:not(:has(.back)) .wordmark { grid-column: 2; }
+}
+@media (min-width: 900px) { .header.tools .back { display: none; } }
+.maker-head .lbl { font: var(--t-label); letter-spacing: var(--track-label); text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px; }
+.maker-head .practice { font: var(--t-note); max-width: 36ch; margin: var(--s3) 0 0; }
+.maker-head .intro { margin: var(--s3) 0 0; }
+.maker-head .where { font: var(--t-meta); letter-spacing: var(--track-meta); color: var(--text-muted); margin: var(--s3) 0 0; }
+.maker-head .maker-act { margin-top: var(--s4); }
+.maker-head .maker-act .btn { width: 100%; }
+@media (min-width: 900px) {
+  .maker-head { padding-top: 72px; }
+  .maker-head .lbl { grid-column: 1 / -1; }
+  .maker-head .practice { grid-column: 1 / span 7; margin-top: 18px; }
+  .maker-head .intro { grid-column: 1 / span 7; }
+  .maker-head .where { grid-column: 1 / span 7; margin-top: 14px; }
+  .maker-head .maker-act { grid-column: 1 / span 4; }
+}
+.profile-wall { padding-top: var(--s5); }
+.profile-wall .count { padding: 0 var(--pad-x) 10px; font: var(--t-label); letter-spacing: var(--track-label); text-transform: uppercase; color: var(--text-muted); }
+.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 3px; }
+.grid3 .tile.sq { position: relative; display: block; aspect-ratio: 1; overflow: hidden; background: var(--surface-plinth); color: var(--text); text-decoration: none; }
+.grid3 .tile.sq img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.grid3 .tile.sq .notice { position: absolute; inset: 0; display: grid; place-items: center; font: var(--t-caption); color: var(--text-muted); }
+.grid3 .flag { position: absolute; left: 6px; top: 6px; padding: 4px 6px; background: var(--paper);
+  font: var(--t-label); letter-spacing: var(--track-label); text-transform: uppercase; color: var(--text-muted); }
+.grid3 .flag.available { color: var(--accent-text); }
+@media (min-width: 600px) {
+  .grid3 { gap: 6px; padding: 0 var(--pad-x); }
+}
+@media (min-width: 900px) { .grid3 { gap: 12px; } .profile-wall { padding-top: var(--s6); } }
+
+/* About as one screen: a short lead, then a row per policy, folded. */
+.page-head.about h1 { font: var(--t-heading); }
+.page-head.about .about-lead { font: var(--t-note); font-style: normal; color: var(--text); max-width: 34ch; }
+.about-folds { margin-top: var(--s5); max-width: 720px; }
+@media (min-width: 900px) { .about-folds { margin-left: var(--pad-x); } }

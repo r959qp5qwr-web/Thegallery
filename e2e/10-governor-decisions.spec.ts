@@ -138,7 +138,7 @@ test.describe("governor decisions", () => {
         [`order${Date.now().toString(36)}${t.length}${t.at(-1)}`, w.gallery_id, t, w.position]));
     }
     await page.goto("/m/anika-rao");
-    await expect(page.locator(".grid .tile .gt").first()).not.toHaveText(MONSOON);
+    await expect(page.locator(".grid3 .tile .gt").first()).not.toHaveText(MONSOON);
     const was = await monsoon();
 
     await signIn(page, MAKER_A.email, MAKER_A.password);
@@ -155,7 +155,7 @@ test.describe("governor decisions", () => {
     await expect(order).toContainText("First in your gallery.");
 
     await page.goto("/m/anika-rao");
-    await expect(page.locator(".grid .tile .gt").first()).toHaveText(MONSOON);
+    await expect(page.locator(".grid3 .tile .gt").first()).toHaveText(MONSOON);
     // A second press from the stale tab moves nothing further.
     const once = await monsoon();
     await stale.getByTestId("hang-order").getByRole("button", { name: "Hang this first" }).click();

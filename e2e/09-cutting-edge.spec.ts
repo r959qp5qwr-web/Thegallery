@@ -69,28 +69,30 @@ test.describe("cutting edge", () => {
     }
   });
 
-  test("a maker's gallery hangs the lead work large, with the next two beside it", async ({ page }) => {
+  test("a maker's gallery is a profile wall: three across at every width, square, each saying its status", async ({ page }) => {
     const w = await monsoon();
     for (const [i, t] of EXTRA.entries()) await hang(t, i + 1, w.gallery_id);
     await page.goto("/m/anika-rao");
-    const tiles = page.locator(".grid .tile");
+    const tiles = page.locator(".grid3 .tile");
     await expect(tiles).toHaveCount(3);
-    const [lead, a, b] = await tiles.evaluateAll((els) => els.map((e) => e.getBoundingClientRect().toJSON()));
-    if (page.viewportSize()!.width >= 900) {
-      expect(await tiles.first().getAttribute("class")).toContain("hang-first");
-      // The lead is still a tile: its frame spans its width, with the label below, not beside it.
-      const frame = (await tiles.first().locator(".frame").boundingBox())!;
-      const title = (await tiles.first().locator(".gt").boundingBox())!;
-      expect(frame.width).toBeGreaterThan(lead.width - 2);
-      expect(title.y).toBeGreaterThan(frame.y + frame.height - 1);
-      expect(lead.width).toBeGreaterThan(a.width * 1.8);          // two columns against one
-      expect(a.left).toBeGreaterThan(lead.right - 1);              // beside it, not below
-      expect(b.left).toBeGreaterThan(lead.right - 1);
-      expect(b.top).toBeGreaterThan(a.top);                        // the two stack in the third column
-    } else {
-      // Below 900 px the hang is the plain grid; no tile is made larger by its order.
-      expect(Math.abs(lead.width - a.width)).toBeLessThan(2);
+    await expect(page.locator(".profile-wall .count")).toHaveText("3 works");
+    const boxes = await tiles.evaluateAll((els) => els.map((e) => e.getBoundingClientRect().toJSON()));
+    // One row of three, equal squares, whatever the image inside them (drawing board, screen 3).
+    for (const b of boxes) {
+      expect(Math.abs(b.width - b.height)).toBeLessThan(2);
+      expect(Math.abs(b.width - boxes[0].width)).toBeLessThan(2);
+      expect(Math.abs(b.top - boxes[0].top)).toBeLessThan(2);
     }
+    expect(boxes[1].left).toBeGreaterThan(boxes[0].right - 1);
+    expect(boxes[2].left).toBeGreaterThan(boxes[1].right - 1);
+    // The image fills its square; the work's own page shows it whole.
+    const img = tiles.first().locator("img");
+    if (await img.count()) {
+      const r = await img.evaluate((e) => e.getBoundingClientRect().toJSON());
+      expect(Math.abs(r.width - boxes[0].width)).toBeLessThan(2);
+    }
+    // Each square is named for a screen reader by its title.
+    await expect(tiles.filter({ hasText: MONSOON })).toHaveCount(1);
   });
 
   test("a tile becomes the work through one view transition, and never under reduced motion", async ({ browser }) => {
@@ -179,7 +181,7 @@ test.describe("cutting edge", () => {
     await owner((c) => c.query(
       "UPDATE works SET status = 'available', status_confirmed_at = now() - interval '3 days' WHERE id = $1", [w.id]));
     await page.goto(`/work/${w.public_token}`);
-    await expect(page.getByTestId("freshness")).toHaveText("Updated 3 days ago");
+    await expect(page.getByTestId("freshness")).toHaveText("updated 3 days ago");
 
     await owner((c) => c.query("UPDATE works SET status_confirmed_at = now() - interval '125 days' WHERE id = $1", [w.id]));
     await page.goto(`/work/${w.public_token}`);
@@ -199,7 +201,7 @@ test.describe("cutting edge", () => {
     expect(after).toEqual({ status: "available", fresh: true });   // confirmed, not changed
 
     await page.goto(`/work/${w.public_token}`);
-    await expect(page.getByTestId("freshness")).toHaveText("Updated today");
+    await expect(page.getByTestId("freshness")).toHaveText("updated today");
   });
 
   test("Confirm refuses a status the maker did not see, and changes nothing", async ({ page }) => {

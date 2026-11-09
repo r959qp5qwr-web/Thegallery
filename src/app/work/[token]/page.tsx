@@ -5,9 +5,9 @@ import { Header, Footer, EmptyState, imgSrc } from "@/components/Chrome";
 import { Icon } from "@/components/Icon";
 import { ImageCount } from "@/components/ImageCount";
 import { SaveButton } from "@/components/SaveButton";
-import { SheetFocus } from "@/components/SheetFocus";
-import { STATUS_LABEL, labelPrice, dimensions, statusIsStale, confirmedAgo, routeHref, routeDisplay, ROUTE_LABEL,
-         shortName, INTENTS, parseIntent } from "@/lib/format";
+import { BackButton, ShareButton } from "@/components/PageTools";
+import { ContactSheet } from "@/components/ContactSheet";
+import { STATUS_LABEL, labelPrice, dimensions, statusIsStale, confirmedAgo, shortName, parseIntent } from "@/lib/format";
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
@@ -77,6 +77,9 @@ export default async function WorkDetail(
   const shownPrice = labelPrice(work);
   const dims = dimensions(work.height_mm, work.width_mm, work.depth_mm);
   const who = shortName(work.maker_display_name, work.maker_kind);
+  // What the message is about follows the work: a sold work asks about one like it, any other
+  // asks about this one. The sheet no longer asks (drawing board, screen 2b); a link that names
+  // an intent (?intent=commission) is still honoured.
   const intent = parseIntent(intentParam, sold);
   const here = `/work/${work.public_token}`;
   const message = { title: work.title, url: `${process.env.GALLERY_BASE_URL ?? ""}${here}`, intent,
@@ -84,13 +87,22 @@ export default async function WorkDetail(
 
   return (
     <>
-      <Header />
-      <main id="main" tabIndex={-1} className={routes.length ? "has-workbar" : undefined}>
+      {/* On a phone the photograph takes the top of the screen (drawing board, screen 2): no
+          header above it, Back, Share and the heart over it. From 900 px the header returns. */}
+      <Header className="over-work" />
+      <main id="main" tabIndex={-1} className={`work-page${routes.length ? " has-workbar" : ""}`}>
 
       {/* Compact: one column. Expanded (§10): the image column (7 parts) beside the wall label
           (5 parts), the label sticky so it stays beside the work as the images scroll. */}
       <div className="detail">
       <div className="detail-media">
+      <div className="photo-tools">
+        <BackButton href={`/m/${work.maker_handle}`} className="roundbtn back" />
+        <span className="photo-tools-end">
+          <ShareButton title={`${work.title} by ${work.maker_display_name}`} path={here} />
+          <SaveButton token={work.public_token} />
+        </span>
+      </div>
       {/* Each image keeps its own proportion. Nothing is cropped to a common shape: the
           maker framed the object, and a gallery that re-crops is editing the work. */}
       <div className="imgstrip" id="work-images" role="region" aria-label={`Images of ${work.title}`} tabIndex={0}>
@@ -110,37 +122,48 @@ export default async function WorkDetail(
 
       </div>
       <div className="detail-label">
+      {/* The wall label (drawing board, screen 2): status first, then the title, the maker and
+          the medium, then one line of facts ending in when the status was last stated. */}
       <div className="label">
-        <h1 className="title">{work.title}</h1>
-        {/* The maker is named once on the page, as the way to their gallery (Wave 5). */}
-        <div className="makerline">
-          <Link href={`/m/${work.maker_handle}`}>{work.maker_display_name}</Link>, {work.medium ?? work.material}
-        </div>
         <div className={`status ${sold ? "sold" : "available"}`}>
           <span>{STATUS_LABEL[work.status]}</span>
           {/* One price rule for every public surface (labelPrice): none beside Sold or Not for
               sale, and never a repeat of the status. */}
-          {shownPrice ? <span className="price" data-testid="price">{shownPrice}</span> : null}
+          {shownPrice ? <><span className="sep" aria-hidden>·</span><span className="price" data-testid="price">{shownPrice}</span></> : null}
         </div>
-        {work.process ? <p className="note">{work.process}</p> : null}
+        <h1 className="title">{work.title}</h1>
+        {/* The maker is named once on the page, as the way to their gallery (Wave 5). */}
+        <div className="makerline">
+          <Link href={`/m/${work.maker_handle}`}>{work.maker_display_name}</Link>
+          {work.medium ?? work.material ? <> · {work.medium ?? work.material}</> : null}
+        </div>
         <div className="facts">
-          {dims ? <div className="dims">{dims}{work.year ? ` · ${work.year}` : ""}</div> : null}
           {/* Status you can trust (R4): when the maker last stated it, fed by their reconfirmation.
-              Past 90 days it reads as a caution, never hidden (DOMAIN_MODEL §2.3, P-11). */}
-          {ago ? (stale
-            ? <div className="stale" data-testid="freshness">Status last confirmed {ago}</div>
-            : <div className="fresh" data-testid="freshness">Updated {ago}</div>) : null}
+              Past 90 days it reads as a caution on its own line, never hidden (DOMAIN_MODEL §2.3, P-11). */}
+          {dims || work.year || (ago && !stale) ? (
+            <div className="dims">
+              {[dims, work.year ? String(work.year) : null].filter(Boolean).join(" · ")}
+              {ago && !stale ? <>{dims || work.year ? " · " : ""}<span className="fresh" data-testid="freshness">updated {ago}</span></> : null}
+            </div>
+          ) : null}
+          {ago && stale ? <div className="stale" data-testid="freshness">Status last confirmed {ago}</div> : null}
         </div>
       </div>
 
-      {/* Contact is offered only once there is a way to be contacted (GAL-PR-01). A button
-          that opens onto "no route yet" is a promise the page cannot keep. */}
-      <div className="actions secondary">
-        <SaveButton token={work.public_token} />
-      </div>
+      {/* The maker's own words fold away under one row, open on a tap (drawing board, screen 2). */}
+      {work.process ? (
+        <div className="folds">
+          <details className="fold">
+            <summary>In {who}&rsquo;s words<Icon name="chevron" /></summary>
+            <p className="note">{work.process}</p>
+          </details>
+        </div>
+      ) : null}
+
       {/* Contact is offered only once there is a way to be contacted (GAL-PR-01). The one filled
           action of the page: pinned to the foot of a phone screen, beside the label on a wide
-          one; the same link, so the contact sheet and its disclosure come first either way. */}
+          one; the same link, so the contact sheet and its disclosure come first either way.
+          A sold work keeps it: the maker may make another. */}
       {routes.length ? (
         <div className="workbar">
           <Link className="btn solid" href={`${here}?contact=1`} id="contact-trigger" scroll={false}>
@@ -154,54 +177,10 @@ export default async function WorkDetail(
       </div>
 
       {contact && routes.length ? (
-        <>
-        <Link className="contact-scrim" href={here} aria-hidden tabIndex={-1} scroll={false} />
-        <section className="sheet contact" role="dialog" aria-modal="true" tabIndex={-1}
-                 aria-labelledby="contact-title" id="contact">
-          <SheetFocus sheetId="contact" closeHref={here} returnFocusTo="contact-trigger" />
-          <div className="handle" />
-          <div className="head">
-            <h2 id="contact-title">Message {work.maker_display_name}</h2>
-            <Link className="iconbtn" href={here} aria-label="Close" data-autofocus scroll={false}><Icon name="close" /></Link>
-          </div>
-          {/* The choice is real: it changes the message the maker receives. Each option is a link
-              to the same sheet with that intent, so it works without script and the URL says
-              which one is chosen. */}
-          <nav aria-label="What your message is about">
-            <ul className="choice">
-              {INTENTS.map((i) => (
-                <li key={i.key}>
-                  <Link href={`${here}?contact=1&intent=${i.key}`} replace scroll={false}
-                        aria-current={intent === i.key ? "true" : undefined} data-intent={i.key}>
-                    {i.label}{intent === i.key ? <Icon name="check" /> : null}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-          {/* GAL-C1: the disclosure appears once, here, before any route is opened. */}
-          <p className="disclosure">
-            You are contacting the maker directly. Payment, delivery, returns and any dispute are arranged
-            with them; The Gallery does not process the transaction.
-          </p>
-          <ul className="routes">
-            {routes.map((r) => (
-              <li key={r.id}>
-                <Icon name={r.kind === "whatsapp" ? "chat" : r.kind === "email" ? "mail"
-                         : r.kind === "phone" ? "phone" : r.kind === "form" ? "form" : "globe"} />
-                <span className="kind">{ROUTE_LABEL[r.kind]}</span>
-                <a className="val" href={routeHref(r, message)} rel="noopener noreferrer"
-                   target={r.kind === "website" || r.kind === "form" ? "_blank" : undefined}
-                   data-route-kind={r.kind}>
-                  {routeDisplay(r, work.maker_display_name, true, work.maker_kind)}
-                  {r.kind === "website" || r.kind === "form" ? <span className="sr-only"> (opens in a new tab)</span> : null}
-                </a>
-                <Icon name="external" small />
-              </li>
-            ))}
-          </ul>
-        </section>
-        </>
+        <ContactSheet heading={`Message ${who}`} closeHref={here} returnFocusTo="contact-trigger"
+                      routes={routes} work={message}
+                      disclosure={<>You are contacting the maker directly. Payment, delivery, returns and any dispute are
+                        arranged with them; The Gallery does not process the transaction.</>} />
       ) : null}
       </main>
       <Footer />

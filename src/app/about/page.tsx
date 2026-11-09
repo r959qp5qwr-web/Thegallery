@@ -1,33 +1,37 @@
 import { Header, Footer } from "@/components/Chrome";
+import { Icon } from "@/components/Icon";
+import { WhoCanOpen, WhatWeActOn, PrivacyText } from "@/components/Policies";
 
 export const metadata = { title: "About" };
 export const dynamic = "force-static";
 
-// Say each policy once (Wave 5): what The Gallery does and does not do is stated here, in plain
-// words, and linked from elsewhere rather than repeated.
+// About, Participation and Privacy on one screen (drawing board, screen 6; governor 2026-11-09).
+// Three lines say what The Gallery is; the full policy text stays, folded under one row each and
+// open on a tap. /participation and /privacy still show the same text whole.
 export default function About() {
   return (
     <>
       <Header />
       <main id="main" tabIndex={-1}>
-      <div className="page-head">
-        <h1>What The Gallery is</h1>
-        <p>Art and craft in clay, textile, wood, metal and paper, and a way to talk to the person who
-          made it.</p>
+      <div className="page-head about">
+        <h1>About</h1>
+        <p className="about-lead">Art and craft, shown by the people who made it. You see the work here and talk
+          to the maker yourself. The Gallery takes no commission.</p>
       </div>
-      <section className="section">
-        <h2 className="lead">How it works</h2>
-        <p className="body">Find a piece you like. Read who made it and how. Message the maker directly, on
-          WhatsApp or by email. Each maker presents their own work, in their own words.</p>
-      </section>
-      <section className="section">
-        <h2 className="lead">What you won&rsquo;t find here</h2>
-        <p className="body">No cart, no checkout and no payment: anything you buy, you arrange with the maker.
-          The Gallery takes no percentage, carries no advertising and sells no ranking. There are no
-          follower counts, likes or popularity charts; a work is here because its maker chose to show it.</p>
-        <p className="body follow">The Gallery makes no claim about a maker&rsquo;s identity,
-          the quality of their work, or their reliability as a seller. What you read is what the maker wrote.</p>
-      </section>
+      <div className="folds about-folds">
+        <details className="fold">
+          <summary>Who can open a gallery<Icon name="chevron" /></summary>
+          <WhoCanOpen h="h3" />
+        </details>
+        <details className="fold">
+          <summary>What we act on<Icon name="chevron" /></summary>
+          <WhatWeActOn h="h3" />
+        </details>
+        <details className="fold">
+          <summary>Privacy<Icon name="chevron" /></summary>
+          <PrivacyText h="h3" />
+        </details>
+      </div>
       </main>
       <Footer />
     </>

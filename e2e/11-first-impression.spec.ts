@@ -131,7 +131,11 @@ test.describe("first impression", () => {
   });
 
   test("the maker's gallery keeps the handoff disclosure's whole meaning before its routes (GAL-C1)", async ({ page }) => {
+    // The routes live in the Message sheet (drawing board, screen 3): the page offers none bare.
     await page.goto("/m/anika-rao");
+    await expect(page.locator('a[href^="https://wa.me/"], a[href^="mailto:"]')).toHaveCount(0);
+    await page.getByRole("link", { name: "Message", exact: true }).click();
+    await expect(page.getByRole("dialog", { name: "Message Anika" })).toBeVisible();
     const said = page.getByTestId("disclosure");
     for (const term of ["directly", "Payment", "delivery", "returns", "dispute", "no part in the sale"]) {
       await expect(said, term).toContainText(term);
