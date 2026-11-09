@@ -25,8 +25,8 @@ export default async function Entrance() {
         <main id="main" tabIndex={-1}>
           <section className="opening" data-testid="opening">
             <h1>The first works are being hung.</h1>
-            <p>The Gallery shows art and craft by makers in Bengaluru, in clay, textile, wood, metal and
-              paper, each in a room of their own. The first rooms open soon.</p>
+            <p>The Gallery shows art and craft in clay, textile, wood, metal and paper, each maker in a
+              room of their own. The first rooms open soon.</p>
             <div className="routes-on">
               <Link className="textlink" href="/about">What The Gallery is</Link>
               <Link className="textlink quiet" href="/makers">Are you a maker? Open your gallery</Link>

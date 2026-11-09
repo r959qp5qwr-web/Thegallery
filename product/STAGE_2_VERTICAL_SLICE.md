@@ -4,7 +4,7 @@
 
 ## 1. The exact chain
 
-One primary synthetic maker (Anika Rao, clay, Bengaluru), one second maker for isolation (Dhaaga Studio), one anonymous visitor, one operator account — on the deployed product, at phone width:
+One primary synthetic maker (Anika Rao, clay, Khurja), one second maker for isolation (Dhaaga Studio), one anonymous visitor, one operator account — on the deployed product, at phone width:
 
 1. `/makers` → Create account with a real test email → confirmation email received on a phone mail client → link → Studio set-up.
 2. Identity saved; one WhatsApp route and one public email route saved and previewed.

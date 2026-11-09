@@ -12,8 +12,8 @@ export default function About() {
       <main id="main" tabIndex={-1}>
       <div className="page-head">
         <h1>What The Gallery is</h1>
-        <p>A quiet place to see art and craft by makers in Bengaluru, in clay, textile, wood, metal and
-          paper, and to talk to the person who made it.</p>
+        <p>Art and craft in clay, textile, wood, metal and paper, and a way to talk to the person who
+          made it.</p>
       </div>
       <section className="section">
         <h2 className="lead">How it works</h2>

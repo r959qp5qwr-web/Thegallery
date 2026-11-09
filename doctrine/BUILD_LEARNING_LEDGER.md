@@ -623,6 +623,64 @@ The reference copy was resynced. A journey in `e2e/11-first-impression.spec.ts` 
 
 ---
 
+### GAL-L0031
+
+**Date:** 2026-11-09  
+**Observed event:**  
+After Wave 5 went live, the governor judged it a regression: "Like a doctor's notebook. Copy is horrible." The gallery character was gone: the mono wordmark and wall labels, the italic curator line with its amber rule, the amber-edged actions and the plinth. Every public screen was a page of text with no image, icon or tab bar. Copy carried machine tics such as "a quiet place" and lists of negations. "Make an account" on For Makers was a numbered step set in bold, so it looked like a control and did nothing when tapped.
+
+**Evidence:**  
+- `doctrine/receipts/wave5/sheet-ba-390.jpg` (before and after).
+- `doctrine/receipts/drawing-board/live-sheet-390.jpg`: 15 live screens with word counts. About had 139 words, Participation 182, Privacy 223.
+- `drawing-board/REFERENCES-2026-11-09.md`: comparable references run 0–30 words on a home screen and about 50 on a work page.
+
+**Why it mattered:**  
+Every rule-based check in Wave 5 passed: type floor, one filled action, no duplication, no decoration. Nothing measured the screens against real apps or against the foundation's proposition, so each passing check removed some of the product's identity. The governor approved a design pass without being told what it removed.
+
+**What changed:**  
+Drawing board, governor decisions in `GOVERNOR-DECISIONS-2026-11-09-DRAWING-BOARD.md`:
+- A2 and B2 are reopened and superseded.
+- The original look is restored as the base, with an app layer added.
+- 16 rendered screens were approved.
+
+The rebuild ships as its own change set. Every design review from now on compares rendered screens against named external references and the original proposition, and lists what each change removes.
+
+**Status:** OPEN (rebuild pending)  
+**Related finding / decision IDs:** A2, B2 (superseded); GAL-L0026  
+**Harvest status:** UNHARVESTED
+
+---
+
+### GAL-L0032
+
+**Date:** 2026-11-09  
+**Observed event:**  
+The live site named Bengaluru as The Gallery's own city in four places:
+- the colophon on every page, "The Gallery, Bengaluru";
+- the empty entrance, "makers in Bengaluru";
+- About;
+- the manifest description.
+
+FIXED decision GAL-OD-04 had ruled out any Bengaluru-only claim since 2026-09-06. The governor: "This is not a Bengaluru centric store. Remove such references if they exist anywhere."
+
+**Evidence:**  
+`grep -rniI bengaluru src` listed `Chrome.tsx:136`, `PublicNav.tsx:96`, `(entrance)/page.tsx:28`, `about/page.tsx:15` and `manifest.ts:9`. The GAL-OD-04 enforcement locus named "the claim sweep over rendered surfaces", but no such sweep existed (enforcement UNARMED).
+
+**Why it mattered:**  
+A fixed product decision was broken on every public page, and nothing would have caught it.
+
+**What changed:**  
+- The five strings were removed.
+- The seeded demonstration makers now live in other cities, and the seed updates their city.
+- GAL-OD-04 is amended with the governor's words.
+- Journey 11 now asserts that no public screen, Menu, meta description or manifest names Bengaluru, and that the empty entrance does not either.
+
+**Status:** RESOLVED on merge  
+**Related finding / decision IDs:** GAL-OD-04  
+**Harvest status:** UNHARVESTED
+
+---
+
 ## Ledger rules
 
 - Capture the event in the governed change that fixes or formally records it where feasible.

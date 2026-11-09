@@ -89,6 +89,8 @@ test.describe("first impression", () => {
       const routes = await page.getByTestId("opening").getByRole("link").evaluateAll(
         (as) => as.map((a) => new URL((a as HTMLAnchorElement).href).pathname));
       expect(routes).toEqual(["/about", "/makers"]);
+      // The Gallery names no city of its own (GAL-OD-04, amended by the governor 2026-11-09).
+      expect(await page.locator("body").textContent()).not.toMatch(/bengaluru|bangalore/i);
       // Every empty room says so once and offers no door into another empty room.
       await page.goto("/browse/clay");
       await expect(page.getByRole("heading", { name: "No clay on view yet" })).toBeVisible();
@@ -152,6 +154,20 @@ test.describe("first impression", () => {
     });
     expect(Math.abs(shown - natural) / natural).toBeLessThan(0.02);
     expect(await img.evaluate((i) => getComputedStyle(i).objectFit)).not.toBe("cover");
+  });
+
+  test("The Gallery names no city of its own: no public screen, Menu or manifest says Bengaluru (GAL-OD-04)", async ({ page, request }) => {
+    // Read from textContent, so hidden text (a closed Menu, a colophon) is caught too. A maker's
+    // own place may appear on their pages; the seeded makers are elsewhere, so any match is ours.
+    for (const path of [...PUBLIC, "/m/dhaaga-studio", `/work/${await monsoonToken()}`]) {
+      await page.goto(path);
+      expect(await page.locator("html").textContent(), path).not.toMatch(/bengaluru|bangalore/i);
+      // Every meta description (name or property, so og: and twitter: too), read without waiting.
+      const metas = await page.evaluate(() => Array.from(document.querySelectorAll("meta[content]"),
+        (m) => m.getAttribute("content") ?? "").join(" | "));
+      expect(metas, path).not.toMatch(/bengaluru|bangalore/i);
+    }
+    expect(JSON.stringify(await (await request.get("/manifest.webmanifest")).json())).not.toMatch(/bengaluru|bangalore/i);
   });
 
   test("the Menu opens onto its Close, closes on Escape and on any tap of its links", async ({ page }) => {
