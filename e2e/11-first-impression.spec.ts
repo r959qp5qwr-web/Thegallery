@@ -238,3 +238,14 @@ test("installable: a manifest whose icons are what they say they are", async ({ 
   const apple = await page.locator('link[rel="apple-touch-icon"]').getAttribute("href");
   expect((await request.get(apple!)).status()).toBe(200);
 });
+
+test("the design system the product serves is byte-for-byte the accepted reference", async () => {
+  // A change to tokens.css or system.css is a SYSTEM CHANGE (governor's word) and must land in
+  // both places at once. Seen 2026-11-09: a review fix reached public/ and not the reference.
+  const { readFileSync } = await import("node:fs");
+  for (const f of ["tokens.css", "system.css"]) {
+    const served = readFileSync(`public/gallery/${f}`);
+    const reference = readFileSync(`ux/reference/interface/${f}`);
+    expect(served.equals(reference), f).toBe(true);
+  }
+});

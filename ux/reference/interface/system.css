@@ -31,7 +31,7 @@ svg.icon.sm { width: 20px; height: 20px; }
 .iconbtn { width: var(--target); height: var(--target); display: inline-flex; align-items: center; justify-content: center; margin-right: -10px; color: var(--text-soft); }
 .iconbtn.lead { margin-right: 0; margin-left: -10px; }
 .header.studio { padding: 0 var(--pad-x-studio); }
-.header .title { font: var(--t-lead); color: var(--text); }
+.header .title { font: var(--t-lead); color: var(--text); margin: 0; }
 
 /* the curatorial line — a serif whisper, amber where it points */
 .context { display: flex; justify-content: space-between; align-items: baseline; padding: 18px var(--pad-x) 12px; font: var(--t-lead); color: var(--text-muted); }
@@ -49,9 +49,10 @@ svg.icon.sm { width: 20px; height: 20px; }
 .frame.r11 { aspect-ratio: 1 / 1; }
 .frame .notice { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font: var(--t-caption); color: var(--text-muted); }
 
-/* the hero — one work at scale, edge to edge: no matte, no ledge. The photograph is the wall. */
-.hero { position: relative; background: var(--surface-plinth); }
-.hero img { display: block; width: 100%; height: auto; max-height: 72vh; object-fit: cover; }
+/* the hero — one work at scale: no matte, no ledge, and never cropped. A work that is taller than
+   the room allows is scaled down whole, not cut. */
+.hero { position: relative; }
+.hero img { display: block; width: auto; max-width: 100%; height: auto; max-height: 72vh; margin-inline: auto; }
 
 /* label block */
 .label { padding: var(--s4) var(--pad-x) 0; }
@@ -223,14 +224,12 @@ svg.icon.sm { width: 20px; height: 20px; }
 .footer .sign { color: var(--text-soft); margin-right: auto; }
 
 /* the menu — the sections set large on a sheet over the page, the colophon at its foot */
-.menu { position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: var(--surface); color: var(--text); flex-direction: column; overflow-y: auto; }
-.menu:popover-open { display: flex; }
+.menu { display: none; position: fixed; inset: 0; z-index: 50; width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: var(--surface); color: var(--text); flex-direction: column; overflow-y: auto; }
+.menu:popover-open, .menu.open { display: flex; }
 .menu .header { border-bottom: 0; }
 .menu ul { list-style: none; margin: 0; padding: var(--s5) var(--pad-x) 0; }
 .menu li a { display: flex; align-items: center; min-height: 60px; font: var(--t-menu); letter-spacing: -0.01em; text-decoration: none; color: var(--text); border-top: 1px solid var(--rule-soft); }
 .menu li:last-child a { border-bottom: 1px solid var(--rule-soft); }
-.menu .materials { display: flex; flex-wrap: wrap; gap: 0 16px; padding: var(--s4) var(--pad-x) 0; }
-.menu .materials a { font: var(--t-action); font-weight: 400; color: var(--text-soft); min-height: var(--target); display: inline-flex; align-items: center; }
 .menu .footer { margin-top: auto; }
 
 /* the work's one pinned action: a filled bar at the foot of a work on a phone */

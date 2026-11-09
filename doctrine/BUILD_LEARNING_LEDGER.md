@@ -602,6 +602,27 @@ The two "Image added" waits allow 30 s, with the measurement in a comment. The p
 
 ---
 
+### GAL-L0030
+
+**Date:** 2026-11-09  
+**Observed event:**  
+The Wave 5 system change was copied to `ux/reference/interface/` when it was first made. Fixes from the independent review then changed `public/gallery/system.css` again, and the reference copy was left behind. The governor's rule is that the two are byte-identical. A `cmp` before the receipt caught it (first difference at line 34).
+
+**Evidence:**  
+`cmp public/gallery/system.css ux/reference/interface/system.css` reported a difference at char 3406, line 34, before the resync. Nothing checked this automatically: the rule lived only in the handoff and in memory.
+
+**Why it mattered:**  
+A SYSTEM CHANGE that reaches one copy and not the other leaves the accepted reference saying something the product no longer does.
+
+**What changed:**  
+The reference copy was resynced. A journey in `e2e/11-first-impression.spec.ts` now compares both files byte for byte. It was proven to fail on a planted one-line difference and to pass once restored.
+
+**Status:** RESOLVED  
+**Related finding / decision IDs:** governor rule "the design system has to be adhered to"  
+**Harvest status:** UNHARVESTED
+
+---
+
 ## Ledger rules
 
 - Capture the event in the governed change that fixes or formally records it where feasible.
