@@ -271,16 +271,14 @@ body:has(.contact-scrim) .bar { display: none; }
 /* ===== Wave 5 — first impression (governor, 2026-11-09: A2, B2). Page layout only; the grammar
    is in system.css. ===== */
 
-/* Public header: the wordmark left; Search and Menu right; the sections inline from 900 px. */
-.header.public .header-end { display: flex; align-items: center; gap: 0; margin-right: -12px; }
-.navlink.wide { display: none; }
-@media (min-width: 900px) { .navlink.wide { display: inline-flex; } .navlink.menu-btn { display: none; } }
-.menu .header .header-end { margin-right: -12px; }
-.menu li a[aria-current="page"] { text-decoration: underline; text-underline-offset: 8px; text-decoration-thickness: 1px; text-decoration-color: var(--accent); }
+/* Public header (drawing board, 2026-11-09): the wordmark left; from 900 px the four places sit
+   at its right. Below 900 px they are the bar. */
+.header.public .header-end { display: flex; align-items: center; margin-right: -12px; }
 
-/* The Studio keeps its bar; its pages make room for it below 900 px. */
-.header.studio ~ main { padding-bottom: calc(var(--bar-h) + env(safe-area-inset-bottom, 0px) + 12px); }
-@media (min-width: 900px) { .header.studio ~ main { padding-bottom: 0; } }
+/* Every page that carries the bar makes room for it below 900 px; screens that dock their own
+   action carry no bar and keep their own room. */
+body:has(nav.bar) .phone { padding-bottom: calc(var(--bar-h) + env(safe-area-inset-bottom, 0px)); }
+@media (min-width: 900px) { body:has(nav.bar) .phone { padding-bottom: 0; } }
 
 /* Text links and their quiet variant. */
 .textlink { color: var(--text); }
@@ -294,16 +292,19 @@ body:has(.contact-scrim) .bar { display: none; }
 .page-head h1 { font: var(--t-display); letter-spacing: var(--track-display); margin: 0; max-width: 16ch; text-wrap: balance; }
 .page-head p { font: var(--t-lead); color: var(--text-soft); margin: var(--s4) 0 0; max-width: 40ch; }
 .section h2.lead { margin: 0 0 12px; }
-.wall .lead { font: var(--t-lead); color: var(--text); margin: 0 0 var(--s4); }
+.section.wall .lead { margin-bottom: var(--s4); }
 .empty h1 { font: var(--t-display); letter-spacing: var(--track-display); }
 
 /* The entrance while nothing is on view: the sentence is the image. */
-.opening { padding: var(--s7) var(--pad-x) 0; }
-.opening h1 { font: var(--t-monument); letter-spacing: var(--track-display); margin: 0; max-width: 11ch; text-wrap: balance; }
-.opening p { font: var(--t-lead); color: var(--text-soft); max-width: 30ch; margin: var(--s5) 0 var(--s4); }
+.opening { padding: 0 0 var(--s6); }
+.opening .plinth .wall { height: min(72vw, 360px); background: linear-gradient(var(--paper-deep), var(--surface-plinth)); }
+.opening .plinth .slab { left: 19%; right: 19%; bottom: 22%; height: 26px; }
+.opening h1 { font: var(--t-monument); letter-spacing: var(--track-display); margin: var(--s4) var(--pad-x) 0; max-width: 11ch; text-wrap: balance; }
+.opening p { font: var(--t-maker); color: var(--text-soft); max-width: 32ch; margin: var(--s3) var(--pad-x) var(--s4); }
+.opening .act { margin-left: var(--pad-x); }
 @media (min-width: 900px) {
-  .opening { padding-top: 120px; min-height: calc(100vh - var(--header-h) - 160px); }
-  .opening h1 { max-width: 13ch; } .opening p { max-width: 38ch; }
+  .opening .plinth .wall { height: 340px; }
+  .opening h1 { max-width: 14ch; }
 }
 
 /* The featured work: edge to edge on a phone; seven of twelve columns from 900 px, the label at
@@ -320,7 +321,6 @@ body:has(.contact-scrim) .bar { display: none; }
 }
 
 /* The wall: a left-aligned grid, never centred and never orphaned in the middle. */
-.wall { padding: var(--s7) var(--pad-x) 0; }
 .wall .grid, .grid.browse-grid { padding: 0; }
 .grid.browse-grid { padding: var(--s4) var(--pad-x) 0; }
 @media (min-width: 600px) {
@@ -442,3 +442,17 @@ a.plain { text-decoration: none; color: inherit; }
 @media (min-width: 900px) { .detail-media .imgstrip .shot img { width: auto; max-width: 100%; } }
 /* A maker with a single work: it takes the wide column, not a third of the room. */
 @media (min-width: 900px) { .maker-head ~ .grid .tile:only-child { grid-column: 1 / span 7; } }
+
+/* ===== Drawing board, part 1 (governor, 2026-11-09): Search and Saved as walls of pictures. ===== */
+.search-form { padding: var(--s3) var(--pad-x) 0; margin: 0; }
+.searchbox { display: flex; align-items: center; gap: 10px; border: 1px solid var(--ink); padding: 0 14px; min-height: 52px; background: var(--surface); }
+.searchbox:focus-within { border-color: var(--accent); box-shadow: var(--focus-ring); }
+.searchbox .icon { flex: none; width: 20px; height: 20px; color: var(--text-muted); }
+.searchbox input { border: 0; padding: 0; min-height: 50px; background: transparent; flex: 1; min-width: 0; }
+.searchbox input:focus { outline: none; box-shadow: none; }
+.search-form + .rail { margin-top: var(--s2); }
+.shelf-count { padding: var(--s2) var(--pad-x) 0; font: var(--t-label); letter-spacing: var(--track-label); text-transform: uppercase; color: var(--text-muted); }
+.footer { align-items: center; }
+.footer .sign { display: inline-flex; align-items: center; min-height: var(--target); }
+.searchbox input::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
+.topnav a { font: var(--t-label); letter-spacing: var(--track-label); text-transform: uppercase; }

@@ -5,7 +5,7 @@ import { readSaved } from "./SaveButton";
 import { EmptyState } from "./Chrome";
 import { STATUS_LABEL } from "@/lib/format";
 
-type Row = { public_token: string; title: string; maker_display_name: string; status: string; gone: boolean };
+type Row = { public_token: string; title: string; maker_display_name: string; status: string; image: string | null; gone: boolean };
 
 // The shelf reads the visitor's own device list and asks the server only what those tokens
 // currently are. A saved work that has since been retired stays on the shelf and is labelled
@@ -27,21 +27,28 @@ export function SavedShelf() {
     // nothing to show either (Wave 5: no door into an empty room).
     return (
       <EmptyState title="Nothing saved yet">
-        Tap Save on any work and it waits here.
+        Tap Save on any work and it waits here, on this phone.
       </EmptyState>
     );
   }
+  // A wall of the saved works (drawing board, screen 5). Every status is said, Available included:
+  // on the shelf the visitor is checking what has changed since they saved it.
   return (
-    <ul className="rowlist">
-      {rows.map((r) => (
-        <li key={r.public_token}>
-          <Link className="grow" href={`/work/${r.public_token}`} style={{ textDecoration: "none" }}>
-            <div className="primary">{r.title}</div>
-            <div className="secondary">{r.maker_display_name}{r.gone ? " · no longer shown" : ""}</div>
+    <>
+      <div className="shelf-count">{rows.length} {rows.length === 1 ? "work" : "works"} · on this phone</div>
+      <div className="grid">
+        {rows.map((r) => (
+          <Link key={r.public_token} className="tile" href={`/work/${r.public_token}`}>
+            <div className="frame r45">
+              {r.image ? <img src={r.image} alt="" loading="lazy" /> : <span className="notice">{r.gone ? "No longer shown" : "No image yet"}</span>}
+            </div>
+            <div className="gt">{r.title}</div>
+            <div className="gm">{r.maker_display_name}</div>
+            {r.gone ? <div className="gs">No longer shown</div>
+              : <div className={`gs${r.status === "available" ? " available" : ""}`}>{STATUS_LABEL[r.status] ?? r.status}</div>}
           </Link>
-          {!r.gone ? <span className={`chip ${r.status === "sold" ? "" : "available"}`}>{STATUS_LABEL[r.status] ?? r.status}</span> : null}
-        </li>
-      ))}
-    </ul>
+        ))}
+      </div>
+    </>
   );
 }

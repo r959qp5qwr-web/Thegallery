@@ -172,15 +172,13 @@ test.describe("boundaries the product must not cross", () => {
   });
 
   test("the served navigation offers only the accepted sections", async ({ page }) => {
-    // Public pages (governor, 2026-11-09, option B2): the wordmark is the way home; the sections
-    // are Saved, Workshops and For Makers, then Search and the Menu. No bar on a public page.
+    // The app's four places (governor, 2026-11-09: drawing board; bottom bar on public pages;
+    // Workshops hidden until the first workshop exists): the bar below 900 px, the header above.
     await page.goto("/");
     const labels = (await page.getByRole("navigation", { name: "Sections" }).locator("a, button").allTextContents())
       .map((t) => t.trim());
-    expect(labels).toEqual(["Saved", "Workshops", "For Makers", "Search", "Menu"]);
-    await expect(page.locator("nav.bar")).toHaveCount(0);
-    const menu = await page.locator("#menu li a").allTextContents();
-    expect(menu).toEqual(["Saved", "Workshops", "For Makers"]);
+    expect(labels).toEqual(["Home", "Search", "Saved", "Studio"]);
+    await expect(page.getByRole("link", { name: "Workshops" })).toHaveCount(0);
   });
 
   test("no real contact value is committed in fixtures or seeds", async () => {

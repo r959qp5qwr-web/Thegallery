@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { listRecentWorks, imagesFor, materialsOnView, type PublicImage } from "@/lib/queries";
-import { Header, Hero, WorkTile, Footer, orientation } from "@/components/Chrome";
+import { Header, Hero, WorkTile, Footer, MaterialRail, Plinth, orientation } from "@/components/Chrome";
 import { STATUS_LABEL, labelPrice } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
@@ -17,20 +17,18 @@ export default async function Entrance() {
   const [featured, ...rest] = works;
 
   if (!featured) {
-    // Nothing on view (the live site before its first maker publishes). No picture of a pretend
-    // work, no material doors into empty rooms; the one sentence is the image (Wave 5).
+    // Nothing on view yet (the live site before its first maker publishes): the empty plinth, one
+    // sentence, one line, and one way in for a maker (drawing board, screen 1b).
     return (
       <>
         <Header />
         <main id="main" tabIndex={-1}>
+          <div className="context"><span>Opening soon</span></div>
           <section className="opening" data-testid="opening">
+            <Plinth />
             <h1>The first works are being hung.</h1>
-            <p>The Gallery shows art and craft in clay, textile, wood, metal and paper, each maker in a
-              room of their own. The first rooms open soon.</p>
-            <div className="routes-on">
-              <Link className="textlink" href="/about">What The Gallery is</Link>
-              <Link className="textlink quiet" href="/makers">Are you a maker? Open your gallery</Link>
-            </div>
+            <p>The first makers are setting up their rooms.</p>
+            <Link className="act primary" href="/makers">Open your gallery</Link>
           </section>
         </main>
         <Footer />
@@ -43,6 +41,7 @@ export default async function Entrance() {
     <>
       <Header />
       <main id="main" tabIndex={-1}>
+        <div className="context"><span>On view now</span></div>
         {/* Expanded: the featured work takes seven of twelve columns, its label at the foot of it. */}
         <div className="featured">
           <div className="featured-media">
@@ -52,22 +51,25 @@ export default async function Entrance() {
           </div>
           <div className="featured-label">
             <div className="label">
-              <h1 className="title"><Link href={`/work/${featured.public_token}`}>{featured.title}</Link></h1>
-              <div className="makerline">
-                <Link href={`/m/${featured.maker_handle}`}>{featured.maker_display_name}</Link>, {featured.medium ?? featured.material}
-              </div>
+              {/* Every status but "Available" is said; for an available work a stated price stands in. */}
               {featured.status !== "available" || featuredPrice ? (
-                <div className={`status ${featured.status === "sold" ? "sold" : "available"}`}>
+                <div className={`status ${featured.status === "available" ? "available" : featured.status === "sold" ? "sold" : ""}`}>
                   {featured.status !== "available" ? <span>{STATUS_LABEL[featured.status]}</span> : null}
                   {featuredPrice ? <span className="price">{featuredPrice}</span> : null}
                 </div>
               ) : null}
+              <h1 className="title"><Link href={`/work/${featured.public_token}`}>{featured.title}</Link></h1>
+              <div className="makerline">
+                <Link href={`/m/${featured.maker_handle}`}>{featured.maker_display_name}</Link> · {featured.medium ?? featured.material}
+              </div>
             </div>
           </div>
         </div>
 
+        {mats.length ? <MaterialRail materials={mats} /> : null}
+
         {rest.length ? (
-          <section className="wall" aria-labelledby="recent">
+          <section className="section wall" aria-labelledby="recent">
             <h2 className="lead" id="recent">Recently hung</h2>
             <div className="grid">
               {rest.map((w) => (
@@ -76,13 +78,6 @@ export default async function Entrance() {
               ))}
             </div>
           </section>
-        ) : null}
-
-        {mats.length ? (
-          <nav className="materials-line" aria-label="Material">
-            <span>By material</span>
-            {mats.map((m) => <Link key={m.key} href={`/browse/${m.key}`}>{m.label}</Link>)}
-          </nav>
         ) : null}
       </main>
       <Footer />
