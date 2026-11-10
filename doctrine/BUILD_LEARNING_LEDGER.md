@@ -739,6 +739,58 @@ A subset run reads as red for reasons unrelated to the change, and it invites a 
 
 ---
 
+### GAL-L0035
+
+**Date:** 2026-11-10  
+**Observed event:**  
+Part 3 moved email confirmation from a page into a route handler, so the link could write the session cookies and bring the maker straight to step 2 (drawing board, screen 9). That made the link a sign-in token for whoever opened it. Someone could sign up with their own address and forward the link to a maker. The maker would land on "Your name and place", signed in as the sender, and put their name, place, WhatsApp number and work into an account the sender controls. The old page could not sign anyone in (a server component cannot set cookies), so the risk arrived with the improvement. The independent review found it (finding 1) before any run.
+
+**Evidence:**  
+- `doctrine/receipts/DRAWING-BOARD-PART3-2026-11-10.md`.
+- A control build with the guard removed (`QvnldJZfpB4pQWohRvOcV`). Journey 13, "a confirmation link opened in another browser…", failed with: expected `/makers/sign-in?confirmed=1`, received `/studio/join`. The other browser was signed in.
+- The same test passes on the final build.
+
+**Why it mattered:**  
+It would have let a stranger collect a maker's details and art under an account the maker does not own. It would also have swapped an existing session without any sign.
+
+**What changed:**  
+- The browser that starts joining carries a mark of the address it used: a SHA-256 hash, httpOnly, 3 days. The link signs in only a browser whose mark matches.
+- In any other browser, the link confirms the address and drops the new session by cookie name. Then it asks for a sign-in ("Email confirmed").
+- Practice: when a change gives an existing token new power (here, setting a session), the review asks who else can hold that token.
+
+**Status:** RESOLVED  
+**Related finding / decision IDs:** drawing board part 3; GAL-12; GAL-A1  
+**Harvest status:** UNHARVESTED
+
+---
+
+### GAL-L0036
+
+**Date:** 2026-11-10  
+**Observed event:**  
+A new journey 13 check read the docked button's colour and got the hover colour, not solid ink. It failed twice before the cause was clear:
+- The first reading caught the 160 ms ease.
+- The second was a real hover: tapping "I already have a gallery" left the pointer where "Sign in" then appeared.
+
+The page was right. The test was measuring the pointer.
+
+**Evidence:**  
+- Journey 13 runs on 2026-11-10: `rgb(37, 32, 28)`, then `rgb(61, 54, 48)` (`--ink-soft`, the hover colour).
+- Passed after the pointer was moved away. The control with the dock unpinned still failed.
+
+**Why it mattered:**  
+A false red on a colour check invites changing the colour. In this project that is a system change.
+
+**What changed:**  
+- The helper moves the pointer away, then uses `toHaveCSS`, which retries through the transition.
+- Practice: a test that reads a colour after a tap moves the pointer first and retries.
+
+**Status:** RESOLVED  
+**Related finding / decision IDs:** drawing board part 3; GAL-L0025  
+**Harvest status:** UNHARVESTED
+
+---
+
 ## Ledger rules
 
 - Capture the event in the governed change that fixes or formally records it where feasible.
