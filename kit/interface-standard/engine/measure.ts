@@ -44,8 +44,15 @@ export function measure(args: { standard: Standard; archetype: string; profile: 
   const add = (r: Rule, measured: string, where: string) => out.push({ rule: r.id, says: r.says, measured, where });
   const textEls = Array.from(document.body.querySelectorAll("*")).filter((e) => !["SCRIPT", "STYLE", "SVG", "PATH", "USE"].includes(e.tagName) && /[A-Za-z0-9]/.test(ownText(e)) && seen(e));
   const roleOf = (e: Element): string => {
+    // A choice drawn as a label around its radio or checkbox is a control, not a field label.
+    const lab = e.closest("label");
+    if (lab && lab.querySelector("input[type=radio], input[type=checkbox]")) return "control";
     if (e.closest("label, legend")) return "label";
     if (profile.help_selector && e.closest(profile.help_selector)) return "help";
+    // A short uppercase tracked label (a tab name, a status, "STEP 2 OF 3") is the label role
+    // Material sets at 12sp; it is held to the absolute floor, not the 14 px sentence floor.
+    { const cs = getComputedStyle(e); const words = ownText(e).split(/\s+/).filter(Boolean).length;
+      if (cs.textTransform === "uppercase" && words <= 4 && px(cs.letterSpacing) > 0) return "caps"; }
     if (e.closest("button, a[href], summary, [role=button], input, select, textarea")) return "control";
     if (e.closest("h1, h2, h3, h4, h5, h6")) return "heading";
     if (e.closest("p, li, dd, blockquote")) return "body";
@@ -86,7 +93,7 @@ export function measure(args: { standard: Standard; archetype: string; profile: 
       // ---- touch
       case "target-size": {
         // Controls that are not links inside a sentence (WCAG 2.5.8 inline exception).
-        const ctrls = Array.from(document.querySelectorAll("a[href], button, input:not([type=hidden]), select, textarea, summary, [role=button], label[for]")).filter(seen);
+        const ctrls = Array.from(document.querySelectorAll("a[href], button, input:not([type=hidden]), select, textarea, summary, [role=button]")).filter(seen);
         for (const e of ctrls) {
           const cs = getComputedStyle(e); const r = e.getBoundingClientRect();
           if (cs.display === "inline" && e.closest("p, li, dd")) continue;

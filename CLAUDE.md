@@ -68,3 +68,11 @@ mismatch. Until orientation is VALID: inspection and diagnosis only.
    Each new correction becomes a rule first, proved to fail, then every flagged page is fixed.
    The routine is `.claude/skills/gallery-app-sweep/SKILL.md`; read it when the governor corrects
    a screen.
+8. Every screen state is measured against the Interface Standard (`kit/interface-standard`,
+   numbers with sources: WCAG 2.2, Material 3, Apple HIG, GOV.UK) by
+   `e2e/15-interface-standard.spec.ts`; every state, with its archetype, is listed in
+   `ux/INTERFACE_PROFILE.json`, and the gate needs its receipt beside the sweep's. Before building or
+   changing a screen, and whenever anyone finds an interface fault, follow
+   `.claude/skills/interface-standard/SKILL.md`: classify the escape (`ESCAPES.md`), fix the layer
+   that missed it with a failing control, then every flagged state. Never shrink type or spacing to
+   fit, and never loosen a rule to pass.

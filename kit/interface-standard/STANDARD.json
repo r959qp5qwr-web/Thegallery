@@ -1,0 +1,116 @@
+{
+  "_what": "The Interface Standard: numeric, sourced rules a screen must meet, measured from what renders by engine/measure.ts. Product-independent. Each rule names its sources (fetched 2026-11-10) and whether the number is a hard floor (WCAG 2.2 AA) or a house value chosen above the floor, with the reason. A product may make a rule stricter in its profile; it may never loosen one. A rule changes only on the governor's word, recorded in ESCAPES.md.",
+  "version": "1.0.0",
+  "archetypes": {
+    "root":      { "root": true,  "says": "A top-level place reached from the main navigation (home, search, saved, the maker's studio home). No Back." },
+    "flow-step": { "root": false, "says": "One step of a sequence (joining, sign-in, reset, confirmation). Back to the previous step or the door it came from." },
+    "sub-screen":{ "root": false, "says": "A screen reached from inside another (a work, a maker, About, a settings page). Back." },
+    "editor":    { "root": false, "says": "A screen that edits one thing (a work, a profile). Cancel or Back, and one primary action." },
+    "dialog":    { "root": false, "says": "A sheet or dialog over another screen. Close." },
+    "operator":  { "root": false, "says": "An internal operator screen. Same measures; Back to the queue." }
+  },
+  "rules": [
+    {
+      "id": "IS-T1-body-16",
+      "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+      "check": { "kind": "text-floor", "roles": ["body"], "phone_px": 16, "wide_px": 16 },
+      "source": ["Material 3 Body Large 16sp — androidx material3 tokens/TypeScaleTokens.kt", "GOV.UK body 19px on all screens — https://design-system.service.gov.uk/styles/type-scale/"],
+      "status": "house (above M3 floor; GOV.UK is stricter)"
+    },
+    {
+      "id": "IS-T2-label-16",
+      "says": "A form label is at least 16 px — as large as what is typed into the field.",
+      "check": { "kind": "text-floor", "roles": ["label"], "phone_px": 16, "wide_px": 16 },
+      "source": ["GOV.UK labels and inputs at 19px — govuk-frontend 6.6.0 label and input mixins", "Material 3 Label Large 14sp is the floor — TypeScaleTokens.kt", "governor 2026-11-10: 'Fonts too small' on Join step 2 (labels measured 13 px)"],
+      "status": "house (governor correction; above M3 14sp)"
+    },
+    {
+      "id": "IS-T3-secondary-14",
+      "says": "Help text, captions and secondary lines are at least 14 px (short uppercase tracked labels — tab names, status words, step counters — are held to the 12 px floor instead).",
+      "check": { "kind": "text-floor", "roles": ["help", "other", "control", "heading"], "phone_px": 14, "wide_px": 14 },
+      "source": ["Material 3 Body Medium 14sp — TypeScaleTokens.kt", "Material 3 Label Medium 12sp for short labels and navigation-bar labels — TypeScaleTokens.kt", "governor 2026-11-10: 'Fonts too small' (help 14 px kept as the floor, labels raised)"],
+      "status": "house"
+    },
+    {
+      "id": "IS-T4-absolute-12",
+      "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+      "check": { "kind": "text-floor", "phone_px": 12, "wide_px": 12 },
+      "source": ["Material 3 Body Small / Label Medium 12sp — TypeScaleTokens.kt", "the product's own foundation: 'No text is set below 12 px' (ux/INTERFACE_FOUNDATION.md)"],
+      "status": "house (Apple's 11pt minimum is lower; 12 is the stricter of the two)"
+    },
+    {
+      "id": "IS-T5-line-height",
+      "says": "Running text has a line height of at least 1.4.",
+      "check": { "kind": "line-height", "min_ratio": 1.4 },
+      "source": ["Material 3 body 24/16 = 1.5, 20/14 = 1.43 — TypeScaleTokens.kt", "WCAG 1.4.12 text spacing 1.5 must not break — https://www.w3.org/WAI/WCAG22/Understanding/text-spacing.html"],
+      "status": "house"
+    },
+    {
+      "id": "IS-T6-measure",
+      "says": "A line of running text is at most 80 characters.",
+      "check": { "kind": "measure", "max_chars": 80 },
+      "source": ["WCAG 1.4.8 'no more than 80 characters' — https://www.w3.org/TR/WCAG22/#visual-presentation", "Baymard 50–75 optimal — https://baymard.com/blog/line-length-readability"],
+      "status": "AAA criterion adopted as house rule"
+    },
+    {
+      "id": "IS-H1-target-44",
+      "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+      "check": { "kind": "target-size", "min_px": 44 },
+      "source": ["WCAG 2.5.5 44×44 (AAA) — https://www.w3.org/WAI/WCAG22/Understanding/target-size-enhanced.html", "Material 48×48dp — https://m3.material.io/foundations/designing/structure", "Apple 44×44pt — https://developer.apple.com/design/human-interface-guidelines/accessibility", "WCAG 2.5.8 24×24 is the hard floor (AA)"],
+      "status": "house (AAA; the product foundation already sets 44)"
+    },
+    {
+      "id": "IS-N1-back",
+      "says": "Every screen that is not a top-level place shows Back (or Close / Cancel) in the top bar, at every width.",
+      "check": { "kind": "has-back", "top_band_px": 96, "names": "^(back|close|cancel)$" },
+      "source": ["Android: Up shows on every destination except the start destination — https://developer.android.com/guide/navigation/principles", "GOV.UK: 'Always include a Back link component at the top of question pages' — https://design-system.service.gov.uk/patterns/question-pages/", "Apple: 'Use the standard Back and Close buttons.' — HIG navigation bars", "governor 2026-11-10: 'How does one go back from this page?' (Join step 2)"],
+      "status": "house (synthesis of platform rules; fail-closed by archetype, never by route list)"
+    },
+    {
+      "id": "IS-A1-one-primary",
+      "says": "At most one primary action is visible on a screen.",
+      "check": { "kind": "primary-count", "max": 1 },
+      "source": ["Material 3 buttons: one high-emphasis action per screen region — https://m3.material.io/components/all-buttons", "the product's drawing board (one docked action)"],
+      "status": "house"
+    },
+    {
+      "id": "IS-F1-form-rhythm",
+      "says": "Forms breathe: label 4 px or more above its input, inputs at least 48 px tall, help text 4 px or more below its input, and 32 px or more between one field and the next.",
+      "check": { "kind": "form-rhythm", "label_to_input_min_px": 4, "input_min_height_px": 48, "input_to_help_min_px": 4, "field_gap_min_px": 32 },
+      "source": ["GOV.UK form group 20px (small) / 30px (large); label gap 5px — govuk-frontend 6.6.0 _form-group, label mixins", "Material 3 text field min height 56dp, supporting text 4dp below — TextFieldDefaults.kt, TextFieldImpl.kt", "governor 2026-11-10: 'Items too cramped together' (fields measured 24 px apart with 13 px labels)"],
+      "status": "house (field gap above GOV.UK's small-screen 20 px, at its large-screen value rounded to the 4 px grid)"
+    },
+    {
+      "id": "IS-L1-side-margin",
+      "says": "On a phone, text keeps at least 16 px from the screen edge.",
+      "check": { "kind": "side-margin", "min_px": 16 },
+      "source": ["Material 3 compact window margins 16dp — https://m3.material.io/foundations/layout/breakpoints/compact (partly verified)", "GOV.UK 15px — govuk-frontend width container"],
+      "status": "house"
+    },
+    {
+      "id": "IS-L2-no-sideways",
+      "says": "Nothing scrolls sideways, down to 320 px wide.",
+      "check": { "kind": "no-overflow-x" },
+      "source": ["WCAG 1.4.10 Reflow (AA) — https://www.w3.org/TR/WCAG22/#reflow"],
+      "status": "hard (AA)"
+    },
+    {
+      "id": "IS-L3-grid",
+      "says": "Spacing sits on the product's declared base unit (4 px).",
+      "check": { "kind": "spacing-scale", "unit_px": 4 },
+      "source": ["the product's foundation: 4 px base unit, 8/16/24/32/48 rhythm (ux/INTERFACE_FOUNDATION.md)", "Material 3 spacing tokens on a 4/8dp scale (UNVERIFIED: page not fetched)"],
+      "status": "house (product-declared)"
+    },
+    {
+      "id": "IS-X1-axe-wcag22",
+      "says": "No axe violation under WCAG 2.2 A and AA, with target-size and colour contrast switched on.",
+      "check": { "kind": "axe", "tags": ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa", "best-practice"] },
+      "source": ["WCAG 1.4.3 contrast 4.5:1 — https://www.w3.org/TR/WCAG22/#contrast-minimum", "axe target-size is disabled by default; enabled by the wcag22aa tag — https://raw.githubusercontent.com/dequelabs/axe-core/develop/lib/rules/target-size.json"],
+      "status": "hard (AA)"
+    }
+  ],
+  "manual": [
+    { "id": "IS-M1-references", "says": "The screen is set beside two named reference apps of its archetype at the same width, and the comparison is shown to the governor as one image.", "why_manual": "taste and character cannot be measured" },
+    { "id": "IS-M2-hierarchy", "says": "The first thing the eye lands on is the screen's purpose; the primary action is obvious.", "why_manual": "attention order is a human judgement; the engine bounds it with IS-A1 and the type floors" }
+  ]
+}

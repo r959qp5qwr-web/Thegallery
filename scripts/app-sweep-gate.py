@@ -21,11 +21,17 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 PROJECTS = ("phone", "desktop")
+# Two receipts per viewport: the governor's corrections (journey 14) and the Interface Standard
+# (journey 15, kit/interface-standard). Either missing, stale or failed keeps the gate shut.
+RECEIPTS = {"app-sweep": "whole-app sweep", "interface": "interface standard"}
 GUARDED = ("mcp__github__create_pull_request", "mcp__github__merge_pull_request")
 # The same list as EXTRA_FILES in e2e/14-whole-app.spec.ts: files outside src/ and public/ that
 # change what renders or how the sweep sees it.
 EXTRA_FILES = ("ux/APP_RULES.json", "e2e/14-whole-app.spec.ts", "e2e/helpers.ts", "next.config.ts",
-               "next.config.js", "next.config.mjs", "package.json", "package-lock.json")
+               "next.config.js", "next.config.mjs", "package.json", "package-lock.json",
+               "ux/INTERFACE_PROFILE.json", "kit/interface-standard/STANDARD.json",
+               "kit/interface-standard/engine/measure.ts", "e2e/15-interface-standard.spec.ts",
+               "e2e/support/fingerprint.ts")
 
 
 def fingerprint() -> str:
@@ -44,14 +50,15 @@ def verdict() -> tuple[bool, list[str]]:
     except Exception as e:  # noqa: BLE001 — any failure to read the code is a shut gate
         return False, [f"the code could not be fingerprinted ({e})"]
     problems = []
-    for project in PROJECTS:
-        path = ROOT / ".doctrine" / "runtime" / f"app-sweep-{project}.json"
+    for kind, project in [(k, p) for k in RECEIPTS for p in PROJECTS]:
+        path = ROOT / ".doctrine" / "runtime" / f"{kind}-{project}.json"
+        project = f"{RECEIPTS[kind]} ({project})"
         try:
             r = json.loads(path.read_text())
             if not isinstance(r, dict):
                 raise ValueError("not an object")
         except Exception:  # noqa: BLE001 — missing or unreadable is shut
-            problems.append(f"{project}: no readable sweep receipt — run the suite (bash e2e/run-hosted.sh --project={project})")
+            problems.append(f"{project}: no readable sweep receipt — run the full suite on this code")
             continue
         pages, swept = r.get("pages"), r.get("swept")
         if not (isinstance(pages, int) and isinstance(swept, int) and pages > 0):

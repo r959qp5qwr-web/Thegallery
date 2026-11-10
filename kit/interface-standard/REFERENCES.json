@@ -1,0 +1,17 @@
+{
+  "_what": "Outside screens the engine is calibrated on (calibrate.ts). Chosen because each is a published reference implementation of its archetype, maintained by a design-system team, and reachable from this environment. A reference that becomes unreachable is replaced, never dropped silently.",
+  "refs": [
+    { "id": "govuk-question-page", "archetype": "flow-step", "why": "GOV.UK Design System's own example of a one-question form page with a Back link",
+      "url": "https://design-system.service.gov.uk/components/text-input/default/index.html",
+      "profile": { "primary_selector": ".govuk-button:not(.govuk-button--secondary)", "help_selector": ".govuk-hint", "field_selector": ".govuk-form-group", "ignore_selector": ".govuk-skip-link" } },
+    { "id": "govuk-date-input", "archetype": "flow-step", "why": "GOV.UK multi-field form example",
+      "url": "https://design-system.service.gov.uk/components/date-input/default/index.html",
+      "profile": { "primary_selector": ".govuk-button:not(.govuk-button--secondary)", "help_selector": ".govuk-hint", "field_selector": ".govuk-form-group", "ignore_selector": ".govuk-skip-link" } },
+    { "id": "govuk-home", "archetype": "root", "why": "GOV.UK home: a large public service read mostly on phones",
+      "url": "https://www.gov.uk/",
+      "profile": { "primary_selector": ".govuk-button--start", "help_selector": ".govuk-hint", "field_selector": ".govuk-form-group", "ignore_selector": ".govuk-skip-link, #global-cookie-message, .gem-c-cookie-banner" } },
+    { "id": "arena-about", "archetype": "sub-screen", "why": "Are.na about page: an art/culture platform's reading page, named by the design review",
+      "url": "https://www.are.na/about",
+      "profile": { "primary_selector": "[data-primary]", "help_selector": ".hint" } }
+  ]
+}
