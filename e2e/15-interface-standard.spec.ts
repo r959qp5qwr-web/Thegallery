@@ -182,6 +182,8 @@ test("every screen state meets the Interface Standard", async ({ browser, baseUR
         if (s.setup === "open-folds") await page.evaluate(() => document.querySelectorAll("details").forEach((d) => (d.open = true)));
         if (s.setup === "submit-empty") {
           ERRORS_BEFORE = await page.locator("main [aria-invalid=true], main .err").count();
+          // The browser's own validation would stop the submit before the product could answer.
+          await page.evaluate(() => document.querySelectorAll("main form").forEach((f) => ((f as HTMLFormElement).noValidate = true)));
           await page.locator(PROFILE.primary_selector).first().click(); await page.waitForTimeout(800);
           const after = new URL(page.url());
           if (after.pathname + after.search !== want.pathname + want.search) findings.push({ rule: "STATE", says: "an empty submit stays on its step", measured: `moved to ${after.pathname + after.search}`, where: "" });

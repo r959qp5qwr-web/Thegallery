@@ -177,7 +177,7 @@ svg.icon.sm { width: 20px; height: 20px; }
 .field .inline { display: flex; gap: 8px; }
 .field .inline .input { flex: 1; }
 .seg { display: flex; border-bottom: 1px solid var(--rule-soft); }
-.seg span { flex: 1; text-align: center; padding: 14px 0 12px; font: var(--t-label); letter-spacing: var(--track-label); text-transform: uppercase; color: var(--text-muted); border-bottom: 2px solid transparent; margin-bottom: -1px; min-height: var(--target); }
+.seg span { flex: 1; text-align: center; padding: 16px 0 12px; font: var(--t-label); letter-spacing: var(--track-label); text-transform: uppercase; color: var(--text-muted); border-bottom: 2px solid transparent; margin-bottom: -1px; min-height: var(--target); }
 .seg span.on { border-bottom-color: var(--accent); color: var(--accent-text); }
 .group { margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--rule-soft); }
 .group .ghead { font: var(--t-lead); color: var(--text-muted); display: flex; align-items: center; gap: 12px; }

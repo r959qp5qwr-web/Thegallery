@@ -8,7 +8,7 @@ import { Field } from "./ActionForm";
  *  line naming what was chosen. The browser's grey "Choose File / No file chosen" no longer shows.
  *  React resets a form's fields after each action (ActionForm), so the line is cleared on the
  *  form's reset too: it must never name a file the input no longer holds. */
-export function PhotoPicker({ required }: { required?: boolean }) {
+export function PhotoPicker({ required, help }: { required?: boolean; help?: React.ReactNode }) {
   const [name, setName] = useState<string | null>(null);
   const input = useRef<HTMLInputElement>(null);
   useEffect(() => {
@@ -23,6 +23,7 @@ export function PhotoPicker({ required }: { required?: boolean }) {
              onChange={(e) => setName(e.currentTarget.files?.[0]?.name ?? null)} />
       <label htmlFor="image" className="btn picker-btn">Choose a photograph</label>
       <span className="picker-name" aria-live="polite">{name ?? "No photograph chosen yet"}</span>
+      {help ? <div className="help picker-help" id="image-help">{help}</div> : null}
     </div>
   );
 }

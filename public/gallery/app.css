@@ -427,7 +427,7 @@ a.plain { text-decoration: none; color: inherit; }
 
 /* ===== Drawing board, part 1 (governor, 2026-11-09): Search and Saved as walls of pictures. ===== */
 .search-form { padding: var(--s3) var(--pad-x) 0; margin: 0; }
-.searchbox { display: flex; align-items: center; gap: 8px; border: 1px solid var(--ink); padding: 0 14px; min-height: 52px; background: var(--surface); }
+.searchbox { display: flex; align-items: center; gap: 8px; border: 1px solid var(--ink); padding: 0 16px; min-height: 52px; background: var(--surface); }
 .searchbox:focus-within { border-color: var(--accent); box-shadow: var(--focus-ring); }
 .searchbox .icon { flex: none; width: 20px; height: 20px; color: var(--text-muted); }
 .searchbox input { border: 0; padding: 0; min-height: 50px; background: transparent; flex: 1; min-width: 0; }
@@ -513,7 +513,7 @@ body:not(:has(nav.bar)) .actionbar { bottom: 0; }
 .fold > .section h3.lead { margin: 0 0 8px; }
 
 /* The Message sheet: heading, the handoff sentence, then one row per way to reach the maker. */
-.sheet.contact .disclosure { margin: var(--s3) var(--pad-x) 0; padding: 12px 14px; background: var(--paper-deep); color: var(--text-soft); }
+.sheet.contact .disclosure { margin: var(--s3) var(--pad-x) 0; padding: 12px 16px; background: var(--paper-deep); color: var(--text-soft); }
 .sheet.contact .routes.rows { margin-top: var(--s3); }
 .routes.rows li { min-height: 0; border-top-color: var(--rule-soft); }
 .routes.rows li a { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 56px; color: var(--text);
@@ -555,7 +555,7 @@ body:not(:has(nav.bar)) .actionbar { bottom: 0; }
 .grid3 .tile.sq { position: relative; display: block; aspect-ratio: 1; overflow: hidden; background: var(--surface-plinth); color: var(--text); text-decoration: none; }
 .grid3 .tile.sq img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .grid3 .tile.sq .notice { position: absolute; inset: 0; display: grid; place-items: center; font: var(--t-caption); color: var(--text-muted); }
-.grid3 .flag { position: absolute; left: var(--s2); top: var(--s2); margin: 0; padding: var(--s1) 6px; background: var(--paper);
+.grid3 .flag { position: absolute; left: var(--s2); top: var(--s2); margin: 0; padding: var(--s1) var(--s2); background: var(--paper);
   font: var(--t-label); letter-spacing: var(--track-label); text-transform: uppercase; color: var(--text-muted); }
 .grid3 .flag.available { color: var(--accent-text); }
 @media (min-width: 600px) {
@@ -621,7 +621,7 @@ body:not(:has(nav.bar)) .actionbar { bottom: 0; }
 /* Choices as taps that wrap (material, status, price, how you work); the chosen one in ink. */
 .seg.pick { display: flex; flex-wrap: wrap; gap: var(--s2); border: 0; }
 .seg.pick label { flex: none; }
-.seg.pick label span { min-height: var(--target); padding: 0 14px; border: 1px solid var(--stone-strong); background: var(--surface);
+.seg.pick label span { min-height: var(--target); padding: 0 16px; border: 1px solid var(--stone-strong); background: var(--surface);
   font: var(--t-body-small); letter-spacing: 0; text-transform: none; color: var(--text-soft); }
 .seg.pick input:checked + span { background: var(--ink); border-color: var(--ink); color: var(--paper); }
 
@@ -673,7 +673,7 @@ body:has(.fm-dock) .footer { padding-bottom: calc(var(--s5) + 130px + env(safe-a
 .studio-tile .frame { display: block; background: var(--surface-plinth); }
 .studio-tile .frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .studio-tile .notice { position: absolute; inset: 0; display: grid; place-items: center; font: var(--t-caption); color: var(--text-muted); }
-.studio-tile .flag { position: absolute; left: var(--s2); top: var(--s2); padding: var(--s1) 6px; background: var(--paper);
+.studio-tile .flag { position: absolute; left: var(--s2); top: var(--s2); padding: var(--s1) var(--s2); background: var(--paper);
   font: var(--t-label); letter-spacing: var(--track-label); text-transform: uppercase; color: var(--text-muted); }
 .studio-tile .flag.available { color: var(--accent-text); }
 .st-title { font: var(--t-grid-title); overflow-wrap: anywhere; }
