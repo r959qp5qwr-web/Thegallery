@@ -881,6 +881,30 @@ The whole-app sweep does not run axe. A green suite and an open gate still let a
 
 ---
 
+### GAL-L0040
+
+**Date:** 2026-11-10  
+**Observed event:**  
+The design reviews of the sweep change (ui-consistency:verifying, design-skills:ux-writing) found "Anything not allowed here, or not lawful to show or sell." on About and /participation: the "not X, not Y" pattern the governor rejected. Rule R03 passed it. Its pattern allowed "and" between the two negatives, not "or".
+
+**Evidence:**  
+- Both reviews quoted `src/components/Policies.tsx:29`.
+- With R03 widened to "and|or", the sweep alone (journey 14, phone, build `PmoFum7aIcB42fwmIYemr`) failed on /about and /participation with that sentence, and on nothing else.
+
+**Why it mattered:**  
+A rule that encodes a correction narrower than the correction lets the same fault back in with one word changed. The sweep was green and the gate open.
+
+**What changed:**  
+- `ux/APP_RULES.json` R03 now covers "not X, or not Y" (tightened, not loosened).
+- The copy now reads "Anything the law or this site forbids you to show or sell."
+- Both suites passed on build `X_B_m5XR5Pz6eVmoBTotD`, and the gate is OPEN.
+
+**Status:** RESOLVED  
+**Related finding / decision IDs:** R03; GAL-L0031; GAL-L0038; correction 34  
+**Harvest status:** UNHARVESTED
+
+---
+
 ## Ledger rules
 
 - Capture the event in the governed change that fixes or formally records it where feasible.
