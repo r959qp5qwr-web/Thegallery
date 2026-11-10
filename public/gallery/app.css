@@ -713,6 +713,7 @@ body:has(.fm-dock) .footer { padding-bottom: calc(var(--s5) + 130px + env(safe-a
   text-underline-offset: 4px; text-decoration-color: var(--stone-strong); }
 .header.studio.editor .hdr-link:first-child { justify-self: start; margin-left: -8px; text-decoration: none; }
 .header.studio.editor .hdr-link:last-child { justify-self: end; margin-right: -8px; }
+.header.studio.editor .header-end { justify-self: end; }
 .flow.editor { padding-top: var(--s3); }
 .photo-tiles .thumbs { display: flex; gap: var(--s2); position: relative; }
 .photo-tiles input.picker-input { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); border: 0; min-height: 0; }
