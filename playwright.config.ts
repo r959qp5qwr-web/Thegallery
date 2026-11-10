@@ -5,8 +5,11 @@ import { defineConfig, devices } from "@playwright/test";
 // reads the local outbox table directly and says so — it does not fake a confirmed account.
 export default defineConfig({
   testDir: "./e2e",
-  timeout: 60_000,
-  expect: { timeout: 10_000 },
+  // Measured 2026-11-10: Studio pages take 6–8 s each on the test project, on the live code as on the
+  // new (a side-by-side control), and phone runs failed four times in four places on 60 s / 10 s waits.
+  // The waits are raised; no assertion is. A product page this slow for real people is a finding of its own.
+  timeout: 120_000,
+  expect: { timeout: 20_000 },
   fullyParallel: false,
   workers: 1,
   retries: 0,
