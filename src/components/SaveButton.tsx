@@ -11,6 +11,9 @@ export function readSaved(): string[] {
   try { return JSON.parse(localStorage.getItem(KEY) ?? "[]") as string[]; } catch { return []; }
 }
 
+/** The heart on a work's photograph (drawing board, screen 2). The same mark as Saved in the
+ *  bar; filled when the work is on this phone's shelf. A round toggle over the picture: one
+ *  name, "Save", and its state in aria-pressed, so a screen reader says it once. */
 export function SaveButton({ token }: { token: string }) {
   const [saved, setSaved] = useState(false);
   const [ready, setReady] = useState(false);
@@ -24,10 +27,10 @@ export function SaveButton({ token }: { token: string }) {
   }
 
   return (
-    <button className="btn quiet" type="button" onClick={toggle} aria-pressed={ready ? saved : undefined}
+    <button className={`roundbtn${saved ? " on" : ""}`} type="button" onClick={toggle}
+            aria-pressed={ready ? saved : undefined} aria-label="Save"
             data-testid="save-work">
-      <Icon name={saved ? "bookmark-on" : "bookmark"} />
-      <span>{saved ? "Saved" : "Save"}</span>
+      <Icon name={saved ? "heart-on" : "heart"} />
     </button>
   );
 }

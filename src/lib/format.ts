@@ -82,11 +82,6 @@ export function shortName(displayName: string, kind?: string | null): string {
 
 /** What the visitor's message is about. Chosen on the contact sheet; carried into the text. */
 export type Intent = "ask" | "commission" | "general";
-export const INTENTS: { key: Intent; label: string }[] = [
-  { key: "ask", label: "Ask about this work" },
-  { key: "commission", label: "Commission something like this" },
-  { key: "general", label: "General enquiry" },
-];
 export function parseIntent(v: string | undefined, sold: boolean): Intent {
   if (v === "ask" || v === "commission" || v === "general") return v;
   return sold ? "commission" : "ask";

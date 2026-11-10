@@ -147,22 +147,30 @@ test.describe("trust and access", () => {
     await expect(page.locator("ul.rowlist li")).toHaveCount(0);
   });
 
-  test("the visitor's choice of intent changes the message the maker receives", async ({ page }) => {
-    const t = await owner((c) => c.query<{ public_token: string }>(
-      "SELECT public_token FROM works WHERE title = $1", [MONSOON]));
-    const here = `/work/${t.rows[0].public_token}`;
-    for (const [intent, phrase] of [
-      ["ask", "would like to ask about it"],
-      ["commission", "commissioning something like it"],
-      ["general", "while looking at"],
-    ] as const) {
-      await page.goto(`${here}?contact=1&intent=${intent}`);
-      await expect(page.locator(`[data-intent="${intent}"]`)).toHaveAttribute("aria-current", "true");
-      const href = decodeURIComponent(
-        (await page.locator('a[data-route-kind="whatsapp"]').getAttribute("href")) ?? "");
-      expect(href).toContain(phrase);
-      expect(href).toContain(MONSOON);
-      expect(href).toContain(here);                       // the link back to the work travels with it
+  test("the message follows the work: about this one while it can be had, one like it once sold", async ({ page }) => {
+    // Drawing board, screen 2b: the sheet asks nothing; what the message is about follows the
+    // work's status. A link that names an intent is still honoured.
+    const t = await owner((c) => c.query<{ id: string; public_token: string; status: string }>(
+      "SELECT id, public_token, status FROM works WHERE title = $1", [MONSOON]));
+    const { id, public_token, status: was } = t.rows[0];
+    const here = `/work/${public_token}`;
+    const said = async (path: string) => {
+      await page.goto(path);
+      return decodeURIComponent((await page.locator('a[data-route-kind="whatsapp"]').getAttribute("href")) ?? "");
+    };
+    try {
+      for (const [status, phrase] of [["available", "would like to ask about it"], ["sold", "commissioning something like it"]] as const) {
+        await owner((c) => c.query("UPDATE works SET status = $1 WHERE id = $2", [status, id]));
+        const href = await said(`${here}?contact=1`);
+        expect(href, status).toContain(phrase);
+        expect(href).toContain(MONSOON);
+        expect(href).toContain(here);                     // the link back to the work travels with it
+      }
+      expect(await said(`${here}?contact=1&intent=general`)).toContain("while looking at");
+      // No choice is offered on the sheet any more.
+      await expect(page.locator("[data-intent]")).toHaveCount(0);
+    } finally {
+      await owner((c) => c.query("UPDATE works SET status = $1 WHERE id = $2", [was, id]));
     }
     // The account email is never part of what the visitor hands over.
     expect(await page.content()).not.toContain(MAKER_A.email);

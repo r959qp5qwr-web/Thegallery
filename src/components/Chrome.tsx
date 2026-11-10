@@ -2,17 +2,27 @@ import Link from "next/link";
 import { TransitionLink } from "./ViewTransition";
 import { Icon } from "./Icon";
 import { SectionNav } from "./SectionNav";
+import { BackButton, ShareButton } from "./PageTools";
 import type { PublicImage, PublicWork } from "@/lib/queries";
 import { STATUS_LABEL, labelPrice } from "@/lib/format";
 
 /** The public header: the wordmark, the way home. The four places are the bar below 900 px and
  *  sit in the header from 900 px (governor, 2026-11-09: drawing board). A page names itself in
  *  its own heading, once. */
-export function Header() {
+export function Header({ className, back, share }:
+  { className?: string; back?: string; share?: { title: string; path: string } } = {}) {
+  // A page that is a place of its own (a maker's gallery, drawing board screen 3) adds Back and
+  // Share on a phone: back · wordmark · share. From 900 px Back steps aside; the four places
+  // are in the header there.
+  const tools = !!(back || share);
   return (
-    <header className="header public">
+    <header className={["header public", tools ? "tools" : "", className ?? ""].filter(Boolean).join(" ")}>
+      {back ? <BackButton href={back} className="iconbtn lead back" /> : null}
       <Link className="wordmark" href="/">The Gallery</Link>
-      <span className="header-end"><SectionNav placement="header" /></span>
+      <span className="header-end">
+        <SectionNav placement="header" />
+        {share ? <ShareButton title={share.title} path={share.path} className="iconbtn" /> : null}
+      </span>
     </header>
   );
 }
@@ -86,7 +96,7 @@ export function WorkTile({ work, image, wide, inGallery, lead }:
     <TransitionLink className={`tile${wide ? " wide" : ""}${lead ? " hang-first" : ""}`} href={`/work/${work.public_token}`}>
       <div className={`frame ${wide ? "" : "r45"}`}>
         {src
-          ? <img src={src} alt={image?.alt_text ?? ""} loading="lazy" />
+          ? <img src={src} alt={image?.alt_text ?? ""} loading="lazy" data-hero={imgSrc(image, "w1280") ?? undefined} />
           : <span className="notice">No image yet</span>}
       </div>
       <div className="gt">{work.title}</div>
