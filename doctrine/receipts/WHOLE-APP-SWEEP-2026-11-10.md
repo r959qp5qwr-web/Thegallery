@@ -52,8 +52,10 @@ GAL-OD-02 (makers, studios and collectives; made or materially produced; not ret
 | Phone suite, build `Uowbq2yNGbEZJtp4r91Gu` (code `b223f75`, previous session) | 100 passed, 1 skipped (28.9 min); superseded below | SEEN |
 | Desktop and phone, build `A_gODj5BRF1PfBLYc2Yu0` (code `b223f75`, this container) | desktop **101 passed** (27.5 min); phone **100 passed, 1 skipped** (28.8 min); gate OPEN. Superseded by the heading fix | SEEN |
 | axe, keyboard, reflow on /about, /participation, /privacy (build `A_gODj5BRF1PfBLYc2Yu0`) | axe `heading-order` on /about with the rows open (h1 then h3), phone and desktop; 0 elsewhere. Fixed in `435a224` (GAL-L0039) | SEEN |
-| **Desktop suite, build `PmoFum7aIcB42fwmIYemr` (code `435a224`)** | **101 passed** (27.2 min), summary line read. Sweep receipt PASS, 27 of 27 pages, 12 rules | SEEN |
-| **Phone suite, same build** | **100 passed, 1 skipped** (28.6 min), summary line read. Sweep receipt PASS, 27 of 27 pages, 12 rules | SEEN |
+| Desktop and phone, build `PmoFum7aIcB42fwmIYemr` (code `435a224`) | desktop 101 passed; phone 100 passed, 1 skipped; gate OPEN. Superseded by the design-review fixes | SEEN |
+| R03 widened to "not X, or not Y" (control) | the sweep alone (journey 14, phone) on build `PmoFum7aIcB42fwmIYemr` with the widened rule: FAIL, R03 on /about and /participation ("Anything not allowed here, or not lawful…"), nothing else | SEEN |
+| **Desktop suite, build `X_B_m5XR5Pz6eVmoBTotD` (code `c8683ed`)** | **101 passed** (26.7 min), summary line read. Sweep receipt PASS, 27 of 27 pages, 12 rules | SEEN |
+| **Phone suite, same build** | **100 passed, 1 skipped** (29.2 min), summary line read. Sweep receipt PASS, 27 of 27 pages, 12 rules | SEEN |
 | **Gate** `python3 scripts/app-sweep-gate.py`, same code | `OPEN — phone and desktop passed on this code` | SEEN |
 | **axe** (4.10.2: wcag2a, wcag2aa, wcag21aa, best-practice), same build | 0 violations on 8 states: /about (rows closed and open), /participation, /privacy; phone and desktop | SEEN |
 | **Keyboard**, same build | every Tab stop visible, named and ringed: /about 10 / 9, /participation 8 / 7, /privacy 8 / 7 (phone / desktop) | SEEN |
@@ -62,10 +64,23 @@ GAL-OD-02 (makers, studios and collectives; made or materially produced; not ret
 | Gate refuses a shut state | `app-sweep-gate.py`: SHUT on a stale receipt and on a missing one; hook mode denies an unreadable payload; guard SWEEP-1 denied `create_pull_request` | SEEN |
 | Repository gates and drill | 5 of 5 green; drill 89 PASS | SEEN |
 | Independent review (builder-reviewer) | 2 High, 6 Medium, 5 Low; all fixed or recorded, as listed in the PR | SEEN |
-| Renders | `policy-screens/before/` (live build) and `after/` (build `PmoFum7aIcB42fwmIYemr`; byte-identical to the renders before the heading fix), phone and desktop: Home, empty Home, About closed and open, Participation, Privacy | SEEN |
+| Renders | `policy-screens/before/` (live build) and `after/` (build `X_B_m5XR5Pz6eVmoBTotD`), phone and desktop: Home, empty Home, About closed and open, Participation, Privacy | SEEN |
 | Independent review of the heading fix (builder-reviewer) | no blocking finding; Low: About's outline is flat (the row names are in `<summary>`, not headings); Low: the sweep runs no axe | SEEN |
 
+## Design skills run (independent agents) and what was done with them
+| Skill | Verdict / main findings | Done |
+|---|---|---|
+| `ui-consistency:verifying` (separate agent; calibrated first on copies with one planted difference: found the wrong Back on the /participation copy by reading) | INCONSISTENT, 4 Medium: heading block unlike About's; same text with different outlines; "not …, or not …" copy; (footer "·" is shorthand, not a finding) | heading block and tracking matched to About; copy fixed; R03 widened; tab title = h1; indentation |
+| `vectorlab-ux-skills:anti-slop` | no hard-rule violation; Low: desktop About ends thin | kept |
+| `vectorlab-ux-skills:typography` | Medium: fold sub-headings larger than the row; /participation title and section title equal; Low: long lines | row name leads (grid-title), inner headings body; section title subheading; measure 34rem |
+| `vectorlab-ux-skills:spacing` | Medium: ~72 px hole before "What we act on"; Low: narrow left column on wide screens | gap 48 → 32; column kept |
+| `design-skills:ux-writing` | Medium: "not …, or not …"; Visiting a five-sentence block, three negatives, heading echo; Low: "Making" unclear | all fixed |
+| `design-skills:design-critique` (refs: Are.na about/guidelines, Etsy House Rules, Tate / Whitechapel footers) | Medium: no Privacy in the footer; HOME lit on About | footer kept: the governor's 2026-11-10 decision (name and About); HOME lit on About is app-wide and live already, listed below |
+
+Not reopened (fixed): the footer's links; "Makers, studios and collectives" (GAL-OD-02 wording).
+
 ## Open
+- Already on the live site, outside this change: HOME shows as current on About and the policy pages; desktop has no Back on these pages (the header hides it from 900 px); Back follows history, so /participation opened from Join goes back to Join.
 - An axe pass inside the sweep, so the gate covers accessibility too (GAL-L0039).
 - About's heading outline is flat: the row names are `<summary>` text, not headings. A heading inside `<summary>` is announced unevenly by screen readers; left as is.
 - An appeal address published on the site (GAL-OD-15 says "by email"; the text points to the notice).
