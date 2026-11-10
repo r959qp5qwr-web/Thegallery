@@ -249,8 +249,11 @@ def decide_shell(payload: dict) -> Verdict:
     subs = {git_subcommand(seg) for seg in segments(command)}
     if "push" in subs and re.search(r"builders-doctrine", command):
         raise Deny("GUARD-1", "this push targets the central Doctrine repository.", "shell")
-    # SWEEP-1 covers every route to a pull request, not only the GitHub API tools (review, 2026-11-10).
-    if re.search(r"\bgh\s+pr\s+(create|merge)\b|\bgh\s+api\b[^|;&]*\bpulls\b", command):
+    # SWEEP-1 covers every route to a pull request, not only the GitHub API tools (review, 2026-11-10);
+    # a merge is the governor's act on every route, as it is on the GitHub tools (GUARD-3).
+    if re.search(r"\bgh\b[^|;&]*\bpr\s+merge\b|/pulls/\d+/merge", command) and os.environ.get("DOCTRINE_ALLOW_MAIN") != "1":
+        raise Deny("GUARD-3", "merging a pull request is the governor's act, not this session's.", "shell")
+    if re.search(r"\bgh\b[^|;&]*\bpr\s+create\b|\bgh\s+api\b[^|;&]*\bpulls\b|\bcurl\b[^|;&]*api\.github\.com[^|;&]*/pulls", command):
         sweep_gate("gh pr")
     consequential = bool(CONSEQUENTIAL_OTHER.search(command)) or bool(subs & CONSEQUENTIAL_GIT)
     if not consequential:

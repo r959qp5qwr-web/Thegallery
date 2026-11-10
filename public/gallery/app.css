@@ -469,7 +469,7 @@ body:not(:has(nav.bar)) .actionbar { bottom: 0; }
   .header.over-work { position: absolute; top: 0; left: 0; right: 0; z-index: 40; width: 1px; height: 1px;
     overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   .header.over-work:focus-within { width: auto; height: var(--header-h); overflow: visible; clip: auto; }
-  .header.over-work .back { display: none; }   /* on a phone the photograph carries the one Back */
+  .header.tools.over-work .back { display: none; }   /* on a phone the photograph carries the one Back (beats .header.tools .back) */
   .work-page .imgstrip { gap: 0; }
   .work-page .imgstrip .shot { height: min(58vh, 125vw); display: flex; align-items: center; justify-content: center;
     background: var(--surface-plinth); }

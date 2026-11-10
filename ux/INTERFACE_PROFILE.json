@@ -6,6 +6,10 @@
   "field_selector": ".field, fieldset.segfield",
   "ignore_selector": ".skip",
   "overrides": {},
+  "unmeasured": [
+    { "file": "src/app/studio/error.tsx", "why": "shown only when a Studio page throws; no honest way to make it throw on the test project. Its copy and layout use the same .empty block as measured states." },
+    { "file": "src/app/(entrance)/loading.tsx", "why": "shown for a fraction of a second while the entrance loads; not a state a person reads." }
+  ],
   "states": [
     { "id": "home",               "page": "/",                      "who": "visitor", "path": "/",                          "archetype": "root" },
     { "id": "home-empty",         "page": "/",                      "who": "visitor", "path": "/",                          "archetype": "root", "setup": "no-works-on-view" },
@@ -40,6 +44,7 @@
     { "id": "work-new",           "page": "/studio/works/new",      "who": "maker",   "path": "/studio/works/new",          "archetype": "editor" },
     { "id": "work-edit",          "page": "/studio/works/[id]",     "who": "maker",   "path": "/studio/works/{workId}",     "archetype": "editor" },
     { "id": "operator",           "page": "/operator",              "who": "operator","path": "/operator",                  "archetype": "root" },
+    { "id": "not-found",          "page": "(not-found)",            "who": "visitor", "path": "/no-such-place",             "archetype": "sub-screen", "status": 404 },
     { "id": "operator-maker",     "page": "/operator/makers/[id]",  "who": "operator","path": "/operator/makers/{makerId}", "archetype": "operator" }
   ]
 }

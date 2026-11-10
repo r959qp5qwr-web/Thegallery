@@ -23,9 +23,9 @@ ROOT = Path(__file__).resolve().parent.parent
 PROJECTS = ("phone", "desktop")
 # Two receipts per viewport: the governor's corrections (journey 14) and the Interface Standard
 # (journey 15, kit/interface-standard). Either missing, stale or failed keeps the gate shut.
-RECEIPTS = {"app-sweep": "whole-app sweep", "interface": "interface standard"}
+RECEIPTS = {"app-sweep": "whole-app sweep", "interface": "interface standard", "interface-drill": "interface drill"}
 GUARDED = ("mcp__github__create_pull_request", "mcp__github__merge_pull_request")
-# The same list as EXTRA_FILES in e2e/14-whole-app.spec.ts: files outside src/ and public/ that
+# The same list as EXTRA_FILES in e2e/support/fingerprint.ts: files outside src/ and public/ that
 # change what renders or how the sweep sees it.
 EXTRA_FILES = ("ux/APP_RULES.json", "e2e/14-whole-app.spec.ts", "e2e/helpers.ts", "next.config.ts",
                "next.config.js", "next.config.mjs", "package.json", "package-lock.json",
@@ -33,7 +33,8 @@ EXTRA_FILES = ("ux/APP_RULES.json", "e2e/14-whole-app.spec.ts", "e2e/helpers.ts"
                "kit/interface-standard/engine/measure.ts", "e2e/15-interface-standard.spec.ts",
                "e2e/support/fingerprint.ts", "playwright.config.ts", "tsconfig.json",
                "open-next.config.ts", "e2e/support/test-project.sql",
-               "e2e/16-interface-drill.spec.ts", "kit/interface-standard/drill/cases.ts")
+               "e2e/16-interface-drill.spec.ts", "kit/interface-standard/drill/cases.ts",
+               "e2e/support/seed-test-project.ts")
 
 
 def fingerprint() -> str:
@@ -56,6 +57,13 @@ def verdict() -> tuple[bool, list[str]]:
         build = (ROOT / ".next" / "BUILD_ID").read_text().strip()
     except Exception:  # noqa: BLE001 — no build is a shut gate for the standard's receipts
         build = ""
+    # The build must be of this code: `npm run build` stamps the source fingerprint into .next/.
+    try:
+        stamped = (ROOT / ".next" / "SOURCE_FINGERPRINT").read_text().strip()
+    except Exception:  # noqa: BLE001
+        stamped = ""
+    if stamped != now:
+        problems.append("the build on disk is not of this code (rebuild with `npm run build`, which stamps .next/SOURCE_FINGERPRINT)")
     for kind, project in [(k, p) for k in RECEIPTS for p in PROJECTS]:
         path = ROOT / ".doctrine" / "runtime" / f"{kind}-{project}.json"
         project = f"{RECEIPTS[kind]} ({project})"
@@ -83,6 +91,11 @@ def verdict() -> tuple[bool, list[str]]:
 
 
 def main() -> int:
+    if len(sys.argv) > 1 and sys.argv[1] == "stamp":
+        (ROOT / ".next").mkdir(exist_ok=True)
+        (ROOT / ".next" / "SOURCE_FINGERPRINT").write_text(fingerprint() + "\n")
+        print("stamped .next/SOURCE_FINGERPRINT")
+        return 0
     if len(sys.argv) > 1 and sys.argv[1] == "hook":
         # An indeterminate verdict is a denial: an unreadable payload or a crash shuts the gate.
         try:

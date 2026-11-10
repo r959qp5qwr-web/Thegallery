@@ -1,6 +1,6 @@
 {
   "_what": "The Interface Standard: numeric, sourced rules a screen must meet, measured from what renders by engine/measure.ts. Product-independent. Each rule names its sources (fetched 2026-11-10) and whether the number is a hard floor (WCAG 2.2 AA) or a house value chosen above the floor, with the reason. A product may make a rule stricter in its profile; it may never loosen one. A rule changes only on the governor's word, recorded in ESCAPES.md. A profile may raise a floor or lower a ceiling, for the numeric keys listed in override_direction; nothing else.",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "archetypes": {
     "root": {
       "root": true,
@@ -100,7 +100,7 @@
     },
     {
       "id": "IS-T7-field-text-16",
-      "says": "What is typed into a field, and its placeholder, is at least 16 px.",
+      "says": "What is typed into a field is at least 16 px.",
       "check": {
         "kind": "field-text-floor",
         "min_px": 16
@@ -227,7 +227,7 @@
     },
     {
       "id": "IS-L3-grid",
-      "says": "The rhythm between blocks (vertical margins and paddings, row and column gaps) sits on the product's declared base unit (4 px).",
+      "says": "The rhythm between blocks sits on the product's declared base unit (4 px): vertical margins and paddings, block paddings on every side, and row and column gaps. Values of 100 px or more, negative margins and insets inside controls are outside this rule.",
       "check": {
         "kind": "spacing-scale",
         "unit_px": 4

@@ -57,6 +57,17 @@ async function person(email: string, password: string): Promise<string> {
 // project (evidence works published for a design review, say) would make "the only Available
 // work" ambiguous, so it is cleared here. Test project only: helpers.ts refuses any other.
 const JOURNEY_TITLES = ["Monsoon Vessel No. 4", "Unfinished Warp"];
+// Works hidden by journey 15's empty-home state are put back before any journey runs, even after a
+// run that was killed mid-state (the ids are written before they are hidden).
+{
+  const { existsSync, readFileSync, rmSync } = await import("node:fs");
+  const pending = ".doctrine/runtime/interface-pending-restore.json";
+  if (existsSync(pending)) {
+    for (const id of JSON.parse(readFileSync(pending, "utf8")) as string[]) await sql("UPDATE works SET taken_down = false WHERE id = $1", [id]);
+    rmSync(pending);
+    console.log("  restored works hidden by an interrupted interface run");
+  }
+}
 await sql(`DELETE FROM works WHERE title <> ALL (ARRAY[$1, $2])`, JOURNEY_TITLES);
 
 for (const p of PROFILES) {

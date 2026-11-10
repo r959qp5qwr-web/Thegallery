@@ -12,7 +12,8 @@ export const EXTRA_FILES = ["ux/APP_RULES.json", "e2e/14-whole-app.spec.ts", "e2
   "ux/INTERFACE_PROFILE.json", "kit/interface-standard/STANDARD.json", "kit/interface-standard/engine/measure.ts",
   "e2e/15-interface-standard.spec.ts", "e2e/support/fingerprint.ts",
   "playwright.config.ts", "tsconfig.json", "open-next.config.ts", "e2e/support/test-project.sql",
-  "e2e/16-interface-drill.spec.ts", "kit/interface-standard/drill/cases.ts"];
+  "e2e/16-interface-drill.spec.ts", "kit/interface-standard/drill/cases.ts",
+  "e2e/support/seed-test-project.ts"];
 /** The same fingerprint scripts/app-sweep-gate.py computes: every file of the app, its styles,
  *  the rules and this sweep, by path and content. A receipt is good only for exactly this code. */
 export function codeFingerprint(): string {

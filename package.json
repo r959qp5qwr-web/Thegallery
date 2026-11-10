@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "next dev -p 3100",
     "build": "next build",
+    "postbuild": "python3 scripts/app-sweep-gate.py stamp || echo \"source stamp skipped (no python3): the local gate will stay shut for this build\"",
     "start": "next start -p 3100",
     "typecheck": "tsc --noEmit",
     "db:reset": "node --experimental-strip-types db/cli.ts reset",

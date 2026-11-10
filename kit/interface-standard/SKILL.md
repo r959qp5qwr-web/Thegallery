@@ -7,8 +7,9 @@ description: The measured Interface Standard and its learning loop. Use before b
 
 Taste is not the method. Every screen state is **measured** against `STANDARD.json` (numbers with
 sources: WCAG 2.2, Material 3, Apple HIG, GOV.UK) by `engine/measure.ts`, on phone and desktop,
-inside the full suite. The gate is OPEN only with PASS receipts for the exact code and build; the
-builder runs it before every PR, and the product guard enforces it where project hooks load.
+inside the full suite. The gate is OPEN only for a build stamped with this code (`npm run build`) and
+PASS receipts for the sweep, the standard and the drill on that code; the builder runs it before
+every PR, and the product guard enforces it where project hooks load (not in CI).
 What cannot be measured is a fixed manual protocol, not an opinion.
 
 ## A. Building or changing a screen (before code)
@@ -16,7 +17,8 @@ What cannot be measured is a fixed manual protocol, not an opinion.
    `operator`). Add the state to the product profile (`ux/INTERFACE_PROFILE.json`) *first*: every
    state — empty, error, each step of a flow, a sheet open — not only the page.
 2. **Rules that bind it.** Read the rules in `STANDARD.json` that apply to the archetype. A
-   `flow-step` has Back at the top, one primary action, labels ≥ 16 px, fields ≥ 32 px apart.
+   `flow-step` has Back at the top, at most one primary action, labels ≥ 16 px, fields ≥ 32 px apart;
+   an `editor` has exactly one primary action.
 3. **References (IS-M1).** Pick two named outside screens of the same archetype (`REFERENCES.json`
    or a product's own list). Build to sit beside them.
 4. **Build**, using the product's tokens; never shrink type or spacing to make something fit.
@@ -43,5 +45,5 @@ What cannot be measured is a fixed manual protocol, not an opinion.
 7. Never loosen or delete a rule to pass. A rule that is wrong changes on the governor's word.
 
 ## D. Adopting in another product
-See `README.md`. Four files and one journey; the engine and standard are copied unchanged and
-pinned by version.
+See `README.md`. Copy the kit unchanged and record its `version` (nothing checks it yet); write the
+profile; copy journeys 15 and 16; add the receipts to the gate.

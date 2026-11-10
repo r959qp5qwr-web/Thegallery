@@ -43,9 +43,13 @@ export function measure(args: { standard: Standard; archetype: string; profile: 
     if (typeof h.checkVisibility === "function" && !h.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true } as any)) return false;
     const r = e.getBoundingClientRect();
     if (r.width < 2 || r.height < 2) return false;
+    let alpha = 1;
+    for (let n: Element | null = e; n && n !== document.documentElement; n = n.parentElement) {
+      alpha *= px(getComputedStyle(n).opacity === "" ? "1" : getComputedStyle(n).opacity);
+      if (alpha < 0.05) return false;
+    }
     for (let n = e.parentElement; n && n !== document.body; n = n.parentElement) {
       const cs = getComputedStyle(n);
-      if (px(cs.opacity) < 0.05) return false;
       if (n.tagName === "DETAILS" && !(n as HTMLDetailsElement).open && !e.closest("summary")) return false;
       const clips = cs.overflow !== "visible" || cs.clip !== "auto" || cs.clipPath !== "none";
       if (clips) {
@@ -64,20 +68,27 @@ export function measure(args: { standard: Standard; archetype: string; profile: 
     const r = e.getBoundingClientRect(); const x = r.left + r.width / 2, y = r.top + r.height / 2;
     if (x < 0 || y < 0 || x > innerWidth || y > innerHeight) return false;
     const hit = document.elementFromPoint(x, y);
-    return !!hit && (hit === e || e.contains(hit) || hit.contains(e));
+    return !!hit && (hit === e || e.contains(hit));
   };
 
-  // The ignore list polices itself: it may hide only what is not on screen.
+  // The profile is policed, so its selectors cannot loosen a rule:
+  //  - the ignore list may hide only what lies outside the page (a skip link parked above it);
+  //  - help text must sit inside a field; a primary action must be a link or a button;
+  //  - every field holds a label and something to fill or choose.
+  const policy = (measured: string, where: string) => add("PROFILE", "the profile's selectors cannot loosen a rule", measured, where);
   if (profile.ignore_selector) {
     for (const e of Array.from(document.querySelectorAll(profile.ignore_selector))) {
-      if (visible(e) && /[A-Za-z0-9]/.test(e.textContent ?? "")) {
-        const r = e.getBoundingClientRect();
-        if (r.bottom > 0 && r.right > 0 && r.top < innerHeight && r.left < innerWidth) {
-          add("ENGINE", "the ignore list hides only what is off screen", `ignored but on screen`, desc(e)); break;
-        }
-      }
+      if (!visible(e)) continue;
+      const r = e.getBoundingClientRect(); const top = r.top + scrollY, left = r.left + scrollX;
+      if (top + r.height > 0 && left + r.width > 0) { policy("ignored but inside the page", desc(e)); break; }
     }
   }
+  if (profile.help_selector) for (const e of Array.from(document.querySelectorAll(profile.help_selector)).filter(visible))
+    if (!e.closest(profile.field_selector ?? ".field, fieldset")) { policy("help text outside any field", desc(e)); break; }
+  for (const e of Array.from(document.querySelectorAll(profile.primary_selector)).filter(visible))
+    if (!e.matches("a[href], button, input[type=submit], [role=button]")) { policy("a primary action that is not a link or button", desc(e)); break; }
+  for (const f of Array.from(document.querySelectorAll(profile.field_selector ?? ".field, fieldset")).filter(visible))
+    if (!f.querySelector("input:not([type=hidden]), textarea, select")) { policy("a field with nothing to fill or choose", desc(f)); break; }
 
   const textEls = Array.from(document.body.querySelectorAll("*")).filter((e) =>
     !["SCRIPT", "STYLE", "SVG", "PATH", "USE", "OPTION", "TITLE", "NOSCRIPT", "TEMPLATE"].includes(e.tagName) && /[A-Za-z0-9]/.test(ownText(e)) && seen(e));
@@ -163,7 +174,9 @@ export function measure(args: { standard: Standard; archetype: string; profile: 
         if (arche.root) break;
         const band = c.top_band_px as number; const names = new RegExp(c.names, "i");
         // A dialog's own Close must be inside the dialog; any other screen's Back sits in the top band.
-        const scope: ParentNode = archetype === "dialog" ? (document.querySelector("[role=dialog], dialog[open]") ?? document) : document;
+        const dlg = document.querySelector("[role=dialog], dialog[open]");
+        if (archetype === "dialog" && (!dlg || !visible(dlg))) { addR(rule, "no dialog is open", "archetype dialog"); break; }
+        const scope: ParentNode = archetype === "dialog" ? dlg! : document;
         const here = location.pathname + location.search;
         const ok = Array.from(scope.querySelectorAll("a[href], button")).some((e) => {
           if (!usable(e) || !names.test((e.getAttribute("aria-label") || e.textContent || "").trim())) return false;
@@ -173,6 +186,7 @@ export function measure(args: { standard: Standard; archetype: string; profile: 
             const raw = e.getAttribute("href") ?? "";
             if (!raw || raw === "#") return false;
             const u = new URL((e as HTMLAnchorElement).href);
+            if (!/^https?:$/.test(u.protocol)) return false;
             if (u.origin === location.origin && u.pathname + u.search === here && archetype !== "dialog") return false;
           }
           return true;
@@ -233,13 +247,17 @@ export function measure(args: { standard: Standard; archetype: string; profile: 
       case "spacing-scale": {
         // The rhythm between blocks — vertical margins and paddings, and the gaps of grids and flex
         // rows — sits on the base unit. Not measured, because computed style cannot tell them from a
-        // mistake: negative margins (optical alignment), auto margins on media (centring), values of
-        // 100 px or more (screen-relative layout such as 18vh), and horizontal insets inside controls.
+        // mistake: negative margins (optical alignment), horizontal margins (auto centring), margins
+        // and paddings of media, values of 100 px or more (screen-relative layout such as 18vh), and
+        // horizontal insets inside controls. Horizontal padding of every other block is measured.
         const unit = c.unit_px as number; const found = new Map<number, string>();
         for (const e of Array.from(document.querySelectorAll("body *")).filter(seen)) {
           if (["IMG", "VIDEO", "SVG", "PICTURE", "CANVAS", "IFRAME"].includes(e.tagName)) continue;
           const cs = getComputedStyle(e);
-          for (const v of [cs.marginTop, cs.marginBottom, cs.paddingTop, cs.paddingBottom, cs.rowGap, cs.columnGap].map(px)) {
+          const control = e.matches("a, button, input, select, textarea, label, summary, [role=button]");
+          const vals = [cs.marginTop, cs.marginBottom, cs.paddingTop, cs.paddingBottom, cs.rowGap, cs.columnGap];
+          if (!control) vals.push(cs.paddingLeft, cs.paddingRight);
+          for (const v of vals.map(px)) {
             if (v > 0 && v < 100 && Math.abs(v / unit - Math.round(v / unit)) > 0.01 && !found.has(v)) found.set(v, desc(e));
           }
         }
