@@ -1,6 +1,21 @@
-# active-memory handoff: The Gallery — Wave 5 "first impression" (review done; governor decisions A/B/C next)
+# active-memory handoff: The Gallery — drawing-board rebuild, parts 1–2 live; next: part 3 (maker screens)
 
-**Handoff #4** · 2026-11-09 · Lineage: #1 (2026-11-05 → 06): re-pinned The Gallery to the new Builders' Doctrine, rebuilt the vanished Supabase project and restored the live site, reworked and passed the e2e journeys on a test project, ran a design review, built Wave 1; #2 (2026-11-06): verified and shipped Wave 1 (PR #4) and Wave 2 (PR #5), ledger GAL-L0019..22; #3 (2026-11-06 → 07): built, reviewed, proved and shipped Wave 3 "one vocabulary" (PR #6) and Wave 4 "cutting edge" (PR #7), ledger GAL-L0023; #4 (2026-11-07 → 09): built and shipped the governor's decisions (PR #8: price rule, motion kept, Hang this first; PR #9: docs words), ledger GAL-L0024..25, published the phone-walk checklist, then — after the governor called the live interface "novice" — ran a five-reviewer design review (98 findings) and published the findings page
+**Handoff #7** · 2026-11-10 · Lineage:
+- **#1 (2026-11-05 → 06):** re-pinned to the new Builders' Doctrine; rebuilt the vanished Supabase project and restored the live site; e2e journeys on a test project; built Wave 1.
+- **#2 (2026-11-06):** shipped Wave 1 (PR #4) and Wave 2 (PR #5); ledger GAL-L0019..22.
+- **#3 (2026-11-06 → 07):** shipped Wave 3 (PR #6) and Wave 4 (PR #7); ledger GAL-L0023.
+- **#4 (2026-11-07 → 09):** governor decisions shipped (PR #8, PR #9); ledger GAL-L0024..25; phone-walk checklist; five-reviewer design review.
+- **#5 (2026-11-09):** governor chose A2 / B2 / C-later; design pass approved; app icon option 4; Wave 5 merged (PR #10 → `cc28867`); ledger GAL-L0026..30.
+- **#6 (2026-11-09):**
+  - The governor judged Wave 5 a regression.
+  - Drawing board: 16 screens approved.
+  - No-city fix: PR #11 → `8890c52`.
+  - Part 1: PR #12 → `ed26f1d`.
+  - Ledger GAL-L0031..33.
+- **#7 (2026-11-09 → 10):**
+  - Built part 2, the visitor screens: the work page, the Message sheet, the maker's gallery as a profile, About on one screen.
+  - Full process run; PR #13 merged on "Merge PR 13, Keep, Show" → `3e1af09`, live.
+  - Ledger GAL-L0034.
 
 ## 0. Instructions for Claude (read first)
 
@@ -14,64 +29,109 @@ You are continuing work from a previous chat. That chat is gone; this file is th
 6. Your first reply: at most 5 lines covering the goal, the current state, and the next step (section 11). Mention any files from section 13 that were not attached. Ask the questions in section 12 if there are any. End with "Ready to continue with <next step>?" Then wait for the user's go.
 
 ## 1. Mission
-- **Goal:** keep The Gallery (`https://atthegallery.in`) live, governed under the central Builders' Doctrine, and raise the interface to a genuinely world-class, artist-first standard. The live site was judged by the governor as not meeting it.
+- **Goal:** rebuild The Gallery (`https://atthegallery.in`) to the governor-approved 16-screen drawing board.
+  - The base is the original look.
+  - The app layer adds a bottom bar with icons, image grids, a heart, fixed bottom actions and short sign-up steps.
+  - It ships in 3 parts, one PR each. Parts 1 and 2 are live; part 3 (maker screens) is next. Then the phone walk.
 - **Done looks like:**
-  - Wave 5 "first impression" built, proved and live: the live empty state, a work page, a maker's gallery and For Makers no longer read as novice or duplicated.
-  - Then the first real maker walks sign-up → publish → share on a physical phone against the live site.
-- **Why it matters:** user: "This is artists oriented portal… aesthetic look is the priority… maintain that highest standard of design orientation… be cutting edge." On 2026-11-09, on seeing the live site: "The interface looks so novice like. There is duplication. Very pathetic. Have we done the interface review. All the relevant design related skills that are part of your system, have we utilised anything."
+  - All 16 board screens are live, each matching the board.
+  - Every part went through the full process (rule 14) and was merged on the governor's word.
+  - Then the governor walks the maker journey on their Android phone against the live site, one step at a time.
+- **Why it matters (user's words):**
+  - "This is artists oriented portal… aesthetic look is the priority… maintain that highest standard of design orientation… be cutting edge."
+  - On Wave 5: "The earlier home page was a beautiful display. Which has become like a notebook now. The copy reads very much written by an AI… Like a doctors notebook. Copy is horrible."
+  - "I have never seen an app designed like this… compare it against any reference of how an app should look like, and it will come out a fail… The original design system of the gallery app was good. We reinstating it. But we are also going back to the drawing board. Look at each function and journey. And copy."
 
 ## 2. About the user (as relevant to this work)
 - Systems-minded wellness entrepreneur and capability designer.
-- Acts as **the Governor** of products built under the Builders' Doctrine (The Gallery, Ahoy, maa.se, Ustaad, TreksFit, Swasthya…).
-- Uses ChatGPT for sense-making, Claude for building and implementation, and another tool for research.
+- The **Governor** of products built under the Builders' Doctrine (The Gallery, Ahoy, maa.se, Ustaad, TreksFit, Swasthya…).
+- Uses ChatGPT for sense-making, Claude for building, another tool for research.
 - Works on an Android phone (Chrome) and an iPad. Reaches the Supabase, Cloudflare and GitHub dashboards in a browser.
 - Has installed many design skills and expects them to be used on anything people see.
-- Answers decisions tersely ("Yes", "Yes.", "Go with your recommendation.", "Merge", "1.").
+- Answers tersely: "Yes", "Go.", "Merge.", "Approved.", "Yes, hide, yes", "Merge PR 13, Keep, Show".
 
 ## 3. Style & communication
 - **Language:** English.
 - **Tone:** grounded, calm, precise, direct, low-hype. No fluff, no motivational padding, no generic coach or branding language.
 - **Reply length:** short and structured; details on request.
-- **Formatting:** headings, short lists, tables. Report SEEN / NOT SEEN / UNKNOWN separately. Use plain words, not code names, in user-facing summaries.
+- **Formatting:**
+  - headings, short lists and tables;
+  - report SEEN / NOT SEEN / UNKNOWN separately;
+  - plain words, not code names, in user-facing summaries;
+  - send renders and sheets as images (SendUserFile) or published artifacts.
 - **Working style:**
-  - Order of work: architecture → domain → workflow → templates. Containers over tips.
-  - Give a few strong options with a recommendation, then treat the choice as fixed.
-  - Ask only when it materially affects design, safety or implementation; otherwise act.
-  - Resolve things yourself rather than hand over dashboard chores.
-  - Each change set ends with a summary, decisions for the governor with a recommendation, and "Merge PR #n?".
-  - Visual decisions are shown as rendered pages, not only described.
-- **Avoid:** reopening settled decisions; vague best practices; claiming green without a receipt; asking for secrets in chat; naming a cause before testing it; calling a design reviewed when no design skill was run.
+  - Work in layers: architecture → domain → workflow → templates. Containers over tips.
+  - Give a few strong options with a recommendation, then treat the choice as fixed. Turn decisions into one-word replies.
+  - Ask only when it materially affects design, safety or implementation; otherwise act. Resolve things rather than hand over chores.
+  - Show visual decisions as rendered pages or images.
+  - Each change set ends with a summary, decisions with a recommendation, and "Merge PR #n?".
+  - On long waits, give short progress lines ("The user hasn't heard from you" means: say what you are doing).
+  - Phone walk: "One step at a time." Give one step, wait for the result, record it.
+- **Avoid:**
+  - reopening settled decisions;
+  - vague best practices;
+  - claiming green without a receipt;
+  - asking for secrets in chat;
+  - naming a cause before testing it;
+  - calling a design reviewed when no design skill was run;
+  - settling a FIXED or OPEN decision through copy or visuals;
+  - machine-sounding copy: "quiet", "not X, not Y" lists, groups of three, abstract nouns.
 
 ## 4. Hard rules (word for word)
-1. "Never write to `builders-doctrine`. The guard denies it; the rule stands without the guard." (Thegallery CLAUDE.md)
+1. "Never write to `builders-doctrine`. The guard denies it; the rule stands without the guard."
 2. "Work on a branch; the default branch is merged through review."
-3. "No real person's art, address, phone number or email in fixtures, screenshots or tests."
+3. "No real person's art, address, phone number or email in fixtures, screenshots or tests." Third-party reference screenshots stay out of the repository and live in the scratchpad.
 4. "Report what was SEEN, NOT SEEN and UNKNOWN. A green claim needs a receipt."
 5. "An indeterminate verdict is a denial."
 6. "Read `active_stage.next_acceptance_condition` in `PRODUCT_STATE.json` before building anything. Do not silently settle an OPEN decision through code."
-7. Run `python3 scripts/doctrine-orient.py orient` first in a session. The pre-commit gate refuses commits after governing state changes until re-oriented.
-8. "No merge, deployment, purchase or schedule is authorized" unless the user says so. Merges are authorised case by case: PR #4 "Merge" + "1.", #5 "Yes", #6 "Merge.", #7 "Yes.", #8 "Yes.", #9 "Yes.".
-9. "the design system has to be adhered to" (user). `public/gallery/tokens.css` and `system.css` must stay byte-identical to `ux/reference/interface/`. All app styling goes in `public/gallery/app.css`. Any change to tokens or system is a SYSTEM CHANGE and needs the governor's word.
-10. Journeys only ever touch the test project; `e2e/helpers.ts` refuses the live project and the live site.
-11. Secrets go only through the environment's secure credential form, never in chat.
+7. Run `python3 scripts/doctrine-orient.py orient` first. The pre-commit gate refuses a commit after governing state changes (PRODUCT_STATE, ledger…) until you re-orient, so re-run orient before such a commit.
+8. "No merge, deployment, purchase or schedule is authorized" unless the user says so. Merges are authorised case by case:
+   - PR #4: "Merge" + "1."
+   - PR #5: "Yes"
+   - PR #6: "Merge."
+   - PR #7: "Yes."
+   - PR #8: "Yes."
+   - PR #9: "Yes."
+   - PR #10: "Yes."
+   - PR #11: "Merge."
+   - PR #12: "Yes."
+   - PR #13: "Merge PR   13, Keep, Show"
+9. "the design system has to be adhered to" (user).
+   - `public/gallery/tokens.css` and `system.css` must be byte-identical to `ux/reference/interface/`, and journey 11 enforces it.
+   - Copy to the reference at the end of every change.
+   - App styling goes in `public/gallery/app.css`.
+   - Tokens and system changes are SYSTEM CHANGES and need the governor's word. The part 1–3 rebuild is authorised.
+10. Journeys only touch the test project; `e2e/helpers.ts` refuses the live project and site.
+11. Secrets go only through the environment's secure form, never in chat.
 12. Never test a server whose served page lacks the current `.next/BUILD_ID` (`e2e/run-hosted.sh` enforces it).
-13. One journey run at a time (`e2e/run-hosted.sh` takes a lock; a second run exits 3). Nothing heavy (a `next build`, a second loaded server) runs beside a suite run. Run each suite as its own background command with timeout 3600000 (GAL-L0024).
+13. Run one journey suite at a time (runner lock; a second run exits 3).
+    - Nothing heavy (a build, renders) beside a suite.
+    - Each suite is its own background command with timeout 3600000.
+    - **Start `next start -p 3100` as its own background command with timeout 7200000** (it is killed at 2 h; restart it for longer sessions).
+    - A run without a summary line and an exit code is "no result".
 14. Every change set needs all of the following:
     - full suite, phone and desktop;
-    - independent review by an agent that did not write the code;
-    - **the installed design skills run on every human-facing change**;
+    - independent review by an agent that did not write the code (builder-reviewer);
+    - installed design skills run and named in the receipt;
     - axe, keyboard and reflow checks;
-    - before/after renders;
+    - before/after renders, including the empty site;
     - a receipt at `doctrine/receipts/…md`;
     - a ledger entry per incident;
     - a PR;
     - merge only on the user's word;
     - live confirmed afterwards.
 15. Before merging, all of the following hold:
-    - the working tree is clean;
-    - the PR head is the tested commit (merge with `expectedHeadSha`);
-    - the red CI log has been read and confirmed to be only `DOCTRINE_READ_TOKEN` unset, and the merge commit message says so.
-16. After a PR is merged, restart the working branch from the latest default branch (same name) before new work. Never force-push; a fast-forward works because the merged tip is an ancestor.
+    - a clean tree;
+    - the PR head is the tested head (merge with `expectedHeadSha`);
+    - the red CI log has been read and confirmed to be only `DOCTRINE_READ_TOKEN` unset, and the merge message says so.
+16. After a merge, fast-forward the working branch to the default branch (`git fetch origin <default> && git merge --ff-only`, then push). Never force-push.
+17. A Stop hook refuses to end a turn with uncommitted or untracked files: commit and push before ending each turn.
+18. FIXED decisions keep their meaning whatever a drawing shows. Wording may be refined, never the meaning (GAL-C1, account boundary "created or materially produced", GAL-P1, P-11, GAL-PR-02, GAL-OD-04).
+19. Each new or changed test must be able to fail. Prove it, for example with a planted defect and a rebuild (or the build before the fix as the control).
+20. Before restoring a file from history, list the rules added after that point and carry each one forward or drop it on purpose (GAL-L0033).
+21. A design review compares rendered screens against named external references and the original foundation, and lists what each change removes (GAL-L0031).
+22. A subset run of the journeys must include the journeys whose fixtures it reads (03 marks the seeded work Sold; 04 leaves the failed image), or it is reported as indicative only. The full suite is the receipt (GAL-L0034).
+23. The `ui-consistency:verifying` check uses a separate agent, calibrated first on a copy with one planted difference.
 
 ## 5. Corrections log
 | # | Claude did | The user wanted |
@@ -83,187 +143,194 @@ You are continuing work from a previous chat. That chat is gone; this file is th
 | 5 | User pasted a Supabase token in chat | Never use it; secrets only via the secure form |
 | 6 | Reported 62/62 against a stale `next-server` | Always verify the served BUILD_ID (GAL-L0018) |
 | 7 | Seeded extra works, breaking journeys | Seed clears works no journey creates; a journey that adds works removes them in afterAll |
-| 8 | Wave 1 claims written from intent, not proof | Each claim needs a journey that fails without it (GAL-L0019) |
-| 9 | Let two suite runs overlap on the test project | Never; runner lock (GAL-L0020) |
-| 10 | Added `overflow-x: clip` on `<html>`; phones mis-sized the viewport | No layout-affecting rule for decoration; regression journey (GAL-L0021) |
-| 11 | Loading states on Studio/operator/root broke 404/307 | Loading state on the entrance only; pinned by a journey (GAL-L0022) |
-| 12 | Render caption hard-coded an older build ID | Label evidence with the build actually rendered |
-| 13 | Ran a `next build` beside a suite, then named that load as the cause of a timeout | Never run heavy work beside a suite; name a cause only after a control run on the previous build (GAL-L0023) |
-| 14 | A shell command combined `cd` with `rm -rf *`; blocked | Don't remove; unpack into a new `mktemp -d` folder instead |
-| 15 | Wave 4: tile class `lead` collided with `.section .lead`; tests measured only outer boxes | Check class names against system.css; test inner layout; render with real images before claiming |
-| 16 | Chained phone + desktop suites in one background command; stopped at the 30-min limit | Each suite its own background command, timeout 3600000; a run without a summary line is "no result" (GAL-L0024) |
-| 17 | Journey 10 counted words with `innerText` on uppercased text, so the check could never fail | Read `textContent`; independent review must check that each test can fail (GAL-L0025) |
-| 18 | Tried `git push -f` after restarting a merged branch; refused by the safety classifier | Plain push; the merged tip is an ancestor, so it fast-forwards |
-| 19 | Shipped waves 1–4 and the decisions without running any installed design skill; receipts name none; the live **empty** state was never reviewed | User: "looks so novice like… duplication… pathetic… have we utilised anything." Run the design skills on every human-facing change and review the live empty state as a first impression |
+| 8 | Wave 1 claims written from intent | Each claim needs a journey that fails without it (GAL-L0019) |
+| 9 | Let two suite runs overlap | Never; runner lock (GAL-L0020) |
+| 10 | `overflow-x: clip` on `<html>` | No layout-affecting rule for decoration (GAL-L0021) |
+| 11 | Loading states broke 404/307 | Loading state on the entrance only (GAL-L0022) |
+| 12 | Render caption hard-coded an old build ID | Label evidence with the build actually rendered |
+| 13 | Ran a build beside a suite, then blamed the load | Never run heavy work beside a suite; name a cause only after a control run (GAL-L0023) |
+| 14 | `cd` + `rm -rf *` in one command; blocked | Unpack into a new `mktemp -d` folder instead |
+| 15 | Tile class `lead` collided; tests measured only outer boxes | Check class names against system.css; test inner layout |
+| 16 | Chained suites in one background command | One suite per background command, timeout 3600000 (GAL-L0024) |
+| 17 | Journey counted words with `innerText` on uppercase text | Read `textContent`; the review checks that each test can fail (GAL-L0025) |
+| 18 | Tried `git push -f` after a merge | Fast-forward; plain push |
+| 19 | Shipped waves 1–4 without design skills | Run design skills on every human-facing change (GAL-L0026) |
+| 20 | Design pass dropped GAL-C1 meaning | Keep a FIXED decision's meaning (GAL-L0027) |
+| 21 | Price-only tiles narrowed P-11 | Tiles keep every status but "Available" |
+| 22 | Reference copies drifted | Copy at the end; byte-identity journey (GAL-L0030) |
+| 23 | Bare `cat` reading stdin | Never |
+| 24 | Wave 5: rule-based checks stripped the gallery character; copy read as AI; no external references; "Make an account" was a list step that looked like a button | Old look restored; compare against real apps; hand-written terse copy; nothing that looks tappable but isn't (GAL-L0031) |
+| 25 | The site named Bengaluru as The Gallery's city (broke GAL-OD-04) | "This is not a Bengaluru centric store. Remove such references if they exist anywhere." (GAL-L0032) |
+| 26 | Restoring system.css dropped the pinned work bar; a hero rule stretched the image box | Carry later rules forward; Message pinned on a phone (GAL-L0033) |
+| 27 | Heredocs with JS or a backgrounded `( … &)` tripped the shell safety check | Write scripts with the Write tool; run servers as their own background command |
+| 28 | Part 2: hid the phone work page's header with `display:none`, removing the banner landmark (journey 07 caught it) | Keep landmarks; hide visually with a clip and show on keyboard focus |
+| 29 | Part 2: a scratch script crashed mid-way and left test rows and a moved position in the test project | Scripts that change test data clean up in `finally`, with SQL the `bind` helper supports (no `ANY($1)` with arrays) |
 
 ## 6. Decisions
 | Decision | Why |
 |---|---|
-| Re-pin to Doctrine `6dc016c485ec1ddf31163534d84e02e0f74772f0` | user |
-| Live Supabase `thegallery` (`kemrceegbyizpcfewgri`); journeys on test project `thegallery-test` (`fbgrumcwlnoljkkbiqfe`) | old project vanished; user chose option 1 |
-| Waves 1–4 live (trust & access, the room at every width, one vocabulary, cutting edge) | adopted |
-| Canonical vocabulary: work · maker · gallery · Studio · The Gallery · on view = published · retired (maker) · taken down (operator) · ways to contact; shown "By enquiry" (stored `enquire`), "Not for sale" (stored `on_view`) | Wave 3 |
-| **Price rule** (`labelPrice`, `src/lib/format.ts`): no price beside Sold or Not for sale; a price never repeats its status; tiles and entrance show only a stated amount; Studio shows the stored price + "not shown while …" | governor 2026-11-07 "Yes. With your recommendations." (PR #8) |
-| **Motion:** keep the tile→hero size morph (~280 ms) over foundation line 163 | same |
-| **Hang this first:** Studio "Order in your gallery" section on a published work; changes only `works.position` (min − 1); shown only when the wall is public and has >1 work; no-op when already first | same |
-| Reconfirming a status moves the work to the top of the Studio list (ordered by `updated_at`) | governor 2026-11-09 "Go with your recommendation." |
-| Keep "For Makers" (capital M) as the section name; "maker" lower case in running text | same |
-| Reference plates and journey docs use the product's words | same (PR #9, documents only) |
-| `DOCTRINE_READ_TOKEN`: not needed to run the site, only to make CI a real check and close the platform-enablement gate | Claude's explanation 2026-11-09; user has not decided (section 12) |
-| Merge PRs #4–#9 over red CI (`DOCTRINE_READ_TOKEN` unset) | user's word each time; recorded in merge messages |
-| Wave 5 = "first impression": review first (done), governor picks A/B/C, then a design pass rendered for the governor before the full build | user "Yes," to the proposal |
+| Doctrine pin `6dc016c485ec1ddf31163534d84e02e0f74772f0` | user |
+| Live Supabase `thegallery` (`kemrceegbyizpcfewgri`); journeys on `thegallery-test` (`fbgrumcwlnoljkkbiqfe`) | user, option 1 |
+| Vocabulary: work · maker · gallery · Studio · The Gallery · on view = published · retired (maker) · taken down (operator) · ways to contact; "By enquiry" (`enquire`), "Not for sale" (`on_view`) | Wave 3 |
+| Price rule (`labelPrice`, `src/lib/format.ts`): no price beside Sold or Not for sale; tiles, entrance, Saved and a maker's squares show every status except "Available", for which a stated price stands in; a stated price also stands beside Made to order / By enquiry | governor 2026-11-07; P-11 / GAL-PR-02 |
+| Keep the tile→hero morph (~280 ms, 1.5 s budget); "Hang this first" control | governor 2026-11-07 |
+| App icon option 4 (stacked "The / Gallery", paper on ink) | "Option 4." |
+| Original look restored (2026-09-06 tokens and system) + app layer | "Of course I want the old look. That is option 1 for sure." |
+| Bottom bar with icons on public pages | "Yes" (reverses B2) |
+| Workshops hidden until the first workshop exists (page stays reachable) | "hide" |
+| About + Participation + Privacy → one screen, full text folded per row; `/participation` and `/privacy` stay, fed from `Policies.tsx` | "yes"; built in part 2 |
+| 16 rendered screens approved, including solid ink bars for Message, Continue and Publish (other actions keep the amber-edged line) | "Approved." |
+| The Gallery names no city of its own; a place is only a maker's own field (GAL-OD-04 `amendment_2026_11_09`) | "This is not a Bengaluru centric store. Remove such references if they exist anywhere." |
+| Bar: Home · Search · Saved · Studio. Studio → `/studio` if signed in, else `/makers`. No bar on `/work/*`, `/makers/*` subpages, `/studio/works/*` or `/operator`. From 900 px the four sit in the header | board + review |
+| GAL-C1 sheet sentence word for word: "You are contacting the maker directly. Payment, delivery, returns and any dispute are arranged with them; The Gallery does not process the transaction." Maker-gallery variant: "You're talking to {first name} directly. Payment, delivery, returns and any dispute are arranged between you; The Gallery takes no part in the sale." | GAL-C1 fixed in meaning |
+| The GAL-C1 sentence sits **above** the route rows on the sheet (the board draws it below) | GAL-C1 meaning: first for every reader, screen reader included |
+| The sheet's three intent choices stay removed; the message follows the work's status (sold → "one like it", else "this one"); `?intent=` still honoured | "Keep" (2026-11-10) |
+| The Email row on the sheet will show the address under "Email" | "Show" (2026-11-10); to land in part 3's PR |
+| No "Report a gallery or a work" row on About until a report route exists | nothing to link to (correction 24) |
+| No "Newest" beside the count on a maker's gallery | works hang in the maker's own order |
+| The maker's head keeps their intro, a public exact address and commissions; the kind label and region/country are dropped | maker's own fields; board |
+| On a phone, the work page's header is hidden by a clip, stays a landmark and shows when the keyboard reaches it | journey 07 |
+| A sold work keeps "Message {name}" | pre-Wave 5 behaviour |
+| Decision C (price "On enquiry" vs status "By enquiry") → later, its own change | governor 2026-11-09 |
+| Merged PR #11, #12 and #13 over red CI (`DOCTRINE_READ_TOKEN` unset) | "Merge." / "Yes." / "Merge PR 13" |
 
 ## 7. Changed / rejected
-- Journeys on the live site → separate test project
-- Direct Postgres → Supabase Management API over HTTPS (`api.supabase.com`, proxy-injected token)
-- Header full-bleed via `overflow-x: clip` → box-shadows → **border-image outset**
-- Loading states on root/Studio/operator → **entrance only**
-- "N images" → **"1 of 3"**; status "Enquire"/"On view" → **By enquiry / Not for sale**
-- Tile class `lead` → **`hang-first`**; React `<ViewTransition>` → browser `document.startViewTransition` (`src/components/ViewTransition.tsx`)
-- "Not for sale · ₹6,800", "By enquiry · Price on enquiry", "Sold · Price on enquiry" → **one price rule** (PR #8)
-- Studio "Order" heading → **"Order in your gallery"** (h2); price note `, not shown…` → separate `.status .price-note` sentence
-- Plates "Exact / Enquire" → **"Fixed price / On enquiry"**; J-002 "Identity / Contact routes" → **"Your details / Ways to contact you"**
-- "Waves 1–4 were design-reviewed" → **not reviewed as a first impression; no recorded skill use** (correction 19)
-- ❌ Restoring the old Supabase project (gone)
-- ❌ `ux/reference/interface/img/hero-vessel.jpg` as test imagery (provenance unknown)
-- ❌ Committed `ux/reference/implemented/*.png` as "before" renders; build the live default branch in a worktree instead
-- ❌ Blaming concurrent build load for the 02 timeout (disproved)
-- ❌ Force-push to restart a merged branch
+- A2 (serif wordmark, sentence-case sans labels, roman lead, filled ink primary everywhere) → original registers restored (mono spaced-capital wordmark and labels, italic serif curator lines with the amber rule, amber-edged actions); solid ink only for the docked action.
+- B2 (wordmark + Search + Menu; bar only in the Studio) → the bar of four on every screen; the Menu removed.
+- Words-only empty states (`EmptyState`, no plinth) → the plinth is back on the empty home (`Plinth` component).
+- Bookmark Save on the work page → a round heart over the photograph (part 2).
+- Search button + Clear + hint → one field; results follow the typing (`SearchBox`).
+- Saved as a list of names → a picture grid with "N works · on this phone".
+- Colophon "The Gallery, Bengaluru" → "The Gallery".
+- Demo makers all in Bengaluru → Khurja (Anika Rao), Jaipur (Dhaaga Studio), Moradabad (Kabir Lohar Works), Kolkata (Folded Hours).
+- Sheet intent choices ("Ask about this work / Commission something like this / General enquiry") → removed ("Keep").
+- Sheet route values (email address, "Message Anika about this work") → row names only; the Email address returns under "Email" ("Show", part 3).
+- Maker gallery one-column hang, lead work large from 900 px, "Get in touch" with bare routes → profile head, one Message button opening the sheet, three-across squares.
+- About "What The Gallery is", "How it works", "What you won't find here" → the board's three-line lead and folding rows. These sentences are no longer said anywhere: "no advertising", "sells no ranking", "no follower counts, likes or popularity charts".
+- The For Makers numbered steps ("Make an account" looked like a button) → to be replaced by the board's screen 7 in part 3.
+- Earlier rejections still stand:
+  - journeys on the live site; direct Postgres;
+  - loading states beyond the entrance;
+  - cropped featured image;
+  - "Contact" (→ "Message");
+  - restoring the old Supabase project;
+  - `hero-vessel.jpg` as test imagery;
+  - committed implemented PNGs as "before";
+  - blaming build load or Wave 5 for timeouts or upload stalls;
+  - force-push;
+  - claiming "It is free";
+  - icon options 1–3.
+- ❌ Board's "Available · ₹6,800" on the home label: the fixed rule wins (price only). (On the work page's own label "Available · ₹6,800" is shown, as the board draws it.)
+- ❌ An "All" chip on Search (not built; the rail lists only materials with work).
 
 ## 8. Data & facts (exact)
 | Item | Value |
 |---|---|
-| Live site | https://atthegallery.in (Cloudflare Worker `thegallery`, auto-deploys the default branch ~75–150 s after merge; PR #8 went live in ~110 s) |
-| Repo / default branch | `r959qp5qwr-web/Thegallery`, `claude/the-gallery-foundation-7plo1e`, tip `5a23906` (Merge PR #9) |
-| Working branch | `claude/eloquent-mccarthy-3o5s8m`, tip `6c65bea` (Wave 5 review evidence; on top of `5a23906`; no PR) |
+| Live site | https://atthegallery.in (Cloudflare Worker `thegallery`, auto-deploys the default branch within ~1 min) |
+| Repo / default branch | `r959qp5qwr-web/Thegallery`, `claude/the-gallery-foundation-7plo1e`, tip `3e1af09` (Merge PR #13) |
+| Working branch (session #7) | `claude/exciting-euler-9njd08` at `84b74f7` = `3e1af09` + one receipt commit ("Part 2 receipt: merged and live"). A new session gets its own designated branch: create it from `claude/exciting-euler-9njd08` (or from the default branch and cherry-pick `84b74f7`) |
 | Doctrine repo | `r959qp5qwr-web/builders-doctrine`, main `6dc016c485ec…`, version 1.1.0 ACTIVE_PENDING_REPIN |
 | Live Supabase | `kemrceegbyizpcfewgri`, publishable `sb_publishable_joD-RqEyX63-Y1CwQSErxg_nuGsUB7N` |
-| Test Supabase | `fbgrumcwlnoljkkbiqfe`, URL `https://fbgrumcwlnoljkkbiqfe.supabase.co`, publishable `sb_publishable_0KNPc4WopVsLNttgeBD43A_O6yyDiJd`, schema `gallery` |
-| Supabase org / paused | org `cfswptemcrgviaelohne` (free, 2 active); paused: Ahoy `mupctqclstbnvrvxycep`, treksfit-prod `yeyaaufiitsznxtuhoee`, maase `mrazsrziwmbwrlsbzglq` |
-| Environment | "The Gallery (with Doctrine)" `env_015jqYRQ2fkV9xhRroHttVvw`; `api.supabase.com` proxy-injected token [secret removed: re-enter it]. It reaches the test project only: a read of the live auth config returned 403. Expires 7 days from 2026-11-06 |
-| PRs | #1 `b22f02e`, #2 `c659e98`, #3 `d7c00a1`, #4 → `336928b`, #5 → `388f914`, #6 → `4986e07`, #7 → `fa59a7c`, #8 → `5563d28`, #9 → `5a23906` |
-| PR #8 proof | build `hY1Ph5UPDYQ6rusmYPJ5G` (code `789cb86`); phone 67 passed + 1 skipped, desktop 68; axe 24 states 0 violations; reflow 16 clean; gates 5/5; drill 89 PASS; before build `OXHiDrCvRr7rERHCSVLHr` (`fa59a7c`); pre-review build `J9XgdgdBIhxPxIj9N349E` (not proof) |
-| Live checks after PR #8 / #9 | `/` `/about` `/privacy` `/makers` 200; `/no-such-page` 404; `/work/not-a-real-token` 404; `/studio` 307; any `/m/<unknown>` 200 "This gallery is not available" (pre-existing, not raised) |
-| Live: icons | `/manifest.webmanifest` 404; no `<link rel=icon>`. Chrome shows a grey "A" and "This app cannot be installed" |
-| Live Supabase auth settings | User said "1 is done" (2026-11-09): Site URL, redirects, templates. NOT SEEN (403) |
-| Test seeds | Maker A `anika.rao@makers.example` / `kiln-and-monsoon-9` (anika-rao); Maker B `studio@dhaaga.example` / `warp-and-weft-11` (dhaaga-studio); Operator `operator@thegallery.example` / `operator-of-record-7` |
-| Test works now | "Monsoon Vessel No. 4" (Maker A, published, status `sold`, price exact 6800, 3 images 900×1200, 1500×1000, 1100×1100); "Unfinished Warp" (Maker B, retired) |
-| Journeys | 01–10; `e2e/10-governor-decisions.spec.ts` (6) |
-| Ledger latest | GAL-L0025 |
-| Receipts (this chat) | `GOVERNOR-DECISIONS-2026-11-07.md` (+ `doctrine/receipts/decisions/*.png`), `GOVERNOR-DECISIONS-2026-11-09.md` |
-| Wave 5 review | 5 reviewers, 98 findings (17 P0), 9 themes; files in `doctrine/receipts/wave5-review/` (`01-ux-ui-audit.md`, `02-vectorlab.md`, `03-critique-elevation.md`, `04-consistency.md`, `05-writing-journey.md`, `BRIEF.md`, `findings-page.html`, `img/`, `sheet-*.jpg`) |
-| Artifacts | Findings page https://claude.ai/artifact/6SN1PoKuEUPWgsXPhmcbTt · Phone-walk checklist https://claude.ai/artifact/TXrno4ACqCY1pEdD8vKKz7 · old design review https://claude.ai/artifact/6UtifvpBuyytm4Nj68C6h4 (all private) |
-| Breakpoints / widths | theme 600 / 900 px; page max 1200 px; Studio column 760 px; forms ≤ 560 px; prose ≤ 66ch |
-| Upload limit | `bodySizeLimit: "12mb"`; only JPEG is read (`src/lib/storage.ts`) |
-
-**Wave 5 themes (from the findings page):**
-1. Empty site looks broken and loops (P0). The browse loop bug is `mats.find(m => m.key !== material)` in the browse page.
-2. Everything said 2–5× (P0): "For Makers" 3–4× per screen; three navigations on phone; maker name 5× on the work page.
-3. Five header shapes / templates (P0): wordmark missing on 13 of 29 pages; 82 inline styles in 26 files.
-4. Contact below the fold on the phone work page (P0; foundation §10 60vh).
-5. Policy language (P1).
-6. Studio unfinished: native file input, "Remove 1…" (P1).
-7. Desktop is a stretched phone: featured work 33% of 1440 (P1/P0).
-8. No app icon or manifest (P1).
-9. Generated-default look (SYSTEM CHANGE).
-
-**Governor decisions pending (Claude's recommendation first):**
-- **A. Visual system:**
-  - Option 2 (recommended), targeted system change: serif wordmark; one filled primary action per screen (WhatsApp on a work); no "→"; mono only for dimensions and price; no rule-plus-italic section opener; 12 px type floor; display up to ~104 px on desktop; palette unchanged.
-  - Option 1: keep the system.
-  - Option 3: full recomposition, including an indigo accent.
-- **B. Public navigation:**
-  - Recommended: wordmark + Search + Menu on public pages; the tab bar stays in the Studio only; one colophon line.
-  - Option 1: keep the tab bar and remove the footer duplicate.
-  - Option 3: header only, everywhere.
-- **C. Price "On enquiry" vs status "By enquiry":**
-  - Recommended: later, as its own change.
-  - Alternatives: fold into Wave 5, or leave as is.
+| Test Supabase | `fbgrumcwlnoljkkbiqfe`, URL `https://fbgrumcwlnoljkkbiqfe.supabase.co`, publishable `sb_publishable_0KNPc4WopVsLNttgeBD43A_O6yyDiJd`, schema `gallery`, bucket `gallery-images` |
+| `.env.local` (gitignored, recreate) | `SUPABASE_URL` (test), `SUPABASE_PUBLISHABLE_KEY` (test), `SUPABASE_STORAGE_BUCKET=gallery-images`, `GALLERY_SCHEMA=gallery`, `GALLERY_BASE_URL=http://127.0.0.1:3100` |
+| Server start | `NODE_USE_ENV_PROXY=1 NODE_EXTRA_CA_CERTS=/root/.ccr/ca-bundle.crt npx next start -p 3100` (own background command) |
+| Suite command | `bash e2e/run-hosted.sh --project=phone --trace off --reporter=line` (and `--project=desktop`), each its own background command |
+| Environment | "The Gallery (with Doctrine)" `env_015jqYRQ2fkV9xhRroHttVvw`; `api.supabase.com` token proxy-injected [secret removed: re-enter it]; reaches the test project only |
+| PRs | #10 → `cc28867`; #11 → `8890c52` (head `49e6f4e`); #12 → `ed26f1d` (head `95b1787`); #13 → `3e1af09` (head `82f6c29`, tested code `eb2cf52`) |
+| PR #12 proof | build `6GlFOZpa4BS4HQUuI8xVv`; phone 80 passed + 1 skipped; desktop 81 passed; axe 0 on 9 screens; reflow 320 OK |
+| PR #13 proof | build `QRdLEjL0sUPlglMRNBfkZ`; phone 90 passed + 1 skipped (24.8 min); desktop 91 passed (24.0 min); axe 0 on 18 states; reflow 320 on 8 pages; controls failed on builds `z9U0wYgyjdf-Q_UKeW29u` and `AC4r1Mi5P3YUW0ThrKPKL` (planted: focus trap removed) |
+| PR #13 unexplained | phone run 1 on `QRdL…`: journey 10 "Hang this first" failed at its last step, and a control of journey 10 alone failed the same way; the next control passed 6/6, as did full runs 2 and 3. Cause UNKNOWN. Run 2 was voided by an HTTP 502 from the management API |
+| Live checks after PR #13 | app.css has "Drawing board, part 2"; `/about` new lead + 3 rows; `/participation`, `/privacy` 200 with unchanged text; `/`, `/search`, `/saved`, `/makers` 200. NOT SEEN: a work/sheet/maker page with content (live has no published work) |
+| Live entrance today | empty (no published works) |
+| Test seeds | Maker A `anika.rao@makers.example` / `kiln-and-monsoon-9` (anika-rao, Khurja); Maker B `studio@dhaaga.example` / `warp-and-weft-11` (dhaaga-studio, Jaipur); Operator `operator@thegallery.example` / `operator-of-record-7` |
+| Test works | "Monsoon Vessel No. 4" (Maker A, published, Sold in the seed state after journey 03, price exact 6800, 3 images, position 0); "Unfinished Warp" (Maker B). The seed does not reset positions |
+| Journeys | 01–12; 91 tests per project (phone 1 skipped) |
+| Saved key | localStorage `gallery.saved.v1` |
+| Ledger latest | GAL-L0034 |
+| Upload limit | `bodySizeLimit: "12mb"`; only JPEG is read (`src/lib/storage.ts`); the picker accepts `image/*` |
+| Breakpoints / widths | 600 / 900 px; page max 1200 px; Studio column 760 px; forms ≤ 560 px; `--bar-h` 66 px |
+| Spacing scale | `--s1` 4 · `--s2` 8 · `--s3` 16 · `--s4` 24 · `--s5` 32 · `--s6` 48 · `--s7` 64 px |
+| Type tokens | wordmark `500 14px` mono, tracking 0.2em, uppercase; display 350 40/48/56; heading 30/34; lead and maker italic 17 serif; label `500 11.5px` mono, tracking 0.14em, uppercase; meta 13 mono; nav 10.5 sans; note italic 19 serif. Also `--t-monument` 350 42/56/72; `--t-caption` 400 13 mono; `--track-display` −0.015em |
+| Colours | paper #F8F3EA, paper-deep #F0E9DC, limestone #E7DECF, ink #221E1A, amber #A5501F, amber-deep #8A3F14 (= `--accent-text`, rgb(138, 63, 20)) |
+| Artifacts (private) | **Approved board** https://claude.ai/artifact/NhfhLaQztV53zwQpYaho7g · phone-walk checklist https://claude.ai/artifact/TXrno4ACqCY1pEdD8vKKz7 · Wave 5 design pass https://claude.ai/artifact/NrK3jfHcXvEXurUAx5NiVp |
+| axe | axe-core 4.10.2 installed in a scratch folder (`npm i axe-core@4.10.2`) and injected with `page.addScriptTag` (not a repo dependency) |
 
 ## 9. People, terms & names
 - **People:** the user = the Governor.
 - **Terms:**
-  - Doctrine tooling: orient / check / gate / drill (`scripts/doctrine-*.py`); receipt; ledger.
-  - Journeys J-001…J-006; plates R-1..R-3, I-1..I-6.
-  - GAL-PR-01: contact is not advertised until a way to contact exists.
-  - "the hang"; "the room"; "the lead work"; "the publish moment"; "Hang this first".
-  - "first impression" = Wave 5.
+  - "drawing board" = the 2026-11-09 restart: references, screen map, 16 screens, rebuilt in parts 1–3.
+  - "part 1/2/3" = the rebuild PRs (#12, #13, next).
+  - "app layer" = the block appended to system.css.
+  - "docked action" = the one solid ink bar a screen pins at its foot.
   - SYSTEM CHANGE = touches tokens.css or system.css.
-- **Files (this chat):**
-  - `labelPrice` in `src/lib/format.ts`;
-  - `hangFirstAction` in `src/app/actions/studio.ts`;
-  - "Order in your gallery" section in `src/app/studio/works/[id]/page.tsx`;
-  - `.status .price-note` and `.group h2.ghead` in `app.css`;
-  - `e2e/10-governor-decisions.spec.ts`;
-  - this file, `doctrine/handoffs/handoff-the-gallery.md`.
+  - "phone walk" = the live physical-phone proof of the maker journey.
+  - GAL-C1 = the handoff disclosure.
+  - GAL-OD-04 = geography.
+  - GAL-PR-01 = contact not advertised until a route exists.
+  - "Keep" / "Show" = the governor's 2026-11-10 answers (intent choices stay removed / show the email address).
+- **Names in use:**
+  - Components:
+    - `Header` (props `className`, `back`, `share`), `Footer`, `Plinth`, `EmptyState`, `WorkTile` (img carries `data-hero`), `Hero`, `MaterialRail`, `Action` in `src/components/Chrome.tsx`;
+    - `ContactSheet` (the Message sheet), `PageTools.tsx` (`BackButton`, `ShareButton`), `SaveButton` (round heart, name "Save" + `aria-pressed`), `Policies.tsx` (`WhoCanOpen`, `WhatWeActOn`, `PrivacyText`), `SheetFocus`, `ViewTransition.tsx` (preloads `data-hero`; sets `window.__galleryMoved`), `SectionNav`, `SearchBox`, `SavedShelf`, `Icon`.
+  - Classes: `.roundbtn`, `.photo-tools`, `.header.over-work`, `.header.tools`, `.folds` / `.fold`, `.routes.rows`, `.profile-wall`, `.grid3`, `.tile.sq`, `.flag.gs`, `.about-lead`, `.about-folds`, `.workbar`, `.act.solid` / `.btn.solid`.
+  - Test ids: `save-work`, `share`, `back`, `disclosure`, `maker-label`, `no-contact`, `freshness`, `price`, `image-count`.
+  - Files:
+    - receipts `doctrine/receipts/DRAWING-BOARD-PART1-2026-11-09.md`, `DRAWING-BOARD-PART2-2026-11-09.md`;
+    - renders `doctrine/receipts/drawing-board-part2/` (`before/`, `after/`, `sheet-ba-phone.jpg`, `hdr-rest-and-focus.png`, `CHECKLIST.md`);
+    - journey `e2e/12-visitor-screens.spec.ts`;
+    - this file `doctrine/handoffs/handoff-the-gallery.md`.
 
 ## 10. Work state
 | Item | Status | Version / location | Notes |
 |---|---|---|---|
-| Waves 1–4 | merged, live | PRs #4–#7 | judged "novice" on the live empty state |
-| Governor decisions 7 Nov | merged, live | PR #8 → `5563d28` | not yet seen on a live work (no public works) |
-| Docs words | merged | PR #9 → `5a23906` | documents only |
-| Wave 5 review | done | `doctrine/receipts/wave5-review/`, artifact 6SN1PoKuEUPWgsXPhmcbTt | awaiting A/B/C |
-| Wave 5 build | not started | — | design pass first, rendered for the governor |
-| Phone walk | not started | checklist artifact TXrno4ACqCY1pEdD8vKKz7 | after Wave 5; also proves the Supabase auth settings |
-| CI | red on every PR | needs repo secret `DOCTRINE_READ_TOKEN` | user undecided |
-
-**Fresh-container routine:**
-1. `npm ci`.
-2. Recreate the gitignored `.env.local`:
-   - `SUPABASE_URL` = the test URL;
-   - `SUPABASE_PUBLISHABLE_KEY` = the test key;
-   - `SUPABASE_STORAGE_BUCKET=gallery-images`;
-   - `GALLERY_SCHEMA=gallery`;
-   - `GALLERY_BASE_URL=http://127.0.0.1:3100`.
-3. `python3 scripts/doctrine-orient.py orient`.
-4. `pkill -f next-server; npx next build; npx next start -p 3100 -H 127.0.0.1` with `NODE_USE_ENV_PROXY=1 NODE_EXTRA_CA_CERTS=/root/.ccr/ca-bundle.crt`.
-5. Journeys: `./e2e/run-hosted.sh --project=phone|desktop --reporter=line`. Phone, then desktop, each its own background command with timeout 3600000; ~19 min each.
-
-**Before-renders:**
-- `git worktree add --detach <scratch>/before <live sha>`.
-- Copy `node_modules` (no symlink).
-- `.env.local` with port 3101.
-- `next start -p 3101`.
-
-**Axe:** `axe-core@4.10.2` in a scratch tools folder, injected via `addScriptTag`.
-
-**Live captures with Playwright:** `launchOptions.proxy = { server: process.env.HTTPS_PROXY, bypass: "127.0.0.1,localhost" }`; the browser NSS store already trusts the proxy CA.
-
-**Render fixtures:** insert extra works reusing Monsoon's `work_images.storage_key`. Restore Monsoon's exact status, confirmation time, `updated_at` and position afterwards.
+| Drawing board (references, screen map, 16 screens) | approved | `doctrine/receipts/drawing-board/` (screens/index.html, png/01–16, REFERENCES-2026-11-09.md); artifact above | source for part 3 (screens 7–14) |
+| Part 1: look + shell (Home, empty Home, Search, Saved, bar) | merged, live | PR #12 | done |
+| Part 2: visitor screens (2, 2b, 3, 6) | merged, live | PR #13 → `3e1af09`; receipt PART2 | done; live content screens NOT SEEN (no live work) |
+| "Show": the email address under "Email" on the sheet | decided, not built | — | build in part 3's PR; add a test that fails without it |
+| Part 3: maker screens (board 7–14) | not started | — | see section 11 |
+| Phone walk | paused until part 3 | checklist artifact | update the checklist for the new screens first |
+| Journey 10 "Hang this first" flake | UNKNOWN | receipt PART2 | if it recurs, rerun with traces on and keep the trace |
+| Report route ("Report a gallery or a work") | not built | — | needs schema + operator queue; its own change |
+| Live operator account | unknown | — | needed for the suspension walk |
+| CI | red on every PR | needs repo secret `DOCTRINE_READ_TOKEN` | governor to create |
 
 ## 11. Next steps
-1. **Next action:** get the governor's answers to A, B and C (section 12, item 1).
-2. Restart the working branch from the default branch tip, orient, and run `ui-consistency:finding-patterns` → `planning`.
-3. Build the Wave 5 **design pass**: the empty entrance, a work page, a maker's gallery and For Makers. Render each at 390 and 1440 from the live-empty state and from the populated state, and show the governor before the full build.
-4. Full Wave 5 build, using the themes in section 8 and the exact copy and values in `doctrine/receipts/wave5-review/*.md`:
-   - one template, one header, one empty-state component;
-   - a written "say it once" rule, plus a journey that counts repeats;
-   - no loops into empty rooms;
-   - Contact on the first screen of a work;
-   - designed Studio controls;
-   - app icon and manifest.
-5. Prove it per rule 14, PR, merge on the user's word, confirm live.
-6. Phone walk (checklist artifact).
+1. **Next action:** on the governor's "Go", start part 3:
+   - Orient.
+   - Create `.env.local` (section 8), then run `npm ci`.
+   - Create this session's branch from `claude/exciting-euler-9njd08`.
+   - Read board screens 7–14 in `doctrine/receipts/drawing-board/screens/index.html`, and the current `src/app/makers/*` and `src/app/studio/*`.
+2. Build part 3:
+   - For Makers (screen 7): pictures first, one docked solid "Open your gallery".
+   - Join (8): three short steps (account; name and place; WhatsApp), one question at a time.
+   - Check your email (9).
+   - Sign in (10).
+   - Reset password (11).
+   - Studio (12): the gallery as a grid with "+ Add a work" first; a missing step shows as one task.
+   - Add a work (13): photos first, choices as taps; size and words further down.
+   - Settings (14): one list.
+   - Plus "Show": the Email address under "Email" on the sheet.
+3. Run the full process (rule 14), then PR #14, "Merge PR #14?", confirm live, fast-forward the branch.
+4. Update the phone-walk checklist; then the phone walk, one step at a time; receipt `PHONE-WALK-<date>.md`.
+5. Afterwards: the live operator account; `DOCTRINE_READ_TOKEN`; decision C; the report route.
 
 ## 12. Open questions ⚠️
-1. **Wave 5 scope:** A (visual system: 1 / **2 recommended** / 3), B (public navigation: 1 / **2 recommended** / 3), C (price-vs-status: **later recommended** / fold in / leave).
-2. **`DOCTRINE_READ_TOKEN`:** set it (recommended, ~5 min, read-only fine-grained token on `builders-doctrine`, Contents read-only, saved as a repo secret), or record a deliberate deferral?
-3. **Live operator account:** unknown whether one exists on the live project; needed for the suspension walk.
-4. **Carried:**
-   - R1 literal "save on pick" vs "draft saved on Save with an image";
+1. **`DOCTRINE_READ_TOKEN`:** a fine-grained read-only GitHub token on `builders-doctrine` (Contents: read), saved as a Thegallery repository secret. Done yet? (yes / not yet)
+2. **Live operator account:** does one exist on the live project? (yes / no / don't know)
+3. **Carried:**
+   - R1 "save on pick" vs "draft saved on Save";
    - live migration for "no untitled publish" + "a published work keeps its last image";
-   - "Untitled work" sentinel vs `title_pending`;
-   - uploads > 12 MB lose the typed label;
-   - JPEG-only reading while the picker accepts `image/*` (iPhone HEIC risk);
-   - status picker on drafts; medium Studio list-detail; expanded operator list (380 px);
-   - foundation conflicts §4 vs §10 and §5 vs §11 (focus ring amber); field-error colour ink vs alarm;
+   - the "Untitled work" sentinel;
+   - uploads over 12 MB lose the typed label;
+   - JPEG-only reading vs iPhone HEIC;
+   - foundation conflicts §4 vs §10 and §5 vs §11;
+   - field-error colour;
    - restore Ahoy and treksfit-prod;
-   - delete or rotate the test project JWT secret and the Supabase token after testing.
+   - rotate the test JWT and the Supabase token after testing;
+   - minor review notes from part 2: About's "What we act on" row repeats its inner heading; a cold work page's way home is Back → maker → bar (or the header on keyboard focus).
 
 ## 13. Re-attach checklist
-- [ ] Nothing has to be attached: this file is also committed at `doctrine/handoffs/handoff-the-gallery.md` on branch `claude/eloquent-mccarthy-3o5s8m`, and the review evidence is in `doctrine/receipts/wave5-review/` on the same branch.
-- [ ] Open the new session on `r959qp5qwr-web/Thegallery` (with `builders-doctrine` beside it) in environment "The Gallery (with Doctrine)", on branch `claude/eloquent-mccarthy-3o5s8m`, and attach or point to this file.
+- [ ] Nothing has to be attached. This file is committed at `doctrine/handoffs/handoff-the-gallery.md` on `claude/exciting-euler-9njd08` (pushed). Open the new session on `r959qp5qwr-web/Thegallery` with `builders-doctrine` beside it, in environment "The Gallery (with Doctrine)", and point it to this file on that branch (or attach this file).
 
 ---
-<sub>Audit: 13/13 sections · 16 rules · 19 corrections · 64 data points · secrets removed: yes · generated by active-memory</sub>
+<sub>Audit: 13/13 sections · 23 rules · 29 corrections · 78 data points · secrets removed: yes · generated by active-memory</sub>
