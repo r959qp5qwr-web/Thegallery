@@ -13,25 +13,25 @@ export default function About() {
     <>
       <Header back="/" />
       <main id="main" tabIndex={-1}>
-      <div className="page-head about">
-        <h1>About</h1>
-        <p className="about-lead">Art and craft, shown by the people who made it. You see the work here and talk
-          to the maker yourself. The Gallery takes no commission.</p>
-      </div>
-      <div className="folds about-folds">
-        <details className="fold">
-          <summary>Who can open a gallery<Icon name="chevron" /></summary>
-          <WhoCanOpen h="h2" />
-        </details>
-        <details className="fold">
-          <summary>What we act on<Icon name="chevron" /></summary>
-          <WhatWeActOn h="h2" />
-        </details>
-        <details className="fold">
-          <summary>Privacy<Icon name="chevron" /></summary>
-          <PrivacyText h="h2" />
-        </details>
-      </div>
+        <div className="page-head about">
+          <h1>About</h1>
+          <p className="about-lead">Art and craft, shown by the people who made it. You see the work here and talk
+            to the maker yourself. The Gallery takes no commission.</p>
+        </div>
+        <div className="folds about-folds">
+          <details className="fold">
+            <summary>Who can open a gallery<Icon name="chevron" /></summary>
+            <WhoCanOpen h="h2" />
+          </details>
+          <details className="fold">
+            <summary>What we act on<Icon name="chevron" /></summary>
+            <WhatWeActOn h="h2" />
+          </details>
+          <details className="fold">
+            <summary>Privacy<Icon name="chevron" /></summary>
+            <PrivacyText h="h2" />
+          </details>
+        </div>
       </main>
       <Footer here="about" />
     </>

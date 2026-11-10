@@ -732,11 +732,12 @@ body:has(.fm-dock) .footer { padding-bottom: calc(var(--s5) + 130px + env(safe-a
 /* ===== Policy screens (governor's review of the live screens, 2026-11-10): About's rows opened
    out on /participation and /privacy; the same text under About's folds. Read as a page, in the
    body face: serif titles, sans sentences, no monospace sentences. ===== */
-.policy-page { padding: var(--s5) var(--pad-x) 0; max-width: calc(640px + 2 * var(--pad-x)); }
-.policy-page > h1 { font: var(--t-heading); letter-spacing: -0.01em; margin: 0; }
-.policy-page .policy-title { font: var(--t-heading); letter-spacing: -0.01em; margin: var(--s6) 0 0; }
-@media (min-width: 900px) { .policy-page { padding-top: var(--s7); } }
-.policy { display: grid; gap: var(--s2); padding: var(--s3) 0 var(--s4); max-width: 60ch; }
+/* The heading block matches About's (.page-head): the same top space and tracking at every width. */
+.policy-page { padding: var(--s6) var(--pad-x) 0; max-width: calc(640px + 2 * var(--pad-x)); }
+.policy-page > h1 { font: var(--t-heading); letter-spacing: var(--track-display); margin: 0; }
+/* A second section on the page sits a step below the page's own title. */
+.policy-page .policy-title { font: var(--t-subheading); letter-spacing: var(--track-display); margin: var(--s5) 0 0; }
+.policy { display: grid; gap: var(--s2); padding: var(--s3) 0 var(--s4); max-width: 34rem; }
 .policy .policy-h { font: var(--t-grid-title); color: var(--text); margin: var(--s3) 0 0; }
 .policy > .policy-h:first-child, .policy-list li:first-child .policy-h { margin-top: 0; }
 .policy p { font: var(--t-body); color: var(--text-soft); margin: 0; }
@@ -746,6 +747,9 @@ body:has(.fm-dock) .footer { padding-bottom: calc(var(--s5) + 130px + env(safe-a
 .policy-list p { font: var(--t-body-small); }
 .policy .policy-aside { font: var(--t-body-small); color: var(--text-muted); }
 .fold > .policy { padding-top: 0; }
+/* Under About, the row name leads and the headings inside it sit a step below it. */
+.about-folds > .fold > summary { font: var(--t-grid-title); }
+.about-folds .policy .policy-h { font: var(--t-body); color: var(--text); }
 
 /* The colophon: on a screen with the bar, the page already keeps the bar's room below it, so the
    footer keeps only its own breathing space (the two together left an empty band). */

@@ -16,9 +16,9 @@
     },
     {
       "id": "R03-no-doubled-negative",
-      "says": "No 'not X, not Y' lists and no 'we do not …, and we do not …' sentences.",
+      "says": "No 'not X, not Y' or 'not X, or not Y' lists and no 'we do not …, and we do not …' sentences.",
       "source": "handoff §3 Avoid (machine-sounding copy); correction 24; GAL-L0031",
-      "check": { "kind": "text-absent", "pattern": "\\b(?:not|no|don['’]t|do not)\\b[^.]{0,60},\\s*(?:and\\s+)?(?:we\\s+)?(?:not|no|don['’]t|do not)\\b", "flags": "i" }
+      "check": { "kind": "text-absent", "pattern": "\\b(?:not|no|don['’]t|do not)\\b[^.]{0,60},\\s*(?:(?:and|or)\\s+)?(?:we\\s+)?(?:not|no|don['’]t|do not)\\b", "flags": "i" }
     },
     {
       "id": "R04-no-rejected-words",

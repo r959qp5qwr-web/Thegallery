@@ -169,12 +169,12 @@ test("About is one screen: a short lead, then the full policy text folded under 
   for (const words of ["It is not for retailers or ordinary resellers.", "Impersonation", "Prohibited or unlawful content",
                        "Spam or systematic misuse", "Prohibited resale", "Safety concerns",
                        "Every action comes with a written reason", "reply to the notice we send you",
-                       "No one here rates the work or checks who a maker is", "Visiting needs no account",
+                       "No one here rates the work or checks who a maker is", "Browsing needs no account",
                        "Your sign-in email stays on record, private"]) {
     await expect(page.getByText(words, { exact: false }).first(), words).toBeVisible();
   }
   // The two pages links already point to stay, with the same words.
-  for (const [path, words] of [["/participation", "Prohibited resale"], ["/privacy", "Visiting needs no account"]] as const) {
+  for (const [path, words] of [["/participation", "Prohibited resale"], ["/privacy", "Browsing needs no account"]] as const) {
     const res = await request.get(path);
     expect(res.status(), path).toBe(200);
     expect(await res.text(), path).toContain(words);

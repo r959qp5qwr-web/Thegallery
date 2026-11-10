@@ -26,7 +26,7 @@ export function WhatWeActOn({ h: Hn = "h2" }: { h?: H }) {
     <div className="policy">
       <ul className="policy-list">
         <li><Hn className="policy-h">Impersonation</Hn><p>Pretending to be someone else, or showing their work as yours.</p></li>
-        <li><Hn className="policy-h">Prohibited or unlawful content</Hn><p>Anything not allowed here, or not lawful to show or sell.</p></li>
+        <li><Hn className="policy-h">Prohibited or unlawful content</Hn><p>Anything the law or this site forbids you to show or sell.</p></li>
         <li><Hn className="policy-h">Spam or systematic misuse</Hn><p>Repeated abuse of the site, by hand or by machine.</p></li>
         <li><Hn className="policy-h">Prohibited resale</Hn><p>Selling work you did not make or materially produce.</p></li>
         <li><Hn className="policy-h">Safety concerns</Hn><p>Anything that puts a person at risk.</p></li>
@@ -43,13 +43,12 @@ export function PrivacyText({ h: Hn = "h2" }: { h?: H }) {
   return (
     <div className="policy">
       <Hn className="policy-h">Visiting</Hn>
-      <p>Visiting needs no account. What you look at is not tracked. Saved works stay in this
-        browser. When you open Saved, the page asks which of them are still available; the request names
-        the works, not you. The servers keep technical logs, such as which page was asked for, to keep the
-        site running.</p>
+      <p>Browsing needs no account and is never tracked. Saved works stay in this browser; opening
+        Saved asks which of them are still available, naming only the works.</p>
+      <p>The servers keep technical logs, such as which page was asked for, to keep the site running.</p>
       <Hn className="policy-h">Messaging a maker</Hn>
       <p>You leave The Gallery. What you say and agree is between you and the maker. We don’t carry or keep it.</p>
-      <Hn className="policy-h">Making</Hn>
+      <Hn className="policy-h">Running a gallery</Hn>
       <p>The email you sign in with is never shown on the site. To let visitors email you, add a public
         email in your Studio’s Settings.</p>
       <Hn className="policy-h">Closing your account</Hn>

@@ -1,7 +1,7 @@
 import { Header, Footer } from "@/components/Chrome";
 import { WhoCanOpen, WhatWeActOn } from "@/components/Policies";
 
-export const metadata = { title: "Participation" };
+export const metadata = { title: "Who can open a gallery" };
 export const dynamic = "force-static";
 
 // The page links already point to (GAL-OD-15 as ratified). The same screen as About's rows,
