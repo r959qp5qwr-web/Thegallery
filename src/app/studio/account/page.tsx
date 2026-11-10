@@ -20,7 +20,7 @@ export default async function Account() {
       <main id="main" tabIndex={-1}>
       <div className="studio-state">
         <h1>Close account</h1>
-        <p className="small" style={{ marginTop: 6 }}>
+        <p className="small" style={{ marginTop: 8 }}>
           Signed in as {account.email}. This address is private and appears on no public page.
         </p>
       </div>

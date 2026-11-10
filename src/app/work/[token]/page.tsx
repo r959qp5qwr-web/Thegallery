@@ -56,7 +56,7 @@ export default async function WorkDetail(
       : "This work is not on view.";
     return (
       <>
-        <Header />
+        <Header back="/" />
         <main id="main" tabIndex={-1}>
           <EmptyState level={1} title={ending.title}
                       routes={ending.maker_status === "active"
@@ -89,7 +89,7 @@ export default async function WorkDetail(
     <>
       {/* On a phone the photograph takes the top of the screen (drawing board, screen 2): no
           header above it, Back, Share and the heart over it. From 900 px the header returns. */}
-      <Header className="over-work" />
+      <Header className="over-work" back={`/m/${work.maker_handle}`} />
       <main id="main" tabIndex={-1} className={`work-page${routes.length ? " has-workbar" : ""}`}>
 
       {/* Compact: one column. Expanded (§10): the image column (7 parts) beside the wall label

@@ -20,6 +20,7 @@
     { "id": "browse",             "page": "/browse/[material]",     "who": "visitor", "path": "/browse/clay",               "archetype": "sub-screen" },
     { "id": "maker",              "page": "/m/[handle]",            "who": "visitor", "path": "/m/anika-rao",               "archetype": "sub-screen" },
     { "id": "work",               "page": "/work/[token]",          "who": "visitor", "path": "/work/{token}",              "archetype": "sub-screen" },
+    { "id": "work-ended",         "page": "/work/[token]",          "who": "visitor", "path": "/work/{retiredToken}",       "archetype": "sub-screen" },
     { "id": "work-message",       "page": "/work/[token]",          "who": "visitor", "path": "/work/{token}?contact=1",    "archetype": "dialog" },
     { "id": "for-makers",         "page": "/makers",                "who": "visitor", "path": "/makers",                    "archetype": "sub-screen" },
     { "id": "join-1",             "page": "/makers/create-account", "who": "visitor", "path": "/makers/create-account",     "archetype": "flow-step" },

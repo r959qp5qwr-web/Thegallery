@@ -19,7 +19,7 @@ export default async function Profile() {
       <main id="main" tabIndex={-1}>
       <div className="studio-state">
         <h1>{maker ? "Your details" : "Who is showing"}</h1>
-        <p className="small" style={{ marginTop: 6 }}>
+        <p className="small" style={{ marginTop: 8 }}>
           Everything on this page is public. Your sign-in email is not on it.
         </p>
       </div>
@@ -44,7 +44,7 @@ export default async function Profile() {
         <Field name="intro" label="A line for the top of your gallery" textarea defaultValue={gallery?.intro} />
         <div className="field">
           <label htmlFor="commissions_open">Commissions</label>
-          <label style={{ display: "flex", gap: 10, alignItems: "center", font: "var(--t-body)" }}>
+          <label className="check-row">
             <KeptCheckbox name="commissions_open" defaultChecked={maker?.commissions_open} />
             I am open to commissions
           </label>

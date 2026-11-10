@@ -10,7 +10,7 @@ export const metadata = { title: "Workshops" };
 export default function Workshops() {
   return (
     <>
-      <Header />
+      <Header back="/" />
       <main id="main" tabIndex={-1}>
         <EmptyState level={1} title="No workshops yet"
                     routes={<Link className="textlink" href="/about">What The Gallery is</Link>}>

@@ -20,7 +20,7 @@ export default async function Whatsapp({ searchParams }: { searchParams: Promise
   const join = !!(await searchParams).join;
   return (
     <>
-      {join ? <Header step="Step 3 of 3" /> : <StudioHeader title="WhatsApp" back="/studio" />}
+      {join ? <Header back="/studio/profile" step="Step 3 of 3" /> : <StudioHeader title="WhatsApp" back="/studio" />}
       <main id="main" tabIndex={-1} className="flow has-workbar">
         <h1>Your WhatsApp</h1>
         <p className="flow-line">Visitors tap Message and it opens a chat with you.</p>

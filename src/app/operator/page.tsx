@@ -50,7 +50,7 @@ export default async function OperatorHome() {
       <main id="main" tabIndex={-1}>
       <div className="studio-state">
         <h1>Makers</h1>
-        <p className="small" style={{ marginTop: 6 }}>
+        <p className="small" style={{ marginTop: 8 }}>
           Access and safety only. Nothing here ranks, features or judges work.
         </p>
       </div>

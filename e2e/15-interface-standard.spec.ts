@@ -69,7 +69,10 @@ test("every screen state meets the Interface Standard", async ({ browser, baseUR
   const w = (await owner((c) => c.query<{ id: string; public_token: string }>(
     "SELECT id, public_token FROM works WHERE title = 'Monsoon Vessel No. 4'"))).rows[0];
   const m = (await owner((c) => c.query<{ id: string }>("SELECT id FROM makers WHERE handle = 'anika-rao'"))).rows[0];
-  const fill = (p: string) => p.replace("{token}", w.public_token).replace("{workId}", w.id).replace("{makerId}", m.id);
+  const ended = (await owner((c) => c.query<{ public_token: string }>(
+    "SELECT public_token FROM works WHERE title = 'Unfinished Warp'"))).rows[0];
+  const fill = (p: string) => p.replace("{token}", w.public_token).replace("{workId}", w.id).replace("{makerId}", m.id)
+    .replace("{retiredToken}", ended.public_token);
   const ctxs: Record<string, BrowserContext> = {};
   const results: { id: string; path: string; archetype: string; findings: Finding[] }[] = [];
   const shots = join(ROOT, "test-results/interface-standard", info.project.name);

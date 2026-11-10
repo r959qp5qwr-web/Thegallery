@@ -47,6 +47,8 @@ export function measure(args: { standard: Standard; archetype: string; profile: 
     // A choice drawn as a label around its radio or checkbox is a control, not a field label.
     const lab = e.closest("label");
     if (lab && lab.querySelector("input[type=radio], input[type=checkbox]")) return "control";
+    // A label that opens a file picker is drawn and used as a button.
+    if (lab && ((lab as HTMLLabelElement).control as HTMLInputElement | null)?.type === "file") return "control";
     if (e.closest("label, legend")) return "label";
     if (profile.help_selector && e.closest(profile.help_selector)) return "help";
     // A short uppercase tracked label (a tab name, a status, "STEP 2 OF 3") is the label role
@@ -55,7 +57,10 @@ export function measure(args: { standard: Standard; archetype: string; profile: 
       if (cs.textTransform === "uppercase" && words <= 4 && px(cs.letterSpacing) > 0) return "caps"; }
     if (e.closest("button, a[href], summary, [role=button], input, select, textarea")) return "control";
     if (e.closest("h1, h2, h3, h4, h5, h6")) return "heading";
-    if (e.closest("p, li, dd, blockquote")) return "body";
+    // Reading text: paragraphs, definitions, quotes — and a list item's own prose. A list row's
+    // supporting line or status chip is secondary text (Material 3 list supporting text, 14sp).
+    if (e.closest("p, dd, blockquote")) return "body";
+    { const li = e.closest("li"); if (li && (e === li || e.parentElement === li) && ownText(e).length > 40) return "body"; }
     return "other";
   };
 
