@@ -45,8 +45,9 @@ Code: branch `claude/continue-wfrmif`, head `beb2365`, final build `UhdkxbzpibZo
 ## Proof
 | Check | Result | Status |
 |---|---|---|
-| Phone suite, final build `UhdkxbzpibZovSIAXEp2u` (code `beb2365`) | PENDING | — |
-| Desktop suite, same build | PENDING | — |
+| Phone suite, final build `UhdkxbzpibZovSIAXEp2u` (code `beb2365`) | **98 passed, 1 skipped, suite exit 0** (27.4 min) | SEEN |
+| Desktop suite, same build | **99 passed, suite exit 0** (25.3 min) | SEEN |
+| Desktop, an earlier run on the same build | 96 passed, 1 failed, 2 did not run. Journey 03 found a *published* "Unfinished Warp" (with a photo) on the home page. The run before it had been cut off by a container restart, partway through the suite. Journey 06 publishes that work for a while and retires it when it finishes, so the cut-off run had probably left it published. The control (the next run, from the state a finished run leaves) passed 99/99. Ledger GAL-L0037. The wrapper's exit code read 0 here; the suite's own summary said 1 failed. Results are now read from the summary line | SEEN |
 | Phone suite, build `j3qN_XCLgaQIn1ruyVFpI` (code `42cd0c0`, before the consistency fixes) | **98 passed, 1 skipped, exit 0** (27.3 min) | SEEN |
 | New tests fail without their change (rule 19) | Journey 13 was run against one planted defect at a time. Each failed at its own test: dock not pinned → test 1 (839 vs 736 px); address not made unique (build `_AipRqjuP6RVEuTW_Rqut`) → test 2; the link signs in any browser (`QvnldJZfpB4pQWohRvOcV`) → test 3, landed signed in on `/studio/join`; no task (`aw1_F4GNOxqqdz7Qzei72`) → test 4; the Studio as one column → test 5 (1 column, not ≥ 2); Publish only drafts (`NKNJoJ21ez8W4St_n7qGe`) → test 6; Settings rows without values (`xmeVbNbV3emn9himKObs1`) → test 7; the sheet without the address (`qpjNEWT4Cl9N1WnG5h6jJ`) → test 8 | SEEN |
 | Changed tests fail on the code before (rule 19) | The old code (`9a6277e`, build `rvSdl9_6wUHvd13DfeWgL`) with the new journeys 01, 08 and 11: 5 failed: the three-step join, recovery and session (01), the status taps (08), the bar off For makers (11). 9 passed, 10 did not run (serial) | SEEN |

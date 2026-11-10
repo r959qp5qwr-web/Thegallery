@@ -791,6 +791,32 @@ A false red on a colour check invites changing the colour. In this project that 
 
 ---
 
+### GAL-L0037
+
+**Date:** 2026-11-10  
+**Observed event:**  
+The container restarted while the desktop suite was running. The re-run on the same build failed one test: journey 03, "a draft work is absent from every anonymous response". The home page showed a *published* "Unfinished Warp" with a photo. Journey 06 publishes that shared work for a while and retires it when it finishes. The run cut off by the restart had probably left it published, and the seed keeps journey-made works. The exit code printed by the background wrapper read 0, while the suite's own summary said "1 failed".
+
+**Evidence:**  
+- `doctrine/receipts/DRAWING-BOARD-PART3-2026-11-10.md`.
+- The failing run: 96 passed, 1 failed, 2 did not run.
+- After it, the test project held one "Unfinished Warp", retired.
+- The control run on the same build, from that state: 99 passed, suite exit 0.
+
+**Why it mattered:**  
+An interrupted run leaves shared test data part-way through a change. The next run fails for that reason and reads as a product regression. A wrapper's exit code nearly carried a red run in as green.
+
+**What changed:**  
+- Practice: after an interrupted suite, check that the shared journey works are as a finished run leaves them (Monsoon Sold, "Unfinished Warp" retired) before trusting the next run, or re-run.
+- Practice: report a suite from its summary line ("N passed / failed / did not run"), never from a wrapper's exit code.
+- Candidate, not built: the seed could put "Unfinished Warp" back to retired when it finds it published.
+
+**Status:** RESOLVED (practice); the seed change is open  
+**Related finding / decision IDs:** drawing board part 3; GAL-L0020; GAL-L0034  
+**Harvest status:** UNHARVESTED
+
+---
+
 ## Ledger rules
 
 - Capture the event in the governed change that fixes or formally records it where feasible.
