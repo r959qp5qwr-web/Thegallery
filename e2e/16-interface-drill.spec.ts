@@ -17,7 +17,8 @@ test("the engine catches every planted defect, and only that", async ({ browser 
   mkdirSync(join(ROOT, ".doctrine/runtime"), { recursive: true });
   rmSync(receipt, { force: true });
   const failures: string[] = [];
-  for (const c of CASES) {
+  const cases = CASES.filter((c) => !c.viewports || c.viewports.includes(info.project.name as "phone" | "desktop"));
+  for (const c of cases) {
     const ctx = await browser.newContext({ ...info.project.use });
     const page = await ctx.newPage();
     await page.route("**/*", (r) => r.fulfill({ status: 200, contentType: "text/html", body: c.html }));
@@ -31,8 +32,8 @@ test("the engine catches every planted defect, and only that", async ({ browser 
   }
   writeFileSync(receipt, JSON.stringify({
     project: info.project.name, result: failures.length ? "FAIL" : "PASS", fingerprint: codeFingerprint(),
-    standard: STANDARD.version, pages: CASES.length, swept: CASES.length, at: new Date().toISOString(),
+    standard: STANDARD.version, pages: cases.length, swept: cases.length, at: new Date().toISOString(),
     findings: failures.map((f) => ({ route: "drill", findings: [{ detail: f }] })),
   }, null, 2));
-  expect(failures, `${failures.length} of ${CASES.length} drill cases wrong`).toEqual([]);
+  expect(failures, `${failures.length} of ${cases.length} drill cases wrong`).toEqual([]);
 });

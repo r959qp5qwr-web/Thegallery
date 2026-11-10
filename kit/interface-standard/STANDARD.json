@@ -1,6 +1,6 @@
 {
   "_what": "The Interface Standard: numeric, sourced rules a screen must meet, measured from what renders by engine/measure.ts. Product-independent. Each rule names its sources (fetched 2026-11-10) and whether the number is a hard floor (WCAG 2.2 AA) or a house value chosen above the floor, with the reason. A product may make a rule stricter in its profile; it may never loosen one. A rule changes only on the governor's word, recorded in ESCAPES.md. A profile may raise a floor or lower a ceiling, for the numeric keys listed in override_direction; nothing else.",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "archetypes": {
     "root": {
       "root": true,
@@ -237,6 +237,18 @@
         "Material 3 spacing tokens on a 4/8dp scale (UNVERIFIED: page not fetched)"
       ],
       "status": "house (product-declared)"
+    },
+    {
+      "id": "IS-L4-viewport",
+      "says": "The page sets its layout width to the device (meta viewport width=device-width), so a phone does not shrink a desktop-width layout.",
+      "check": {
+        "kind": "viewport-meta"
+      },
+      "source": [
+        "MDN: viewport meta tag — https://developer.mozilla.org/en-US/docs/Web/HTML/Viewport_meta_tag",
+        "WCAG 1.4.10 Reflow (AA) — https://www.w3.org/TR/WCAG22/#reflow"
+      ],
+      "status": "house (precondition of the phone measures)"
     },
     {
       "id": "IS-X1-axe-wcag22",

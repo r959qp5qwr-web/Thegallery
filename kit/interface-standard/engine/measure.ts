@@ -239,6 +239,12 @@ export function measure(args: { standard: Standard; archetype: string; profile: 
         }
         break;
       }
+      case "viewport-meta": {
+        // Without width=device-width a phone lays the page out about 980 px wide and shrinks it.
+        const m = document.querySelector('meta[name="viewport"]')?.getAttribute("content") ?? "";
+        if (!/width\s*=\s*device-width/.test(m)) addR(rule, m ? `viewport is "${m}"` : "no viewport meta tag", "");
+        break;
+      }
       case "no-overflow-x": {
         const d = document.documentElement;
         if (d.scrollWidth > d.clientWidth + 1) addR(rule, `scrollWidth ${d.scrollWidth} > ${d.clientWidth}`, "");

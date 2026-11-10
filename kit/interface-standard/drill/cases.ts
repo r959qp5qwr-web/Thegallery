@@ -11,6 +11,7 @@ export const DRILL_PROFILE: Profile = { primary_selector: ".primary", help_selec
 const BASE = `<style>
   body { margin: 0; font: 16px/1.5 sans-serif; } header { height: 56px; display: flex; align-items: center; padding: 0 16px; }
   main { padding: 16px; max-width: 560px; } a, button { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; font-size: 16px; }
+  button { padding: 0 16px; }
   h1 { margin: 0 0 16px; font-size: 28px; } h2 { margin: 0 0 16px; font-size: 22px; } p { margin: 0 0 16px; } ul { margin: 0; padding: 0 0 0 24px; }
   .field { margin-top: 32px; } label { display: block; margin-bottom: 8px; font-size: 16px; }
   input { display: block; height: 48px; font-size: 16px; width: 100%; box-sizing: border-box; padding: 0 12px; }
@@ -18,7 +19,8 @@ const BASE = `<style>
   .skip { position: absolute; top: -80px; left: 8px; }
   [role=dialog] { position: fixed; inset: auto 0 0 0; background: #fff; padding: 16px; }
 </style>`;
-const page = (header: string, main: string, after = "") => `<!doctype html><html lang="en"><head><title>Drill</title>${BASE}</head><body>
+const VIEWPORT = `<meta name="viewport" content="width=device-width, initial-scale=1">`;
+const page = (header: string, main: string, after = "") => `<!doctype html><html lang="en"><head>${VIEWPORT}<title>Drill</title>${BASE}</head><body>
   <a class="skip" href="#main">Skip to content</a>${header}<main id="main"><h1>A screen</h1>${main}</main>${after}</body></html>`;
 const BACK = `<header><a href="/elsewhere" aria-label="Back">←</a></header>`;
 const FORM = `<div class="field"><label for="a">Name</label><input id="a"><div class="help">Shown on your page.</div></div>
@@ -26,7 +28,8 @@ const FORM = `<div class="field"><label for="a">Name</label><input id="a"><div c
 const PROSE = `<p>A short paragraph that a person reads from start to end.</p>`;
 const DIALOG = (inner: string) => `<section role="dialog" aria-label="Message"><h2>Message</h2>${inner}</section>`;
 
-export type DrillCase = { id: string; archetype: string; html: string; expect: string[]; profile?: Partial<Profile> };
+/** viewports: where the case applies (a phone-only rule cannot fire on a desktop, a 120-character line cannot fit a phone). */
+export type DrillCase = { id: string; archetype: string; html: string; expect: string[]; profile?: Partial<Profile>; viewports?: ("phone" | "desktop")[] };
 export const CASES: DrillCase[] = [
   // ---- clean pages: nothing may be reported
   { id: "clean editor", archetype: "editor", html: page(BACK, FORM), expect: [] },
@@ -55,7 +58,7 @@ export const CASES: DrillCase[] = [
   { id: "tracked capitals that are a sentence", archetype: "sub-screen", expect: ["IS-T3-secondary-14"], html: page(BACK, PROSE + `<span style="text-transform:uppercase;letter-spacing:0.1em;font-size:12px">Sold. Ask.</span>`) },
   { id: "aria-hidden text at 11 px", archetype: "sub-screen", expect: ["IS-T3-secondary-14", "IS-T4-absolute-12"], html: page(BACK, PROSE + `<div aria-hidden="true" style="font-size:11px">1 of 3</div>`) },
   { id: "line height 1.2 on running text", archetype: "sub-screen", expect: ["IS-T5-line-height"], html: page(BACK, `<p style="line-height:1.2">A paragraph long enough to be running text, set far too tight for a person to read with ease.</p>`) },
-  { id: "lines of 120 characters", archetype: "sub-screen", expect: ["IS-T6-measure"],
+  { id: "lines of 120 characters", archetype: "sub-screen", expect: ["IS-T6-measure"], viewports: ["desktop"],
     html: page(BACK, `<p style="width:960px;max-width:none">${"A long line of running text that keeps going across the whole width of a very wide column. ".repeat(4)}</p>`).replace("max-width: 560px", "max-width: none") },
   { id: "typed text at 14 px", archetype: "editor", expect: ["IS-T7-field-text-16"], html: page(BACK, FORM.replace(`<input id="a">`, `<input id="a" style="font-size:14px">`)) },
 
@@ -75,7 +78,8 @@ export const CASES: DrillCase[] = [
   { id: "an input outside any field", archetype: "editor", expect: ["IS-F1-form-rhythm"], html: page(BACK, FORM + `<input aria-label="Loose" style="margin-top:32px">`) },
 
   // ---- layout (IS-L1..L3)
-  { id: "text touching the screen edge", archetype: "sub-screen", expect: ["IS-L1-side-margin"], html: page(BACK, PROSE).replace("main { padding: 16px;", "main { padding: 16px 0;") },
+  { id: "text touching the screen edge", archetype: "sub-screen", expect: ["IS-L1-side-margin"], viewports: ["phone"], html: page(BACK, PROSE).replace("main { padding: 16px;", "main { padding: 16px 0;") },
+  { id: "no mobile viewport tag", archetype: "sub-screen", expect: ["IS-L4-viewport"], html: page(BACK, PROSE).replace(VIEWPORT, "") },
   { id: "sideways scroll", archetype: "sub-screen", expect: ["IS-L2-no-sideways"], html: page(BACK, PROSE + `<div style="width:2000px;height:8px"></div>`) },
   { id: "spacing off the grid", archetype: "sub-screen", expect: ["IS-L3-grid"], html: page(BACK, `<p style="margin-top:18px">Words to read here, a few of them.</p>`) },
 
