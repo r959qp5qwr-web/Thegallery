@@ -4,7 +4,7 @@
   "primary_selector": ".btn.solid, .act.solid",
   "help_selector": ".help",
   "field_selector": ".field, fieldset.segfield",
-  "ignore_selector": ".skip, nav.bar .sr, [aria-hidden=true]",
+  "ignore_selector": ".skip",
   "overrides": {},
   "states": [
     { "id": "home",               "page": "/",                      "who": "visitor", "path": "/",                          "archetype": "root" },

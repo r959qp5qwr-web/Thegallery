@@ -7,7 +7,8 @@ description: The measured Interface Standard and its learning loop. Use before b
 
 Taste is not the method. Every screen state is **measured** against `STANDARD.json` (numbers with
 sources: WCAG 2.2, Material 3, Apple HIG, GOV.UK) by `engine/measure.ts`, on phone and desktop,
-inside the full suite. The gate refuses a pull request without a PASS receipt for the exact code.
+inside the full suite. The gate is OPEN only with PASS receipts for the exact code and build; the
+builder runs it before every PR, and the product guard enforces it where project hooks load.
 What cannot be measured is a fixed manual protocol, not an opinion.
 
 ## A. Building or changing a screen (before code)

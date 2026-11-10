@@ -1,5 +1,5 @@
 import { test, expect, type Browser, type BrowserContext, type Page } from "@playwright/test";
-import { mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { join, relative } from "node:path";
 import { owner, signIn, sql, linkFromOutbox, forgetPerson, MAKER_A, OPERATOR } from "./helpers";
 import { codeFingerprint } from "./support/fingerprint";
@@ -7,28 +7,41 @@ import { measure, type Standard, type Profile, type Finding } from "../kit/inter
 
 // The Interface Standard (governor, 2026-11-10: "a mechanism level solution, that's replicable,
 // rigid, and learns from itself"). Every screen STATE in ux/INTERFACE_PROFILE.json is opened as
-// its viewer and measured by the engine against kit/interface-standard/STANDARD.json: type floors,
-// line height and length, target size, Back by archetype, one primary action, form rhythm, side
-// margins, the spacing grid, and axe under WCAG 2.2 AA with target-size on. Numbers, not taste.
-// A page with no state fails; a state that lands somewhere else fails. The receipt it writes is
-// required by scripts/app-sweep-gate.py beside the whole-app sweep's.
+// its viewer and measured by the engine against kit/interface-standard/STANDARD.json, plus axe at
+// WCAG 2.2 AA. Numbers, not taste. Fail-closed: a page with no state, an unknown archetype, viewer
+// or setup, a setup that did not take, a state that lands anywhere but the address asked for, a
+// loosening override — each is a finding in the receipt, which scripts/app-sweep-gate.py requires.
 
 const ROOT = process.cwd();
 type State = { id: string; page: string; who: string; path: string; archetype: string; setup?: string };
-const PROFILE = JSON.parse(readFileSync(join(ROOT, "ux/INTERFACE_PROFILE.json"), "utf8")) as Profile & { standard: string; states: State[]; overrides: Record<string, Record<string, number>> };
-const STANDARD = JSON.parse(readFileSync(join(ROOT, PROFILE.standard), "utf8")) as Standard;
-// A profile may only make a rule stricter: numbers that are floors may rise, ceilings may fall.
-for (const [id, o] of Object.entries(PROFILE.overrides ?? {})) {
-  const r = STANDARD.rules.find((x) => x.id === id);
-  if (!r) throw new Error(`profile overrides unknown rule ${id}`);
-  for (const [k, v] of Object.entries(o)) {
-    const was = r.check[k] as number; const ceiling = /^max/.test(k);
-    if (ceiling ? v > was : v < was) throw new Error(`profile would loosen ${id}.${k} (${was} → ${v})`);
-    r.check[k] = v;
-  }
-}
+const PROFILE = JSON.parse(readFileSync(join(ROOT, "ux/INTERFACE_PROFILE.json"), "utf8")) as Profile & { standard: string; states: State[]; overrides: Record<string, Record<string, unknown>> };
+const STANDARD = JSON.parse(readFileSync(join(ROOT, PROFILE.standard), "utf8")) as Standard & { override_direction: Record<string, "floor" | "ceiling"> };
 const AXE = readFileSync(join(ROOT, "node_modules/axe-core/axe.min.js"), "utf8");
 const JOINER = { email: "standard.joiner@makers.example", password: "standard-joiner-pass-1" };
+const VIEWERS = ["visitor", "maker", "operator", "joiner", "joiner-named"];
+// Each setup and what must be true once it has run; a setup that did not take is a finding.
+const SETUPS: Record<string, (p: Page) => Promise<string | null>> = {
+  "no-works-on-view": async (p) => (await p.locator("a[href^='/work/']").count()) ? "works still on view" : null,
+  "open-folds": async (p) => (await p.locator("details:not([open])").count()) || !(await p.locator("details[open]").count()) ? "folds not open" : null,
+  "submit-empty": async (p) => (await p.locator("[aria-invalid=true], .err, [role=alert]").count()) ? null : "no error shown after an empty submit",
+};
+const PENDING = join(ROOT, ".doctrine/runtime/interface-pending-restore.json");
+
+/** A profile may raise a floor or lower a ceiling, for the numeric keys the standard lists. */
+function applyOverrides(): string[] {
+  const errs: string[] = [];
+  for (const [id, o] of Object.entries(PROFILE.overrides ?? {})) {
+    const r = STANDARD.rules.find((x) => x.id === id);
+    if (!r) { errs.push(`override of unknown rule ${id}`); continue; }
+    for (const [k, v] of Object.entries(o)) {
+      const dir = STANDARD.override_direction?.[k]; const was = r.check[k];
+      if (!dir || typeof v !== "number" || typeof was !== "number") { errs.push(`override ${id}.${k} is not a numeric floor or ceiling`); continue; }
+      if (dir === "floor" ? v < was : v > was) { errs.push(`override would loosen ${id}.${k} (${was} → ${v})`); continue; }
+      r.check[k] = v;
+    }
+  }
+  return errs;
+}
 
 function pagesOnDisk(): string[] {
   const out: string[] = [];
@@ -38,11 +51,13 @@ function pagesOnDisk(): string[] {
   return out.map((d) => "/" + d.split("/").filter((s) => s && !/^\(.*\)$/.test(s)).join("/")).sort();
 }
 
-test("every page has at least one state in the interface profile", async () => {
-  const listed = new Set(PROFILE.states.map((s) => s.page));
-  expect(pagesOnDisk().filter((p) => !listed.has(p)), "pages with no state in ux/INTERFACE_PROFILE.json").toEqual([]);
-  expect(PROFILE.states.filter((s) => !STANDARD.archetypes[s.archetype]).map((s) => s.id), "states with an unknown archetype").toEqual([]);
-});
+/** Works hidden for the empty-home state are put back even if an earlier run was killed mid-state. */
+async function restorePending() {
+  if (!existsSync(PENDING)) return;
+  const ids = JSON.parse(readFileSync(PENDING, "utf8")) as string[];
+  for (const id of ids) await sql("UPDATE works SET taken_down = false WHERE id = $1", [id]);
+  rmSync(PENDING);
+}
 
 async function joinerContext(browser: Browser, use: object, baseURL: string, named: boolean): Promise<BrowserContext> {
   const ctx = await browser.newContext({ ...use, baseURL });
@@ -66,6 +81,24 @@ async function joinerContext(browser: Browser, use: object, baseURL: string, nam
 
 test("every screen state meets the Interface Standard", async ({ browser, baseURL }, info) => {
   test.setTimeout(1_200_000);
+  const receipt = join(ROOT, `.doctrine/runtime/interface-${info.project.name}.json`);
+  mkdirSync(join(ROOT, ".doctrine/runtime"), { recursive: true });
+  rmSync(receipt, { force: true });                       // no earlier PASS survives this run
+  const build = readFileSync(join(ROOT, ".next/BUILD_ID"), "utf8").trim();
+  const served = await (await fetch(new URL("/about", baseURL))).text();
+  const results: { id: string; path: string; archetype: string; findings: Finding[] }[] = [];
+  const meta = (id: string, measured: string) => results.push({ id, path: "", archetype: "-", findings: [{ rule: "PROFILE", says: "the profile covers the app and is well formed", measured, where: "" }] });
+  if (!served.includes(build)) meta("server", `the server at ${baseURL} is not serving build ${build}`);
+  for (const e of applyOverrides()) meta("overrides", e);
+  const listed = new Set(PROFILE.states.map((s) => s.page));
+  for (const p of pagesOnDisk().filter((p) => !listed.has(p))) meta(p, "a page with no state in ux/INTERFACE_PROFILE.json");
+  for (const s of PROFILE.states) {
+    if (!STANDARD.archetypes[s.archetype]) meta(s.id, `unknown archetype ${s.archetype}`);
+    if (!VIEWERS.includes(s.who)) meta(s.id, `unknown viewer ${s.who}`);
+    if (s.setup && !SETUPS[s.setup]) meta(s.id, `unknown setup ${s.setup}`);
+  }
+
+  await restorePending();
   const w = (await owner((c) => c.query<{ id: string; public_token: string }>(
     "SELECT id, public_token FROM works WHERE title = 'Monsoon Vessel No. 4'"))).rows[0];
   const m = (await owner((c) => c.query<{ id: string }>("SELECT id FROM makers WHERE handle = 'anika-rao'"))).rows[0];
@@ -74,13 +107,23 @@ test("every screen state meets the Interface Standard", async ({ browser, baseUR
   const fill = (p: string) => p.replace("{token}", w.public_token).replace("{workId}", w.id).replace("{makerId}", m.id)
     .replace("{retiredToken}", ended.public_token);
   const ctxs: Record<string, BrowserContext> = {};
-  const results: { id: string; path: string; archetype: string; findings: Finding[] }[] = [];
   const shots = join(ROOT, "test-results/interface-standard", info.project.name);
   mkdirSync(shots, { recursive: true });
   const axeTags = (STANDARD.rules.find((r) => r.check.kind === "axe")?.check.tags ?? []) as string[];
+  const write = () => {
+    const bad = results.filter((r) => r.findings.length);
+    const measured = results.filter((r) => r.archetype !== "-").length;
+    const pass = measured === PROFILE.states.length && bad.length === 0;
+    writeFileSync(receipt, JSON.stringify({
+      project: info.project.name, result: pass ? "PASS" : "FAIL", fingerprint: codeFingerprint(), build, base_url: baseURL,
+      standard: STANDARD.version, pages: PROFILE.states.length, swept: measured,
+      rules: STANDARD.rules.map((r) => r.id), at: new Date().toISOString(),
+      findings: bad.map((r) => ({ route: r.id, path: r.path, archetype: r.archetype, findings: r.findings })),
+    }, null, 2));
+  };
   await forgetPerson(JOINER.email);
   try {
-    for (const s of PROFILE.states) {
+    for (const s of PROFILE.states.filter((s) => STANDARD.archetypes[s.archetype] && VIEWERS.includes(s.who) && (!s.setup || SETUPS[s.setup]))) {
       const findings: Finding[] = [];
       let page: Page | undefined; let restore: (() => Promise<void>) | undefined;
       try {
@@ -92,24 +135,26 @@ test("every screen state meets the Interface Standard", async ({ browser, baseUR
             ctxs[s.who] = await browser.newContext({ ...info.project.use, baseURL });
             if (s.who !== "visitor") {
               const p = await ctxs[s.who].newPage();
-              const who = s.who === "maker" ? MAKER_A : OPERATOR;
-              await signIn(p, who.email, who.password); await p.close();
+              await signIn(p, ...(s.who === "maker" ? [MAKER_A.email, MAKER_A.password] : [OPERATOR.email, OPERATOR.password]) as [string, string]);
+              await p.close();
             }
           }
         }
         if (s.setup === "no-works-on-view") {
           const ids = (await sql<{ id: string }>("SELECT id FROM works WHERE taken_down = false")).map((r) => r.id);
-          if (ids.length) await sql(`UPDATE works SET taken_down = true WHERE id IN (${ids.map((_, i) => `$${i + 1}`).join(",")})`, ids);
-          restore = async () => { if (ids.length) await sql(`UPDATE works SET taken_down = false WHERE id IN (${ids.map((_, i) => `$${i + 1}`).join(",")})`, ids); };
+          writeFileSync(PENDING, JSON.stringify(ids));          // written before the change, so a killed run is undone next time
+          for (const id of ids) await sql("UPDATE works SET taken_down = true WHERE id = $1", [id]);
+          restore = restorePending;
         }
         page = await ctxs[s.who].newPage();
         const path = fill(s.path);
         const res = await page.goto(path, { waitUntil: "networkidle" });
         if (!res || res.status() >= 400) findings.push({ rule: "STATE", says: "every state opens", measured: `HTTP ${res?.status()}`, where: path });
-        const landed = new URL(page.url()).pathname, wanted = new URL(path, "http://x").pathname;
-        if (landed !== wanted) findings.push({ rule: "STATE", says: "the state measured is the state asked for", measured: `asked ${wanted}, landed on ${landed}`, where: "" });
+        const got = new URL(page.url()), want = new URL(path, "http://x");
+        if (got.pathname + got.search !== want.pathname + want.search) findings.push({ rule: "STATE", says: "the state measured is the state asked for", measured: `asked ${want.pathname + want.search}, landed on ${got.pathname + got.search}`, where: "" });
         if (s.setup === "open-folds") await page.evaluate(() => document.querySelectorAll("details").forEach((d) => (d.open = true)));
-        if (s.setup === "submit-empty") { await page.locator(PROFILE.primary_selector).first().click(); await page.waitForTimeout(600); }
+        if (s.setup === "submit-empty") { await page.locator(PROFILE.primary_selector).first().click(); await page.waitForTimeout(800); }
+        if (s.setup) { const miss = await SETUPS[s.setup](page); if (miss) findings.push({ rule: "STATE", says: "the setup took", measured: `${s.setup}: ${miss}`, where: "" }); }
         await page.mouse.move(0, 0);
         findings.push(...await page.evaluate(measure, { standard: STANDARD, archetype: s.archetype, profile: PROFILE }));
         if (axeTags.length) {
@@ -123,23 +168,16 @@ test("every screen state meets the Interface Standard", async ({ browser, baseUR
       } catch (e) {
         findings.push({ rule: "STATE", says: "every state opens", measured: String(e).slice(0, 200), where: s.path });
       } finally {
-        await page?.close();
-        if (restore) await restore();
+        if (restore) await restore();                         // before anything else that could throw
+        await page?.close().catch(() => {});
       }
       results.push({ id: s.id, path: s.path, archetype: s.archetype, findings });
     }
   } finally {
-    for (const c of Object.values(ctxs)) await c.close();
+    write();                                                  // the receipt first; cleanup after
+    await restorePending();
+    for (const c of Object.values(ctxs)) await c.close().catch(() => {});
     await forgetPerson(JOINER.email);
-    const bad = results.filter((r) => r.findings.length);
-    const pass = results.length === PROFILE.states.length && bad.length === 0;
-    mkdirSync(join(ROOT, ".doctrine/runtime"), { recursive: true });
-    writeFileSync(join(ROOT, `.doctrine/runtime/interface-${info.project.name}.json`), JSON.stringify({
-      project: info.project.name, result: pass ? "PASS" : "FAIL", fingerprint: codeFingerprint(),
-      standard: STANDARD.version, pages: PROFILE.states.length, swept: results.length,
-      rules: STANDARD.rules.map((r) => r.id), at: new Date().toISOString(),
-      findings: bad.map((r) => ({ route: r.id, path: r.path, archetype: r.archetype, findings: r.findings })),
-    }, null, 2));
   }
   const report = results.flatMap((r) => r.findings.map((f) => `${r.id} (${r.archetype}) — ${f.rule}: ${f.measured}${f.where ? ` @ ${f.where}` : ""}`));
   expect(report, `${report.length} finding(s) across ${PROFILE.states.length} states; receipt in .doctrine/runtime/`).toEqual([]);

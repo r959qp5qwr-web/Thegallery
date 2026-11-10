@@ -1,7 +1,7 @@
 # Interface Standard (kit)
 
-A product-independent mechanism that holds every screen of an app to measured, sourced interface
-rules, blocks a pull request until they pass, and learns from every fault a person still finds.
+A product-independent mechanism that holds every declared screen state of an app to measured, sourced
+interface rules, makes the merge gate depend on them, and learns from every fault a person still finds.
 First adopted by The Gallery (2026-11-10). Written to be lifted into any web app built under the
 Builders' Doctrine.
 
@@ -25,11 +25,11 @@ Builders' Doctrine.
 | Calibration | `calibrate.ts`, `REFERENCES.json`, `CALIBRATION.json` | runs the engine on outside reference screens; every finding read: engine error or stricter house rule |
 | Product profile | `<app>/ux/INTERFACE_PROFILE.json` | every screen **state** with its archetype and viewer; the product's selectors; stricter overrides only |
 | Journey | `<app>/e2e/15-interface-standard.spec.ts` | opens every state as its viewer, phone and desktop; engine + axe (WCAG 2.2 AA, target-size on); receipt bound to a code fingerprint |
-| Gate | `<app>/scripts/app-sweep-gate.py` | no PR opened or merged without PASS receipts for the exact code |
+| Gate | `<app>/scripts/app-sweep-gate.py` | OPEN only with PASS receipts for the exact code and build, phone and desktop. Enforced where it runs: the product's guard (`doctrine-hook.py` SWEEP-1, for the GitHub tools and `gh pr`) when the host loads project hooks, and the builder's own gate check before every PR. CI cannot read the receipts; enforcement there is NOT configured |
 | Loop | `SKILL.md`, `ESCAPES.md` | every escape classified C1–C4, fixed at its layer with a failing control, counted |
 
 ## Adopting in another product
-1. Copy `kit/interface-standard/` unchanged (engine and standard are pinned by `version`).
+1. Copy `kit/interface-standard/` unchanged; record its `version` in the product (nothing checks the version yet).
 2. Write `ux/INTERFACE_PROFILE.json`: selectors for the primary action, help text and fields; one
    entry per screen state with its archetype and viewer.
 3. Copy the journey (`e2e/15-interface-standard.spec.ts`) and adapt only the viewer sign-ins and the
@@ -37,7 +37,8 @@ Builders' Doctrine.
 4. Add the receipts to the PR gate. Run `calibrate.ts` once in the new environment.
 
 ## Hard rules
-- A profile may make a rule stricter, never looser (the journey refuses a loosening override).
-- A state that lands elsewhere fails; there is no redirect exemption.
+- A profile may raise a floor or lower a ceiling for the numeric keys in `override_direction`; any other override, or a loosening one, is a finding in the receipt.
+- The profile's selectors are policed: the ignore list may hide only what is off screen; every input must sit in a field; an editor or a flow step needs exactly one primary action.
+- A state that lands anywhere but the address asked for (path and query) fails; there is no redirect exemption. A page with no declared state, an unknown viewer or setup, and a setup that did not take are findings in the receipt, not a separate test.
 - An unknown archetype or check kind fails.
 - A rule changes on the governor's word only, recorded in `ESCAPES.md`.

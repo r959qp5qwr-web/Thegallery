@@ -249,6 +249,9 @@ def decide_shell(payload: dict) -> Verdict:
     subs = {git_subcommand(seg) for seg in segments(command)}
     if "push" in subs and re.search(r"builders-doctrine", command):
         raise Deny("GUARD-1", "this push targets the central Doctrine repository.", "shell")
+    # SWEEP-1 covers every route to a pull request, not only the GitHub API tools (review, 2026-11-10).
+    if re.search(r"\bgh\s+pr\s+(create|merge)\b|\bgh\s+api\b[^|;&]*\bpulls\b", command):
+        sweep_gate("gh pr")
     consequential = bool(CONSEQUENTIAL_OTHER.search(command)) or bool(subs & CONSEQUENTIAL_GIT)
     if not consequential:
         return Allow("shell-not-consequential")
@@ -317,7 +320,7 @@ def sweep_gate(tool: str) -> None:
     except Exception as e:  # noqa: BLE001 — an indeterminate verdict is a denial
         ok, problems = False, [f"the sweep gate could not run ({e})"]
     if not ok:
-        raise Deny("SWEEP-1", f"{tool}: the whole-app sweep has not passed on this code. " + " | ".join(problems), "github-api")
+        raise Deny("SWEEP-1", f"{tool}: the whole-app sweep and the Interface Standard have not both passed on this code. " + " | ".join(problems), "github-api")
 
 
 def decide_generic_consequential(payload: dict, tool: str, cls: str) -> Verdict:

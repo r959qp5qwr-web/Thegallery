@@ -31,12 +31,13 @@ EXTRA_FILES = ("ux/APP_RULES.json", "e2e/14-whole-app.spec.ts", "e2e/helpers.ts"
                "next.config.js", "next.config.mjs", "package.json", "package-lock.json",
                "ux/INTERFACE_PROFILE.json", "kit/interface-standard/STANDARD.json",
                "kit/interface-standard/engine/measure.ts", "e2e/15-interface-standard.spec.ts",
-               "e2e/support/fingerprint.ts")
+               "e2e/support/fingerprint.ts", "playwright.config.ts", "tsconfig.json",
+               "open-next.config.ts", "e2e/support/test-project.sql")
 
 
 def fingerprint() -> str:
     """The same fingerprint e2e/14-whole-app.spec.ts writes (codeFingerprint)."""
-    files = [p for d in ("src", "public") for p in (ROOT / d).rglob("*") if p.is_file()]
+    files = [p for d in ("src", "public", "db/migrations") for p in (ROOT / d).rglob("*") if p.is_file()]
     rel = [p.relative_to(ROOT).as_posix() for p in files] + [f for f in EXTRA_FILES if (ROOT / f).is_file()]
     h = hashlib.sha256()
     for f in sorted(rel):
@@ -50,6 +51,10 @@ def verdict() -> tuple[bool, list[str]]:
     except Exception as e:  # noqa: BLE001 — any failure to read the code is a shut gate
         return False, [f"the code could not be fingerprinted ({e})"]
     problems = []
+    try:
+        build = (ROOT / ".next" / "BUILD_ID").read_text().strip()
+    except Exception:  # noqa: BLE001 — no build is a shut gate for the standard's receipts
+        build = ""
     for kind, project in [(k, p) for k in RECEIPTS for p in PROJECTS]:
         path = ROOT / ".doctrine" / "runtime" / f"{kind}-{project}.json"
         project = f"{RECEIPTS[kind]} ({project})"
@@ -64,7 +69,9 @@ def verdict() -> tuple[bool, list[str]]:
         if not (isinstance(pages, int) and isinstance(swept, int) and pages > 0):
             problems.append(f"{project}: the receipt does not say how many pages were swept")
             continue
-        if r.get("fingerprint") != now:
+        if kind == "interface" and r.get("build") != build:
+            problems.append(f"{project}: measured on build {r.get('build', '?')}, but the build on disk is {build or 'missing'}")
+        elif r.get("fingerprint") != now:
             problems.append(f"{project}: the sweep ran on other code ({r.get('at', '?')}); run it again on this code")
         elif r.get("result") != "PASS":
             n = sum(len(x.get("findings", [])) for x in r.get("findings", []))

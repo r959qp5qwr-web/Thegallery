@@ -29,7 +29,9 @@ been fixed must not recur.
 
 | Class | Escapes | Since the mechanism (2026-11-10) |
 |---|---|---|
-| C1 coverage | 1 | 0 |
-| C2 measure | 1 | 0 |
-| C3 standard | 5 | 0 |
-| C4 judgement | 1 | 0 |
+| C1 coverage | 2 (E03, E05) | 0 |
+| C2 measure | 1 (E04) | 0 |
+| C3 standard | 6 (E01, E02, E03, E05, E06, E07) | 0 |
+| C4 judgement | 1 (E01) | 0 |
+
+An escape can carry more than one class; each class it carries is counted. Controls for E05–E07 are recorded in `CONTROL-2026-11-10-phone.json` and `CONTROL-2026-11-10-desktop.json`.

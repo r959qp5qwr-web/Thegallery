@@ -10,7 +10,8 @@ const ROOT = process.cwd();
 export const EXTRA_FILES = ["ux/APP_RULES.json", "e2e/14-whole-app.spec.ts", "e2e/helpers.ts", "next.config.ts",
   "next.config.js", "next.config.mjs", "package.json", "package-lock.json",
   "ux/INTERFACE_PROFILE.json", "kit/interface-standard/STANDARD.json", "kit/interface-standard/engine/measure.ts",
-  "e2e/15-interface-standard.spec.ts", "e2e/support/fingerprint.ts"];
+  "e2e/15-interface-standard.spec.ts", "e2e/support/fingerprint.ts",
+  "playwright.config.ts", "tsconfig.json", "open-next.config.ts", "e2e/support/test-project.sql"];
 /** The same fingerprint scripts/app-sweep-gate.py computes: every file of the app, its styles,
  *  the rules and this sweep, by path and content. A receipt is good only for exactly this code. */
 export function codeFingerprint(): string {
@@ -21,7 +22,7 @@ export function codeFingerprint(): string {
       if (statSync(p).isDirectory()) walk(p); else files.push(relative(ROOT, p));
     }
   };
-  walk(join(ROOT, "src")); walk(join(ROOT, "public"));
+  walk(join(ROOT, "src")); walk(join(ROOT, "public")); walk(join(ROOT, "db/migrations"));
   files.push(...EXTRA_FILES.filter((f) => { try { return statSync(join(ROOT, f)).isFile(); } catch { return false; } }));
   const h = createHash("sha256");
   for (const f of files.map((f) => f.split("\\").join("/")).sort()) {
