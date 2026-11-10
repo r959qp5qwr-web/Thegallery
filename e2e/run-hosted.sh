@@ -32,4 +32,23 @@ if ! flock -n 9; then
 fi
 
 node --no-warnings --experimental-strip-types e2e/support/seed-test-project.ts
+# A full run (no spec file or -g filter) that exits clean writes a suite receipt per project for the
+# gate (scripts/app-sweep-gate.py): the sweep, standard and drill receipts alone do not prove the
+# other journeys passed. Any failure, filter or partial run writes no receipt and removes the old one.
+full=1; projects=""
+for a in "$@"; do
+  case "$a" in
+    --project=*) projects="$projects ${a#--project=}" ;;
+    -g|--grep|--grep=*|-g=*|*.spec.ts|e2e/*) full=0 ;;
+  esac
+done
+[ -z "$projects" ] && projects="phone desktop"
+for p in $projects; do rm -f ".doctrine/runtime/suite-$p.json"; done
+set +e
 npx playwright test "$@"
+code=$?
+set -e
+if [ "$code" -eq 0 ] && [ "$full" -eq 1 ]; then
+  for p in $projects; do python3 scripts/app-sweep-gate.py suite-receipt "$p"; done
+fi
+exit "$code"

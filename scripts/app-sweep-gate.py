@@ -23,7 +23,7 @@ ROOT = Path(__file__).resolve().parent.parent
 PROJECTS = ("phone", "desktop")
 # Two receipts per viewport: the governor's corrections (journey 14) and the Interface Standard
 # (journey 15, kit/interface-standard). Either missing, stale or failed keeps the gate shut.
-RECEIPTS = {"app-sweep": "whole-app sweep", "interface": "interface standard", "interface-drill": "interface drill"}
+RECEIPTS = {"suite": "full journey suite", "app-sweep": "whole-app sweep", "interface": "interface standard", "interface-drill": "interface drill"}
 GUARDED = ("mcp__github__create_pull_request", "mcp__github__merge_pull_request")
 # The same list as EXTRA_FILES in e2e/support/fingerprint.ts: files outside src/ and public/ that
 # change what renders or how the sweep sees it.
@@ -91,6 +91,15 @@ def verdict() -> tuple[bool, list[str]]:
 
 
 def main() -> int:
+    if len(sys.argv) > 2 and sys.argv[1] == "suite-receipt":
+        # Written by e2e/run-hosted.sh only after a full, unfiltered run whose Playwright exit code was 0.
+        import datetime
+        out = ROOT / ".doctrine" / "runtime" / f"suite-{sys.argv[2]}.json"
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(json.dumps({"project": sys.argv[2], "result": "PASS", "fingerprint": fingerprint(), "pages": 1, "swept": 1,
+                                   "at": datetime.datetime.now(datetime.timezone.utc).isoformat()}, indent=2))
+        print(f"suite receipt written for {sys.argv[2]}")
+        return 0
     if len(sys.argv) > 1 and sys.argv[1] == "stamp":
         (ROOT / ".next").mkdir(exist_ok=True)
         (ROOT / ".next" / "SOURCE_FINGERPRINT").write_text(fingerprint() + "\n")

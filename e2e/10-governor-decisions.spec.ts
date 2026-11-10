@@ -129,6 +129,10 @@ test.describe("governor decisions", () => {
   });
 
   test("Hang this first moves the work to the front of the wall and changes nothing else", async ({ page }) => {
+    // Measured 2026-11-10 (trace): each Studio work-page load takes 6–8 s on the test project, and this
+    // test makes five of them plus a stale tab, so a passing run sits close to 60 s; one slow answer
+    // timed it out (phone, twice across sessions). The limit is raised; no assertion is.
+    test.setTimeout(120_000);
     const w = await monsoon();
     // Two works published after Monsoon at the same position: the most recent hangs first.
     for (const t of EXTRA) {
