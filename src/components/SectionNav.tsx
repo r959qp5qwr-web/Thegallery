@@ -15,10 +15,11 @@ const ITEMS = [
   { href: "/saved", label: "Saved", icon: "heart", match: (p: string) => p.startsWith("/saved") },
 ];
 
-/** Screens that dock their own one action at the foot (a work's Message, a sign-up or sign-in
- *  form's action, the editor's Publish) carry no bar: two things fixed at the bottom of a phone is one too many. */
+/** Screens that dock their own one action at the foot (a work's Message, For makers, joining,
+ *  signing in, the editor's Publish) carry no bar: two things fixed at the bottom of a phone is one too many. */
 function docked(p: string) {
-  return p.startsWith("/work/") || p.startsWith("/makers/") || p.startsWith("/studio/works/");
+  return p.startsWith("/work/") || p === "/makers" || p.startsWith("/makers/") || p.startsWith("/studio/works/")
+    || p.startsWith("/studio/join") || p.startsWith("/studio/whatsapp");
 }
 
 export const SignedInContext = createContext(false);

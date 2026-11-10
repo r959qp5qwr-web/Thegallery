@@ -9,15 +9,18 @@ import { STATUS_LABEL, labelPrice } from "@/lib/format";
 /** The public header: the wordmark, the way home. The four places are the bar below 900 px and
  *  sit in the header from 900 px (governor, 2026-11-09: drawing board). A page names itself in
  *  its own heading, once. */
-export function Header({ className, back, share }:
-  { className?: string; back?: string; share?: { title: string; path: string } } = {}) {
+export function Header({ className, back, share, step }:
+  { className?: string; back?: string; share?: { title: string; path: string };
+    /** Drawing board 8–9: a step of joining names itself in the header's middle ("Step 1 of 3"). */
+    step?: string } = {}) {
   // A page that is a place of its own (a maker's gallery, drawing board screen 3) adds Back and
   // Share on a phone: back · wordmark · share. From 900 px Back steps aside; the four places
   // are in the header there.
-  const tools = !!(back || share);
+  const tools = !!(back || share || step);
   return (
-    <header className={["header public", tools ? "tools" : "", className ?? ""].filter(Boolean).join(" ")}>
+    <header className={["header public", tools ? "tools" : "", step ? "step" : "", className ?? ""].filter(Boolean).join(" ")}>
       {back ? <BackButton href={back} className="iconbtn lead back" /> : null}
+      {step ? <span className="step-of">{step}</span> : null}
       <Link className="wordmark" href="/">The Gallery</Link>
       <span className="header-end">
         <SectionNav placement="header" />
@@ -27,14 +30,22 @@ export function Header({ className, back, share }:
   );
 }
 
-export function StudioHeader({ title, back }: { title: string; back?: string }) {
+export function StudioHeader({ title, back, end }: { title: string; back?: string; end?: React.ReactNode }) {
+  // The Studio itself (drawing board, screen 12) names itself where the wordmark stands; its
+  // pages carry Back and their title. The bar (or, from 900 px, the header) is the way home.
+  if (!back) {
+    return (
+      <header className="header studio home">
+        <span className="wordmark">{title}</span>
+        <span className="header-end"><SectionNav placement="header" />{end}</span>
+      </header>
+    );
+  }
   return (
     <header className="header studio">
-      {back
-        ? <Link className="iconbtn lead" href={back} aria-label="Back"><Icon name="back" /></Link>
-        : <Link className="wordmark" href="/">The Gallery</Link>}
+      <Link className="iconbtn lead" href={back} aria-label="Back"><Icon name="back" /></Link>
       <span className="title">{title}</span>
-      <span className="header-end"><SectionNav placement="header" /><span className="header-spacer" /></span>
+      <span className="header-end"><SectionNav placement="header" />{end ?? <span className="header-spacer" />}</span>
     </header>
   );
 }

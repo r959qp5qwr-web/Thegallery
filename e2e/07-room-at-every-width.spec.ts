@@ -111,7 +111,7 @@ test.describe("the room at every width", () => {
     await page.goto("/studio");
 
     // The row shows the work itself, and the chip is a control whose name carries the value.
-    await expect(page.locator(".rowlist.works .thumb img").first()).toBeVisible();
+    await expect(page.locator(".studio-wall .studio-tile img").first()).toBeVisible();
     await page.getByRole("button", { name: new RegExp(`^Status: .*Change status of ${MONSOON}`) }).click();
     const sheet = page.getByRole("dialog");
     await expect(sheet).toBeVisible();
@@ -133,11 +133,11 @@ test.describe("the room at every width", () => {
     await clearStarted();
     await signIn(page, MAKER_B.email, MAKER_B.password);
     await page.goto("/studio/works/new");
-    await page.getByLabel("Choose a photograph").setInputFiles(join(process.cwd(), "e2e/fixtures/square-1x1.jpg"));
+    await page.getByLabel("Add photo").setInputFiles(join(process.cwd(), "e2e/fixtures/square-1x1.jpg"));
     await page.getByLabel("Medium").fill("Kept medium probe");
     await page.getByRole("radio", { name: "Fixed price" }).check();       // fixed price, no amount: refused
     await page.getByRole("button", { name: "Save draft" }).click();
-    await expect(page.getByTestId("form-error")).toContainText("Choose the image again");
+    await expect(page.getByTestId("form-error")).toContainText("Choose the photo again");
     await expect(page.getByLabel("Title")).toHaveValue("");              // not "Untitled work"
     await expect(page.getByLabel("Medium")).toHaveValue("Kept medium probe");
     expect((await owner((c) => c.query("SELECT 1 FROM works WHERE medium = 'Kept medium probe'"))).rowCount).toBe(0);
@@ -155,7 +155,7 @@ test.describe("the room at every width", () => {
     });
     expect(order).toBe(true);
 
-    await page.getByLabel("Choose a photograph").setInputFiles(join(process.cwd(), "e2e/fixtures/square-1x1.jpg"));
+    await page.getByLabel("Add photo").setInputFiles(join(process.cwd(), "e2e/fixtures/square-1x1.jpg"));
     await page.getByRole("button", { name: "Save draft" }).click();
     await expect(page.getByText("Draft work")).toBeVisible({ timeout: 20_000 });
     await expect(page.getByText("saved with its first image")).toBeVisible();

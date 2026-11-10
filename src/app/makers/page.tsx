@@ -1,35 +1,46 @@
 import Link from "next/link";
-import { Header, Footer, Action } from "@/components/Chrome";
-import { currentAccount } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import { Header, Footer, imgSrc } from "@/components/Chrome";
+import { currentAccount } from "@/lib/auth";
+import { listRecentWorks, imagesFor, type PublicImage } from "@/lib/queries";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "For Makers" };
+export const metadata = { title: "For makers" };
 
-// Pitched to a potter, not written as terms (Wave 5): one paragraph, one filled action, three
-// steps. Who may hold a gallery and what is acted on live on Participation, linked once.
+/** For makers (drawing board, screen 7): pictures first, three short lines, one button.
+ *  The pictures are works that are on view. Where there are fewer than three, the empty plinth
+ *  stands in: the page never shows a work that is not hung here. */
 export default async function ForMakers() {
   if (await currentAccount()) redirect("/studio");
+  const works = await listRecentWorks(12);
+  const images = await imagesFor(works.map((w) => w.id));
+  const cover = new Map<string, PublicImage>();
+  for (const im of images) if (!cover.has(im.work_id)) cover.set(im.work_id, im);
+  const pictures = works.map((w) => cover.get(w.id)).filter((im): im is PublicImage => !!im).slice(0, 3);
+  const slot = (i: number, variant: "w1280" | "w640") => {
+    const im = pictures[i];
+    const src = imgSrc(im, variant);
+    return src ? <img src={src} alt="" /> : <div className="wall" data-testid="plinth-slot"><div className="slab" /></div>;
+  };
+
   return (
     <>
       <Header />
-      <main id="main" tabIndex={-1} className="for-makers">
-        <div className="intro">
-          <h1>Show your work the way a gallery would</h1>
-          <p>A room of your own: your photographs at full size, your words beside them. Visitors message
-            you directly, on WhatsApp or by email. There is no commission on your sales.</p>
-          <div className="do">
-            <Action href="/makers/create-account" primary>Open your gallery</Action>
-            <Link className="textlink" href="/makers/sign-in">I already have an account</Link>
-          </div>
+      <main id="main" tabIndex={-1} className="for-makers has-workbar">
+        {/* Decoration: the works stand for the room; their names are on the wall, not here. */}
+        <div className="fm-pictures" aria-hidden data-testid="fm-pictures">
+          <div className="fm-pic lead">{slot(0, "w1280")}</div>
+          <div className="fm-pic">{slot(1, "w640")}</div>
+          <div className="fm-pic">{slot(2, "w640")}</div>
         </div>
-        <div className="how-wrap">
-          <ol className="how">
-            <li><span><b>Make an account</b>With the email you sign in with. It is never shown.</span></li>
-            <li><span><b>Hang your work</b>Photographs from your phone, a title, a few words.</span></li>
-            <li><span><b>Publish</b>Your gallery opens. Share its link wherever you like.</span></li>
-          </ol>
-          <p className="fine">Who can open a gallery, and what we act on: <Link href="/participation">Participation</Link>.</p>
+        <div className="fm-words">
+          <p className="lbl">For makers</p>
+          <h1>A gallery of your own.</h1>
+          <p className="fm-line">Hang your work from your phone. Visitors message you on WhatsApp. No commission.</p>
+        </div>
+        <div className="workbar dock fm-dock">
+          <Link className="btn solid" href="/makers/create-account">Open your gallery</Link>
+          <Link className="textlink" href="/makers/sign-in">I already have a gallery</Link>
         </div>
       </main>
       <Footer />

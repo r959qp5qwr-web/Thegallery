@@ -3,7 +3,7 @@ import { currentAccount } from "@/lib/auth";
 import { studioContext } from "@/lib/queries";
 import { StudioHeader } from "@/components/Chrome";
 import { ActionForm, Field } from "@/components/ActionForm";
-import { closeAccountAction, signOutAction } from "@/app/actions/account";
+import { closeAccountAction } from "@/app/actions/account";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Your account" };
@@ -16,22 +16,15 @@ export default async function Account() {
 
   return (
     <>
-      <StudioHeader title="Account" back="/studio" />
+      <StudioHeader title="Close account" back="/studio/settings" />
       <main id="main" tabIndex={-1}>
       <div className="studio-state">
-        <h1>Account</h1>
+        <h1>Close account</h1>
         <p className="small" style={{ marginTop: 6 }}>
           Signed in as {account.email}. This address is private and appears on no public page.
         </p>
       </div>
 
-      <form action={signOutAction} className="actions">
-        <button className="btn block" type="submit">Sign out</button>
-      </form>
-
-      <div className="group" style={{ margin: "28px var(--pad-x-studio) 0" }}>
-        <div className="ghead">Close this account</div>
-      </div>
       <div className="form">
         <p className="body" style={{ marginTop: 12 }}>Closing takes effect at once. It does this:</p>
         <ul className="rowlist" style={{ padding: 0, marginTop: 12 }}>

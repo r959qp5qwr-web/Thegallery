@@ -38,7 +38,10 @@ export function ContactSheet({ heading, closeHref, returnFocusTo, disclosure, ro
                 <a href={routeHref(r, work)} rel="noopener noreferrer" target={away ? "_blank" : undefined}
                    data-route-kind={r.kind}>
                   <Icon name={ROUTE_ICON[r.kind] ?? "globe"} />
-                  <span className="kind">{r.kind === "form" && r.label ? r.label : ROUTE_LABEL[r.kind]}</span>
+                  <span className="kind">{r.kind === "form" && r.label ? r.label : ROUTE_LABEL[r.kind]}
+                    {/* "Show" (governor, 2026-11-10): the address under Email, so a visitor can copy it
+                        when no mail app opens. The maker supplied it as public (GAL-P1). */}
+                    {r.kind === "email" ? <span className="route-val" data-testid="route-email">{r.value}</span> : null}</span>
                   {away ? <span className="sr-only"> (opens in a new tab)</span> : null}
                   <Icon name="chevron" />
                 </a>

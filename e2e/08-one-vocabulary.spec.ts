@@ -52,12 +52,15 @@ test.describe("one vocabulary", () => {
     await signIn(page, MAKER_A.email, MAKER_A.password);
     const w = await monsoon();
 
-    for (const path of [`/studio/works/${w.id}`, "/studio/works/new"]) {
-      await page.goto(path);
-      const options = page.locator("select#status option");
-      expect(await options.allInnerTexts(), path).toEqual(SHOWN);
-      expect(await options.evaluateAll((os) => os.map((o) => (o as HTMLOptionElement).value)), path).toEqual(STORED);
-    }
+    await page.goto(`/studio/works/${w.id}`);
+    const options = page.locator("select#status option");
+    expect(await options.allInnerTexts()).toEqual(SHOWN);
+    expect(await options.evaluateAll((os) => os.map((o) => (o as HTMLOptionElement).value))).toEqual(STORED);
+    // Add a work offers the same five as taps (drawing board, screen 13), in the same order.
+    await page.goto("/studio/works/new");
+    const taps = page.getByRole("group", { name: "Status" }).getByRole("radio");
+    expect(await taps.evaluateAll((rs) => rs.map((r) => (r as HTMLInputElement).labels?.[0]?.textContent?.trim()))).toEqual(SHOWN);
+    expect(await taps.evaluateAll((rs) => rs.map((r) => (r as HTMLInputElement).value))).toEqual(STORED);
 
     // The chip's picker sheet on the Studio list.
     await page.goto(`/studio?status=${w.id}`);
@@ -68,10 +71,11 @@ test.describe("one vocabulary", () => {
   test("a maker never reads 'route' or 'identity' in the Studio", async ({ page }) => {
     await signIn(page, MAKER_A.email, MAKER_A.password);
     await page.goto("/studio");
-    await expect(page.getByRole("link", { name: "Ways to contact you" })).toBeVisible();
-    await expect(page.getByRole("link", { name: "Your details" })).toBeVisible();
+    await page.getByRole("link", { name: "Settings" }).click();
+    await expect(page.getByRole("link", { name: /^Email for visitors/ })).toBeVisible();
+    await expect(page.getByRole("link", { name: /^Name/ })).toBeVisible();
 
-    for (const path of ["/studio", "/studio/contact-routes", "/studio/profile", "/studio/account", "/studio/works/new"]) {
+    for (const path of ["/studio", "/studio/settings", "/studio/whatsapp", "/studio/contact-routes", "/studio/profile", "/studio/account", "/studio/works/new"]) {
       await page.goto(path);
       const text = await visibleText(page);
       expect(text, path).not.toMatch(/\broutes?\b/i);

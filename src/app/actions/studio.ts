@@ -45,7 +45,7 @@ export async function saveProfileAction(_prev: FormState, form: FormData): Promi
   // address is taken must not lose the whole identity form (J-002, one sitting).
   const refuse = (error: string, field?: string): FormState => ({ error, field, values: typed(form) });
   if (!display_name) return refuse("Your name is how visitors will know you. Add it.", "display_name");
-  if (!city) return refuse("Add the city you work in.", "city");
+  if (!city) return refuse("Add your town or city.", "city");
   if (!/^[a-z0-9]([a-z0-9-]{1,28}[a-z0-9])$/.test(handle)) {
     return refuse("The gallery address uses lowercase letters, numbers and hyphens, 3 to 30 characters.", "handle");
   }
@@ -80,10 +80,66 @@ export async function saveProfileAction(_prev: FormState, form: FormData): Promi
     if (gErr) return refuse("We could not save that just now. Nothing was changed.");
   }
   revalidatePath("/studio");
-  redirect("/studio?saved=profile");
+  redirect("/studio/settings?saved=profile");
+}
+
+// ------------------------------------------------------------------------- joining, step 2
+/** A gallery address from the maker's name: lowercase, hyphens, 3 to 30 characters. */
+function handleFrom(name: string): string {
+  const base = name.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 24).replace(/-+$/g, "");
+  return base.length >= 3 ? base : `gallery-${token().slice(0, 5)}`;
+}
+
+/** Join, step 2 of 3 (drawing board, screen 8): name, place, and how you work — the
+ *  self-declaration made when a gallery is created (GAL-OD-02, GAL-OD-03). The gallery's address
+ *  is made from the name; it can be changed later in Settings. */
+export async function joinAction(_prev: FormState, form: FormData): Promise<FormState> {
+  const account = await requireActiveMaker();
+  const display_name = String(form.get("display_name") ?? "").trim();
+  const city = String(form.get("city") ?? "").trim();
+  const kind = String(form.get("kind") ?? "");
+  const refuse = (error: string, field?: string): FormState => ({ error, field, values: typed(form) });
+  if (!display_name) return refuse("Add your name. It is how visitors will know you.", "display_name");
+  if (!city) return refuse("Add your town or city.", "city");
+  if (!["individual", "studio", "collective"].includes(kind)) return refuse("Choose how you work.", "kind");
+
+  const db = await client();
+  const { data: mine } = await db.from("makers").select("id").limit(1);
+  if (mine?.length) redirect("/studio/whatsapp?join=1");   // step 2 is already done
+
+  const base = handleFrom(display_name);
+  for (let attempt = 0; attempt < 6; attempt++) {
+    const handle = attempt === 0 ? base : `${base.slice(0, 24)}-${attempt === 5 ? token().slice(0, 4) : attempt + 1}`;
+    const { data: created, error } = await db.from("makers")
+      .insert({ handle, display_name, kind, city, user_id: account.id }).select("id").limit(1);
+    if (error?.code === "23505") continue;   // the address is taken: try the next one
+    if (error || !created?.length) return refuse("We could not save that just now. Nothing was changed.");
+    const { error: gErr } = await db.from("galleries").insert({ maker_id: (created[0] as { id: string }).id });
+    if (gErr) return refuse("We could not save that just now. Nothing was changed.");
+    revalidatePath("/studio");
+    redirect("/studio/whatsapp?join=1");
+  }
+  return refuse("We could not save that just now. Nothing was changed.");
 }
 
 // ------------------------------------------------------------------------- contact routes
+/** Add one way to contact the maker. validated = true because the format was checked;
+ *  enabled = true because a maker who typed it means it to be used. Both stay separate columns,
+ *  so a way can be turned off without being deleted (DOMAIN_MODEL §2.7). */
+async function addRoute(kind: string, value: string, label: string | null): Promise<string | null> {
+  const db = await client();
+  const { data: mine } = await db.from("makers").select("id").limit(1);
+  const maker = mine?.[0] as { id: string } | undefined;
+  if (!maker) return "Add your name and place first.";
+  const { data: existing } = await db.from("contact_routes").select("position").eq("maker_id", maker.id);
+  const { error } = await db.from("contact_routes").insert({
+    maker_id: maker.id, kind, value, label, enabled: true, validated: true,
+    position: await nextPosition(existing as { position: number }[] | null),
+  });
+  return error ? "We could not add that just now. Nothing was changed." : null;
+}
+
 export async function saveRouteAction(_prev: FormState, form: FormData): Promise<FormState> {
   await requireActiveMaker();
   const kind = String(form.get("kind") ?? "");
@@ -91,24 +147,22 @@ export async function saveRouteAction(_prev: FormState, form: FormData): Promise
   const label = String(form.get("label") ?? "").trim() || null;
   const problem = validateRoute(kind, value);
   if (problem) return { error: problem, field: "value", values: typed(form) };
-
-  const db = await client();
-  const { data: mine } = await db.from("makers").select("id").limit(1);
-  const maker = mine?.[0] as { id: string } | undefined;
-  if (!maker) return { error: "Add your details first: your name, how you work and your city." };
-
-  const { data: existing } = await db.from("contact_routes").select("position").eq("maker_id", maker.id);
-  // validated = true because the format was checked here; enabled = true because a maker who
-  // typed a route means it to be used. Both stay separate columns so a route can be turned off
-  // without being deleted (DOMAIN_MODEL §2.7).
-  const { error } = await db.from("contact_routes").insert({
-    maker_id: maker.id, kind, value, label, enabled: true, validated: true,
-    position: await nextPosition(existing as { position: number }[] | null),
-  });
-  if (error) return { error: "We could not add that just now. Nothing was changed.", values: typed(form) };
-
+  const failed = await addRoute(kind, value, label);
+  if (failed) return { error: failed, values: typed(form) };
   revalidatePath("/studio/contact-routes");
   return { notice: "Added. Visitors can use it from your gallery straight away." };
+}
+
+/** Join, step 3 of 3, and the Studio's one task when it is missing: WhatsApp. */
+export async function saveWhatsappAction(_prev: FormState, form: FormData): Promise<FormState> {
+  await requireActiveMaker();
+  const value = String(form.get("value") ?? "").trim();
+  const problem = validateRoute("whatsapp", value);
+  if (problem) return { error: problem, field: "value", values: typed(form) };
+  const failed = await addRoute("whatsapp", value, null);
+  if (failed) return { error: failed, values: typed(form) };
+  revalidatePath("/studio"); revalidatePath("/", "layout");
+  redirect(form.get("join") ? "/studio?joined=1" : "/studio?saved=whatsapp");
 }
 
 export async function toggleRouteAction(form: FormData): Promise<void> {
@@ -188,10 +242,17 @@ export async function createWorkAction(_prev: FormState, form: FormData): Promis
   // before publishing. Without an image, the title is required as before.
   const file = form.get("image");
   const hasImage = file instanceof File && file.size > 0;
+  // Drawing board 13: the docked Publish creates and publishes in one go; the header's Save
+  // draft keeps it in the Studio. Publishing needs a photograph and a title.
+  const publishing = form.get("intent") === "publish";
   // The form is read, never rewritten: a refusal must hand back exactly what was typed, and a
   // browser cannot hand back a chosen file, so the refusal says to choose it again.
+  const again = hasImage ? " Choose the photo again — a browser does not keep it after a refusal." : "";
+  if (publishing && !hasImage) return { error: "Add a photo to publish. Or save it as a draft.", field: "image", values: typed(form) };
+  if (publishing && !String(form.get("title") ?? "").trim()) {
+    return { error: "Give the work a title to publish." + again, field: "title", values: typed(form) };
+  }
   const label = readLabel(form, hasImage ? UNTITLED : undefined);
-  const again = hasImage ? " Choose the image again — a browser does not keep it after a refusal." : "";
   if ("error" in label) return { ...label, error: label.error + again, values: typed(form) };
 
   const db = await client();
@@ -214,6 +275,13 @@ export async function createWorkAction(_prev: FormState, form: FormData): Promis
     if (problem) {
       const code = problem.includes("12 MB") ? "too_large" : problem.includes("not yours") ? "not_yours" : "failed";
       redirect(`/studio/works/${id}?created=1&image_problem=${code}`);
+    }
+    if (publishing) {
+      // One key for this one press: the work was created just now, so a repeat cannot meet it.
+      const { error: pubError } = await db.rpc("publish_work", { p_work_id: id, p_intent_key: `publish:${id}:${crypto.randomUUID()}` });
+      revalidatePath("/", "layout");
+      // A refused publish leaves a saved draft, and the work's page says what is missing.
+      redirect(pubError ? `/studio/works/${id}?created=image&not_published=1` : `/studio/works/${id}?published=1`);
     }
     redirect(`/studio/works/${id}?created=image`);
   }

@@ -10,27 +10,31 @@ export type FormState = { error?: string; notice?: string; field?: string; value
 const FormStateContext = createContext<FormState>({});
 export function useFormState(): FormState { return useContext(FormStateContext); }
 
-function Submit({ label, busy, block = true, className = "btn" }:
-                { label: string; busy: string; block?: boolean; className?: string }) {
+function Submit({ label, busy, block = true, className = "btn", name, value }:
+                { label: string; busy: string; block?: boolean; className?: string; name?: string; value?: string }) {
   const { pending } = useFormStatus();
   // Disabling while a submit is in flight is the first defence against a double publish; the
   // idempotency key carried in the form is the one that actually holds, because a reload or a
   // second tab does not see this button.
   return (
-    <button className={`${className}${block ? " block" : ""}`} type="submit" disabled={pending}>
+    <button className={`${className}${block ? " block" : ""}`} type="submit" disabled={pending} name={name} value={value}>
       {pending ? busy : label}
     </button>
   );
 }
 
 export function ActionForm(
-  { action, submitLabel, busyLabel = "Working…", children, hidden, className = "form", secondary, bar }:
+  { action, submitLabel, busyLabel = "Working…", children, hidden, className = "form", secondary, bar, dock, id }:
   {
     action: (prev: FormState, form: FormData) => Promise<FormState>;
     submitLabel: string; busyLabel?: string; children: React.ReactNode;
     hidden?: Record<string, string>; className?: string; secondary?: React.ReactNode;
     /** Plate R-3: the form's action stays in reach in a bar fixed to the bottom of the form. */
     bar?: React.ReactNode;
+    /** Drawing board: the screen's one action, solid ink, docked at the foot of a phone (in the
+     *  form's flow from 900 px). `name`/`value` say which act it is when a form has two. */
+    dock?: { name?: string; value?: string; extra?: React.ReactNode } | true;
+    id?: string;
   },
 ) {
   const [state, formAction] = useActionState(action, {});
@@ -45,7 +49,7 @@ export function ActionForm(
   }, [state]);
   return (
     <FormStateContext.Provider value={state}>
-    <form className={className} action={formAction} ref={formRef}>
+    <form className={className} action={formAction} ref={formRef} id={id}>
       {Object.entries(hidden ?? {}).map(([k, v]) => <input key={k} type="hidden" name={k} value={v} />)}
       {state.error ? (
         <div className="band fail" role="alert" data-testid="form-error" style={{ marginTop: 16 }}
@@ -59,7 +63,13 @@ export function ActionForm(
         </div>
       ) : null}
       {children}
-      {bar !== undefined ? (
+      {dock ? (
+        <div className="workbar dock">
+          <Submit label={submitLabel} busy={busyLabel} block={false} className="btn solid"
+                  name={dock === true ? undefined : dock.name} value={dock === true ? undefined : dock.value} />
+          {dock !== true && dock.extra ? dock.extra : null}
+        </div>
+      ) : bar !== undefined ? (
         <div className="actionbar form-bar">
           <Submit label={submitLabel} busy={busyLabel} block={false} />
           {bar}

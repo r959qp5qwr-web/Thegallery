@@ -21,7 +21,7 @@ export default async function ContactRoutes({ searchParams }: { searchParams: Pr
 
   return (
     <>
-      <StudioHeader title="Ways to contact you" back="/studio" />
+      <StudioHeader title="Ways to contact you" back="/studio/settings" />
       <main id="main" tabIndex={-1}>
       <div className="studio-state">
         <h1>How people reach you</h1>

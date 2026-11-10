@@ -28,7 +28,7 @@ export async function resendConfirmAction(_prev: FormState, form: FormData): Pro
   const email = String(form.get("email") ?? "");
   if (emailProblem(email)) return { error: "Enter the address you signed up with.", values: { email } };
   await resendConfirm(email);
-  return { notice: "If that address is waiting for confirmation, another link is on its way." };
+  return { notice: "If that address is waiting for a link, a new one is on its way." };
 }
 
 export async function signInAction(_prev: FormState, form: FormData): Promise<FormState> {
@@ -64,7 +64,7 @@ export async function startRecoveryAction(_prev: FormState, form: FormData): Pro
   if (emailProblem(email)) return { error: "Enter the address you signed up with.", values: { email } };
   await startRecovery(email);
   // Same answer either way.
-  return { notice: "If that address has an account, a link to set a new password is on its way." };
+  return { notice: "If it has a gallery, a link is on its way." };
 }
 
 export async function completeRecoveryAction(_prev: FormState, form: FormData): Promise<FormState> {

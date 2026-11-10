@@ -177,15 +177,15 @@ test.describe("first impression", () => {
 
   test("the bar: on every public screen, on the Studio's home, and off the screens that dock their own action", async ({ page }) => {
     const narrow = page.viewportSize()!.width < 900;
-    for (const path of ["/", "/search", "/saved", "/browse/clay", "/m/anika-rao", "/about", "/makers"]) {
+    for (const path of ["/", "/search", "/saved", "/browse/clay", "/m/anika-rao", "/about"]) {
       await page.goto(path);
       // Rendered on every one of these screens; shown below 900 px, where the header has no room.
       await expect(page.locator("nav.bar"), path).toHaveCount(1);
       if (narrow) await expect(page.locator("nav.bar"), path).toBeVisible();
       else await expect(page.locator("nav.bar"), path).toBeHidden();
     }
-    // A work docks its Message; a sign-in form docks its action: no bar beside them.
-    for (const path of [`/work/${await monsoonToken()}`, "/makers/sign-in"]) {
+    // A work docks its Message; For makers, joining and signing in dock theirs (drawing board 7–11): no bar beside them.
+    for (const path of [`/work/${await monsoonToken()}`, "/makers", "/makers/sign-in", "/makers/create-account", "/makers/reset"]) {
       await page.goto(path);
       await expect(page.locator("nav.bar"), path).toHaveCount(0);
     }
@@ -231,21 +231,21 @@ test.describe("first impression", () => {
   test("the Studio's photo picker is a designed control over the native input", async ({ page }) => {
     await signIn(page, MAKER_A.email, MAKER_A.password);
     await page.goto("/studio/works/new");
-    const input = page.getByLabel("Choose a photograph");
-    await expect(input).toHaveAttribute("type", "file");
+    await expect(page.getByLabel("Add photo")).toHaveAttribute("type", "file");
+    const input = page.locator("#image");
     const box = (await input.boundingBox())!;
     expect(box.width).toBeLessThanOrEqual(1);                       // the browser's button is not shown
-    await expect(page.getByText("No photograph chosen yet")).toBeVisible();
+    await expect(page.getByText("The first photo is the cover")).toBeVisible();
     await input.setInputFiles({ name: "kiln-study.jpg", mimeType: "image/jpeg", buffer: Buffer.from([0xff, 0xd8, 0xff, 0xd9]) });
     await expect(page.getByText("kiln-study.jpg")).toBeVisible();
     // React resets the form after a refused save; the line must not keep naming a file the input
     // no longer holds.
     await input.evaluate((i) => (i as HTMLInputElement).form!.reset());
-    await expect(page.getByText("No photograph chosen yet")).toBeVisible();
+    await expect(page.getByText("The first photo is the cover")).toBeVisible();
     // Keyboard focus on the hidden input shows on the designed button.
     await input.focus();
     await page.keyboard.press("Shift+Tab"); await page.keyboard.press("Tab");
-    expect(await page.locator("label.picker-btn").evaluate((l) => getComputedStyle(l).boxShadow)).not.toBe("none");
+    expect(await page.locator("label.add-photo").evaluate((l) => getComputedStyle(l).boxShadow)).not.toBe("none");
   });
 });
 

@@ -9,17 +9,18 @@ test.describe("the maker door", () => {
     await forgetPerson(NEW.email);
   });
 
-  test("create an account, confirm the email, sign in, sign out", async ({ page }) => {
+  test("open a gallery in three steps: account, name and place, WhatsApp; then sign out", async ({ page }) => {
     await page.goto("/makers");
     await page.getByRole("link", { name: "Open your gallery" }).click();
-    await expect(page.getByRole("heading", { name: "Create your account" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Open your gallery" })).toBeVisible();
+    await expect(page.getByText("Step 1 of 3")).toBeVisible();
 
     // The door says plainly that this address stays private.
-    await expect(page.getByText("It stays private")).toBeVisible();
+    await expect(page.getByText("For signing in. Never shown.")).toBeVisible();
 
     await page.getByLabel("Email").fill(NEW.email);
     await page.getByLabel("Password").fill(NEW.password);
-    await page.getByRole("button", { name: "Create account" }).click();
+    await page.getByRole("button", { name: "Continue" }).click();
 
     await expect(page.getByRole("heading", { name: "Check your email" })).toBeVisible();
     await expect(page.getByText(NEW.email)).toBeVisible();
@@ -28,19 +29,37 @@ test.describe("the maker door", () => {
     await signIn(page, NEW.email, NEW.password, false);
     await expect(page.getByTestId("form-error")).toContainText("has not been confirmed");
 
+    // The link signs the maker in and brings them straight to step 2 (drawing board, screen 9).
     const link = await linkFromOutbox(NEW.email, "/makers/confirm/");
     await page.goto(link);
-    await expect(page.getByRole("heading", { name: "Your email is confirmed" })).toBeVisible();
+    await expect(page).toHaveURL(/\/studio\/join$/);
+    await expect(page.getByRole("heading", { name: "Your name and place" })).toBeVisible();
+    await expect(page.getByText("Step 2 of 3")).toBeVisible();
 
     // A confirmation link is single use.
-    await page.goto(link);
-    await expect(page.getByRole("heading", { name: "That link no longer works" })).toBeVisible();
+    const again = await page.context().newPage();
+    await again.goto(link);
+    await expect(again.getByRole("heading", { name: "That link has expired" })).toBeVisible();
+    await again.close();
 
-    await signIn(page, NEW.email, NEW.password);
-    await expect(page).toHaveURL(/\/studio/);
-    await expect(page.getByRole("heading", { name: "Set up your gallery" })).toBeVisible();
+    // Step 2: name, place and how you work. The address is made from the name.
+    await page.getByLabel("Name").fill("Kavya Iyer");
+    await page.getByLabel("Place").fill("Mysuru");
+    await page.getByRole("radio", { name: "A studio" }).check();
+    await page.getByRole("button", { name: "Continue" }).click();
+    await expect(page.getByText("Step 3 of 3")).toBeVisible();
+    const made = await owner((c) => c.query<{ handle: string; kind: string; city: string }>(
+      `SELECT m.handle, m.kind, m.city FROM makers m JOIN auth.users u ON u.id = m.user_id
+        WHERE lower(u.email) = lower($1)`, [NEW.email]));
+    expect(made.rows[0]).toEqual({ handle: "kavya-iyer", kind: "studio", city: "Mysuru" });
 
-    await page.goto("/studio/account");
+    // Step 3 can wait: a work can be published without a way to contact (GAL-OD-06).
+    await page.getByRole("link", { name: "Skip for now" }).click();
+    await expect(page).toHaveURL(/\/studio\?joined=1$/);
+    await expect(page.getByRole("heading", { name: "Kavya Iyer" })).toBeVisible();
+    await expect(page.getByTestId("task")).toHaveText("Add WhatsApp so visitors can message you");
+
+    await page.goto("/studio/settings");
     await page.getByRole("button", { name: "Sign out" }).click();
     await expect(page).toHaveURL("/");
     await page.goto("/studio");
@@ -59,12 +78,12 @@ test.describe("the maker door", () => {
   test("recovery answers the same way whether or not the account exists", async ({ page }) => {
     await page.goto("/makers/reset");
     await page.getByLabel("Email").fill("nobody.at.all@makers.example");
-    await page.getByRole("button", { name: "Send the link" }).click();
+    await page.getByRole("button", { name: "Send link" }).click();
     const unknown = await page.getByTestId("form-notice").textContent();
 
     await page.goto("/makers/reset");
     await page.getByLabel("Email").fill(NEW.email);
-    await page.getByRole("button", { name: "Send the link" }).click();
+    await page.getByRole("button", { name: "Send link" }).click();
     const known = await page.getByTestId("form-notice").textContent();
     expect(known).toBe(unknown);
 

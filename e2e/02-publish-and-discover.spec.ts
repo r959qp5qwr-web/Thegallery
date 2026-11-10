@@ -71,7 +71,7 @@ test.describe("publish a work and meet it as a visitor", () => {
     await page.getByLabel("Year").fill("2026");
     await page.getByRole("radio", { name: "Fixed price" }).check();
     await page.getByLabel("Amount (₹)").fill("6800");
-    await page.getByLabel("Status").selectOption("available");
+    await page.getByRole("radio", { name: "Available", exact: true }).check();
     await page.getByRole("button", { name: "Save draft" }).click();
 
     await expect(page.getByText("The label is saved")).toBeVisible();
