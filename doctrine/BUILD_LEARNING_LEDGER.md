@@ -856,6 +856,31 @@ The root cause is the method, not any one page:
 
 ---
 
+### GAL-L0039
+
+**Date:** 2026-11-10  
+**Observed event:**  
+The sweep change had passed both full suites and the gate was open. The axe check, run afterwards, found `heading-order` on About with its rows open: the page's h1 was followed straight by h3s. The rows' texts (`WhoCanOpen`, `WhatWeActOn`, `PrivacyText`) were given `h="h3"`, but no h2 stands above them on About.
+
+**Evidence:**  
+- axe-core 4.10.2 on build `A_gODj5BRF1PfBLYc2Yu0`: `heading-order (1)` on /about with the rows open, phone and desktop. 0 on the six other states.
+- After the fix (`h="h2"`), build `PmoFum7aIcB42fwmIYemr`: 0 on all eight states.
+- The renders before and after the fix are byte-identical. The look comes from `.policy-h`, not from the tag.
+
+**Why it mattered:**  
+The whole-app sweep does not run axe. A green suite and an open gate still let an accessibility fault through to a PR. The separate axe check in rule 14 caught it, so that check stays a required step and is not to be dropped as covered by the sweep.
+
+**What changed:**  
+- `src/app/about/page.tsx`: the three row texts use h2.
+- Both suites re-run on the new build (desktop 101 passed; phone 100 passed, 1 skipped); gate OPEN on that code.
+
+**Status:** RESOLVED  
+**Related finding / decision IDs:** GAL-L0038; rule 14 (axe, keyboard and reflow)  
+**Harvest status:** UNHARVESTED  
+**Open:** an axe pass inside the sweep, so the gate covers it. Not added here: it is a new check on every page and wants its own change, with a control.
+
+---
+
 ## Ledger rules
 
 - Capture the event in the governed change that fixes or formally records it where feasible.

@@ -49,14 +49,25 @@ GAL-OD-02 (makers, studios and collectives; made or materially produced; not ret
 | The sweep fails on the old code (control) | On the live build `UhdkxbzpibZovSIAXEp2u`: FAIL, findings on 15 of 27 pages. Every issue in the governor's screenshots was flagged: mono sentences, the doubled negative, "Fair use", no Back, the footer links, the empty band. Not raised by him, and also found: a 94-word Privacy paragraph and mono sentences on Close account and the operator pages | SEEN |
 | The landing check catches a redirect (control) | `/studio/join` without its declared redirect: "asked /studio/join, landed on /studio" | SEEN |
 | The sweep caught the builder | It flagged a new doubled negative written in this change ("no visitor account, and no tracking") on About and Privacy; reworded | SEEN |
-| Phone suite, build `Uowbq2yNGbEZJtp4r91Gu` (code `b223f75`) | **100 passed, 1 skipped, suite exit 0** (28.9 min). Sweep receipt: PASS, 27 of 27 pages, 12 rules | SEEN |
-| Desktop suite, same build | PENDING | — |
+| Phone suite, build `Uowbq2yNGbEZJtp4r91Gu` (code `b223f75`, previous session) | 100 passed, 1 skipped (28.9 min); superseded below | SEEN |
+| Desktop and phone, build `A_gODj5BRF1PfBLYc2Yu0` (code `b223f75`, this container) | desktop **101 passed** (27.5 min); phone **100 passed, 1 skipped** (28.8 min); gate OPEN. Superseded by the heading fix | SEEN |
+| axe, keyboard, reflow on /about, /participation, /privacy (build `A_gODj5BRF1PfBLYc2Yu0`) | axe `heading-order` on /about with the rows open (h1 then h3), phone and desktop; 0 elsewhere. Fixed in `435a224` (GAL-L0039) | SEEN |
+| **Desktop suite, build `PmoFum7aIcB42fwmIYemr` (code `435a224`)** | **101 passed** (27.2 min), summary line read. Sweep receipt PASS, 27 of 27 pages, 12 rules | SEEN |
+| **Phone suite, same build** | **100 passed, 1 skipped** (28.6 min), summary line read. Sweep receipt PASS, 27 of 27 pages, 12 rules | SEEN |
+| **Gate** `python3 scripts/app-sweep-gate.py`, same code | `OPEN — phone and desktop passed on this code` | SEEN |
+| **axe** (4.10.2: wcag2a, wcag2aa, wcag21aa, best-practice), same build | 0 violations on 8 states: /about (rows closed and open), /participation, /privacy; phone and desktop | SEEN |
+| **Keyboard**, same build | every Tab stop visible, named and ringed: /about 10 / 9, /participation 8 / 7, /privacy 8 / 7 (phone / desktop) | SEEN |
+| **Reflow 320 px**, same build | scrollWidth 320 on all four states | SEEN |
+| Shared fixtures before and after the runs (rule 26) | Monsoon Vessel No. 4 Sold; Unfinished Warp retired; no work left taken down after the empty-Home render | SEEN |
 | Gate refuses a shut state | `app-sweep-gate.py`: SHUT on a stale receipt and on a missing one; hook mode denies an unreadable payload; guard SWEEP-1 denied `create_pull_request` | SEEN |
 | Repository gates and drill | 5 of 5 green; drill 89 PASS | SEEN |
 | Independent review (builder-reviewer) | 2 High, 6 Medium, 5 Low; all fixed or recorded, as listed in the PR | SEEN |
-| Renders | `policy-screens/before/` (live build) and `after/`, phone and desktop: Home, empty Home, About closed and open, Participation, Privacy | SEEN |
+| Renders | `policy-screens/before/` (live build) and `after/` (build `PmoFum7aIcB42fwmIYemr`; byte-identical to the renders before the heading fix), phone and desktop: Home, empty Home, About closed and open, Participation, Privacy | SEEN |
+| Independent review of the heading fix (builder-reviewer) | no blocking finding; Low: About's outline is flat (the row names are in `<summary>`, not headings); Low: the sweep runs no axe | SEEN |
 
 ## Open
+- An axe pass inside the sweep, so the gate covers accessibility too (GAL-L0039).
+- About's heading outline is flat: the row names are `<summary>` text, not headings. A heading inside `<summary>` is announced unevenly by screen readers; left as is.
 - An appeal address published on the site (GAL-OD-15 says "by email"; the text points to the notice).
 - A plugin so the gate follows the governor into every session.
 - A drill case for SWEEP-1 in `scripts/doctrine-drill.py`.
