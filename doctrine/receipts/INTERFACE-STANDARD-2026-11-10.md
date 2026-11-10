@@ -45,12 +45,15 @@ Full analysis: `doctrine/harvests/PRODUCT_HARVEST-GALLERY-H-INTERFACE-001.md`; l
 | Calibration on references | No engine misreads. GOV.UK's 40 px inputs fail our stricter 48 (house value); Are.na's 10–12.5 px text fails, as intended | SEEN |
 | Independent review 1 (builder-reviewer) | 10 ways to pass a bad screen, 2 journey breaks, doc over-claims. All fixed | SEEN |
 | Independent review 2 (builder-reviewer) | 11 further holes: phone showed two Backs; gate could pass on a stale build; drill too narrow; `gh pr merge` not refused. All fixed | SEEN |
-| Drill, build `xaeTYGiwrFqIRyaYfYDFZ` | 38/38 exact, phone and desktop. It also found its own fixture faults and one real gap (no viewport tag), now rule IS-L4 | SEEN |
-| Journey 15, same build | PASS: 0 findings, 35 of 35 states, phone and desktop | SEEN |
-| **Desktop full suite, same build** | **103 passed** (33.5 min), summary line read | SEEN |
-| **Phone full suite, same build** | PENDING | — |
-| Gate | PENDING (after the phone suite) | — |
-| Renders beside references (IS-M1) | PENDING | — |
+| Drill | 38/38 exact, phone and desktop. It also found its own fixture faults and one real gap (no viewport tag), now rule IS-L4 | SEEN |
+| Phone runs on build `xaeTYGiwrFqIRyaYfYDFZ` | Failed once each in journeys 02, 10, 06 and 05, always a wait on a slow server answer. Each passed when re-run alone | SEEN |
+| Control: live code (`23000f2`) vs new code, alternating, same test project | Studio work-page load median 6.8 s vs 7.5 s, overlapping ranges (5.5–8.5 vs 6.1–10.7 s). The latency is the environment's, not the change's. Waits raised 60→120 s per test and 10→20 s per expect; no assertion changed | SEEN |
+| **Phone full suite, build `M_yYONQ-Y9kGPhg_ZhcIk`** | **102 passed, 1 skipped** (35.4 min), summary line read; suite receipt written | SEEN |
+| **Desktop full suite, same build** | **103 passed** (33.0 min), summary line read; suite receipt written | SEEN |
+| **Gate** `python3 scripts/app-sweep-gate.py` | `OPEN`: full suite, sweep, standard and drill receipts, phone and desktop, on the stamped build of this code | SEEN |
+| Journey 15 inside those runs | 0 findings, 35 of 35 states, phone and desktop | SEEN |
+| Renders | `interface-standard/before/` (the live build, earlier today) and `after/`: Join step 2, Home, a work, Your details (Pixel 7) | SEEN |
+| IS-M1 | Join step 2 beside two GOV.UK flow steps at the same width (sheet kept outside the repo: third-party screenshots). Ours: Back, 16 px labels, fields 32 px apart. GOV.UK sets its question as a 19 px+ bold heading; the standard sets a floor, not a match | SEEN |
 
 ## Removed (rule 21)
 - Back hidden from 900 px wide; the header was the only way back on desktop. Back now shows at every width.
@@ -59,6 +62,8 @@ Full analysis: `doctrine/harvests/PRODUCT_HARVEST-GALLERY-H-INTERFACE-001.md`; l
 - Off-grid spacing (3, 6, 7, 10, 14, 18, 22 px).
 
 ## Open
+- Studio pages take 6–8 s on the test project (both code versions). For real people this would be a finding of its own; live latency is UNKNOWN.
+- The gate's receipts are local: CI cannot see them.
 - A screen held to "Back at every width" now shows Back on desktop next to the four places; the governor sees this in the renders.
 - Error and loading screens are declared unmeasured (reasons in the profile).
 - Non-text contrast (WCAG 1.4.11) is not measured; axe has no rule for it.
