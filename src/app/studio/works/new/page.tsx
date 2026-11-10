@@ -4,6 +4,7 @@ import { currentAccount } from "@/lib/auth";
 import { studioContext, materials } from "@/lib/queries";
 import { client } from "@/lib/supabase";
 import { ActionForm } from "@/components/ActionForm";
+import { StudioHeader } from "@/components/Chrome";
 import { PhotoTiles } from "@/components/PhotoPicker";
 import { WorkLabelFields } from "@/components/WorkLabelFields";
 import { createWorkAction } from "@/app/actions/studio";
@@ -28,13 +29,10 @@ export default async function NewWork() {
 
   return (
     <>
-      <header className="header studio editor">
-        <Link className="hdr-link" href="/studio">Cancel</Link>
-        <span className="title">New work</span>
-        {/* Submits the form below as a draft (the form attribute). It comes first in the page, so
-            Enter in a field saves a draft — the safer of the two — and never publishes. */}
-        <DraftButton form="new-work" />
-      </header>
+      {/* Save draft submits the form below as a draft (the form attribute). It comes first in the
+          page, so Enter in a field saves a draft — the safer of the two — and never publishes. */}
+      <StudioHeader title="New work" lead={<Link className="hdr-link" href="/studio">Cancel</Link>}
+                    end={<DraftButton form="new-work" />} />
       <main id="main" tabIndex={-1} className="flow editor has-workbar">
         <h1 className="sr-only">New work</h1>
         <ActionForm action={createWorkAction} submitLabel="Publish" busyLabel="Publishing…" id="new-work"

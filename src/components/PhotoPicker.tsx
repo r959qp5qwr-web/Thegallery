@@ -1,5 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { Icon } from "./Icon";
+import { Field } from "./ActionForm";
 
 /** The Studio's photo picker (Wave 5): the native file input stays the control (keyboard, screen
  *  reader, the phone's own camera/gallery chooser), visually replaced by a designed button and a
@@ -48,7 +50,7 @@ export function PhotoTiles() {
                  setChosen(f ? { name: f.name, url: URL.createObjectURL(f) } : null);
                }} />
         <label htmlFor="image" className="add-photo">
-          <svg className="icon" aria-hidden><use href="#i-image" /></svg>
+          <Icon name="image" />
           <span>{chosen ? "Change photo" : "Add photo"}</span>
         </label>
       </div>
@@ -56,11 +58,7 @@ export function PhotoTiles() {
       {/* Its description is asked for once there is a photo to describe (the board puts the title
           straight after the photos). */}
       {chosen ? (
-        <div className="field">
-          <label htmlFor="alt_text">Describe the photo</label>
-          <input id="alt_text" name="alt_text" aria-describedby="alt_text-help" />
-          <div className="help" id="alt_text-help">For anyone who cannot see it. Optional.</div>
-        </div>
+        <Field name="alt_text" label="Describe the photo" help="For anyone who cannot see it. Optional." />
       ) : null}
     </div>
   );

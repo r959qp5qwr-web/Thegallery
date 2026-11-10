@@ -30,7 +30,19 @@ export function Header({ className, back, share, step }:
   );
 }
 
-export function StudioHeader({ title, back, end }: { title: string; back?: string; end?: React.ReactNode }) {
+export function StudioHeader({ title, back, end, lead }:
+  { title: string; back?: string; end?: React.ReactNode;
+    /** An editor's header (drawing board, screen 13): its own way out on the left (Cancel) in place of Back. */
+    lead?: React.ReactNode }) {
+  if (lead) {
+    return (
+      <header className="header studio editor">
+        {lead}
+        <span className="title">{title}</span>
+        <span className="header-end"><SectionNav placement="header" />{end}</span>
+      </header>
+    );
+  }
   // The Studio itself (drawing board, screen 12) names itself where the wordmark stands; its
   // pages carry Back and their title. The bar (or, from 900 px, the header) is the way home.
   if (!back) {

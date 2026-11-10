@@ -36,7 +36,7 @@ export default async function Settings({ searchParams }: { searchParams: Promise
 
   return (
     <>
-      <StudioHeader title="Studio" back="/studio" />
+      <StudioHeader title="Settings" back="/studio" />
       <main id="main" tabIndex={-1} className="settings">
         <h1>Settings</h1>
         {saved ? <Band label="Saved">Your details are saved.</Band> : null}

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Header } from "@/components/Chrome";
-import { ActionForm } from "@/components/ActionForm";
+import { ActionForm, Field } from "@/components/ActionForm";
 import { Icon } from "@/components/Icon";
 import { resendConfirmAction } from "@/app/actions/account";
 
@@ -24,8 +24,7 @@ export default async function CheckEmail({ searchParams }: { searchParams: Promi
         </p>
         <ActionForm action={resendConfirmAction} submitLabel="Send it again" busyLabel="Sending…"
                     hidden={e ? { email: e } : undefined} className="form resend">
-          {e ? null : <div className="field"><label htmlFor="email">Email</label>
-            <input id="email" name="email" type="email" required autoComplete="email" /></div>}
+          {e ? null : <Field name="email" label="Email" type="email" required autoComplete="email" />}
         </ActionForm>
         {expired ? <Link className="textlink" href="/makers/sign-in">Sign in</Link> : null}
       </main>
