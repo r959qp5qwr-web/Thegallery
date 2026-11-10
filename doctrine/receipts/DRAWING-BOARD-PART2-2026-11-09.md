@@ -60,6 +60,14 @@ Not a SYSTEM CHANGE: `tokens.css` and `system.css` are untouched and byte-identi
   - The heart is a toggle with one name.
   - The sentence comes before the routes in reading order.
 
+## Merge and live (2026-11-10)
+- Governor: "Merge PR 13, Keep, Show". Merged with expectedHeadSha `82f6c29` → `3e1af09`. CI red only for `DOCTRINE_READ_TOKEN` (log read).
+- Keep: the sheet's three intent choices stay removed. Show: the Email row will show the address. This lands with part 3, so it gets the same full process.
+- Live, atthegallery.in, about 1 min after merge:
+  - SEEN: app.css carries the part 2 block; /about shows the new lead and its three rows; /participation and /privacy return 200 with their text unchanged.
+  - SEEN: /, /search, /saved and /makers return 200.
+  - NOT SEEN: a work page, its sheet or a maker's gallery with content live, because the live entrance has no published work yet.
+
 ## Not seen
 - The cause of the two journey 10 failures in phone run 1 (above). Open item: if it recurs, rerun with traces on and keep the trace.
 - The live result (after merge).
