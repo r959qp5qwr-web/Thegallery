@@ -35,7 +35,7 @@ function pagesOnDisk(): string[] {
 
 type Who = "visitor" | "maker" | "operator";
 /** How each page is reached: who opens it, and the value for each dynamic segment. */
-const VISIT: Record<string, { who: Who; path: (v: Values) => string }> = {
+const VISIT: Record<string, { who: Who; path: (v: Values) => string; lands?: RegExp }> = {
   "/": { who: "visitor", path: () => "/" },
   "/about": { who: "visitor", path: () => "/about" },
   "/participation": { who: "visitor", path: () => "/participation" },
@@ -58,7 +58,8 @@ const VISIT: Record<string, { who: Who; path: (v: Values) => string }> = {
   "/studio/contact-routes": { who: "maker", path: () => "/studio/contact-routes" },
   "/studio/account": { who: "maker", path: () => "/studio/account" },
   "/studio/whatsapp": { who: "maker", path: () => "/studio/whatsapp" },
-  "/studio/join": { who: "maker", path: () => "/studio/join" },      // a maker with a gallery is sent on to the Studio
+  // A maker who already has a gallery is sent on to the Studio; the join screen itself is walked by journey 13.
+  "/studio/join": { who: "maker", path: () => "/studio/join", lands: /^\/studio$/ },
   "/studio/works/new": { who: "maker", path: () => "/studio/works/new" },
   "/studio/works/[id]": { who: "maker", path: (v) => `/studio/works/${v.workId}` },
   "/operator": { who: "operator", path: () => "/operator" },
@@ -67,6 +68,10 @@ const VISIT: Record<string, { who: Who; path: (v: Values) => string }> = {
 type Values = { token: string; workId: string; makerId: string };
 
 // ------------------------------------------------------------------- the code this sweep saw
+/** Files outside src/ and public/ that change what renders or how the sweep sees it. The gate
+ *  (scripts/app-sweep-gate.py EXTRA_FILES) lists the same. */
+const EXTRA_FILES = ["ux/APP_RULES.json", "e2e/14-whole-app.spec.ts", "e2e/helpers.ts", "next.config.ts",
+  "next.config.js", "next.config.mjs", "package.json", "package-lock.json"];
 /** The same fingerprint scripts/app-sweep-gate.py computes: every file of the app, its styles,
  *  the rules and this sweep, by path and content. A receipt is good only for exactly this code. */
 function codeFingerprint(): string {
@@ -78,7 +83,7 @@ function codeFingerprint(): string {
     }
   };
   walk(join(ROOT, "src")); walk(join(ROOT, "public"));
-  files.push("ux/APP_RULES.json", "e2e/14-whole-app.spec.ts");
+  files.push(...EXTRA_FILES.filter((f) => { try { return statSync(join(ROOT, f)).isFile(); } catch { return false; } }));
   const h = createHash("sha256");
   for (const f of files.map((f) => f.split("\\").join("/")).sort()) {
     h.update(f + "\0" + createHash("sha256").update(readFileSync(join(ROOT, f))).digest("hex") + "\n");
@@ -94,12 +99,20 @@ async function apply(page: Page, route: string): Promise<Finding[]> {
     const found: { rule: string; says: string; detail: string }[] = [];
     const seen = (el: Element) => {
       const e = el as HTMLElement;
-      if (!e.checkVisibility || !e.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true })) return false;
+      // Without checkVisibility the sweep cannot tell what is seen: it counts the element as seen,
+      // so a rule never passes for lack of a browser feature.
+      if (e.checkVisibility && !e.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true })) return false;
       const r = e.getBoundingClientRect();
       return r.width > 1 && r.height > 1;
     };
-    // The words a person can see: text in rendered, visible elements, line by line.
+    // Folded text is read too: what a tap reveals is on the screen as much as what shows at rest.
+    document.querySelectorAll("details").forEach((d) => { (d as HTMLDetailsElement).open = true; });
+    // The words a person can see or hear: text in rendered, visible elements, line by line, and the
+    // names given to controls and pictures.
     const lines: string[] = [];
+    document.querySelectorAll("[aria-label], img[alt], [placeholder], [title]").forEach((el) => {
+      for (const a of ["aria-label", "alt", "placeholder", "title"]) { const v = el.getAttribute(a); if (v?.trim()) lines.push(v.trim()); }
+    });
     const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
     while (walker.nextNode()) {
       const t = walker.currentNode as Text; const parent = t.parentElement;
@@ -173,9 +186,13 @@ async function apply(page: Page, route: string): Promise<Finding[]> {
           break;
         }
         case "has-back": {
-          if ((c.routes as string[]).some((r) => new RegExp(r).test(route))
-              && !document.querySelector('[aria-label="Back"], [data-testid="back"]')
-              && !Array.from(document.querySelectorAll("header a[href]")).some((a) => /^\s*cancel\s*$/i.test(a.textContent ?? ""))) add("no Back on a screen reached from inside another");
+          if (!(c.routes as string[]).some((r) => new RegExp(r).test(route))) break;
+          // A visible control: Back (or the editor's Cancel). From 900 px the header's four places
+          // are the way back on public screens, where Back steps aside.
+          const back = Array.from(document.querySelectorAll('a[href][aria-label="Back"], button[aria-label="Back"], header a[href]'))
+            .some((el) => seen(el) && (el.getAttribute("aria-label") === "Back" || /^\s*cancel\s*$/i.test(el.textContent ?? "")));
+          const wideNav = window.innerWidth >= 900 && Array.from(document.querySelectorAll("header nav a[href]")).some(seen);
+          if (!back && !wideNav) add("no visible Back on a screen reached from inside another");
           break;
         }
         case "paragraph-words": {
@@ -230,7 +247,14 @@ test("the whole app keeps the governor's rules", async ({ browser, baseURL }, in
       try {
         const res = await page.goto(path, { waitUntil: "networkidle" });
         const findings: Finding[] = [];
-        if (!res || res.status() >= 500) findings.push({ rule: "SWEEP", says: "every page answers", detail: `HTTP ${res?.status()}` });
+        if (!res || res.status() >= 400) findings.push({ rule: "SWEEP", says: "every page answers", detail: `HTTP ${res?.status()}` });
+        // The page swept must be the page asked for: a sign-in that failed would otherwise sweep the
+        // sign-in screen in place of every Studio page and still pass.
+        const landed = new URL(page.url()).pathname;
+        const wanted = new URL(path, "http://x").pathname;
+        if (visit.lands ? !visit.lands.test(landed) : landed !== wanted) {
+          findings.push({ rule: "SWEEP", says: "the page swept is the page asked for", detail: `asked ${wanted}, landed on ${landed}` });
+        }
         await page.screenshot({ path: join(shots, (route === "/" ? "home" : route.slice(1).replace(/[\/\[\]]/g, "_")) + ".png"), fullPage: true });
         findings.push(...await apply(page, new URL(page.url()).pathname));
         results.push({ route, path, findings });

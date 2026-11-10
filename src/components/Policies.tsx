@@ -11,7 +11,7 @@ export function WhoCanOpen({ h: Hn = "h2" }: { h?: H }) {
   return (
     <div className="policy">
       <Hn className="policy-h">Makers, studios and collectives</Hn>
-      <p>Showing work they made or had a real hand in making. Retailers and resellers can’t open a gallery.</p>
+      <p>A gallery is for work you made or materially produced. It is not for retailers or ordinary resellers.</p>
       <Hn className="policy-h">Opening one</Hn>
       <p>All it takes is an email address. Nothing is reviewed before it goes up, and being here is no
         mark of approval.</p>
@@ -25,14 +25,14 @@ export function WhatWeActOn({ h: Hn = "h2" }: { h?: H }) {
   return (
     <div className="policy">
       <ul className="policy-list">
-        <li><Hn className="policy-h">Impersonation</Hn><p>Pretending to be someone else, or showing their work as your own.</p></li>
-        <li><Hn className="policy-h">Unlawful content</Hn><p>Anything that may not lawfully be shown or sold.</p></li>
-        <li><Hn className="policy-h">Spam and misuse</Hn><p>Bulk or automated abuse of the site.</p></li>
-        <li><Hn className="policy-h">Prohibited resale</Hn><p>Selling work you did not make or have a real hand in making.</p></li>
-        <li><Hn className="policy-h">Safety</Hn><p>A risk to a person.</p></li>
+        <li><Hn className="policy-h">Impersonation</Hn><p>Pretending to be someone else, or showing their work as yours.</p></li>
+        <li><Hn className="policy-h">Prohibited or unlawful content</Hn><p>Anything not allowed here, or not lawful to show or sell.</p></li>
+        <li><Hn className="policy-h">Spam or systematic misuse</Hn><p>Repeated abuse of the site, by hand or by machine.</p></li>
+        <li><Hn className="policy-h">Prohibited resale</Hn><p>Selling work you did not make or materially produce.</p></li>
+        <li><Hn className="policy-h">Safety concerns</Hn><p>Anything that puts a person at risk.</p></li>
       </ul>
-      <p>Every action comes with a written reason. A take-down can be restored and a suspension lifted.
-        To ask for another look, reply to the email that told you.</p>
+      <p>Every action comes with a written reason, and most can be reversed: a take-down restored, a
+        suspension lifted. To ask for another look, reply to the notice we send you.</p>
       <p className="policy-aside">No one here rates the work or checks who a maker is.</p>
     </div>
   );
@@ -43,9 +43,10 @@ export function PrivacyText({ h: Hn = "h2" }: { h?: H }) {
   return (
     <div className="policy">
       <Hn className="policy-h">Visiting</Hn>
-      <p>No account, and nothing follows what you look at. Saved works stay in this browser. When you open
-        Saved, the page asks which of them are still available; the request names the works, not you. The
-        servers keep short technical logs, such as which page was asked for, to keep the site running.</p>
+      <p>Visiting needs no account. What you look at is not tracked. Saved works stay in this
+        browser. When you open Saved, the page asks which of them are still available; the request names
+        the works, not you. The servers keep technical logs, such as which page was asked for, to keep the
+        site running.</p>
       <Hn className="policy-h">Messaging a maker</Hn>
       <p>You leave The Gallery. What you say and agree is between you and the maker. We don’t carry or keep it.</p>
       <Hn className="policy-h">Making</Hn>

@@ -22,12 +22,16 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 PROJECTS = ("phone", "desktop")
 GUARDED = ("mcp__github__create_pull_request", "mcp__github__merge_pull_request")
+# The same list as EXTRA_FILES in e2e/14-whole-app.spec.ts: files outside src/ and public/ that
+# change what renders or how the sweep sees it.
+EXTRA_FILES = ("ux/APP_RULES.json", "e2e/14-whole-app.spec.ts", "e2e/helpers.ts", "next.config.ts",
+               "next.config.js", "next.config.mjs", "package.json", "package-lock.json")
 
 
 def fingerprint() -> str:
     """The same fingerprint e2e/14-whole-app.spec.ts writes (codeFingerprint)."""
     files = [p for d in ("src", "public") for p in (ROOT / d).rglob("*") if p.is_file()]
-    rel = [p.relative_to(ROOT).as_posix() for p in files] + ["ux/APP_RULES.json", "e2e/14-whole-app.spec.ts"]
+    rel = [p.relative_to(ROOT).as_posix() for p in files] + [f for f in EXTRA_FILES if (ROOT / f).is_file()]
     h = hashlib.sha256()
     for f in sorted(rel):
         h.update((f + "\0" + hashlib.sha256((ROOT / f).read_bytes()).hexdigest() + "\n").encode())
@@ -44,28 +48,41 @@ def verdict() -> tuple[bool, list[str]]:
         path = ROOT / ".doctrine" / "runtime" / f"app-sweep-{project}.json"
         try:
             r = json.loads(path.read_text())
-        except Exception:  # noqa: BLE001
-            problems.append(f"{project}: no sweep receipt — run the suite (bash e2e/run-hosted.sh --project={project})")
+            if not isinstance(r, dict):
+                raise ValueError("not an object")
+        except Exception:  # noqa: BLE001 — missing or unreadable is shut
+            problems.append(f"{project}: no readable sweep receipt — run the suite (bash e2e/run-hosted.sh --project={project})")
+            continue
+        pages, swept = r.get("pages"), r.get("swept")
+        if not (isinstance(pages, int) and isinstance(swept, int) and pages > 0):
+            problems.append(f"{project}: the receipt does not say how many pages were swept")
             continue
         if r.get("fingerprint") != now:
             problems.append(f"{project}: the sweep ran on other code ({r.get('at', '?')}); run it again on this code")
         elif r.get("result") != "PASS":
             n = sum(len(x.get("findings", [])) for x in r.get("findings", []))
             problems.append(f"{project}: the sweep FAILED with {n} finding(s) on {len(r.get('findings', []))} page(s) — see {path.relative_to(ROOT)}")
-        elif r.get("swept") != r.get("pages"):
-            problems.append(f"{project}: the sweep reached {r.get('swept')} of {r.get('pages')} pages")
+        elif swept != pages:
+            problems.append(f"{project}: the sweep reached {swept} of {pages} pages")
     return not problems, problems
 
 
 def main() -> int:
     if len(sys.argv) > 1 and sys.argv[1] == "hook":
+        # An indeterminate verdict is a denial: an unreadable payload or a crash shuts the gate.
         try:
             payload = json.load(sys.stdin)
+            tool = payload.get("tool_name") if isinstance(payload, dict) else None
         except Exception:  # noqa: BLE001
-            payload = {}
-        if payload.get("tool_name") not in GUARDED:
+            tool = None
+        if tool is not None and tool not in GUARDED:
             return 0
-        ok, problems = verdict()
+        try:
+            ok, problems = verdict()
+        except Exception as e:  # noqa: BLE001
+            ok, problems = False, [f"the gate could not decide ({e})"]
+        if tool is None:
+            ok, problems = False, ["the hook payload could not be read"] + ([] if ok else problems)
         if ok:
             return 0
         print(json.dumps({"hookSpecificOutput": {
