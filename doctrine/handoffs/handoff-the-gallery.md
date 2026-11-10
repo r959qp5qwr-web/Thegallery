@@ -13,7 +13,7 @@
   - Rewrote the phone-walk checklist for the new screens.
   - The governor reviewed the live Participation and Home screens and asked for the root cause plus a mechanism. Built: the whole-app sweep (rules register, journey 14, gate, guard rule SWEEP-1, skill, CLAUDE.md rule 7) and fixed the policy screens and footer.
   - Ledger GAL-L0035..38.
-  - PR #15 not yet opened: the desktop suite was still running at handoff.
+  - Sweep change fully tested (phone 100 passed + 1 skipped, desktop 101 passed, gate OPEN); PR #15 not yet opened.
 
 ## 0. Instructions for Claude (read first)
 
@@ -253,7 +253,7 @@ You are continuing work from a previous chat. That chat is gone; this file is th
 | Environment | "The Gallery (with Doctrine)" `env_015jqYRQ2fkV9xhRroHttVvw`; `api.supabase.com` token proxy-injected [secret removed: re-enter it]; reaches the test project only |
 | PRs | #12 → `ed26f1d`; #13 → `3e1af09`; #14 → `907e973` (head `ced5abc`, tested code `beb2365`, build `UhdkxbzpibZovSIAXEp2u`) |
 | PR #14 proof | phone 98 passed + 1 skipped (27.4 min); desktop 99 passed (25.3 min; an earlier desktop run 96 passed, 1 failed, 2 did not run, after a container restart, GAL-L0037); 8/8 journey 13 controls failed under planted defects; axe 0 on 15 states; reflow 320 on 13 pages |
-| Sweep change (PR #15, not opened) | build `Uowbq2yNGbEZJtp4r91Gu`, code `b223f75`: phone **100 passed, 1 skipped**, suite exit 0 (28.9 min); sweep receipt PASS 27/27 pages, 12 rules. Desktop suite was **running at handoff, result NOT SEEN** |
+| Sweep change (PR #15, not opened) | build `Uowbq2yNGbEZJtp4r91Gu`, code `b223f75`: phone **100 passed, 1 skipped**, suite exit 0 (28.9 min); desktop **101 passed**, suite exit 0 (27.0 min); sweep receipts PASS 27/27 pages, 12 rules, both projects; gate OPEN (SEEN in the old container; the receipts live in gitignored `.doctrine/runtime/` and do not carry over) |
 | Sweep control on live code | FAIL with findings on 15 of 27 pages (every issue in the governor's screenshots plus Privacy 94-word paragraph, mono sentences on Close account and operator pages) |
 | Pages swept | 27 (`src/app/**/page.tsx`) |
 | Test seeds | Maker A `anika.rao@makers.example` / `kiln-and-monsoon-9` (anika-rao, Khurja); Maker B `studio@dhaaga.example` / `warp-and-weft-11` (dhaaga-studio, Jaipur); Operator `operator@thegallery.example` / `operator-of-record-7` |
@@ -287,14 +287,14 @@ You are continuing work from a previous chat. That chat is gone; this file is th
   - Mechanism files: `ux/APP_RULES.json` (R01–R12), `e2e/14-whole-app.spec.ts`, `scripts/app-sweep-gate.py`, `scripts/doctrine-hook.py` (SWEEP-1, `sweep_gate`), `.claude/skills/gallery-app-sweep/SKILL.md`, CLAUDE.md rule 7. Receipts written to `.doctrine/runtime/app-sweep-<project>.json`; pictures to `test-results/app-sweep/<project>/`.
   - Receipts:
     - `doctrine/receipts/DRAWING-BOARD-PART3-2026-11-10.md` (+ `drawing-board-part3/before|after|CHECKLIST.md`)
-    - `doctrine/receipts/WHOLE-APP-SWEEP-2026-11-10.md` (desktop row PENDING; + `policy-screens/before|after`)
+    - `doctrine/receipts/WHOLE-APP-SWEEP-2026-11-10.md` (phone and desktop recorded; + `policy-screens/before|after`)
   - This file: `doctrine/handoffs/handoff-the-gallery.md`.
 
 ## 10. Work state
 | Item | Status | Version / location | Notes |
 |---|---|---|---|
 | Drawing board parts 1–3 | merged, live | PR #12, #13, #14 → `907e973` | live signed-in screens NOT SEEN (phone walk) |
-| Whole-app sweep + policy screens + footer | built, committed, not merged | branch `claude/continue-wfrmif` `4762104` (code `b223f75`) | desktop suite result NOT SEEN; re-render policy screens (copy changed after the last render); finish the receipt; PR #15 |
+| Whole-app sweep + policy screens + footer | built, tested, not merged | branch `claude/continue-wfrmif` (code `b223f75`) | phone and desktop suites passed; re-render policy screens (copy changed after the last render); axe on the policy screens; PR #15 |
 | Session-level sweep hook | written at `/workspace/.claude/settings.json` (this container only) | — | ephemeral; loading UNKNOWN; the durable route is a plugin (not built) |
 | Phone-walk checklist | updated (v2) | artifact above | walk paused at step 1 (get ready); the governor sent the review screenshots instead of "Ready" |
 | Journey 10 "Hang this first" flake | UNKNOWN, not seen since | receipt PART2 | if it recurs, rerun with traces on |
@@ -303,15 +303,14 @@ You are continuing work from a previous chat. That chat is gone; this file is th
 | CI | red on every PR | needs repo secret `DOCTRINE_READ_TOKEN` | governor to create |
 
 ## 11. Next steps
-1. **Next action:** set up the new session, then re-run the desktop suite on the sweep code:
+1. **Next action:** set up the new session, then re-run both suites so the gate has receipts in the new container (both passed in the old one; receipts don't carry over):
    - Orient.
    - Recreate `.env.local` (section 8) and run `npm ci`.
    - Create this session's branch from `claude/continue-wfrmif`.
    - `npx next build`, then start the server.
-   - Run the **desktop** suite: the previous result was lost with the old container.
-   - If the phone receipt is missing in the new container, run the phone suite too: the gate needs both receipts on this exact code.
+   - Run the phone suite, then the desktop suite (each its own background command).
 2. Re-render the policy screens: `node render-policy.cjs` writes to `doctrine/receipts/policy-screens/after`. The script was in the old scratchpad; rewrite it: Home, empty Home with works taken down in `finally`, About closed and open, Participation, Privacy, phone and desktop.
-3. Fill the desktop row of `WHOLE-APP-SWEEP-2026-11-10.md`. Run axe and keyboard on /about, /participation, /privacy. `python3 scripts/app-sweep-gate.py` must say OPEN.
+3. Run axe and keyboard on /about, /participation, /privacy and add them to `WHOLE-APP-SWEEP-2026-11-10.md`. `python3 scripts/app-sweep-gate.py` must say OPEN.
 4. Open PR #15 and read the red CI log; then "Merge PR #15?". After the merge: confirm live, fast-forward the branch.
 5. Resume the phone walk at step 1 (get ready), one step at a time.
 6. Afterwards:

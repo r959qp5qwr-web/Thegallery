@@ -50,7 +50,7 @@ GAL-OD-02 (makers, studios and collectives; made or materially produced; not ret
 | The landing check catches a redirect (control) | `/studio/join` without its declared redirect: "asked /studio/join, landed on /studio" | SEEN |
 | The sweep caught the builder | It flagged a new doubled negative written in this change ("no visitor account, and no tracking") on About and Privacy; reworded | SEEN |
 | Phone suite, build `Uowbq2yNGbEZJtp4r91Gu` (code `b223f75`) | **100 passed, 1 skipped, suite exit 0** (28.9 min). Sweep receipt: PASS, 27 of 27 pages, 12 rules | SEEN |
-| Desktop suite, same build | PENDING | — |
+| Desktop suite, same build | **101 passed, suite exit 0** (27.0 min). Sweep receipt: PASS, 27 of 27 pages. `app-sweep-gate.py`: OPEN, phone and desktop passed on this code | SEEN |
 | Gate refuses a shut state | `app-sweep-gate.py`: SHUT on a stale receipt and on a missing one; hook mode denies an unreadable payload; guard SWEEP-1 denied `create_pull_request` | SEEN |
 | Repository gates and drill | 5 of 5 green; drill 89 PASS | SEEN |
 | Independent review (builder-reviewer) | 2 High, 6 Medium, 5 Low; all fixed or recorded, as listed in the PR | SEEN |
