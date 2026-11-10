@@ -13,9 +13,8 @@ export function Header({ className, back, share, step }:
   { className?: string; back?: string; share?: { title: string; path: string };
     /** Drawing board 8–9: a step of joining names itself in the header's middle ("Step 1 of 3"). */
     step?: string } = {}) {
-  // A page that is a place of its own (a maker's gallery, drawing board screen 3) adds Back and
-  // Share on a phone: back · wordmark · share. From 900 px Back steps aside; the four places
-  // are in the header there.
+  // A screen that is not a top-level place carries Back at every width (Interface Standard IS-N1):
+  // back · wordmark · share on a phone; back · wordmark · the four places from 900 px.
   const tools = !!(back || share || step);
   return (
     <header className={["header public", tools ? "tools" : "", step ? "step" : "", className ?? ""].filter(Boolean).join(" ")}>

@@ -82,7 +82,7 @@
   --radius: 2px;
   --radius-sheet: 12px;
   --header-h: 60px;
-  --bar-h: 66px;
+  --bar-h: 64px;
   --target: 44px;
 }
 @media (min-width: 600px) { :root { --t-display: 350 48px/1.03 var(--font-serif); --t-heading: 400 34px/1.1 var(--font-serif); --pad-x: 32px; } }

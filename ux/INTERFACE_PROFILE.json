@@ -1,7 +1,7 @@
 {
   "_what": "The Gallery's adoption of the Interface Standard (kit/interface-standard). Every screen STATE the app has, with its archetype, is listed here; e2e/15-interface-standard.spec.ts opens each one as its viewer on phone and desktop and measures it with the engine. A page (src/app/**/page.tsx) with no state here fails. A state the sweep cannot reach (it lands somewhere else) fails: there is no exemption by redirect. The profile may make a rule stricter (overrides); it may not loosen one.",
   "standard": "kit/interface-standard/STANDARD.json",
-  "primary_selector": ".btn.solid, .act.solid",
+  "primary_selector": ".btn.solid, .act.solid, .btn.primary, .act.primary, .btn.block",
   "help_selector": ".help",
   "field_selector": ".field, fieldset.segfield",
   "ignore_selector": ".skip",

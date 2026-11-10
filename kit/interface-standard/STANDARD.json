@@ -170,13 +170,12 @@
     },
     {
       "id": "IS-A1-one-primary",
-      "says": "One primary action on a screen: at most one anywhere, and exactly one on an editor or a step of a flow.",
+      "says": "One primary action on a screen: at most one anywhere, and exactly one on an editor.",
       "check": {
         "kind": "primary-count",
         "max": 1,
         "min_by_archetype": {
-          "editor": 1,
-          "flow-step": 1
+          "editor": 1
         }
       },
       "source": [
@@ -228,7 +227,7 @@
     },
     {
       "id": "IS-L3-grid",
-      "says": "Spacing sits on the product's declared base unit (4 px).",
+      "says": "The rhythm between blocks (vertical margins and paddings, row and column gaps) sits on the product's declared base unit (4 px).",
       "check": {
         "kind": "spacing-scale",
         "unit_px": 4

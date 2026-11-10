@@ -97,7 +97,7 @@ svg.icon.sm { width: 20px; height: 20px; }
 .phone.tall .bar { position: sticky; }
 .fullpage .phone.tall .bar, .fullpage .actionbar { position: static; }
 .fullpage .phone.tall .bar { margin-top: 24px; }
-.bar a { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 7px; text-decoration: none; font: var(--t-nav); letter-spacing: var(--track-nav); text-transform: uppercase; color: var(--text-muted); position: relative; padding-top: 2px; }
+.bar a { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; text-decoration: none; font: var(--t-nav); letter-spacing: var(--track-nav); text-transform: uppercase; color: var(--text-muted); position: relative; padding-top: 4px; }
 .bar a svg.icon { stroke-width: 1.3; }
 .bar a.active { color: var(--accent-text); }
 .bar a.active svg.icon { color: var(--accent); }
@@ -154,7 +154,7 @@ svg.icon.sm { width: 20px; height: 20px; }
 .choice li:last-child { border-bottom: 1px solid var(--rule-soft); }
 .disclosure { padding: 16px var(--pad-x) 4px; font: var(--t-body); color: var(--text-soft); }
 .routes { list-style: none; margin: 8px 0 0; padding: 0 var(--pad-x); }
-.routes li { display: flex; align-items: center; gap: 14px; min-height: 58px; border-top: 1px solid var(--rule-soft); }
+.routes li { display: flex; align-items: center; gap: 16px; min-height: 56px; border-top: 1px solid var(--rule-soft); }
 .routes li:last-child { border-bottom: 1px solid var(--rule-soft); }
 .routes .kind { font: var(--t-label); letter-spacing: var(--track-label); text-transform: uppercase; color: var(--text-muted); width: 88px; }
 .routes .val { font: var(--t-body); flex: 1; text-decoration-color: var(--stone-strong); text-underline-offset: 4px; }
@@ -227,7 +227,7 @@ svg.icon.sm { width: 20px; height: 20px; }
 .empty h2 { font: var(--t-heading); margin: 0 0 8px; letter-spacing: -0.01em; }
 .empty p { font: var(--t-body); margin: 0 0 20px; color: var(--text-soft); max-width: 34ch; }
 .skeleton { background: var(--surface-sunken); border-radius: 2px; }
-.footer { padding: var(--s5) var(--pad-x) 100px; font: var(--t-body-small); color: var(--text-muted); display: flex; gap: 18px; flex-wrap: wrap; border-top: 1px solid var(--rule-hair); margin-top: var(--s6); }
+.footer { padding: var(--s5) var(--pad-x) 100px; font: var(--t-body-small); color: var(--text-muted); display: flex; gap: 16px; flex-wrap: wrap; border-top: 1px solid var(--rule-hair); margin-top: var(--s6); }
 .footer a { text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--stone); }
 
 /* ===== The app layer (governor, 2026-11-09: drawing board approved; bottom bar on public pages).

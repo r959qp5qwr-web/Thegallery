@@ -32,7 +32,8 @@ EXTRA_FILES = ("ux/APP_RULES.json", "e2e/14-whole-app.spec.ts", "e2e/helpers.ts"
                "ux/INTERFACE_PROFILE.json", "kit/interface-standard/STANDARD.json",
                "kit/interface-standard/engine/measure.ts", "e2e/15-interface-standard.spec.ts",
                "e2e/support/fingerprint.ts", "playwright.config.ts", "tsconfig.json",
-               "open-next.config.ts", "e2e/support/test-project.sql")
+               "open-next.config.ts", "e2e/support/test-project.sql",
+               "e2e/16-interface-drill.spec.ts", "kit/interface-standard/drill/cases.ts")
 
 
 def fingerprint() -> str:

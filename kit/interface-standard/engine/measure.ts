@@ -231,14 +231,16 @@ export function measure(args: { standard: Standard; archetype: string; profile: 
         break;
       }
       case "spacing-scale": {
-        // Margins, paddings and gaps, on all four sides and both axes, sit on the base unit.
+        // The rhythm between blocks — vertical margins and paddings, and the gaps of grids and flex
+        // rows — sits on the base unit. Not measured, because computed style cannot tell them from a
+        // mistake: negative margins (optical alignment), auto margins on media (centring), values of
+        // 100 px or more (screen-relative layout such as 18vh), and horizontal insets inside controls.
         const unit = c.unit_px as number; const found = new Map<number, string>();
         for (const e of Array.from(document.querySelectorAll("body *")).filter(seen)) {
+          if (["IMG", "VIDEO", "SVG", "PICTURE", "CANVAS", "IFRAME"].includes(e.tagName)) continue;
           const cs = getComputedStyle(e);
-          for (const v of [cs.marginTop, cs.marginBottom, cs.marginLeft, cs.marginRight, cs.paddingTop, cs.paddingBottom,
-                           cs.paddingLeft, cs.paddingRight, cs.rowGap, cs.columnGap].map(px)) {
-            const a = Math.abs(v);
-            if (a > 0 && a < 200 && Math.abs(a / unit - Math.round(a / unit)) > 0.01 && !found.has(a)) found.set(a, desc(e));
+          for (const v of [cs.marginTop, cs.marginBottom, cs.paddingTop, cs.paddingBottom, cs.rowGap, cs.columnGap].map(px)) {
+            if (v > 0 && v < 100 && Math.abs(v / unit - Math.round(v / unit)) > 0.01 && !found.has(v)) found.set(v, desc(e));
           }
         }
         for (const [v, w] of Array.from(found).slice(0, 6)) addR(rule, `${v} px is off the ${unit} px grid`, w);
