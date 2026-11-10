@@ -8,6 +8,7 @@ import { publishGalleryAction, changeStatusAction, reconfirmStatusAction } from 
 import { SheetFocus } from "@/components/SheetFocus";
 import { Icon } from "@/components/Icon";
 import { STATUS_LABEL, STATUS_ORDER, confirmedAgo, statusIsStale } from "@/lib/format";
+import { ShareButton } from "@/components/PageTools";
 
 // The five statuses in the maker's own order (J-003 picker), named as every page names them.
 const STATUSES: readonly string[] = STATUS_ORDER;
@@ -16,10 +17,10 @@ export const dynamic = "force-dynamic";
 export const metadata = { title: "Studio" };
 
 export default async function Studio({ searchParams }: {
-  searchParams: Promise<{ saved?: string; status?: string; changed?: string; from?: string; unchanged?: string; restored_status?: string; confirmed?: string }> }) {
+  searchParams: Promise<{ saved?: string; joined?: string; status?: string; changed?: string; from?: string; unchanged?: string; restored_status?: string; confirmed?: string }> }) {
   const account = await currentAccount();
   if (!account) redirect("/makers/sign-in?next=/studio");
-  const { saved, status: picking, changed, from, unchanged, restored_status, confirmed } = await searchParams;
+  const { saved, joined, status: picking, changed, from, unchanged, restored_status, confirmed } = await searchParams;
   const { maker, gallery, works, routes } = await studioContext(account.id);
 
   // A suspended maker is not signed out and not left guessing: the Studio states the
@@ -51,131 +52,107 @@ export default async function Studio({ searchParams }: {
     );
   }
 
-  if (!maker) {
-    return (
-      <>
-        <StudioHeader title="Studio" />
-      <main id="main" tabIndex={-1}>
-        <div className="studio-state">
-          <h1>Set up your gallery</h1>
-          <p className="small" style={{ marginTop: 6 }}>Three steps, and you can publish in one sitting.</p>
-        </div>
-        <ol className="steps">
-          <li><span className="num">1</span><span className="grow">Your name, how you work, your city</span>
-            <Link className="textlink" href="/studio/profile">Start</Link></li>
-          <li><span className="num">2</span><span className="grow done">Add a work with its images</span></li>
-          <li><span className="num">3</span><span className="grow done">Publish</span></li>
-        </ol>
-        <div className="hint">A public way to contact you is separate, and you can add it whenever you
-          like — it is not needed to publish.</div>
-      </main>
-      </>
-    );
-  }
+  // No gallery yet: joining carries on at step 2 (drawing board, screen 8).
+  if (!maker) redirect("/studio/join");
 
   const published = works.filter((w) => w.lifecycle === "published");
+  const open = gallery?.lifecycle === "published";
+  const host = (process.env.GALLERY_BASE_URL ?? "").replace(/^https?:\/\//, "").replace(/\/$/, "");
+  const reachable = routes.some((r) => r.enabled && r.validated);
+  // The flag over each of the maker's own works: where it stands, in the gallery's own words.
+  const flag = (w: (typeof works)[number]) =>
+    w.taken_down ? "Taken down" : w.lifecycle === "published" ? "On view" : w.lifecycle === "retired" ? "Retired" : "Draft";
+
   return (
     <>
-      <StudioHeader title="Studio" />
-      <main id="main" tabIndex={-1}>
+      <StudioHeader title="Studio" end={<>
+        {open ? <ShareButton title={maker.display_name} path={`/m/${maker.handle}`} className="iconbtn" /> : null}
+        <Link className="hdr-link" href="/studio/settings">Settings</Link>
+      </>} />
+      <main id="main" tabIndex={-1} className="studio-home">
       {saved === "profile" ? <Band label="Saved">Your details are saved.</Band> : null}
-      <div className="studio-state">
+      {saved === "whatsapp" ? <Band label="Saved">Visitors can now message you on WhatsApp.</Band> : null}
+      <div className="studio-head">
         <h1>{maker.display_name}</h1>
-        <p className="small">
-          {gallery?.lifecycle === "published"
-            ? <>Your gallery is on view at <Link href={`/m/${maker.handle}`}>/m/{maker.handle}</Link>.</>
-            : "Your gallery is a draft. Publishing your first work opens it."}
+        <p className="addr">
+          {open ? <Link href={`/m/${maker.handle}`}>{host}/m/{maker.handle}</Link>
+                : <>{host}/m/{maker.handle}</>}
         </p>
       </div>
 
-      {/* GAL-PR-01: Contact is not advertised until a way to contact exists, and the Studio shows the task. */}
-      {!routes.some((r) => r.enabled && r.validated) ? (
-        <Band label="No way to contact you yet">
-          Your work is shown without a Message button until you add a way to contact you.{" "}
-          <Link href="/studio/contact-routes">Add a way to contact you</Link>
-        </Band>
-      ) : null}
-
-      {gallery && gallery.lifecycle !== "published" && published.length > 0 ? (
-        <form action={publishGalleryAction} className="inline-actions">
+      {/* One missing step at a time, shown as one task until it is done (drawing board, screen 12).
+          A gallery with work on view that is still a draft comes first: nothing is public until it opens.
+          Then a way to be contacted — GAL-PR-01: Message is not offered until one exists. */}
+      {gallery && !open && published.length > 0 ? (
+        <form action={publishGalleryAction} className="task-form">
           <input type="hidden" name="gallery_id" value={gallery.id} />
-          <button className="btn" type="submit">Open my gallery</button>
+          <button className="task" type="submit" data-testid="task">
+            <span>Your gallery is still a draft. Open it</span><Icon name="chevron" />
+          </button>
         </form>
+      ) : !reachable ? (
+        <Link className="task" href="/studio/whatsapp" data-testid="task">
+          <span>Add WhatsApp so visitors can message you</span><Icon name="chevron" />
+        </Link>
       ) : null}
+      {joined && !works.length ? <p className="studio-note">Your gallery opens with your first work.</p> : null}
 
-      <div className="section">
-        <div className="lead">Works</div>
-        {works.length ? (
-          <ul className="rowlist works" style={{ padding: 0 }}>
-            {works.map((w) => (
-              <li key={w.id}>
-                {/* The maker's own work, seen: its cover beside its title (design review). */}
-                <Link className="thumb" href={`/studio/works/${w.id}`} tabIndex={-1} aria-hidden>
-                  {w.cover ? <img src={`/img/${w.cover}/w320`} alt="" /> : null}
-                </Link>
-                <Link className="grow" href={`/studio/works/${w.id}`} style={{ textDecoration: "none" }}>
-                  <span className="primary">{w.title}</span>
-                  <span className="secondary">
-                    {/* Status is the chip's to say; the row's second line carries the material and,
-                        on a published work, when its status was last confirmed (J-003). */}
-                    {w.material}
-                    {w.lifecycle === "published" && !w.taken_down && !statusIsStale(w.status_confirmed_at)
-                      ? ` · confirmed ${confirmedAgo(w.status_confirmed_at)}` : ""}
-                  </span>
-                </Link>
-                {/* J-003: on a published work the chip is the status control — a button whose name
-                    carries the value, opening the picker. A draft or retired work has no status yet. */}
-                {w.lifecycle === "published" && !w.taken_down ? (
-                  // A real button (Space and Enter both work), in a GET form so it opens the picker
-                  // without script too. A pending Undo travels with it.
-                  <form method="get" action="/studio" className="chip-form">
-                    <input type="hidden" name="status" value={w.id} />
-                    {changed && from ? <><input type="hidden" name="changed" value={changed} /><input type="hidden" name="from" value={from} /></> : null}
-                    <button className={`chip ${w.status === "sold" ? "" : "available"}`} id={`chip-${w.id}`} type="submit"
-                            aria-label={`Status: ${STATUS_LABEL[w.status] ?? w.status}. Change status of ${w.title}`}>
-                      {STATUS_LABEL[w.status] ?? w.status}
-                    </button>
-                  </form>
-                ) : <StatusChip lifecycle={w.lifecycle} status={w.status} />}
-                {changed === w.id && from && STATUSES.includes(from) ? (
-                  <form action={changeStatusAction} className="undo-line" role="status">
-                    <span>Marked as {STATUS_LABEL[w.status]}</span>
-                    <input type="hidden" name="work_id" value={w.id} />
-                    <input type="hidden" name="status" value={from} />
-                    <input type="hidden" name="undo" value="1" />
-                    <button className="btn quiet" type="submit"><span>Undo</span></button>
-                  </form>
-                ) : null}
-                {/* J-003 reconfirmation: past 90 days the row asks, and one tap answers. */}
-                {w.lifecycle === "published" && !w.taken_down && statusIsStale(w.status_confirmed_at) && confirmed !== w.id ? (
-                  <form action={reconfirmStatusAction} className="undo-line" data-testid="reconfirm">
-                    <span>Status last confirmed {confirmedAgo(w.status_confirmed_at)}</span>
-                    <input type="hidden" name="work_id" value={w.id} />
-                    <input type="hidden" name="expected" value={w.status} />
-                    <button className="btn quiet" type="submit"
-                            aria-label={`Confirm ${w.title} is still ${STATUS_LABEL[w.status] ?? w.status}`}><span>Confirm</span></button>
-                  </form>
-                ) : null}
-                {confirmed === w.id ? (
-                  <p className="undo-line" role="status">Confirmed. Visitors now see {STATUS_LABEL[w.status]} as current.</p>
-                ) : null}
-                {restored_status === w.id ? (
-                  <p className="undo-line" role="status">Status put back to {STATUS_LABEL[w.status]}.</p>
-                ) : null}
-                {unchanged === w.id ? (
-                  <p className="undo-line" role="status">That did not go through; the status is as it was.</p>
-                ) : null}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="body">No works yet. The first one is the gallery.</p>
-        )}
-      </div>
-
-      <div className="actions">
-        <Link className="btn block primary" href="/studio/works/new">Add a work</Link>
-      </div>
+      <ul className="studio-wall" aria-label="Your works">
+        <li className="add-cell">
+          <Link className="add-work" href="/studio/works/new"><Icon name="plus" /><span>Add a work</span></Link>
+        </li>
+        {works.map((w) => (
+          <li key={w.id}>
+            <Link className="studio-tile" href={`/studio/works/${w.id}`}>
+              <span className="frame r45">
+                {w.cover ? <img src={`/img/${w.cover}/w640`} alt="" /> : <span className="notice">No image yet</span>}
+              </span>
+              <span className={`flag${w.lifecycle === "published" && !w.taken_down ? " available" : ""}`}>{flag(w)}</span>
+              <span className="st-title">{w.title}</span>
+            </Link>
+            {/* J-003: on a published work the chip is the status control — a button whose name
+                carries the value, opening the picker. A GET form, so it works without script. */}
+            {w.lifecycle === "published" && !w.taken_down ? (
+              <form method="get" action="/studio" className="chip-form">
+                <input type="hidden" name="status" value={w.id} />
+                {changed && from ? <><input type="hidden" name="changed" value={changed} /><input type="hidden" name="from" value={from} /></> : null}
+                <button className={`chip ${w.status === "sold" ? "" : "available"}`} id={`chip-${w.id}`} type="submit"
+                        aria-label={`Status: ${STATUS_LABEL[w.status] ?? w.status}. Change status of ${w.title}`}>
+                  {STATUS_LABEL[w.status] ?? w.status}
+                </button>
+              </form>
+            ) : null}
+            {changed === w.id && from && STATUSES.includes(from) ? (
+              <form action={changeStatusAction} className="undo-line" role="status">
+                <span>Marked as {STATUS_LABEL[w.status]}</span>
+                <input type="hidden" name="work_id" value={w.id} />
+                <input type="hidden" name="status" value={from} />
+                <input type="hidden" name="undo" value="1" />
+                <button className="btn quiet" type="submit"><span>Undo</span></button>
+              </form>
+            ) : null}
+            {/* J-003 reconfirmation: past 90 days the work asks, and one tap answers. */}
+            {w.lifecycle === "published" && !w.taken_down && statusIsStale(w.status_confirmed_at) && confirmed !== w.id ? (
+              <form action={reconfirmStatusAction} className="undo-line" data-testid="reconfirm">
+                <span>Status last confirmed {confirmedAgo(w.status_confirmed_at)}</span>
+                <input type="hidden" name="work_id" value={w.id} />
+                <input type="hidden" name="expected" value={w.status} />
+                <button className="btn quiet" type="submit"
+                        aria-label={`Confirm ${w.title} is still ${STATUS_LABEL[w.status] ?? w.status}`}><span>Confirm</span></button>
+              </form>
+            ) : null}
+            {confirmed === w.id ? (
+              <p className="undo-line" role="status">Confirmed. Visitors now see {STATUS_LABEL[w.status]} as current.</p>
+            ) : null}
+            {restored_status === w.id ? (
+              <p className="undo-line" role="status">Status put back to {STATUS_LABEL[w.status]}.</p>
+            ) : null}
+            {unchanged === w.id ? (
+              <p className="undo-line" role="status">That did not go through; the status is as it was.</p>
+            ) : null}
+          </li>
+        ))}
+      </ul>
 
       {(() => {
         const w = picking ? works.find((x) => x.id === picking && x.lifecycle === "published") : undefined;
@@ -212,11 +189,6 @@ export default async function Studio({ searchParams }: {
           </>
         );
       })()}
-      <div className="actions secondary">
-        <Link className="btn quiet" href="/studio/profile"><span>Your details</span></Link>
-        <Link className="btn quiet" href="/studio/contact-routes"><span>Ways to contact you</span></Link>
-        <Link className="btn quiet" href="/studio/account"><span>Account</span></Link>
-      </div>
       </main>
     </>
   );

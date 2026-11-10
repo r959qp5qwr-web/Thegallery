@@ -1,21 +1,25 @@
-import { PhotoPicker } from "@/components/PhotoPicker";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { currentAccount } from "@/lib/auth";
 import { studioContext, materials } from "@/lib/queries";
 import { client } from "@/lib/supabase";
+import { ActionForm } from "@/components/ActionForm";
 import { StudioHeader } from "@/components/Chrome";
-import { ActionForm, Field } from "@/components/ActionForm";
+import { PhotoTiles } from "@/components/PhotoPicker";
 import { WorkLabelFields } from "@/components/WorkLabelFields";
 import { createWorkAction } from "@/app/actions/studio";
+import { DraftButton } from "@/components/DraftButton";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Add a work" };
+export const metadata = { title: "New work" };
 
+/** Add a work (drawing board, screen 13): photos first, choices as taps, size and a few words
+ *  further down. Publish is docked at the foot; Save draft sits in the header. */
 export default async function NewWork() {
   const account = await currentAccount();
   if (!account) redirect("/makers/sign-in?next=/studio/works/new");
   const [{ maker }, mats] = await Promise.all([studioContext(account.id), materials()]);
-  if (!maker) redirect("/studio/profile");
+  if (!maker) redirect("/studio/join");
 
   // Start on the material this maker last used: a weaver should not have to move off Clay
   // every time. Row-level security scopes this read to the maker's own works.
@@ -25,25 +29,17 @@ export default async function NewWork() {
 
   return (
     <>
-      <StudioHeader title="Add a work" back="/studio" />
-      <main id="main" tabIndex={-1}>
-      <div className="studio-state">
-        <h1>Add a work</h1>
-        <p className="small" style={{ marginTop: 6 }}>Start with a picture or with the label, whichever you
-          have. Nothing is public until you publish.</p>
-      </div>
-      <ActionForm action={createWorkAction} submitLabel="Save draft" busyLabel="Saving…"
-                  bar={<span className="savedline">Nothing is public until you publish</span>}>
-        {/* Plate R-3: images first — the first is the cover. Adding one saves the draft. */}
-        <div className="group" style={{ marginTop: 16 }}><div className="ghead">Images · the first is the cover</div></div>
-        <PhotoPicker />
-        <div className="help picker-help">Portrait, landscape or square: the shape you shot is the shape shown.
-          Add more on the next page.</div>
-        <Field name="alt_text" label="Describe the image" help="For anyone who cannot see it." />
-        {/* No example values inside fields: a filled-looking empty field leaves a first-time
-            maker unsure what is saved. Examples, where useful, live in the help line. */}
-        <WorkLabelFields materials={mats} defaultMaterial={defaultMaterial} titleOptional />
-      </ActionForm>
+      {/* Save draft submits the form below as a draft (the form attribute). It comes first in the
+          page, so Enter in a field saves a draft — the safer of the two — and never publishes. */}
+      <StudioHeader title="New work" lead={<Link className="hdr-link" href="/studio">Cancel</Link>}
+                    end={<DraftButton form="new-work" />} />
+      <main id="main" tabIndex={-1} className="flow editor has-workbar">
+        <h1 className="sr-only">New work</h1>
+        <ActionForm action={createWorkAction} submitLabel="Publish" busyLabel="Publishing…" id="new-work"
+                    dock={{ name: "intent", value: "publish", otherBusy: "Publish" }}>
+          <PhotoTiles />
+          <WorkLabelFields materials={mats} defaultMaterial={defaultMaterial} titleOptional />
+        </ActionForm>
       </main>
     </>
   );

@@ -175,19 +175,15 @@ test.describe("status, authority and privacy", () => {
     await page.goto("/makers/create-account");
     await page.getByLabel("Email").fill(disposable.email);
     await page.getByLabel("Password").fill(disposable.password);
-    await page.getByRole("button", { name: "Create account" }).click();
+    await page.getByRole("button", { name: "Continue" }).click();
     await expect(page.getByRole("heading", { name: "Check your email" })).toBeVisible();
     const link = await linkFromOutbox(disposable.email, "/makers/confirm/");
     await page.goto(link);
-    await expect(page.getByRole("heading", { name: "Your email is confirmed" })).toBeVisible();
-    await signIn(page, disposable.email, disposable.password);
-
-    await page.goto("/studio/profile");
-    await page.getByLabel("Name shown to visitors").fill("Closing Soon");
-    await page.getByLabel("Gallery address").fill("closing-soon");
-    await page.getByLabel("City").fill("Mysuru");
-    await page.getByRole("button", { name: "Save" }).click();
-    await expect(page.getByText("Your details are saved")).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Your name and place" })).toBeVisible();
+    await page.getByLabel("Name").fill("Closing Soon");
+    await page.getByLabel("Place").fill("Mysuru");
+    await page.getByRole("button", { name: "Continue" }).click();
+    await expect(page.getByText("Step 3 of 3")).toBeVisible();
 
     await page.goto("/studio/account");
     // The consequence is stated before the act, in specifics rather than a warning triangle.

@@ -1,30 +1,24 @@
-import Link from "next/link";
 import { Header } from "@/components/Chrome";
 import { ActionForm, Field } from "@/components/ActionForm";
 import { createAccountAction } from "@/app/actions/account";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Create an account" };
+export const metadata = { title: "Open your gallery" };
 
+/** Join, step 1 of 3 (drawing board, screen 8): the account. Your name and place come next,
+ *  then WhatsApp; one question at a time. */
 export default function CreateAccount() {
   return (
     <>
-      <Header />
-      <main id="main" tabIndex={-1}>
-      <div className="studio-state">
-        <h1>Create your account</h1>
-        <p className="small">Your email is only for signing in to your Studio, where you hang your work. It stays
-          private: it is never shown on any public page. To be emailed by visitors, you add a separate public
-          address in your Studio.</p>
-      </div>
-      <ActionForm action={createAccountAction} submitLabel="Create account" busyLabel="Creating…">
-        <Field name="email" label="Email" type="email" required autoComplete="email" />
-        <Field name="password" label="Password" type="password" required autoComplete="new-password"
-               help="At least 10 characters. A longer password is stronger than one full of symbols." />
-      </ActionForm>
-      <div className="inline-actions">
-        <Link className="textlink" href="/makers/sign-in">I already have an account</Link>
-      </div>
+      <Header back="/makers" step="Step 1 of 3" />
+      <main id="main" tabIndex={-1} className="flow has-workbar">
+        <h1>Open your gallery</h1>
+        <ActionForm action={createAccountAction} submitLabel="Continue" busyLabel="Creating…" dock>
+          <Field name="email" label="Email" type="email" required autoComplete="email"
+                 help="For signing in. Never shown." />
+          <Field name="password" label="Password" type="password" required autoComplete="new-password"
+                 help="At least 10 characters." />
+        </ActionForm>
       </main>
     </>
   );

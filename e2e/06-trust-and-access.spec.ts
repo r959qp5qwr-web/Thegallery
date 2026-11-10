@@ -47,7 +47,7 @@ test.describe("trust and access", () => {
       "SELECT city, handle FROM makers WHERE handle = 'dhaaga-studio'"));
 
     await page.getByLabel("Gallery address").fill("anika-rao");          // taken by Maker A
-    await page.getByLabel("City").fill("Kept-City Probe");
+    await page.getByLabel("Place").fill("Kept-City Probe");
     await page.getByLabel("How you work").selectOption("studio");
     const box = page.locator("#commissions_open");
     const wasTicked = await box.isChecked();
@@ -57,7 +57,7 @@ test.describe("trust and access", () => {
     // The refusal sits under the field it is about, and nothing typed is lost.
     await expect(page.locator("#handle-err")).toContainText("taken");
     await expect(page.getByLabel("Gallery address")).toHaveAttribute("aria-invalid", "true");
-    await expect(page.getByLabel("City")).toHaveValue("Kept-City Probe");
+    await expect(page.getByLabel("Place")).toHaveValue("Kept-City Probe");
     await expect(page.getByLabel("How you work")).toHaveValue("studio");
     expect(await box.isChecked()).toBe(!wasTicked);
 
@@ -131,7 +131,7 @@ test.describe("trust and access", () => {
 
     // With no route, the Studio itself shows the task (GAL-PR-01), not only the routes page.
     await page.goto("/studio");
-    await expect(page.getByRole("link", { name: "Add a way to contact you" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Add WhatsApp so visitors can message you" })).toBeVisible();
 
     await page.goto("/studio/contact-routes");
     await page.getByLabel("Way to contact").selectOption("website");

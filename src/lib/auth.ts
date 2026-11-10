@@ -64,10 +64,21 @@ export async function resendConfirm(email: string): Promise<void> {
  * The link carries a single-use hash minted by GoTrue. Consuming it also signs the person in,
  * which is why this returns after the client has written its cookies.
  */
-export async function confirmEmail(tokenHash: string): Promise<"confirmed" | "expired"> {
+export async function confirmEmail(tokenHash: string): Promise<{ outcome: "confirmed" | "expired"; email: string | null }> {
   const sb = await client();
-  const { error } = await sb.auth.verifyOtp({ type: "email", token_hash: tokenHash });
-  return error ? "expired" : "confirmed";
+  const { data, error } = await sb.auth.verifyOtp({ type: "email", token_hash: tokenHash });
+  return error ? { outcome: "expired", email: null } : { outcome: "confirmed", email: data.user?.email ?? null };
+}
+
+/** The browser that began joining carries a mark of the address it joined with (a hash, never
+ *  the address). Only that browser is signed in by the confirmation link: a link forwarded to
+ *  someone else confirms the account but signs nobody in, so a maker cannot be led into an
+ *  account another person controls. */
+export const JOIN_COOKIE = "gallery_join";
+export async function joinMark(email: string): Promise<string> {
+  const bytes = new TextEncoder().encode(email.trim().toLowerCase());
+  const digest = new Uint8Array(await crypto.subtle.digest("SHA-256", bytes));
+  return Array.from(digest, (b) => b.toString(16).padStart(2, "0")).join("");
 }
 
 export async function startRecovery(email: string): Promise<void> {

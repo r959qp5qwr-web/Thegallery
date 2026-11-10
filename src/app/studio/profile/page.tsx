@@ -15,7 +15,7 @@ export default async function Profile() {
 
   return (
     <>
-      <StudioHeader title="Your details" back="/studio" />
+      <StudioHeader title="Your details" back="/studio/settings" />
       <main id="main" tabIndex={-1}>
       <div className="studio-state">
         <h1>{maker ? "Your details" : "Who is showing"}</h1>
@@ -38,7 +38,7 @@ export default async function Profile() {
           </KeptSelect>
           <div className="help">Studios and collectives are welcome. Retailers and resellers are not.</div>
         </div>
-        <Field name="city" label="City" defaultValue={maker?.city} required />
+        <Field name="city" label="Place" defaultValue={maker?.city} required help="Your town or city." />
         <Field name="practice_note" label="About your practice" textarea defaultValue={maker?.practice_note}
                help="In your own words. This is the wall text beside your work." />
         <Field name="intro" label="A line for the top of your gallery" textarea defaultValue={gallery?.intro} />
