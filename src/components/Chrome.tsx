@@ -150,13 +150,14 @@ export function MaterialRail({ materials, active }: { materials: { key: string; 
 
 /** The colophon: one line that signs the room. The four places live in the bar (or the header
  *  when wide), so they are not repeated here: say it once. */
-export function Footer() {
+export function Footer({ here }: { here?: "about" } = {}) {
+  // The colophon (drawing board): the name, and About, which holds who can open a gallery, what
+  // we act on and privacy. /participation and /privacy stay for links already shared. On About
+  // itself the link would lead to the same page, so only the name stands.
   return (
     <footer className="footer">
       <span className="sign">The Gallery</span>
-      <Link href="/about">About</Link>
-      <Link href="/participation">Participation</Link>
-      <Link href="/privacy">Privacy</Link>
+      {here === "about" ? null : <Link href="/about">About</Link>}
     </footer>
   );
 }

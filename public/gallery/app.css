@@ -728,3 +728,28 @@ body:has(.fm-dock) .footer { padding-bottom: calc(var(--s5) + 130px + env(safe-a
 
 /* The Message sheet's Email row: the address under its name ("Show", governor 2026-11-10). */
 .routes.rows li a .kind .route-val { display: block; font: var(--t-body-small); color: var(--text-muted); overflow-wrap: anywhere; margin-top: 2px; }
+
+/* ===== Policy screens (governor's review of the live screens, 2026-11-10): About's rows opened
+   out on /participation and /privacy; the same text under About's folds. Read as a page, in the
+   body face: serif titles, sans sentences, no monospace sentences. ===== */
+.policy-page { padding: var(--s5) var(--pad-x) 0; max-width: calc(640px + 2 * var(--pad-x)); }
+.policy-page > h1 { font: var(--t-heading); letter-spacing: -0.01em; margin: 0; }
+.policy-page .policy-title { font: var(--t-heading); letter-spacing: -0.01em; margin: var(--s6) 0 0; }
+@media (min-width: 900px) { .policy-page { padding-top: var(--s7); } }
+.policy { display: grid; gap: var(--s2); padding: var(--s3) 0 var(--s4); max-width: 60ch; }
+.policy .policy-h { font: var(--t-grid-title); color: var(--text); margin: var(--s3) 0 0; }
+.policy > .policy-h:first-child, .policy-list li:first-child .policy-h { margin-top: 0; }
+.policy p { font: var(--t-body); color: var(--text-soft); margin: 0; }
+.policy-list { list-style: none; margin: 0 0 var(--s3); padding: 0; border-top: 1px solid var(--rule-soft); }
+.policy-list li { padding: var(--s3) 0; border-bottom: 1px solid var(--rule-soft); display: grid; gap: var(--s1); }
+.policy-list .policy-h { margin: 0; }
+.policy-list p { font: var(--t-body-small); }
+.policy .policy-aside { font: var(--t-body-small); color: var(--text-muted); }
+.fold > .policy { padding-top: 0; }
+
+/* The colophon: on a screen with the bar, the page already keeps the bar's room below it, so the
+   footer keeps only its own breathing space (the two together left an empty band). */
+body:has(nav.bar) .footer { padding-bottom: var(--s5); }
+/* A row's second line that is a sentence (a reason, a consequence) is read, so it is set in the
+   body face; the mono second line stays for labels, places and counts (rule R02). */
+.rowlist .secondary.sentence { font: var(--t-body-small); letter-spacing: 0; color: var(--text-soft); }

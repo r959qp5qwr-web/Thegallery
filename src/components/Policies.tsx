@@ -1,87 +1,59 @@
 // The policy text, written once and shown in two places: folded under About (drawing board,
 // screen 6) and whole on /participation and /privacy, which stay reachable for links already
-// shared. The words are unchanged from the pages they came from (2026-11-09).
+// shared. Rewritten short on 2026-11-10 (governor's review of the live screens); every fixed
+// meaning is kept: GAL-OD-02 (who), GAL-OD-03 (open by email, no review, no mark of approval),
+// GAL-OD-15 (five things acted on, a written reason, reversible, reply by email), GAL-07 and
+// GAL-OD-12 (no rating, no identity check), GAL-P1 (the sign-in email stays private), GAL-OD-09.
 type H = "h2" | "h3";
 
-/** GAL-OD-15 as ratified: who may hold a gallery, and that opening one is not a mark of approval. */
+/** GAL-OD-02 and GAL-OD-03: who may hold a gallery, and that opening one is not a mark of approval. */
 export function WhoCanOpen({ h: Hn = "h2" }: { h?: H }) {
   return (
-    <>
-      <div className="section">
-        <Hn className="lead">Who can hold a gallery</Hn>
-        <p className="body">Individual makers, studios and collectives showing work they created or materially
-          produced. Retailers and ordinary resellers are not admitted.</p>
-      </div>
-      <div className="section">
-        <Hn className="lead">Opening a gallery</Hn>
-        <p className="body">Anyone may create an account with an email address and open a gallery. Nobody
-          reviews your work before you publish it, and nothing here is a mark of approval.</p>
-      </div>
-    </>
+    <div className="policy">
+      <Hn className="policy-h">Makers, studios and collectives</Hn>
+      <p>Showing work they made or had a real hand in making. Retailers and resellers can’t open a gallery.</p>
+      <Hn className="policy-h">Opening one</Hn>
+      <p>All it takes is an email address. Nothing is reviewed before it goes up, and being here is no
+        mark of approval.</p>
+    </div>
   );
 }
 
-/** GAL-OD-15: five report categories, recorded reasons, reversible where appropriate, appeal by
- *  email. Moderation protects access and safety; it does not curate taste or certify claims. */
+/** GAL-OD-15: five things acted on, each action with a written reason, reversible, and a reply by
+ *  email. Moderation protects access and safety; it does not rate work or check identity. */
 export function WhatWeActOn({ h: Hn = "h2" }: { h?: H }) {
   return (
-    <>
-      <div className="section">
-        <Hn className="lead">What we act on</Hn>
-        <ul className="rowlist flush">
-          <li><span className="grow"><span className="primary">Impersonation</span>
-            <span className="secondary">Presenting someone else&rsquo;s identity or work as your own</span></span></li>
-          <li><span className="grow"><span className="primary">Prohibited or unlawful content</span>
-            <span className="secondary">Material that may not lawfully be shown or sold</span></span></li>
-          <li><span className="grow"><span className="primary">Spam or systematic misuse</span>
-            <span className="secondary">Bulk or automated abuse of the gallery</span></span></li>
-          <li><span className="grow"><span className="primary">Prohibited resale</span>
-            <span className="secondary">Reselling work you did not create or materially produce</span></span></li>
-          <li><span className="grow"><span className="primary">Safety concern</span>
-            <span className="secondary">A risk to a person</span></span></li>
-        </ul>
-      </div>
-      <div className="section">
-        <Hn className="lead">How a decision is made and undone</Hn>
-        <p className="body">Every action carries a written reason. A take-down can be restored and a
-          suspension can be reinstated. If you think a decision is wrong, reply by email to the address in
-          the notice and it will be looked at again.</p>
-        <p className="small follow">We do not judge whether work is good, and we do not
-          verify that a maker is who they say they are.</p>
-      </div>
-    </>
+    <div className="policy">
+      <ul className="policy-list">
+        <li><Hn className="policy-h">Impersonation</Hn><p>Showing someone else’s identity or work as your own.</p></li>
+        <li><Hn className="policy-h">Unlawful content</Hn><p>Anything that may not lawfully be shown or sold.</p></li>
+        <li><Hn className="policy-h">Spam and misuse</Hn><p>Bulk or automated abuse of the site.</p></li>
+        <li><Hn className="policy-h">Prohibited resale</Hn><p>Selling work you did not make or have a real hand in making.</p></li>
+        <li><Hn className="policy-h">Safety</Hn><p>A risk to a person.</p></li>
+      </ul>
+      <p>Every action comes with a written reason. A take-down can be restored and a suspension lifted.
+        To ask for another look, reply to the email that told you.</p>
+      <p className="policy-aside">No one here rates the work or checks who a maker is.</p>
+    </div>
   );
 }
 
+/** The privacy text: GAL-OD-09 (saves on this device), GAL-P1 (the sign-in email stays private). */
 export function PrivacyText({ h: Hn = "h2" }: { h?: H }) {
   return (
-    <>
-      <div className="section">
-        <Hn className="lead">If you&rsquo;re visiting</Hn>
-        <p className="body">There is no visitor account and no tracking of what you look at. Saved works
-          are kept in your own browser on this device. When you open Saved, the page asks The Gallery
-          for those works&rsquo; current status, so it can tell you whether each is still available.
-          That request names the works, not you. Like any website, the servers that run The Gallery keep
-          short-lived technical logs of requests, such as which page address was asked for, to keep the site
-          working. They are not used to follow what any visitor looks at.</p>
-      </div>
-      <div className="section">
-        <Hn className="lead">When you contact a maker</Hn>
-        <p className="body">You leave The Gallery. The message, the negotiation and anything that follows are
-          between you and the maker; we neither carry nor keep them.</p>
-      </div>
-      <div className="section">
-        <Hn className="lead">If you&rsquo;re a maker</Hn>
-        <p className="body">The address you sign in with is never shown on a public page and is not included
-          in any public response. If you want people to email you, add a public email under Ways to contact
-          you in your Studio; that is a separate address you choose.</p>
-      </div>
-      <div className="section">
-        <Hn className="lead">Closing your account</Hn>
-        <p className="body">Closing retires your published work and closes your gallery. Public links end
-          with a plain notice rather than disappearing. Your sign-in email is not deleted when you close: it
-          stays, private and never shown, as the record that the account existed and was closed.</p>
-      </div>
-    </>
+    <div className="policy">
+      <Hn className="policy-h">Visiting</Hn>
+      <p>No account, and nothing follows what you look at. Saved works stay in this browser. When you open
+        Saved, the page asks which of them are still available; the request names the works, not you. The
+        servers keep short technical logs, such as which page was asked for, to keep the site running.</p>
+      <Hn className="policy-h">Messaging a maker</Hn>
+      <p>You leave The Gallery. What you say and agree is between you and the maker. We don’t carry or keep it.</p>
+      <Hn className="policy-h">Making</Hn>
+      <p>The email you sign in with is never shown on the site. To let visitors email you, add a public
+        email in your Studio’s Settings.</p>
+      <Hn className="policy-h">Closing your account</Hn>
+      <p>Your work is retired and your gallery closes; its links show a short notice. Your sign-in email
+        stays on record, private, to show the account existed and was closed.</p>
+    </div>
   );
 }

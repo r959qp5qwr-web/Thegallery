@@ -61,6 +61,7 @@ RULES = {
     "GUARD-2": {"since": "2026-09-04", "paid_for_by": "Playbook §3 consequence gate; Commission v1.1 §3 fail-closed rule — no consequential act on an invalid, stale or absent orientation."},
     "GUARD-3": {"since": "2026-09-04", "paid_for_by": "Canon Day Zero #6 — branch discipline enforced, not advised (the advisory form was broken 29 times on one build)."},
     "GUARD-4": {"since": "2026-09-04", "paid_for_by": "The active stage's own blocked_until_acceptance list in doctrine/PRODUCT_STATE.json — a stage gate that only a human remembers is a wish (Canon, first law)."},
+    "SWEEP-1": {"since": "2026-11-10", "paid_for_by": "Governor, 2026-11-10: issues already spoken against kept reaching the live screens one at a time, because reviews covered only each change's own screens (ledger GAL-L0038). A pull request waits for the whole-app sweep (e2e/14, ux/APP_RULES.json) on exactly its code."},
 }
 
 # ---------------------------------------------------------------------------------------
@@ -298,8 +299,25 @@ def decide_remote_repo_write(payload: dict, tool: str) -> Verdict:
         raise Deny("GUARD-3", f"{tool} writes directly to the default branch '{branch}' through the GitHub API, with no local review and no git hook in the path.", "github-api")
     if tool.endswith("merge_pull_request") and os.environ.get("DOCTRINE_ALLOW_MAIN") != "1":
         raise Deny("GUARD-3", "merging a pull request is the governor's act, not this session's.", "github-api")
+    if tool.endswith(("create_pull_request", "merge_pull_request")):
+        sweep_gate(tool)
     require_orientation(payload.get("session_id"), "github-api", f"{tool}")
     return Allow("github-api-oriented")
+
+
+def sweep_gate(tool: str) -> None:
+    """SWEEP-1 (governor, 2026-11-10): a pull request is opened or merged only when the whole-app
+    sweep passed on phone and desktop for exactly this code (scripts/app-sweep-gate.py). A gate
+    that cannot be read is shut (G6)."""
+    import importlib.util
+    try:
+        spec = importlib.util.spec_from_file_location("app_sweep_gate", PROJECT / "scripts" / "app-sweep-gate.py")
+        gate = importlib.util.module_from_spec(spec); spec.loader.exec_module(gate)  # type: ignore[union-attr]
+        ok, problems = gate.verdict()
+    except Exception as e:  # noqa: BLE001 — an indeterminate verdict is a denial
+        ok, problems = False, [f"the sweep gate could not run ({e})"]
+    if not ok:
+        raise Deny("SWEEP-1", f"{tool}: the whole-app sweep has not passed on this code. " + " | ".join(problems), "github-api")
 
 
 def decide_generic_consequential(payload: dict, tool: str, cls: str) -> Verdict:

@@ -62,3 +62,9 @@ mismatch. Until orientation is VALID: inspection and diagnosis only.
 5. Report what was SEEN, NOT SEEN and UNKNOWN. A green claim needs a receipt.
 6. An indeterminate verdict is a denial. If a guard, a gate or a check cannot establish that a
    consequential act is permitted, the act does not happen — a malfunction is never permission.
+7. Every screen is held to every correction the governor has made, on every page: before showing
+   the governor any screen or opening a pull request, the whole-app sweep must pass
+   (`e2e/14-whole-app.spec.ts`, rules in `ux/APP_RULES.json`, gate `scripts/app-sweep-gate.py`).
+   Each new correction becomes a rule first, proved to fail, then every flagged page is fixed.
+   The routine is `.claude/skills/gallery-app-sweep/SKILL.md`; read it when the governor corrects
+   a screen.

@@ -33,7 +33,7 @@ export default function About() {
         </details>
       </div>
       </main>
-      <Footer />
+      <Footer here="about" />
     </>
   );
 }
