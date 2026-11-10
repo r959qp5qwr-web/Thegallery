@@ -3,10 +3,11 @@ import { redirect } from "next/navigation";
 import { currentAccount } from "@/lib/auth";
 import { studioContext, materials } from "@/lib/queries";
 import { client } from "@/lib/supabase";
-import { ActionForm, Field } from "@/components/ActionForm";
+import { ActionForm } from "@/components/ActionForm";
 import { PhotoTiles } from "@/components/PhotoPicker";
 import { WorkLabelFields } from "@/components/WorkLabelFields";
 import { createWorkAction } from "@/app/actions/studio";
+import { DraftButton } from "@/components/DraftButton";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "New work" };
@@ -30,15 +31,15 @@ export default async function NewWork() {
       <header className="header studio editor">
         <Link className="hdr-link" href="/studio">Cancel</Link>
         <span className="title">New work</span>
-        {/* Submits the form below as a draft (the form attribute), whatever its docked button says. */}
-        <button className="hdr-link" type="submit" form="new-work" name="intent" value="draft">Save draft</button>
+        {/* Submits the form below as a draft (the form attribute). It comes first in the page, so
+            Enter in a field saves a draft — the safer of the two — and never publishes. */}
+        <DraftButton form="new-work" />
       </header>
       <main id="main" tabIndex={-1} className="flow editor has-workbar">
         <h1 className="sr-only">New work</h1>
         <ActionForm action={createWorkAction} submitLabel="Publish" busyLabel="Publishing…" id="new-work"
-                    dock={{ name: "intent", value: "publish" }}>
+                    dock={{ name: "intent", value: "publish", otherBusy: "Publish" }}>
           <PhotoTiles />
-          <Field name="alt_text" label="Describe the photo" help="For anyone who cannot see it. Optional." />
           <WorkLabelFields materials={mats} defaultMaterial={defaultMaterial} titleOptional />
         </ActionForm>
       </main>

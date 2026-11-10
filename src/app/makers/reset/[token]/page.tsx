@@ -16,7 +16,7 @@ export default async function ResetWithToken({ params }: { params: Promise<{ tok
         <ActionForm action={completeRecoveryAction} submitLabel="Set password" busyLabel="Saving…"
                     hidden={{ token }} dock>
           <Field name="password" label="New password" type="password" required autoComplete="new-password"
-                 help="At least 10 characters. Every other session is signed out." />
+                 help="At least 10 characters." />
         </ActionForm>
       </main>
     </>

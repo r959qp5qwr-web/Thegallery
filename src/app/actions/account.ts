@@ -1,9 +1,10 @@
 "use server";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import {
   createAccount, resendConfirm, signIn, signOut, startRecovery, completeRecovery,
-  emailProblem, passwordProblem, currentAccount,
+  emailProblem, passwordProblem, currentAccount, JOIN_COOKIE, joinMark,
 } from "@/lib/auth";
 import { client } from "@/lib/supabase";
 
@@ -19,6 +20,11 @@ export async function createAccountAction(_prev: FormState, form: FormData): Pro
   } catch {
     return { error: "We could not create the account just now. Nothing was saved — try again.", values: { email } };
   }
+  // This browser began joining with this address: its confirmation link may sign it in here.
+  (await cookies()).set(JOIN_COOKIE, await joinMark(email), {
+    httpOnly: true, sameSite: "lax", secure: process.env.NODE_ENV === "production" && !/^http:/.test(process.env.GALLERY_BASE_URL ?? ""),
+    path: "/", maxAge: 60 * 60 * 24 * 3,
+  });
   // The same destination whether or not the address already had an account: the door does not
   // tell a stranger who is registered here.
   redirect(`/makers/check-email?e=${encodeURIComponent(email)}`);
@@ -51,7 +57,13 @@ export async function signInAction(_prev: FormState, form: FormData): Promise<Fo
 /** Only a path on this site. "//host" and "/\\host" are read by browsers as another site, so a
  *  crafted sign-in link could otherwise hand a maker to a look-alike page after a real sign-in. */
 function safeNext(next: string): string {
-  return /^\/(?![\/\\])/.test(next) ? next : "/studio";
+  // Parsed the way a browser will read it (tabs and newlines are dropped, so "/\t/host" becomes
+  // "//host"): only a path on this same origin is kept.
+  try {
+    const u = new URL(next, "https://gallery.invalid");
+    if (u.origin === "https://gallery.invalid" && /^\/(?![\/\\])/.test(u.pathname)) return u.pathname + u.search + u.hash;
+  } catch { /* not a URL at all */ }
+  return "/studio";
 }
 
 export async function signOutAction(): Promise<void> {

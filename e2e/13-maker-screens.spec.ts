@@ -4,6 +4,7 @@ import { forgetPerson, linkFromOutbox, owner, signIn } from "./helpers";
 
 // Drawing board, part 3 (governor, 2026-11-09): the maker's screens 7–14, and "Show" (2026-11-10).
 // One new maker walks them in order. Each test fails if its change is taken away:
+//  - a confirmation link signs in only the browser that began joining;
 //  - For makers: pictures first, then three lines, one docked solid action and a way to sign in;
 //  - joining: step 2 asks name, place and how you work, and makes the address from the name;
 //  - step 3: WhatsApp, checked, saved as a public way to contact, and skippable;
@@ -14,6 +15,7 @@ import { forgetPerson, linkFromOutbox, owner, signIn } from "./helpers";
 test.describe.configure({ mode: "serial" });
 
 const NEW = { email: "meera.das@makers.example", password: "glaze-and-ember-12" };
+const OTHER = { email: "forwarded.link@makers.example", password: "kiln-door-ajar-21" };
 const NAME = "Anika Rao";               // the name of a seeded maker: the address must not collide
 const WORK = "Salt Study No. 1";
 const PUBLIC_EMAIL = "studio@meeradas.example";
@@ -31,8 +33,8 @@ async function docked(page: Page, name: string) {
   await expect(page.locator("nav.bar")).toHaveCount(0);
 }
 
-test.beforeAll(async () => { await forgetPerson(NEW.email); });
-test.afterAll(async () => { await forgetPerson(NEW.email); });
+test.beforeAll(async () => { await forgetPerson(NEW.email); await forgetPerson(OTHER.email); });
+test.afterAll(async () => { await forgetPerson(NEW.email); await forgetPerson(OTHER.email); });
 
 test("For makers: pictures first, three lines, one docked action and a way to sign in", async ({ page }) => {
   await page.goto("/makers");
@@ -90,22 +92,46 @@ test("joining, step 2: name, place and how you work; the address is made from th
   expect(made).toEqual({ handle: "anika-rao-2", kind: "collective", city: "Kochi" });
 });
 
-test("joining, step 3: WhatsApp is checked, can wait, and the Studio keeps it as one task until done", async ({ page }) => {
-  await signIn(page, NEW.email, NEW.password);
-  await page.goto("/studio/whatsapp?join=1");
-  await expect(page.getByText("Shown to visitors.")).toBeVisible();   // seen as public before it is saved (GAL-P1)
-  await page.getByRole("link", { name: "Skip for now" }).click();
-  const task = page.getByTestId("task");
-  await expect(task).toHaveText("Add WhatsApp so visitors can message you");
-  await expect(page.getByTestId("task")).toHaveCount(1);
-  await task.click();
+test("a confirmation link opened in another browser confirms the address but signs no one in", async ({ page, browser }) => {
+  await page.goto("/makers/create-account");
+  await page.getByLabel("Email").fill(OTHER.email);
+  await page.getByLabel("Password").fill(OTHER.password);
+  await page.getByRole("button", { name: "Continue" }).click();
+  await expect(page.getByRole("heading", { name: "Check your email" })).toBeVisible();
+  const link = await linkFromOutbox(OTHER.email, "/makers/confirm/");
 
+  // Someone forwards the link: the person who opens it must not land inside that account.
+  const elsewhere = await browser.newContext({ baseURL: process.env.GALLERY_BASE_URL ?? "http://127.0.0.1:3100" });
+  const p2 = await elsewhere.newPage();
+  await p2.goto(link);
+  await expect(p2).toHaveURL(/\/makers\/sign-in\?confirmed=1$/);
+  await expect(p2.getByText("Sign in to carry on with your gallery.")).toBeVisible();
+  await p2.goto("/studio/join");
+  await expect(p2).toHaveURL(/\/makers\/sign-in/);
+  await elsewhere.close();
+
+  // The address is confirmed all the same: its owner signs in and carries on at step 2.
+  await signIn(page, OTHER.email, OTHER.password);
+  await page.goto("/studio");
+  await expect(page).toHaveURL(/\/studio\/join$/);
+});
+
+test("joining, step 3: WhatsApp is checked, public, and the Studio keeps it as one task until done", async ({ page }) => {
+  await signIn(page, NEW.email, NEW.password);
+  await page.goto("/studio");
+  await expect(page.getByTestId("task")).toHaveText("Add WhatsApp so visitors can message you");
+  await expect(page.getByTestId("task")).toHaveCount(1);
+
+  await page.goto("/studio/whatsapp?join=1");
+  await expect(page.getByText("Step 3 of 3")).toBeVisible();
+  await expect(page.getByText("Shown to visitors.")).toBeVisible();   // seen as public before it is saved (GAL-P1)
+  await docked(page, "Continue");
   await page.getByLabel("WhatsApp number").fill("98765 43210");
-  await page.getByRole("button", { name: "Save" }).click();
+  await page.getByRole("button", { name: "Continue" }).click();
   await expect(page.locator("#value-err")).toContainText("country code");
   await page.getByLabel("WhatsApp number").fill("+999 7000 00042");
-  await page.getByRole("button", { name: "Save" }).click();
-  await expect(page.getByText("Visitors can now message you on WhatsApp.")).toBeVisible();
+  await page.getByRole("button", { name: "Continue" }).click();
+  await expect(page).toHaveURL(/\/studio\?joined=1$/);
   await expect(page.getByTestId("task")).toHaveCount(0);
   const routes = (await owner((c) => c.query<{ kind: string; enabled: boolean }>(
     `SELECT r.kind, r.enabled FROM contact_routes r JOIN makers m ON m.id = r.maker_id WHERE m.handle = 'anika-rao-2'`))).rows;
@@ -148,17 +174,20 @@ test("Add a work: photos first, choices as taps; Publish needs a photo; Save dra
   const none = await owner((c) => c.query("SELECT 1 FROM works WHERE title = $1", [WORK]));
   expect(none.rowCount).toBe(0);
 
-  // Save draft from the header keeps it in the Studio, unpublished.
+  // Enter in a field saves a draft — never publishes — and the work stays in the Studio, unpublished.
   await page.getByLabel("Title").fill(`${WORK} (draft)`);
-  await page.getByRole("button", { name: "Save draft" }).click();
+  await page.getByLabel("Title").press("Enter");
   await expect(page.getByText("The label is saved")).toBeVisible({ timeout: 20_000 });
   const draft = (await owner((c) => c.query<{ lifecycle: string }>("SELECT lifecycle FROM works WHERE title = $1", [`${WORK} (draft)`]))).rows;
   expect(draft).toEqual([{ lifecycle: "draft" }]);
 
   // A photo and a title, then Publish: on view in one go.
   await page.goto("/studio/works/new");
+  // The title follows the photos; the photo's description is asked for once there is a photo.
+  await expect(page.getByLabel("Describe the photo")).toHaveCount(0);
   await page.getByLabel("Add photo").setInputFiles(join(process.cwd(), "e2e/fixtures/square-1x1.jpg"));
   await expect(page.locator(".photo-tiles .thumb img")).toBeVisible();
+  await page.getByLabel("Describe the photo").fill("A pale salt-glazed jar, square on");
   await page.getByLabel("Title").fill(WORK);
   await page.getByRole("radio", { name: "Clay" }).check();
   await page.getByRole("radio", { name: "Not for sale" }).check();
@@ -192,8 +221,8 @@ test("Settings is one list; each row opens where that thing is changed", async (
   await expect(page).toHaveURL(/\/studio\/profile#city$/);
   await page.goBack();
   await page.getByRole("link", { name: /^Password/ }).click();
-  await expect(page).toHaveURL(/\/makers\/reset\?e=/);
-  await expect(page.getByLabel("Email")).toHaveValue(NEW.email);
+  await expect(page).toHaveURL(/\/makers\/reset$/);           // the address is not put in the URL
+  await expect(page.getByRole("heading", { name: "Reset password" })).toBeVisible();
 });
 
 test("the Message sheet shows the address under Email ('Show')", async ({ page, browser }) => {

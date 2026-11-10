@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { currentAccount } from "@/lib/auth";
 import { studioContext } from "@/lib/queries";
@@ -33,7 +34,8 @@ export default async function Join() {
                  help="Your town or city. Shown on your gallery." />
           {/* The self-declaration made when a gallery is created (GAL-OD-02, GAL-OD-03). */}
           <Segmented name="kind" legend="How you work" options={KINDS} pick value="individual"
-                     help="Show only work you made or had a real hand in making. Not resale." />
+                     help={<>Show only work you made or had a real hand in making. Not resale.{" "}
+                       <Link className="textlink" href="/participation">Who can open a gallery</Link></>} />
         </ActionForm>
       </main>
     </>

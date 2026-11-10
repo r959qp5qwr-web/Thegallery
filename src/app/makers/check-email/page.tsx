@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Header } from "@/components/Chrome";
 import { ActionForm } from "@/components/ActionForm";
 import { Icon } from "@/components/Icon";
@@ -18,7 +19,7 @@ export default async function CheckEmail({ searchParams }: { searchParams: Promi
         <h1>{expired ? "That link has expired" : "Check your email"}</h1>
         <p className="flow-line">
           {expired
-            ? "Links last 24 hours and work once. Ask for a new one."
+            ? "It was used already, or is too old. Ask for a new one, or sign in if you confirmed before."
             : <>Tap the link we sent to {e ? <span className="addr">{e}</span> : "your address"}.</>}
         </p>
         <ActionForm action={resendConfirmAction} submitLabel="Send it again" busyLabel="Sending…"
@@ -26,6 +27,7 @@ export default async function CheckEmail({ searchParams }: { searchParams: Promi
           {e ? null : <div className="field"><label htmlFor="email">Email</label>
             <input id="email" name="email" type="email" required autoComplete="email" /></div>}
         </ActionForm>
+        {expired ? <Link className="textlink" href="/makers/sign-in">Sign in</Link> : null}
       </main>
     </>
   );

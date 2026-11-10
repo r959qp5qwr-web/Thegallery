@@ -20,13 +20,14 @@ export const PRICE_MODES = [
 ];
 
 export function Segmented({ name, legend, options, value, help, pick }:
-  { name: string; legend: string; options: { key: string; label: string }[]; value?: string; help?: string;
+  { name: string; legend: string; options: { key: string; label: string }[]; value?: string; help?: React.ReactNode;
     /** Drawing board 13: a closed set of choices as taps that wrap, the chosen one in ink. */
     pick?: boolean }) {
   const state = useFormState();
   const chosen = state.values?.[name] ?? value;
   return (
-    <fieldset className="field segfield">
+    // The help line is the group's description, so a screen reader hears it with the choices.
+    <fieldset className="field segfield" aria-describedby={help ? `${name}-help` : undefined}>
       <legend>{legend}</legend>
       <div className={pick ? "seg pick" : "seg"}>
         {options.map((o, i) => (
@@ -37,7 +38,7 @@ export function Segmented({ name, legend, options, value, help, pick }:
           </label>
         ))}
       </div>
-      {help ? <div className="help">{help}</div> : null}
+      {help ? <div className="help" id={`${name}-help`}>{help}</div> : null}
     </fieldset>
   );
 }

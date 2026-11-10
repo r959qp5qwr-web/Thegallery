@@ -105,18 +105,32 @@ export async function joinAction(_prev: FormState, form: FormData): Promise<Form
   if (!["individual", "studio", "collective"].includes(kind)) return refuse("Choose how you work.", "kind");
 
   const db = await client();
+  // Step 2 already done (a second tap, another tab): make sure its gallery exists, and move on.
+  const ensureGallery = async (makerId: string) => {
+    const { data: g } = await db.from("galleries").select("id").eq("maker_id", makerId).limit(1);
+    if (g?.length) return true;
+    return !(await db.from("galleries").insert({ maker_id: makerId })).error;
+  };
   const { data: mine } = await db.from("makers").select("id").limit(1);
-  if (mine?.length) redirect("/studio/whatsapp?join=1");   // step 2 is already done
+  if (mine?.length) {
+    if (!(await ensureGallery((mine[0] as { id: string }).id))) return refuse("We could not save that just now. Nothing was changed.");
+    redirect("/studio/whatsapp?join=1");
+  }
 
   const base = handleFrom(display_name);
   for (let attempt = 0; attempt < 6; attempt++) {
     const handle = attempt === 0 ? base : `${base.slice(0, 24)}-${attempt === 5 ? token().slice(0, 4) : attempt + 1}`;
     const { data: created, error } = await db.from("makers")
       .insert({ handle, display_name, kind, city, user_id: account.id }).select("id").limit(1);
-    if (error?.code === "23505") continue;   // the address is taken: try the next one
+    if (error?.code === "23505" && /handle/.test(error.message)) continue;   // the address is taken: try the next one
+    if (error?.code === "23505") {
+      // This account already has its gallery (two submits at once): carry on from it.
+      const { data: again } = await db.from("makers").select("id").limit(1);
+      if (again?.length && await ensureGallery((again[0] as { id: string }).id)) redirect("/studio/whatsapp?join=1");
+      return refuse("We could not save that just now. Nothing was changed.");
+    }
     if (error || !created?.length) return refuse("We could not save that just now. Nothing was changed.");
-    const { error: gErr } = await db.from("galleries").insert({ maker_id: (created[0] as { id: string }).id });
-    if (gErr) return refuse("We could not save that just now. Nothing was changed.");
+    if (!(await ensureGallery((created[0] as { id: string }).id))) return refuse("We could not save that just now. Nothing was changed.");
     revalidatePath("/studio");
     redirect("/studio/whatsapp?join=1");
   }

@@ -53,6 +53,15 @@ export function PhotoTiles() {
         </label>
       </div>
       <p className="picker-name" aria-live="polite">{chosen ? chosen.name : "The first photo is the cover. Nothing is cropped."}</p>
+      {/* Its description is asked for once there is a photo to describe (the board puts the title
+          straight after the photos). */}
+      {chosen ? (
+        <div className="field">
+          <label htmlFor="alt_text">Describe the photo</label>
+          <input id="alt_text" name="alt_text" aria-describedby="alt_text-help" />
+          <div className="help" id="alt_text-help">For anyone who cannot see it. Optional.</div>
+        </div>
+      ) : null}
     </div>
   );
 }

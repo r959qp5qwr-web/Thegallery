@@ -54,7 +54,7 @@ export default async function Settings({ searchParams }: { searchParams: Promise
         <ul className="setrows">
           {/* The sign-in email is shown, not offered as a link: there is no way to change it here yet. */}
           <li><span className="static"><span className="k">Sign-in email</span><span className="v">{account.email}</span></span></li>
-          <Row href={`/makers/reset?e=${encodeURIComponent(account.email ?? "")}`} label="Password" value="Reset" />
+          <Row href="/makers/reset" label="Password" value="Reset" />
           <li>
             <form action={signOutAction}><button type="submit"><span className="k">Sign out</span></button></form>
           </li>
