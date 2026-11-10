@@ -25,7 +25,7 @@ export function WhatWeActOn({ h: Hn = "h2" }: { h?: H }) {
   return (
     <div className="policy">
       <ul className="policy-list">
-        <li><Hn className="policy-h">Impersonation</Hn><p>Showing someone else’s identity or work as your own.</p></li>
+        <li><Hn className="policy-h">Impersonation</Hn><p>Pretending to be someone else, or showing their work as your own.</p></li>
         <li><Hn className="policy-h">Unlawful content</Hn><p>Anything that may not lawfully be shown or sold.</p></li>
         <li><Hn className="policy-h">Spam and misuse</Hn><p>Bulk or automated abuse of the site.</p></li>
         <li><Hn className="policy-h">Prohibited resale</Hn><p>Selling work you did not make or have a real hand in making.</p></li>
