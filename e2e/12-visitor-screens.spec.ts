@@ -163,15 +163,18 @@ test("About is one screen: a short lead, then the full policy text folded under 
   const rows = page.locator(".about-folds details.fold > summary");
   await expect(rows).toHaveText(["Who can open a gallery", "What we act on", "Privacy"]);
   // Closed, the policy text is not on the screen; opened, the whole of it is.
-  await expect(page.getByText("Retailers and ordinary resellers are not admitted.")).toBeHidden();
+  await expect(page.getByText("It is not for retailers or ordinary resellers.")).toBeHidden();
   for (const r of await rows.all()) await r.click();
-  for (const words of ["Retailers and ordinary resellers are not admitted.", "Prohibited resale",
-                       "We do not judge whether work is good", "There is no visitor account",
-                       "Your sign-in email is not deleted when you close"]) {
+  // GAL-OD-02/03/15 in full: who, the five things acted on, the reason, reversal and reply.
+  for (const words of ["It is not for retailers or ordinary resellers.", "Impersonation", "Prohibited or unlawful content",
+                       "Spam or systematic misuse", "Prohibited resale", "Safety concerns",
+                       "Every action comes with a written reason", "reply to the notice we send you",
+                       "No one here rates the work or checks who a maker is", "Browsing needs no account",
+                       "Your sign-in email stays on record, private"]) {
     await expect(page.getByText(words, { exact: false }).first(), words).toBeVisible();
   }
   // The two pages links already point to stay, with the same words.
-  for (const [path, words] of [["/participation", "Prohibited resale"], ["/privacy", "There is no visitor account"]] as const) {
+  for (const [path, words] of [["/participation", "Prohibited resale"], ["/privacy", "Browsing needs no account"]] as const) {
     const res = await request.get(path);
     expect(res.status(), path).toBe(200);
     expect(await res.text(), path).toContain(words);

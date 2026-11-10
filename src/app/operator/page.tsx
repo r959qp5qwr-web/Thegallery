@@ -59,7 +59,7 @@ export default async function OperatorHome() {
           <li key={m.id}>
             <Link className="grow" href={`/operator/makers/${m.id}`} style={{ textDecoration: "none" }}>
               <span className="primary">{m.display_name}</span>
-              <span className="secondary">{m.city}{m.status_reason ? ` · ${m.status_reason}` : ""}</span>
+              <span className="secondary sentence">{m.city}{m.status_reason ? ` · ${m.status_reason}` : ""}</span>
             </Link>
             <span className={`chip ${m.status === "active" ? "available" : ""}`}>{m.status}</span>
           </li>
@@ -75,7 +75,7 @@ export default async function OperatorHome() {
                   <span className="primary">
                     {ACTION_LABEL[a.action] ?? a.action} · {makers.find((m) => m.id === a.subject_id)?.display_name ?? "a maker"}
                   </span>
-                  <span className="secondary">{a.reason}</span>
+                  <span className="secondary sentence">{a.reason}</span>
                   <span className="secondary meta">{recordedAt(a.created_at)}</span>
                 </span>
               </li>

@@ -817,6 +817,94 @@ An interrupted run leaves shared test data part-way through a change. The next r
 
 ---
 
+### GAL-L0038
+
+**Date:** 2026-11-10  
+**Observed event:**  
+After part 3 went live, the governor sent three phone screens: Participation, its end, and the empty Home. They carried issues already spoken against:
+- a terms-document page with a display title ("Fair use of The Gallery") and no way back;
+- sentences set in monospace;
+- a "we do not …, and we do not …" sentence;
+- a lead that contradicted the next line ("Anyone can open a gallery" / "Retailers … are not admitted");
+- a footer linking two pages that About already holds;
+- a band of empty paper under the footer on every screen with the bar.
+
+The governor: "There are too many issues for me to talk about and most we have already spoken against."
+
+**Evidence:**  
+- The governor's screenshots, 2026-11-10.
+- The first whole-app sweep (`e2e/14-whole-app.spec.ts`) on the live code (build `UhdkxbzpibZovSIAXEp2u`) as its own control. It flagged every one of those issues on its own, across 15 of the 27 pages. It also found more: a 94-word paragraph on Privacy, mono sentences on Close account and the operator pages, and the footer links and empty band on every public page.
+
+**Why it mattered:**  
+The root cause is the method, not any one page:
+1. Each review, render set and design pass covered only the pages its change touched. Part 2 rebuilt About and left `/participation`, `/privacy` and the footer as they were. Nothing later looked at them again.
+2. The governor's corrections lived as prose: the handoff's corrections table, this ledger, a session's memory. They were applied where remembered, never checked on every page.
+3. The journeys proved that new things work, not that rejected things are absent everywhere.
+4. The governor sees the whole app on a phone; the builder looked at a slice.
+
+**What changed:**  
+- `ux/APP_RULES.json`: the corrections as 12 checked rules, each naming its source.
+- `e2e/14-whole-app.spec.ts`: the whole-app sweep. It finds every page from the code, so none can be skipped. It opens each as its viewer on phone and desktop and applies every rule, inside the full suite every merge needs. It saves a picture of every page and writes a receipt for exactly the code it saw.
+- `scripts/app-sweep-gate.py` and guard rule SWEEP-1 in `scripts/doctrine-hook.py`: a pull request is not opened or merged without a passing receipt for the current code.
+  - Repo hooks do not load in this session's topology. Seen: the guard's own GUARD-3 should have refused the PR merges this session made, and did not. So the same gate is also wired at the session level, and the suite remains the chokepoint that holds in every topology.
+- `.claude/skills/gallery-app-sweep/SKILL.md` and CLAUDE.md standing rule 7: every new correction becomes a rule. The rule is proved to fail on the screen shown, every flagged page is fixed, and the change gets a ledger entry.
+- The pages fixed: Participation and Privacy as About's rows opened out (Back, the body face, short text, same meanings); the colophon is the name and About; the footer keeps no empty band; row sentences use the body face.
+
+**Status:** RESOLVED (mechanism and pages); the topology limit on repo hooks is recorded  
+**Related finding / decision IDs:** drawing board parts 1–3; GAL-L0026; GAL-L0031; corrections 3, 4, 19, 24  
+**Harvest status:** UNHARVESTED
+
+---
+
+### GAL-L0039
+
+**Date:** 2026-11-10  
+**Observed event:**  
+The sweep change had passed both full suites and the gate was open. The axe check, run afterwards, found `heading-order` on About with its rows open: the page's h1 was followed straight by h3s. The rows' texts (`WhoCanOpen`, `WhatWeActOn`, `PrivacyText`) were given `h="h3"`, but no h2 stands above them on About.
+
+**Evidence:**  
+- axe-core 4.10.2 on build `A_gODj5BRF1PfBLYc2Yu0`: `heading-order (1)` on /about with the rows open, phone and desktop. 0 on the six other states.
+- After the fix (`h="h2"`), build `PmoFum7aIcB42fwmIYemr`: 0 on all eight states.
+- The renders before and after the fix are byte-identical. The look comes from `.policy-h`, not from the tag.
+
+**Why it mattered:**  
+The whole-app sweep does not run axe. A green suite and an open gate still let an accessibility fault through to a PR. The separate axe check in rule 14 caught it, so that check stays a required step and is not to be dropped as covered by the sweep.
+
+**What changed:**  
+- `src/app/about/page.tsx`: the three row texts use h2.
+- Both suites re-run on the new build (desktop 101 passed; phone 100 passed, 1 skipped); gate OPEN on that code.
+
+**Status:** RESOLVED  
+**Related finding / decision IDs:** GAL-L0038; rule 14 (axe, keyboard and reflow)  
+**Harvest status:** UNHARVESTED  
+**Open:** an axe pass inside the sweep, so the gate covers it. Not added here: it is a new check on every page and wants its own change, with a control.
+
+---
+
+### GAL-L0040
+
+**Date:** 2026-11-10  
+**Observed event:**  
+The design reviews of the sweep change (ui-consistency:verifying, design-skills:ux-writing) found "Anything not allowed here, or not lawful to show or sell." on About and /participation: the "not X, not Y" pattern the governor rejected. Rule R03 passed it. Its pattern allowed "and" between the two negatives, not "or".
+
+**Evidence:**  
+- Both reviews quoted `src/components/Policies.tsx:29`.
+- With R03 widened to "and|or", the sweep alone (journey 14, phone, build `PmoFum7aIcB42fwmIYemr`) failed on /about and /participation with that sentence, and on nothing else.
+
+**Why it mattered:**  
+A rule that encodes a correction narrower than the correction lets the same fault back in with one word changed. The sweep was green and the gate open.
+
+**What changed:**  
+- `ux/APP_RULES.json` R03 now covers "not X, or not Y" (tightened, not loosened).
+- The copy now reads "Anything the law or this site forbids you to show or sell."
+- Both suites passed on build `X_B_m5XR5Pz6eVmoBTotD`, and the gate is OPEN.
+
+**Status:** RESOLVED  
+**Related finding / decision IDs:** R03; GAL-L0031; GAL-L0038; correction 34  
+**Harvest status:** UNHARVESTED
+
+---
+
 ## Ledger rules
 
 - Capture the event in the governed change that fixes or formally records it where feasible.

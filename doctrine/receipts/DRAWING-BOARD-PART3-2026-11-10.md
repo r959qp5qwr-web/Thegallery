@@ -82,3 +82,12 @@ References: Shopify and Linktree onboarding (one question per screen, chips, pro
 - The live result (after merge).
 - A real email round trip: the test project writes links to an outbox (helpers `linkFromOutbox`).
 - Real devices; the phone walk follows this PR.
+
+## Merge and live (2026-11-10)
+- Governor: "Yes." Merged with expectedHeadSha `ced5abc` → `907e973`. CI red only for `DOCTRINE_READ_TOKEN` (log read). Working branch fast-forwarded.
+- Live, atthegallery.in, about 90 s after merge:
+  - SEEN: `app.css` carries the part 3 block.
+  - SEEN: /makers shows "A gallery of your own.", "Open your gallery" and "I already have a gallery". All three picture slots are the empty plinth, because the live site has no published work yet.
+  - SEEN: /makers/create-account shows "Step 1 of 3" and "For signing in. Never shown.". /makers/sign-in shows "Forgot password?". /makers/reset and /makers/check-email return 200.
+  - SEEN: /studio/settings and /studio/join send a signed-out visitor to sign in (307 to `/makers/sign-in?next=…`). A bad confirmation link answers 303 to the expired state.
+  - NOT SEEN: the signed-in screens, a real confirmation email or a published work live. These are for the phone walk.

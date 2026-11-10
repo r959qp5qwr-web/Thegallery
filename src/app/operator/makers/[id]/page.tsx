@@ -60,7 +60,7 @@ export default async function OperatorMaker({ params }: { params: Promise<{ id: 
               <li key={h.id}>
                 <span className="grow">
                   <span className="primary">{ACTION_LABEL[h.action] ?? h.action}</span>
-                  <span className="secondary">{h.reason}</span>
+                  <span className="secondary sentence">{h.reason}</span>
                   <span className="secondary meta">{recordedAt(h.created_at)}</span>
                 </span>
               </li>

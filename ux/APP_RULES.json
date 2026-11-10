@@ -1,0 +1,78 @@
+{
+  "_what": "The governor's corrections as checks. Every rule here is applied by e2e/14-whole-app.spec.ts to every page the app has (found from src/app/**/page.tsx), signed out, as a maker and as the operator, on phone and desktop. A rule is added when a correction is made (skill: .claude/skills/gallery-app-sweep), proved to fail on the offending screen, and only then the screens are fixed. Rules are never deleted to make a sweep pass; a rule that is wrong is changed with the governor's word and the change is recorded in the ledger.",
+  "schema_version": 1,
+  "rules": [
+    {
+      "id": "R01-no-city",
+      "says": "The Gallery names no city of its own; a place is only a maker's own field.",
+      "source": "GAL-OD-04 amendment 2026-11-09; correction 25; GAL-L0032",
+      "check": { "kind": "text-absent", "pattern": "\\b(bengaluru|bangalore)\\b", "flags": "i" }
+    },
+    {
+      "id": "R02-no-mono-sentences",
+      "says": "Monospace is for labels, counts and addresses. A sentence is never set in mono.",
+      "source": "governor review of the live Participation screen, 2026-11-10",
+      "check": { "kind": "mono-sentences", "max_words": 6 }
+    },
+    {
+      "id": "R03-no-doubled-negative",
+      "says": "No 'not X, not Y' or 'not X, or not Y' lists and no 'we do not …, and we do not …' sentences.",
+      "source": "handoff §3 Avoid (machine-sounding copy); correction 24; GAL-L0031",
+      "check": { "kind": "text-absent", "pattern": "\\b(?:not|no|don['’]t|do not)\\b[^.]{0,60},\\s*(?:(?:and|or)\\s+)?(?:we\\s+)?(?:not|no|don['’]t|do not)\\b", "flags": "i" }
+    },
+    {
+      "id": "R04-no-rejected-words",
+      "says": "Words the governor has rejected: 'quiet' as copy, 'Fair use', engineering words (route, identity), 'Contact' as the action (it is Message), 'It is free'.",
+      "source": "handoff §3 Avoid; §7 rejected ('Contact' → 'Message', 'It is free'); journey 08; governor review 2026-11-10",
+      "check": { "kind": "text-absent", "pattern": "\\bquiet(ly)?\\b|\\bfair use\\b|\\broutes?\\b|\\bidentity\\b|\\bit is free\\b|^\\s*contact\\s*$", "flags": "im" }
+    },
+    {
+      "id": "R05-nothing-looks-tappable-but-isnt",
+      "says": "Anything drawn as a button or a row with a chevron is a real link, button or summary.",
+      "source": "correction 24 ('Make an account' looked like a button); part 2 About report row",
+      "check": { "kind": "fake-controls" }
+    },
+    {
+      "id": "R06-colophon-only",
+      "says": "The footer is the colophon: the name, and About. Participation and Privacy live inside About.",
+      "source": "drawing board (About + Participation + Privacy on one screen); governor review 2026-11-10",
+      "check": { "kind": "footer-links", "allowed": ["/about"] }
+    },
+    {
+      "id": "R07-no-empty-band-under-footer",
+      "says": "No band of empty paper under the colophon: below the footer's text only its own padding and, on a phone, the bar's room.",
+      "source": "governor review of the live screens 2026-11-10 (double padding under the footer)",
+      "check": { "kind": "footer-tail", "max_px": 56 }
+    },
+    {
+      "id": "R08-one-h1",
+      "says": "Each screen names itself once, in one h1.",
+      "source": "foundation: a page names itself in its own heading, once",
+      "check": { "kind": "h1-count", "exactly": 1 }
+    },
+    {
+      "id": "R09-one-solid-action",
+      "says": "At most one solid ink action is visible on a screen.",
+      "source": "drawing board: the docked action; journey 11",
+      "check": { "kind": "solid-actions", "max": 1 }
+    },
+    {
+      "id": "R10-no-sideways-scroll",
+      "says": "The page never scrolls sideways.",
+      "source": "foundation §10; journey 07 (three pages only before the sweep)",
+      "check": { "kind": "no-overflow-x" }
+    },
+    {
+      "id": "R11-a-way-back",
+      "says": "A screen reached from inside another (About and its policies, a work, a maker, a Studio sub-page) has Back.",
+      "source": "governor review 2026-11-10 (Participation had no way back); drawing board screens 2, 3, 6, 14",
+      "check": { "kind": "has-back", "routes": ["^/about$", "^/participation$", "^/privacy$", "^/work/", "^/m/", "^/studio/(settings|profile|contact-routes|account|whatsapp)$", "^/studio/works/[^/]+$", "^/makers/(sign-in|reset|create-account)"] }
+    },
+    {
+      "id": "R12-no-documents",
+      "says": "No screen is a wall of prose: no paragraph runs past 75 words.",
+      "source": "governor 2026-11-09 ('like a doctor's notebook'); review of the live screens 2026-11-10",
+      "check": { "kind": "paragraph-words", "max_words": 75 }
+    }
+  ]
+}
