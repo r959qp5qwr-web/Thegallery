@@ -163,7 +163,7 @@ export function Footer({ here }: { here?: "about" } = {}) {
 
 export function Band({ kind, label, children }: { kind?: "warn" | "fail"; label?: string; children: React.ReactNode }) {
   return (
-    <div className={`band ${kind ?? ""}`}>
+    <div className={`band ${kind ?? ""}`} role={kind === "fail" ? "alert" : undefined}>
       <div className="grow">
         {label ? <div className="lbl">{label}</div> : null}
         <p>{children}</p>

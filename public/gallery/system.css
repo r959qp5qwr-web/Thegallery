@@ -136,11 +136,11 @@ svg.icon.sm { width: 20px; height: 20px; }
 .tile .gs.available { color: var(--accent-text); }
 
 /* notice bands — a left rule in the colour that means it; no box */
-.band { display: flex; gap: 12px; align-items: flex-start; padding: 14px var(--pad-x) 14px calc(var(--pad-x) - 3px); background: var(--surface-sunken); border-left: 3px solid var(--stone-strong); margin: 0 0 0 0; }
+.band { display: flex; gap: 12px; align-items: flex-start; padding: 16px var(--pad-x) 16px calc(var(--pad-x) - 4px); background: var(--surface-sunken); border-left: 4px solid var(--stone-strong); margin: 0 0 0 0; }
 .band.warn { background: var(--accent-tint); border-left-color: var(--accent); }
 .band.fail { color: var(--alarm); border-left-color: var(--alarm); }
 .band .lbl { font: var(--t-label); letter-spacing: var(--track-label); text-transform: uppercase; margin-bottom: 4px; color: var(--text-soft); }
-.band p { margin: 0; font: var(--t-body-small); color: var(--text); }
+.band p { margin: 0; font: var(--t-body); color: var(--text); }
 .band.fail p { color: var(--alarm); }
 .band .grow { flex: 1; }
 

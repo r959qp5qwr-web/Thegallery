@@ -25,7 +25,7 @@ const SETUPS: Record<string, (p: Page) => Promise<string | null>> = {
   "no-works-on-view": async (p) => (await p.locator("a[href^='/work/']").count()) ? "works still on view" : null,
   "open-folds": async (p) => (await p.locator("details:not([open])").count()) || !(await p.locator("details[open]").count()) ? "folds not open" : null,
   // Checked against the count before the submit (recorded in ERRORS_BEFORE), inside main only.
-  "submit-empty": async (p) => (await p.locator("main [aria-invalid=true], main .err").count()) > ERRORS_BEFORE ? null : "no error shown after an empty submit",
+  "submit-empty": async (p) => (await p.locator("main [aria-invalid=true], main .err, main [role=alert]").count()) > ERRORS_BEFORE ? null : "no error shown after an empty submit",
 };
 const PENDING = join(ROOT, ".doctrine/runtime/interface-pending-restore.json");
 let ERRORS_BEFORE = 0;
@@ -181,7 +181,7 @@ test("every screen state meets the Interface Standard", async ({ browser, baseUR
         if (got.pathname + got.search !== want.pathname + want.search) findings.push({ rule: "STATE", says: "the state measured is the state asked for", measured: `asked ${want.pathname + want.search}, landed on ${got.pathname + got.search}`, where: "" });
         if (s.setup === "open-folds") await page.evaluate(() => document.querySelectorAll("details").forEach((d) => (d.open = true)));
         if (s.setup === "submit-empty") {
-          ERRORS_BEFORE = await page.locator("main [aria-invalid=true], main .err").count();
+          ERRORS_BEFORE = await page.locator("main [aria-invalid=true], main .err, main [role=alert]").count();
           // The browser's own validation would stop the submit before the product could answer.
           await page.evaluate(() => document.querySelectorAll("main form").forEach((f) => ((f as HTMLFormElement).noValidate = true)));
           await page.locator(PROFILE.primary_selector).first().click(); await page.waitForTimeout(800);
