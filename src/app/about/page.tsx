@@ -21,15 +21,15 @@ export default function About() {
       <div className="folds about-folds">
         <details className="fold">
           <summary>Who can open a gallery<Icon name="chevron" /></summary>
-          <WhoCanOpen h="h3" />
+          <WhoCanOpen h="h2" />
         </details>
         <details className="fold">
           <summary>What we act on<Icon name="chevron" /></summary>
-          <WhatWeActOn h="h3" />
+          <WhatWeActOn h="h2" />
         </details>
         <details className="fold">
           <summary>Privacy<Icon name="chevron" /></summary>
-          <PrivacyText h="h3" />
+          <PrivacyText h="h2" />
         </details>
       </div>
       </main>
