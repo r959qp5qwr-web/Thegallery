@@ -947,6 +947,37 @@ The governor stayed the detector of interface faults on every product. Each corr
 
 ---
 
+### GAL-L0042
+
+**Date:** 2026-11-10  
+**Observed event:**  
+The first build of the Interface Standard passed its own measurement: 0 findings on 34 states. Two independent reviews then found 21 ways it could still pass a bad screen. Among them:
+- Back counted when it was clipped out of sight, when it went nowhere, or when another layer covered it.
+- The profile's selectors could loosen any rule.
+- A page with no declared state still produced a PASS receipt.
+- The gate could pass on a stale build.
+- The phone showed two Back links because of CSS rule order.
+- `gh pr merge` was not refused.
+- The drill used "contains", not exact rule sets.
+
+**Evidence:**  
+- Review reports (builder-reviewer, twice), each item with file and line.
+- The drill, once exact, failed on its own fixtures: browser-default button padding, and pages with no viewport tag that a phone laid out 981 px wide. It also found one real gap, a page without `width=device-width`, now rule IS-L4.
+
+**Why it mattered:**  
+A gate that passes is only worth the ways it can fail. The first version measured honestly what it saw, but it could be made to see less.
+
+**What changed:**  
+- Engine, journey 15, gate and guard hardened (see the receipt `doctrine/receipts/INTERFACE-STANDARD-2026-11-10.md`).
+- Builds are stamped with the source fingerprint.
+- The drill is exact: 38 cases per viewport, with a clean page per archetype. It is gated.
+
+**Status:** RESOLVED; desktop full suite 103 passed on the stamped build  
+**Related finding / decision IDs:** GAL-L0041; rule 19 (every check must be able to fail)  
+**Harvest status:** feeds H-INTERFACE-001
+
+---
+
 ## Ledger rules
 
 - Capture the event in the governed change that fixes or formally records it where feasible.
