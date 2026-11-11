@@ -602,7 +602,7 @@ body:not(:has(nav.bar)) .actionbar { bottom: 0; }
 .flow > .band { margin: var(--s3) calc(-1 * var(--pad-x)) 0; }
 .flow .form { padding: 0; max-width: none; }
 .flow .field, .flow .segfield { margin-top: var(--s5); }
-.flow-line { font: var(--t-maker); color: var(--text-soft); margin: var(--s3) 0 0; max-width: 34ch; }
+.flow-line { font: var(--t-maker); color: var(--text-soft); margin: var(--s3) 0 0; max-width: 34ch; line-height: 1.5; }
 .flow-link { margin: var(--s3) 0 0; }
 .flow.has-workbar { padding-bottom: calc(var(--s7) + 76px + env(safe-area-inset-bottom, 0px)); }
 @media (min-width: 900px) { .flow { padding-top: var(--s7); } .flow.has-workbar { padding-bottom: var(--s7); } .flow .workbar.dock { padding-top: var(--s5); } }

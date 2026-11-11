@@ -24,7 +24,7 @@ been fixed must not recur.
 | E05 | 2026-11-10 | The Gallery | Join step 2: "How does one go back from this page?" | C1 (the sweep never saw join-2: it redirected) + C3 (Back was a route list) | profile states join-2, join-3 (joiner viewers); IS-N1 by archetype | IS-N1 | journey 15 FAIL on join-2: "no visible back control in the top 96 px" |
 | E06 | 2026-11-10 | The Gallery | Join step 2: "Fonts too small" | C3 | STANDARD IS-T2 (labels 16), IS-T4 (12 floor) | IS-T2, IS-T4 | journey 15 FAIL: labels 13 px, "Step 2 of 3" 11.5 px |
 | E07 | 2026-11-10 | The Gallery | Join step 2: "Items too cramped together" | C3 | STANDARD IS-F1 (32 px between fields) | IS-F1 | journey 15 FAIL: 24 px between fields |
-| E08 | 2026-11-11 | The Gallery | Join, real sign-up: "it says the email has been sent, no email received" (the address already had an account) | C3 (product) | APP_RULES R13 | R13 | journey 14 FAIL on `/makers/check-email`: no link to sign in, none to reset |
+| E08 | 2026-11-11 | The Gallery | Join, real sign-up: "it says the email has been sent, no email received" (the address already had an account) | C3 (product) | APP_RULES R13 | R13 | journey 14 FAIL on `/makers/check-email`: no link to sign in, none to reset. Adding the expired state to the profile (C1) then found IS-T5 line height 1.35 on `.flow-line`, fixed |
 
 ## Counts
 
