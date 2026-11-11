@@ -24,7 +24,7 @@ export default async function Join() {
   if (maker) redirect("/studio");
   return (
     <>
-      <Header step="Step 2 of 3" />
+      <Header back="/makers" step="Step 2 of 3" />
       <main id="main" tabIndex={-1} className="flow has-workbar">
         <h1>Your name and place</h1>
         <ActionForm action={joinAction} submitLabel="Continue" busyLabel="Saving…" dock>

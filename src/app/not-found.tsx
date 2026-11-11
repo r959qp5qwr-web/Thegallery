@@ -5,7 +5,7 @@ import { Header, Footer, EmptyState } from "@/components/Chrome";
 export default function NotFound() {
   return (
     <>
-      <Header />
+      <Header back="/" />
       <main id="main" tabIndex={-1}>
         <EmptyState level={1} title="Nothing is hung here"
                     routes={<Link className="textlink" href="/">Back to The Gallery</Link>}>

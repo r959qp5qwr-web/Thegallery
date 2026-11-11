@@ -31,7 +31,7 @@ export default async function Browse({ params }: { params: Promise<{ material: s
 
   return (
     <>
-      <Header />
+      <Header back="/search" />
       <main id="main" tabIndex={-1}>
       <h1 className="sr-only">{found.label}</h1>
       {rail.length > 1 ? <MaterialRail materials={rail} active={material} /> : null}

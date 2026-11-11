@@ -25,7 +25,7 @@ export default async function ContactRoutes({ searchParams }: { searchParams: Pr
       <main id="main" tabIndex={-1}>
       <div className="studio-state">
         <h1>How people reach you</h1>
-        <p className="small" style={{ marginTop: 6 }}>
+        <p className="small" style={{ marginTop: 8 }}>
           These are public. Your sign-in email ({account.email}) is not one of them and never becomes one —
           if you want people to email you, add that address here as its own way to contact you.
         </p>

@@ -905,6 +905,79 @@ A rule that encodes a correction narrower than the correction lets the same faul
 
 ---
 
+### GAL-L0041
+
+**Date:** 2026-11-10  
+**Observed event:**  
+On Join step 2, live, the governor asked: "How does one go back from this page? Also, the use of space looks off. Items too cramped together. Fonts too small." Then: "Why are we stuck … Give me a mechanism level solution, that's replicable, rigid, and learns from itself, and can be applied elsewhere too."
+
+**Evidence:**  
+- The screen had no Back. Its labels were 13 px, its step counter 11.5 px, and its fields 24 px apart.
+- The whole-app sweep had never measured it: the sweep's maker already had a gallery and was redirected, and the redirect counted as a pass.
+- Rule R11 required Back only on routes listed by hand.
+- The Doctrine's interface law is written but unarmed. Sizes are "around" / "generally", spacing has no number, and visual judgement is a manual review. The Canon and Playbook say so (`doctrine/harvests/PRODUCT_HARVEST-GALLERY-H-INTERFACE-001.md`).
+- The product's tokens broke its own foundation ("no text below 12 px").
+- A DOM measurement of the live code against sourced thresholds failed 33 of 33 states: 391 findings on phone, 511 on desktop (`kit/interface-standard/CONTROL-2026-11-10-*.json`).
+
+**Why it mattered:**  
+The governor stayed the detector of interface faults on every product. Each correction fixed one screen and one symptom; nothing measured the rest.
+
+**What changed:**  
+- `kit/interface-standard/`, the Interface Standard 1.0:
+  - 14 numeric rules, each sourced (WCAG 2.2, Material 3, Apple HIG, GOV.UK), with hard floors and house values marked;
+  - a DOM measuring engine;
+  - calibration on GOV.UK and Are.na, each finding read;
+  - an escape log classing each escape C1 coverage / C2 measure / C3 standard / C4 judgement;
+  - a skill.
+- `ux/INTERFACE_PROFILE.json`: all 34 screen states with archetypes, with no redirect exemption.
+- `e2e/15-interface-standard.spec.ts`: every state measured on phone and desktop, plus axe at WCAG 2.2 AA with target-size on.
+- The gate needs its receipts; `CLAUDE.md` rule 8.
+- Governor-approved SYSTEM CHANGE (2026-11-10: "I will go by your recommendations. Do the most reliable thing."):
+  - field labels 13→16 px, caps labels 11.5→12, tab names 10.5→12, mono metadata and captions 13→14;
+  - form fields 32 px apart;
+  - sentences in the body face;
+  - system spacing on the 4 px grid.
+- Back on every non-top-level state at every width, including Join steps 2 and 3, For Makers, Browse, Workshops and the work page on desktop.
+- 44 px targets.
+- Result: 0 of 34 states fail on phone and desktop.
+
+**Status:** RESOLVED in The Gallery; cross-product candidate drafted for the governor (harvest H-INTERFACE-001, option A)  
+**Related finding / decision IDs:** GAL-L0031, L0038, L0039, L0040; escapes E05–E07  
+**Harvest status:** HARVESTED (H-INTERFACE-001, DRAFT)
+
+---
+
+### GAL-L0042
+
+**Date:** 2026-11-10  
+**Observed event:**  
+The first build of the Interface Standard passed its own measurement: 0 findings on 34 states. Two independent reviews then found 21 ways it could still pass a bad screen. Among them:
+- Back counted when it was clipped out of sight, when it went nowhere, or when another layer covered it.
+- The profile's selectors could loosen any rule.
+- A page with no declared state still produced a PASS receipt.
+- The gate could pass on a stale build.
+- The phone showed two Back links because of CSS rule order.
+- `gh pr merge` was not refused.
+- The drill used "contains", not exact rule sets.
+
+**Evidence:**  
+- Review reports (builder-reviewer, twice), each item with file and line.
+- The drill, once exact, failed on its own fixtures: browser-default button padding, and pages with no viewport tag that a phone laid out 981 px wide. It also found one real gap, a page without `width=device-width`, now rule IS-L4.
+
+**Why it mattered:**  
+A gate that passes is only worth the ways it can fail. The first version measured honestly what it saw, but it could be made to see less.
+
+**What changed:**  
+- Engine, journey 15, gate and guard hardened (see the receipt `doctrine/receipts/INTERFACE-STANDARD-2026-11-10.md`).
+- Builds are stamped with the source fingerprint.
+- The drill is exact: 38 cases per viewport, with a clean page per archetype. It is gated.
+
+**Status:** RESOLVED; desktop full suite 103 passed on the stamped build  
+**Related finding / decision IDs:** GAL-L0041; rule 19 (every check must be able to fail)  
+**Harvest status:** feeds H-INTERFACE-001
+
+---
+
 ## Ledger rules
 
 - Capture the event in the governed change that fixes or formally records it where feasible.

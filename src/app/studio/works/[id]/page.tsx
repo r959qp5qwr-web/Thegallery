@@ -168,9 +168,8 @@ export default async function EditWork(
 
       <ActionForm action={addImageAction} submitLabel="Add image" busyLabel="Uploading…"
                   hidden={{ work_id: work.id }}>
-        <PhotoPicker required />
-        <div className="help picker-help">Portrait, landscape or square: the shape you shot is the shape shown.
-          Nothing is cropped.</div>
+        <PhotoPicker required help={<>Portrait, landscape or square: the shape you shot is the shape shown.
+          Nothing is cropped.</>} />
         <Field name="alt_text" label="Describe the image" help="For anyone who cannot see it." />
       </ActionForm>
 

@@ -1,0 +1,3324 @@
+{
+  "project": "desktop",
+  "result": "FAIL",
+  "fingerprint": "c77995fced4b1d02c61590ad4adf9ada3b1b1cc33a13bcbe7b4dffa0b300c11f",
+  "standard": "1.0.0",
+  "pages": 33,
+  "swept": 33,
+  "rules": [
+    "IS-T1-body-16",
+    "IS-T2-label-16",
+    "IS-T3-secondary-14",
+    "IS-T4-absolute-12",
+    "IS-T5-line-height",
+    "IS-T6-measure",
+    "IS-H1-target-44",
+    "IS-N1-back",
+    "IS-A1-one-primary",
+    "IS-F1-form-rhythm",
+    "IS-L1-side-margin",
+    "IS-L2-no-sideways",
+    "IS-L3-grid",
+    "IS-X1-axe-wcag22"
+  ],
+  "at": "2026-11-10T15:01:48.049Z",
+  "findings": [
+    {
+      "route": "home",
+      "path": "/",
+      "archetype": "root",
+      "findings": [
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a.active> \"Home\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Studio\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<span> \"Sold\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Clay\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a.active> \"Home\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Studio\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<span> \"Sold\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Clay\""
+        },
+        {
+          "rule": "IS-H1-target-44",
+          "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+          "measured": "71×17 px < 44×44",
+          "where": "<a> \"Anika Rao\""
+        },
+        {
+          "rule": "IS-H1-target-44",
+          "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+          "measured": "38×44 px < 44×44",
+          "where": "<a> \"About\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "18 px is off the 4 px grid",
+          "where": "<div.context> \"On view now\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "6 px is off the 4 px grid",
+          "where": "<div.featured-label> \"SoldMonsoon Vessel No. 4Anika Rao · Wood\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "10 px is off the 4 px grid",
+          "where": "<h1.title> \"Monsoon Vessel No. 4\""
+        }
+      ]
+    },
+    {
+      "route": "home-empty",
+      "path": "/",
+      "archetype": "root",
+      "findings": [
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a.active> \"Home\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Studio\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a.active> \"Home\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Studio\""
+        },
+        {
+          "rule": "IS-H1-target-44",
+          "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+          "measured": "38×44 px < 44×44",
+          "where": "<a> \"About\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "18 px is off the 4 px grid",
+          "where": "<div.context> \"Opening soon\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "10 px is off the 4 px grid",
+          "where": "<a.act.primary> \"Open your gallery\""
+        }
+      ]
+    },
+    {
+      "route": "about",
+      "path": "/about",
+      "archetype": "sub-screen",
+      "findings": [
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a.active> \"Home\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Studio\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a.active> \"Home\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Studio\""
+        },
+        {
+          "rule": "IS-N1-back",
+          "says": "Every screen that is not a top-level place shows Back (or Close / Cancel) in the top bar, at every width.",
+          "measured": "no visible back|close|cancel control in the top 96 px",
+          "where": "archetype sub-screen"
+        }
+      ]
+    },
+    {
+      "route": "about-open",
+      "path": "/about",
+      "archetype": "sub-screen",
+      "findings": [
+        {
+          "rule": "IS-T1-body-16",
+          "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+          "measured": "14 px < 16 px",
+          "where": "<p> \"Pretending to be someone else, or showin\""
+        },
+        {
+          "rule": "IS-T1-body-16",
+          "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+          "measured": "14 px < 16 px",
+          "where": "<p> \"Anything the law or this site forbids yo\""
+        },
+        {
+          "rule": "IS-T1-body-16",
+          "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+          "measured": "14 px < 16 px",
+          "where": "<p> \"Repeated abuse of the site, by hand or b\""
+        },
+        {
+          "rule": "IS-T1-body-16",
+          "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+          "measured": "14 px < 16 px",
+          "where": "<p> \"Selling work you did not make or materia\""
+        },
+        {
+          "rule": "IS-T1-body-16",
+          "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+          "measured": "14 px < 16 px",
+          "where": "<p> \"Anything that puts a person at risk.\""
+        },
+        {
+          "rule": "IS-T1-body-16",
+          "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+          "measured": "14 px < 16 px",
+          "where": "<p.policy-aside> \"No one here rates the work or checks who\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a.active> \"Home\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Studio\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a.active> \"Home\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Studio\""
+        },
+        {
+          "rule": "IS-N1-back",
+          "says": "Every screen that is not a top-level place shows Back (or Close / Cancel) in the top bar, at every width.",
+          "measured": "no visible back|close|cancel control in the top 96 px",
+          "where": "archetype sub-screen"
+        }
+      ]
+    },
+    {
+      "route": "participation",
+      "path": "/participation",
+      "archetype": "sub-screen",
+      "findings": [
+        {
+          "rule": "IS-T1-body-16",
+          "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+          "measured": "14 px < 16 px",
+          "where": "<p> \"Pretending to be someone else, or showin\""
+        },
+        {
+          "rule": "IS-T1-body-16",
+          "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+          "measured": "14 px < 16 px",
+          "where": "<p> \"Anything the law or this site forbids yo\""
+        },
+        {
+          "rule": "IS-T1-body-16",
+          "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+          "measured": "14 px < 16 px",
+          "where": "<p> \"Repeated abuse of the site, by hand or b\""
+        },
+        {
+          "rule": "IS-T1-body-16",
+          "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+          "measured": "14 px < 16 px",
+          "where": "<p> \"Selling work you did not make or materia\""
+        },
+        {
+          "rule": "IS-T1-body-16",
+          "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+          "measured": "14 px < 16 px",
+          "where": "<p> \"Anything that puts a person at risk.\""
+        },
+        {
+          "rule": "IS-T1-body-16",
+          "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+          "measured": "14 px < 16 px",
+          "where": "<p.policy-aside> \"No one here rates the work or checks who\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a.active> \"Home\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Studio\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a.active> \"Home\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Studio\""
+        },
+        {
+          "rule": "IS-H1-target-44",
+          "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+          "measured": "38×44 px < 44×44",
+          "where": "<a> \"About\""
+        },
+        {
+          "rule": "IS-N1-back",
+          "says": "Every screen that is not a top-level place shows Back (or Close / Cancel) in the top bar, at every width.",
+          "measured": "no visible back|close|cancel control in the top 96 px",
+          "where": "archetype sub-screen"
+        }
+      ]
+    },
+    {
+      "route": "privacy",
+      "path": "/privacy",
+      "archetype": "sub-screen",
+      "findings": [
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a.active> \"Home\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Studio\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a.active> \"Home\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Studio\""
+        },
+        {
+          "rule": "IS-H1-target-44",
+          "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+          "measured": "38×44 px < 44×44",
+          "where": "<a> \"About\""
+        },
+        {
+          "rule": "IS-N1-back",
+          "says": "Every screen that is not a top-level place shows Back (or Close / Cancel) in the top bar, at every width.",
+          "measured": "no visible back|close|cancel control in the top 96 px",
+          "where": "archetype sub-screen"
+        }
+      ]
+    },
+    {
+      "route": "search",
+      "path": "/search?q=monsoon",
+      "archetype": "root",
+      "findings": [
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Home\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a.active> \"Search\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Studio\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Clay\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<div.gs> \"Sold\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Home\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a.active> \"Search\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Studio\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Clay\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<div.gs> \"Sold\""
+        },
+        {
+          "rule": "IS-H1-target-44",
+          "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+          "measured": "38×44 px < 44×44",
+          "where": "<a> \"About\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "10 px is off the 4 px grid",
+          "where": "<div.searchbox> \"Search\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "3 px is off the 4 px grid",
+          "where": "<div.gm> \"Anika Rao\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "7 px is off the 4 px grid",
+          "where": "<div.gs> \"Sold\""
+        }
+      ]
+    },
+    {
+      "route": "search-blank",
+      "path": "/search",
+      "archetype": "root",
+      "findings": [
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Home\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a.active> \"Search\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Studio\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Clay\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Home\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a.active> \"Search\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Studio\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Clay\""
+        },
+        {
+          "rule": "IS-H1-target-44",
+          "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+          "measured": "38×44 px < 44×44",
+          "where": "<a> \"About\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "10 px is off the 4 px grid",
+          "where": "<div.searchbox> \"Search\""
+        }
+      ]
+    },
+    {
+      "route": "saved",
+      "path": "/saved",
+      "archetype": "root",
+      "findings": [
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Home\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a.active> \"Saved\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Studio\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Home\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a.active> \"Saved\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Studio\""
+        },
+        {
+          "rule": "IS-H1-target-44",
+          "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+          "measured": "38×44 px < 44×44",
+          "where": "<a> \"About\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "10 px is off the 4 px grid",
+          "where": "<h2> \"Nothing saved yet\""
+        }
+      ]
+    },
+    {
+      "route": "workshops",
+      "path": "/workshops",
+      "archetype": "sub-screen",
+      "findings": [
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a.active> \"Home\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Studio\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a.active> \"Home\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Studio\""
+        },
+        {
+          "rule": "IS-H1-target-44",
+          "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+          "measured": "38×44 px < 44×44",
+          "where": "<a> \"About\""
+        },
+        {
+          "rule": "IS-N1-back",
+          "says": "Every screen that is not a top-level place shows Back (or Close / Cancel) in the top bar, at every width.",
+          "measured": "no visible back|close|cancel control in the top 96 px",
+          "where": "archetype sub-screen"
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "37.52 px is off the 4 px grid",
+          "where": "<h1> \"No workshops yet\""
+        }
+      ]
+    },
+    {
+      "route": "browse",
+      "path": "/browse/clay",
+      "archetype": "sub-screen",
+      "findings": [
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a.active> \"Home\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Studio\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<div.gs> \"Sold\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a.active> \"Home\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Studio\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<div.gs> \"Sold\""
+        },
+        {
+          "rule": "IS-H1-target-44",
+          "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+          "measured": "38×44 px < 44×44",
+          "where": "<a> \"About\""
+        },
+        {
+          "rule": "IS-N1-back",
+          "says": "Every screen that is not a top-level place shows Back (or Close / Cancel) in the top bar, at every width.",
+          "measured": "no visible back|close|cancel control in the top 96 px",
+          "where": "archetype sub-screen"
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "10 px is off the 4 px grid",
+          "where": "<div.frame.r45> \"\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "3 px is off the 4 px grid",
+          "where": "<div.gm> \"Anika Rao\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "7 px is off the 4 px grid",
+          "where": "<div.gs> \"Sold\""
+        }
+      ]
+    },
+    {
+      "route": "maker",
+      "path": "/m/anika-rao",
+      "archetype": "sub-screen",
+      "findings": [
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a.active> \"Home\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Studio\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<div.lbl> \"Clay · Khurja\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<div.count.lbl> \"1 work\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "1 more below 14 px",
+          "where": ""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a.active> \"Home\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Studio\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<div.lbl> \"Clay · Khurja\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<div.count.lbl> \"1 work\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "1 more below 12 px",
+          "where": ""
+        },
+        {
+          "rule": "IS-H1-target-44",
+          "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+          "measured": "38×44 px < 44×44",
+          "where": "<a> \"About\""
+        },
+        {
+          "rule": "IS-N1-back",
+          "says": "Every screen that is not a top-level place shows Back (or Close / Cancel) in the top bar, at every width.",
+          "measured": "no visible back|close|cancel control in the top 96 px",
+          "where": "archetype sub-screen"
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "10 px is off the 4 px grid",
+          "where": "<div.lbl> \"Clay · Khurja\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "18 px is off the 4 px grid",
+          "where": "<p.practice> \"“ I fire in a wood kiln outside the city\""
+        }
+      ]
+    },
+    {
+      "route": "work",
+      "path": "/work/{token}",
+      "archetype": "sub-screen",
+      "findings": [
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Home\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Studio\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<span> \"Sold\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "13 px < 14 px",
+          "where": "<div.dims> \"28 cm h · 19 cm w · 2026 ·\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "1 more below 14 px",
+          "where": ""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Home\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Studio\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<span> \"Sold\""
+        },
+        {
+          "rule": "IS-H1-target-44",
+          "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+          "measured": "71×17 px < 44×44",
+          "where": "<a> \"Anika Rao\""
+        },
+        {
+          "rule": "IS-H1-target-44",
+          "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+          "measured": "38×44 px < 44×44",
+          "where": "<a> \"About\""
+        },
+        {
+          "rule": "IS-N1-back",
+          "says": "Every screen that is not a top-level place shows Back (or Close / Cancel) in the top bar, at every width.",
+          "measured": "no visible back|close|cancel control in the top 96 px",
+          "where": "archetype sub-screen"
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "10 px is off the 4 px grid",
+          "where": "<h1.title> \"Monsoon Vessel No. 4\""
+        }
+      ]
+    },
+    {
+      "route": "work-message",
+      "path": "/work/{token}?contact=1",
+      "archetype": "dialog",
+      "findings": [
+        {
+          "rule": "IS-T1-body-16",
+          "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+          "measured": "14 px < 16 px",
+          "where": "<p.disclosure> \"You are contacting the maker directly. P\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Home\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Studio\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<span> \"Sold\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "13 px < 14 px",
+          "where": "<div.dims> \"28 cm h · 19 cm w · 2026 ·\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "1 more below 14 px",
+          "where": ""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Home\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Studio\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<span> \"Sold\""
+        },
+        {
+          "rule": "IS-H1-target-44",
+          "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+          "measured": "71×17 px < 44×44",
+          "where": "<a> \"Anika Rao\""
+        },
+        {
+          "rule": "IS-H1-target-44",
+          "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+          "measured": "38×44 px < 44×44",
+          "where": "<a> \"About\""
+        },
+        {
+          "rule": "IS-N1-back",
+          "says": "Every screen that is not a top-level place shows Back (or Close / Cancel) in the top bar, at every width.",
+          "measured": "no visible back|close|cancel control in the top 96 px",
+          "where": "archetype dialog"
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "10 px is off the 4 px grid",
+          "where": "<h1.title> \"Monsoon Vessel No. 4\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "6 px is off the 4 px grid",
+          "where": "<div.head> \"Message Anika\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "2 px is off the 4 px grid",
+          "where": "<span.route-val> \"studio@anikarao.example\""
+        }
+      ]
+    },
+    {
+      "route": "for-makers",
+      "path": "/makers",
+      "archetype": "sub-screen",
+      "findings": [
+        {
+          "rule": "IS-T1-body-16",
+          "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+          "measured": "11.5 px < 16 px",
+          "where": "<p.lbl> \"For makers\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Home\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a.active> \"Studio\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Home\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a.active> \"Studio\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<p.lbl> \"For makers\""
+        },
+        {
+          "rule": "IS-T5-line-height",
+          "says": "Running text has a line height of at least 1.4.",
+          "measured": "line height 1.35 < 1.4",
+          "where": "<p.fm-line> \"Hang your work from your phone. Visitors\""
+        },
+        {
+          "rule": "IS-H1-target-44",
+          "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+          "measured": "38×44 px < 44×44",
+          "where": "<a> \"About\""
+        },
+        {
+          "rule": "IS-N1-back",
+          "says": "Every screen that is not a top-level place shows Back (or Close / Cancel) in the top bar, at every width.",
+          "measured": "no visible back|close|cancel control in the top 96 px",
+          "where": "archetype sub-screen"
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "6 px is off the 4 px grid",
+          "where": "<div.workbar.dock> \"Open your galleryI already have a galler\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "10 px is off the 4 px grid",
+          "where": "<a.btn.solid> \"Open your gallery\""
+        }
+      ]
+    },
+    {
+      "route": "join-1",
+      "path": "/makers/create-account",
+      "archetype": "flow-step",
+      "findings": [
+        {
+          "rule": "IS-T2-label-16",
+          "says": "A form label is at least 16 px — as large as what is typed into the field.",
+          "measured": "13 px < 16 px",
+          "where": "<label> \"Email\""
+        },
+        {
+          "rule": "IS-T2-label-16",
+          "says": "A form label is at least 16 px — as large as what is typed into the field.",
+          "measured": "13 px < 16 px",
+          "where": "<label> \"Password\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<span.step-of> \"Step 1 of 3\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Home\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a.active> \"Studio\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<span.step-of> \"Step 1 of 3\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Home\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a.active> \"Studio\""
+        },
+        {
+          "rule": "IS-N1-back",
+          "says": "Every screen that is not a top-level place shows Back (or Close / Cancel) in the top bar, at every width.",
+          "measured": "no visible back|close|cancel control in the top 96 px",
+          "where": "archetype flow-step"
+        },
+        {
+          "rule": "IS-F1-form-rhythm",
+          "says": "Forms breathe: label 4 px or more above its input, inputs at least 48 px tall, help text 4 px or more below its input, and 32 px or more between one field and the next.",
+          "measured": "gap between fields 24 px < 32",
+          "where": "<label> \"Password\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "6 px is off the 4 px grid",
+          "where": "<div.help> \"For signing in. Never shown.\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "10 px is off the 4 px grid",
+          "where": "<button.btn.solid> \"Continue\""
+        }
+      ]
+    },
+    {
+      "route": "join-1-errors",
+      "path": "/makers/create-account",
+      "archetype": "flow-step",
+      "findings": [
+        {
+          "rule": "IS-T2-label-16",
+          "says": "A form label is at least 16 px — as large as what is typed into the field.",
+          "measured": "13 px < 16 px",
+          "where": "<label> \"Email\""
+        },
+        {
+          "rule": "IS-T2-label-16",
+          "says": "A form label is at least 16 px — as large as what is typed into the field.",
+          "measured": "13 px < 16 px",
+          "where": "<label> \"Password\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<span.step-of> \"Step 1 of 3\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Home\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a.active> \"Studio\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<span.step-of> \"Step 1 of 3\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Home\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a.active> \"Studio\""
+        },
+        {
+          "rule": "IS-N1-back",
+          "says": "Every screen that is not a top-level place shows Back (or Close / Cancel) in the top bar, at every width.",
+          "measured": "no visible back|close|cancel control in the top 96 px",
+          "where": "archetype flow-step"
+        },
+        {
+          "rule": "IS-F1-form-rhythm",
+          "says": "Forms breathe: label 4 px or more above its input, inputs at least 48 px tall, help text 4 px or more below its input, and 32 px or more between one field and the next.",
+          "measured": "gap between fields 24 px < 32",
+          "where": "<label> \"Password\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "6 px is off the 4 px grid",
+          "where": "<div.help> \"For signing in. Never shown.\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "10 px is off the 4 px grid",
+          "where": "<button.btn.solid> \"Continue\""
+        }
+      ]
+    },
+    {
+      "route": "check-email",
+      "path": "/makers/check-email?e=someone%40makers.example",
+      "archetype": "flow-step",
+      "findings": [
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<span.step-of> \"Step 1 of 3\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Home\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a.active> \"Studio\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<span.step-of> \"Step 1 of 3\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Home\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a.active> \"Studio\""
+        },
+        {
+          "rule": "IS-N1-back",
+          "says": "Every screen that is not a top-level place shows Back (or Close / Cancel) in the top bar, at every width.",
+          "measured": "no visible back|close|cancel control in the top 96 px",
+          "where": "archetype flow-step"
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "10 px is off the 4 px grid",
+          "where": "<button.btn.block> \"Send it again\""
+        }
+      ]
+    },
+    {
+      "route": "sign-in",
+      "path": "/makers/sign-in",
+      "archetype": "flow-step",
+      "findings": [
+        {
+          "rule": "IS-T2-label-16",
+          "says": "A form label is at least 16 px — as large as what is typed into the field.",
+          "measured": "13 px < 16 px",
+          "where": "<label> \"Email\""
+        },
+        {
+          "rule": "IS-T2-label-16",
+          "says": "A form label is at least 16 px — as large as what is typed into the field.",
+          "measured": "13 px < 16 px",
+          "where": "<label> \"Password\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Home\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a.active> \"Studio\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Home\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a.active> \"Studio\""
+        },
+        {
+          "rule": "IS-N1-back",
+          "says": "Every screen that is not a top-level place shows Back (or Close / Cancel) in the top bar, at every width.",
+          "measured": "no visible back|close|cancel control in the top 96 px",
+          "where": "archetype flow-step"
+        },
+        {
+          "rule": "IS-F1-form-rhythm",
+          "says": "Forms breathe: label 4 px or more above its input, inputs at least 48 px tall, help text 4 px or more below its input, and 32 px or more between one field and the next.",
+          "measured": "gap between fields 24 px < 32",
+          "where": "<label> \"Password\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "6 px is off the 4 px grid",
+          "where": "<div.workbar.dock> \"Sign in\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "10 px is off the 4 px grid",
+          "where": "<button.btn.solid> \"Sign in\""
+        }
+      ]
+    },
+    {
+      "route": "reset",
+      "path": "/makers/reset",
+      "archetype": "flow-step",
+      "findings": [
+        {
+          "rule": "IS-T2-label-16",
+          "says": "A form label is at least 16 px — as large as what is typed into the field.",
+          "measured": "13 px < 16 px",
+          "where": "<label> \"Email\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Home\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a.active> \"Studio\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Home\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a.active> \"Studio\""
+        },
+        {
+          "rule": "IS-N1-back",
+          "says": "Every screen that is not a top-level place shows Back (or Close / Cancel) in the top bar, at every width.",
+          "measured": "no visible back|close|cancel control in the top 96 px",
+          "where": "archetype flow-step"
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "6 px is off the 4 px grid",
+          "where": "<div.help> \"We’ll send a link if it has a gallery.\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "10 px is off the 4 px grid",
+          "where": "<button.btn.solid> \"Send link\""
+        }
+      ]
+    },
+    {
+      "route": "reset-token",
+      "path": "/makers/reset/not-a-real-token",
+      "archetype": "flow-step",
+      "findings": [
+        {
+          "rule": "IS-T2-label-16",
+          "says": "A form label is at least 16 px — as large as what is typed into the field.",
+          "measured": "13 px < 16 px",
+          "where": "<label> \"New password\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Home\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a.active> \"Studio\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Home\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a.active> \"Studio\""
+        },
+        {
+          "rule": "IS-N1-back",
+          "says": "Every screen that is not a top-level place shows Back (or Close / Cancel) in the top bar, at every width.",
+          "measured": "no visible back|close|cancel control in the top 96 px",
+          "where": "archetype flow-step"
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "6 px is off the 4 px grid",
+          "where": "<div.help> \"At least 10 characters.\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "10 px is off the 4 px grid",
+          "where": "<button.btn.solid> \"Set password\""
+        }
+      ]
+    },
+    {
+      "route": "join-2",
+      "path": "/studio/join",
+      "archetype": "flow-step",
+      "findings": [
+        {
+          "rule": "IS-T2-label-16",
+          "says": "A form label is at least 16 px — as large as what is typed into the field.",
+          "measured": "13 px < 16 px",
+          "where": "<label> \"Name\""
+        },
+        {
+          "rule": "IS-T2-label-16",
+          "says": "A form label is at least 16 px — as large as what is typed into the field.",
+          "measured": "13 px < 16 px",
+          "where": "<label> \"Place\""
+        },
+        {
+          "rule": "IS-T2-label-16",
+          "says": "A form label is at least 16 px — as large as what is typed into the field.",
+          "measured": "13 px < 16 px",
+          "where": "<legend> \"How you work\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<span.step-of> \"Step 2 of 3\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Home\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a.active> \"Studio\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<span.step-of> \"Step 2 of 3\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Home\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a.active> \"Studio\""
+        },
+        {
+          "rule": "IS-N1-back",
+          "says": "Every screen that is not a top-level place shows Back (or Close / Cancel) in the top bar, at every width.",
+          "measured": "no visible back|close|cancel control in the top 96 px",
+          "where": "archetype flow-step"
+        },
+        {
+          "rule": "IS-F1-form-rhythm",
+          "says": "Forms breathe: label 4 px or more above its input, inputs at least 48 px tall, help text 4 px or more below its input, and 32 px or more between one field and the next.",
+          "measured": "gap between fields 24 px < 32",
+          "where": "<label> \"Place\""
+        },
+        {
+          "rule": "IS-F1-form-rhythm",
+          "says": "Forms breathe: label 4 px or more above its input, inputs at least 48 px tall, help text 4 px or more below its input, and 32 px or more between one field and the next.",
+          "measured": "gap between fields 24 px < 32",
+          "where": "<legend> \"How you work\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "6 px is off the 4 px grid",
+          "where": "<div.help> \"Your own name, or your studio’s. Shown o\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "10 px is off the 4 px grid",
+          "where": "<button.btn.solid> \"Continue\""
+        }
+      ]
+    },
+    {
+      "route": "join-3",
+      "path": "/studio/whatsapp?join=1",
+      "archetype": "flow-step",
+      "findings": [
+        {
+          "rule": "IS-T2-label-16",
+          "says": "A form label is at least 16 px — as large as what is typed into the field.",
+          "measured": "13 px < 16 px",
+          "where": "<label> \"WhatsApp number\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<span.step-of> \"Step 3 of 3\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Home\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a.active> \"Studio\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<span.step-of> \"Step 3 of 3\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Home\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a.active> \"Studio\""
+        },
+        {
+          "rule": "IS-N1-back",
+          "says": "Every screen that is not a top-level place shows Back (or Close / Cancel) in the top bar, at every width.",
+          "measured": "no visible back|close|cancel control in the top 96 px",
+          "where": "archetype flow-step"
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "6 px is off the 4 px grid",
+          "where": "<div.help> \"With + and the country code. Shown to vi\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "10 px is off the 4 px grid",
+          "where": "<button.btn.solid> \"Continue\""
+        }
+      ]
+    },
+    {
+      "route": "studio",
+      "path": "/studio",
+      "archetype": "root",
+      "findings": [
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Home\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a.active> \"Studio\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a.hdr-link> \"Settings\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "13 px < 14 px",
+          "where": "<a> \"127.0.0.1:3100 /m/ anika-rao\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "2 more below 14 px",
+          "where": ""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Home\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a.active> \"Studio\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a.hdr-link> \"Settings\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<span.flag.available> \"On view\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "1 more below 12 px",
+          "where": ""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "6 px is off the 4 px grid",
+          "where": "<p.addr> \"127.0.0.1:3100/m/anika-rao\""
+        }
+      ]
+    },
+    {
+      "route": "settings",
+      "path": "/studio/settings",
+      "archetype": "sub-screen",
+      "findings": [
+        {
+          "rule": "IS-T1-body-16",
+          "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+          "measured": "14 px < 16 px",
+          "where": "<span.v> \"anika.rao@makers.example\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Home\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a.active> \"Studio\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<h2.rows-head> \"Your gallery\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<h2.rows-head> \"Account\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Home\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a.active> \"Studio\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<h2.rows-head> \"Your gallery\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<h2.rows-head> \"Account\""
+        }
+      ]
+    },
+    {
+      "route": "profile",
+      "path": "/studio/profile",
+      "archetype": "editor",
+      "findings": [
+        {
+          "rule": "IS-T1-body-16",
+          "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+          "measured": "14 px < 16 px",
+          "where": "<p.small> \"Everything on this page is public. Your \""
+        },
+        {
+          "rule": "IS-T2-label-16",
+          "says": "A form label is at least 16 px — as large as what is typed into the field.",
+          "measured": "13 px < 16 px",
+          "where": "<label> \"Name shown to visitors\""
+        },
+        {
+          "rule": "IS-T2-label-16",
+          "says": "A form label is at least 16 px — as large as what is typed into the field.",
+          "measured": "13 px < 16 px",
+          "where": "<label> \"Gallery address\""
+        },
+        {
+          "rule": "IS-T2-label-16",
+          "says": "A form label is at least 16 px — as large as what is typed into the field.",
+          "measured": "13 px < 16 px",
+          "where": "<label> \"How you work\""
+        },
+        {
+          "rule": "IS-T2-label-16",
+          "says": "A form label is at least 16 px — as large as what is typed into the field.",
+          "measured": "13 px < 16 px",
+          "where": "<label> \"Place\""
+        },
+        {
+          "rule": "IS-T2-label-16",
+          "says": "A form label is at least 16 px — as large as what is typed into the field.",
+          "measured": "13 px < 16 px",
+          "where": "<label> \"About your practice\""
+        },
+        {
+          "rule": "IS-T2-label-16",
+          "says": "A form label is at least 16 px — as large as what is typed into the field.",
+          "measured": "13 px < 16 px",
+          "where": "<label> \"A line for the top of your gallery\""
+        },
+        {
+          "rule": "IS-T2-label-16",
+          "says": "A form label is at least 16 px — as large as what is typed into the field.",
+          "measured": "2 more below 16 px",
+          "where": ""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Home\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a.active> \"Studio\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Home\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a.active> \"Studio\""
+        },
+        {
+          "rule": "IS-H1-target-44",
+          "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+          "measured": "13×13 px < 44×44",
+          "where": "<input> \"\""
+        },
+        {
+          "rule": "IS-F1-form-rhythm",
+          "says": "Forms breathe: label 4 px or more above its input, inputs at least 48 px tall, help text 4 px or more below its input, and 32 px or more between one field and the next.",
+          "measured": "gap between fields 20 px < 32",
+          "where": "<label> \"Gallery address\""
+        },
+        {
+          "rule": "IS-F1-form-rhythm",
+          "says": "Forms breathe: label 4 px or more above its input, inputs at least 48 px tall, help text 4 px or more below its input, and 32 px or more between one field and the next.",
+          "measured": "gap between fields 20 px < 32",
+          "where": "<label> \"How you work\""
+        },
+        {
+          "rule": "IS-F1-form-rhythm",
+          "says": "Forms breathe: label 4 px or more above its input, inputs at least 48 px tall, help text 4 px or more below its input, and 32 px or more between one field and the next.",
+          "measured": "gap between fields 20 px < 32",
+          "where": "<label> \"Place\""
+        },
+        {
+          "rule": "IS-F1-form-rhythm",
+          "says": "Forms breathe: label 4 px or more above its input, inputs at least 48 px tall, help text 4 px or more below its input, and 32 px or more between one field and the next.",
+          "measured": "gap between fields 20 px < 32",
+          "where": "<label> \"About your practice\""
+        },
+        {
+          "rule": "IS-F1-form-rhythm",
+          "says": "Forms breathe: label 4 px or more above its input, inputs at least 48 px tall, help text 4 px or more below its input, and 32 px or more between one field and the next.",
+          "measured": "gap between fields 20 px < 32",
+          "where": "<label> \"A line for the top of your gallery\""
+        },
+        {
+          "rule": "IS-F1-form-rhythm",
+          "says": "Forms breathe: label 4 px or more above its input, inputs at least 48 px tall, help text 4 px or more below its input, and 32 px or more between one field and the next.",
+          "measured": "gap between fields 20 px < 32",
+          "where": "<label> \"Commissions\""
+        },
+        {
+          "rule": "IS-F1-form-rhythm",
+          "says": "Forms breathe: label 4 px or more above its input, inputs at least 48 px tall, help text 4 px or more below its input, and 32 px or more between one field and the next.",
+          "measured": "gap between fields 20 px < 32",
+          "where": "<label> \"What you take on\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "6 px is off the 4 px grid",
+          "where": "<p.small> \"Everything on this page is public. Your \""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "10 px is off the 4 px grid",
+          "where": "<label> \"I am open to commissions\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "3 px is off the 4 px grid",
+          "where": "<input> \"\""
+        }
+      ]
+    },
+    {
+      "route": "contact-routes",
+      "path": "/studio/contact-routes",
+      "archetype": "editor",
+      "findings": [
+        {
+          "rule": "IS-T1-body-16",
+          "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+          "measured": "14 px < 16 px",
+          "where": "<p.small> \"These are public. Your sign-in email ( a\""
+        },
+        {
+          "rule": "IS-T1-body-16",
+          "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+          "measured": "13 px < 16 px",
+          "where": "<span.secondary> \"Message Anika Rao\""
+        },
+        {
+          "rule": "IS-T1-body-16",
+          "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+          "measured": "13 px < 16 px",
+          "where": "<span.secondary> \"studio@anikarao.example\""
+        },
+        {
+          "rule": "IS-T2-label-16",
+          "says": "A form label is at least 16 px — as large as what is typed into the field.",
+          "measured": "13 px < 16 px",
+          "where": "<label> \"Way to contact\""
+        },
+        {
+          "rule": "IS-T2-label-16",
+          "says": "A form label is at least 16 px — as large as what is typed into the field.",
+          "measured": "13 px < 16 px",
+          "where": "<label> \"Number or address\""
+        },
+        {
+          "rule": "IS-T2-label-16",
+          "says": "A form label is at least 16 px — as large as what is typed into the field.",
+          "measured": "13 px < 16 px",
+          "where": "<label> \"Label (optional)\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Home\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a.active> \"Studio\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Home\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a.active> \"Studio\""
+        },
+        {
+          "rule": "IS-F1-form-rhythm",
+          "says": "Forms breathe: label 4 px or more above its input, inputs at least 48 px tall, help text 4 px or more below its input, and 32 px or more between one field and the next.",
+          "measured": "gap between fields 20 px < 32",
+          "where": "<label> \"Number or address\""
+        },
+        {
+          "rule": "IS-F1-form-rhythm",
+          "says": "Forms breathe: label 4 px or more above its input, inputs at least 48 px tall, help text 4 px or more below its input, and 32 px or more between one field and the next.",
+          "measured": "gap between fields 20 px < 32",
+          "where": "<label> \"Label (optional)\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "6 px is off the 4 px grid",
+          "where": "<p.small> \"These are public. Your sign-in email ( a\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "3 px is off the 4 px grid",
+          "where": "<span.secondary> \"Message Anika Rao\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "10 px is off the 4 px grid",
+          "where": "<button.btn.quiet> \"Turn off WhatsApp\""
+        }
+      ]
+    },
+    {
+      "route": "account",
+      "path": "/studio/account",
+      "archetype": "sub-screen",
+      "findings": [
+        {
+          "rule": "IS-T1-body-16",
+          "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+          "measured": "14 px < 16 px",
+          "where": "<p.small> \"Signed in as anika.rao@makers.example . \""
+        },
+        {
+          "rule": "IS-T1-body-16",
+          "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+          "measured": "14 px < 16 px",
+          "where": "<span.secondary.sentence> \"Their links keep working and say the wor\""
+        },
+        {
+          "rule": "IS-T1-body-16",
+          "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+          "measured": "13 px < 16 px",
+          "where": "<span.secondary> \"/m/anika-rao stops being reachable\""
+        },
+        {
+          "rule": "IS-T1-body-16",
+          "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+          "measured": "14 px < 16 px",
+          "where": "<span.secondary.sentence> \"And cannot sign in again with this addre\""
+        },
+        {
+          "rule": "IS-T1-body-16",
+          "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+          "measured": "14 px < 16 px",
+          "where": "<span.secondary.sentence> \"Closing is not the same as erasure; see \""
+        },
+        {
+          "rule": "IS-T2-label-16",
+          "says": "A form label is at least 16 px — as large as what is typed into the field.",
+          "measured": "13 px < 16 px",
+          "where": "<label> \"Type close to confirm\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Home\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a.active> \"Studio\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Home\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a.active> \"Studio\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "6 px is off the 4 px grid",
+          "where": "<p.small> \"Signed in as anika.rao@makers.example . \""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "3 px is off the 4 px grid",
+          "where": "<span.secondary.sentence> \"Their links keep working and say the wor\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "10 px is off the 4 px grid",
+          "where": "<button.btn.block> \"Close my account\""
+        }
+      ]
+    },
+    {
+      "route": "whatsapp",
+      "path": "/studio/whatsapp",
+      "archetype": "editor",
+      "findings": [
+        {
+          "rule": "IS-T2-label-16",
+          "says": "A form label is at least 16 px — as large as what is typed into the field.",
+          "measured": "13 px < 16 px",
+          "where": "<label> \"WhatsApp number\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Home\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a.active> \"Studio\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Home\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a.active> \"Studio\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "6 px is off the 4 px grid",
+          "where": "<div.help> \"With + and the country code. Shown to vi\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "10 px is off the 4 px grid",
+          "where": "<button.btn.solid> \"Save\""
+        }
+      ]
+    },
+    {
+      "route": "work-new",
+      "path": "/studio/works/new",
+      "archetype": "editor",
+      "findings": [
+        {
+          "rule": "IS-T1-body-16",
+          "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+          "measured": "14 px < 16 px",
+          "where": "<p.picker-name> \"The first photo is the cover. Nothing is\""
+        },
+        {
+          "rule": "IS-T2-label-16",
+          "says": "A form label is at least 16 px — as large as what is typed into the field.",
+          "measured": "14 px < 16 px",
+          "where": "<span> \"Add photo\""
+        },
+        {
+          "rule": "IS-T2-label-16",
+          "says": "A form label is at least 16 px — as large as what is typed into the field.",
+          "measured": "13 px < 16 px",
+          "where": "<label> \"Title\""
+        },
+        {
+          "rule": "IS-T2-label-16",
+          "says": "A form label is at least 16 px — as large as what is typed into the field.",
+          "measured": "13 px < 16 px",
+          "where": "<legend> \"Material\""
+        },
+        {
+          "rule": "IS-T2-label-16",
+          "says": "A form label is at least 16 px — as large as what is typed into the field.",
+          "measured": "13 px < 16 px",
+          "where": "<legend> \"Status\""
+        },
+        {
+          "rule": "IS-T2-label-16",
+          "says": "A form label is at least 16 px — as large as what is typed into the field.",
+          "measured": "13 px < 16 px",
+          "where": "<legend> \"Price\""
+        },
+        {
+          "rule": "IS-T2-label-16",
+          "says": "A form label is at least 16 px — as large as what is typed into the field.",
+          "measured": "13 px < 16 px",
+          "where": "<label> \"Amount (₹)\""
+        },
+        {
+          "rule": "IS-T2-label-16",
+          "says": "A form label is at least 16 px — as large as what is typed into the field.",
+          "measured": "7 more below 16 px",
+          "where": ""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<span.title> \"New work\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Home\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a.active> \"Studio\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<span.title> \"New work\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Home\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a.active> \"Studio\""
+        },
+        {
+          "rule": "IS-F1-form-rhythm",
+          "says": "Forms breathe: label 4 px or more above its input, inputs at least 48 px tall, help text 4 px or more below its input, and 32 px or more between one field and the next.",
+          "measured": "gap between fields 24 px < 32",
+          "where": "<legend> \"Material\""
+        },
+        {
+          "rule": "IS-F1-form-rhythm",
+          "says": "Forms breathe: label 4 px or more above its input, inputs at least 48 px tall, help text 4 px or more below its input, and 32 px or more between one field and the next.",
+          "measured": "gap between fields 24 px < 32",
+          "where": "<legend> \"Status\""
+        },
+        {
+          "rule": "IS-F1-form-rhythm",
+          "says": "Forms breathe: label 4 px or more above its input, inputs at least 48 px tall, help text 4 px or more below its input, and 32 px or more between one field and the next.",
+          "measured": "gap between fields 24 px < 32",
+          "where": "<legend> \"Price\""
+        },
+        {
+          "rule": "IS-F1-form-rhythm",
+          "says": "Forms breathe: label 4 px or more above its input, inputs at least 48 px tall, help text 4 px or more below its input, and 32 px or more between one field and the next.",
+          "measured": "gap between fields 24 px < 32",
+          "where": "<label> \"Amount (₹)\""
+        },
+        {
+          "rule": "IS-F1-form-rhythm",
+          "says": "Forms breathe: label 4 px or more above its input, inputs at least 48 px tall, help text 4 px or more below its input, and 32 px or more between one field and the next.",
+          "measured": "gap between fields 24 px < 32",
+          "where": "<legend> \"Size (cm)\""
+        },
+        {
+          "rule": "IS-F1-form-rhythm",
+          "says": "Forms breathe: label 4 px or more above its input, inputs at least 48 px tall, help text 4 px or more below its input, and 32 px or more between one field and the next.",
+          "measured": "gap between fields 24 px < 32",
+          "where": "<label> \"Year\""
+        },
+        {
+          "rule": "IS-F1-form-rhythm",
+          "says": "Forms breathe: label 4 px or more above its input, inputs at least 48 px tall, help text 4 px or more below its input, and 32 px or more between one field and the next.",
+          "measured": "gap between fields 24 px < 32",
+          "where": "<label> \"About this work\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "6 px is off the 4 px grid",
+          "where": "<div.help> \"Needed before you publish.\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "10 px is off the 4 px grid",
+          "where": "<button.btn.solid> \"Publish\""
+        }
+      ]
+    },
+    {
+      "route": "work-edit",
+      "path": "/studio/works/{workId}",
+      "archetype": "editor",
+      "findings": [
+        {
+          "rule": "IS-T1-body-16",
+          "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+          "measured": "14 px < 16 px",
+          "where": "<p.small> \"This is how its link looks when you send\""
+        },
+        {
+          "rule": "IS-T2-label-16",
+          "says": "A form label is at least 16 px — as large as what is typed into the field.",
+          "measured": "15 px < 16 px",
+          "where": "<label.btn.picker-btn> \"Choose a photograph\""
+        },
+        {
+          "rule": "IS-T2-label-16",
+          "says": "A form label is at least 16 px — as large as what is typed into the field.",
+          "measured": "13 px < 16 px",
+          "where": "<label> \"Describe the image\""
+        },
+        {
+          "rule": "IS-T2-label-16",
+          "says": "A form label is at least 16 px — as large as what is typed into the field.",
+          "measured": "13 px < 16 px",
+          "where": "<label> \"This work is\""
+        },
+        {
+          "rule": "IS-T2-label-16",
+          "says": "A form label is at least 16 px — as large as what is typed into the field.",
+          "measured": "13 px < 16 px",
+          "where": "<label> \"Title\""
+        },
+        {
+          "rule": "IS-T2-label-16",
+          "says": "A form label is at least 16 px — as large as what is typed into the field.",
+          "measured": "13 px < 16 px",
+          "where": "<legend> \"Material\""
+        },
+        {
+          "rule": "IS-T2-label-16",
+          "says": "A form label is at least 16 px — as large as what is typed into the field.",
+          "measured": "13 px < 16 px",
+          "where": "<legend> \"Price\""
+        },
+        {
+          "rule": "IS-T2-label-16",
+          "says": "A form label is at least 16 px — as large as what is typed into the field.",
+          "measured": "8 more below 16 px",
+          "where": ""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Home\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<a.active> \"Studio\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "11.5 px < 14 px",
+          "where": "<div.status.sold> \"Sold\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "13 px < 14 px",
+          "where": "<span.price> \"· ₹6,800\""
+        },
+        {
+          "rule": "IS-T3-secondary-14",
+          "says": "Help text, captions and secondary lines are at least 14 px.",
+          "measured": "4 more below 14 px",
+          "where": ""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Home\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Search\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a> \"Saved\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<a.active> \"Studio\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<div.status.sold> \"Sold\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<span.pos> \"1\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "2 more below 12 px",
+          "where": ""
+        },
+        {
+          "rule": "IS-F1-form-rhythm",
+          "says": "Forms breathe: label 4 px or more above its input, inputs at least 48 px tall, help text 4 px or more below its input, and 32 px or more between one field and the next.",
+          "measured": "gap between fields 20 px < 32",
+          "where": "<legend> \"Material\""
+        },
+        {
+          "rule": "IS-F1-form-rhythm",
+          "says": "Forms breathe: label 4 px or more above its input, inputs at least 48 px tall, help text 4 px or more below its input, and 32 px or more between one field and the next.",
+          "measured": "gap between fields 20 px < 32",
+          "where": "<legend> \"Price\""
+        },
+        {
+          "rule": "IS-F1-form-rhythm",
+          "says": "Forms breathe: label 4 px or more above its input, inputs at least 48 px tall, help text 4 px or more below its input, and 32 px or more between one field and the next.",
+          "measured": "gap between fields 20 px < 32",
+          "where": "<label> \"Amount (₹)\""
+        },
+        {
+          "rule": "IS-F1-form-rhythm",
+          "says": "Forms breathe: label 4 px or more above its input, inputs at least 48 px tall, help text 4 px or more below its input, and 32 px or more between one field and the next.",
+          "measured": "gap between fields 20 px < 32",
+          "where": "<legend> \"Size (cm)\""
+        },
+        {
+          "rule": "IS-F1-form-rhythm",
+          "says": "Forms breathe: label 4 px or more above its input, inputs at least 48 px tall, help text 4 px or more below its input, and 32 px or more between one field and the next.",
+          "measured": "gap between fields 20 px < 32",
+          "where": "<label> \"Year\""
+        },
+        {
+          "rule": "IS-F1-form-rhythm",
+          "says": "Forms breathe: label 4 px or more above its input, inputs at least 48 px tall, help text 4 px or more below its input, and 32 px or more between one field and the next.",
+          "measured": "gap between fields 20 px < 32",
+          "where": "<label> \"About this work\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "10 px is off the 4 px grid",
+          "where": "<h1.title> \"Monsoon Vessel No. 4\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "3 px is off the 4 px grid",
+          "where": "<span.pos> \"1\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "6 px is off the 4 px grid",
+          "where": "<div.help.picker-help> \"Portrait, landscape or square: the shape\""
+        }
+      ]
+    },
+    {
+      "route": "operator",
+      "path": "/operator",
+      "archetype": "root",
+      "findings": [
+        {
+          "rule": "IS-T1-body-16",
+          "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+          "measured": "14 px < 16 px",
+          "where": "<p.small> \"Access and safety only. Nothing here ran\""
+        },
+        {
+          "rule": "IS-T1-body-16",
+          "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+          "measured": "11.5 px < 16 px",
+          "where": "<span.chip.available> \"active\""
+        },
+        {
+          "rule": "IS-T1-body-16",
+          "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+          "measured": "11.5 px < 16 px",
+          "where": "<span.chip> \"closed\""
+        },
+        {
+          "rule": "IS-T1-body-16",
+          "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+          "measured": "11.5 px < 16 px",
+          "where": "<span.chip.available> \"active\""
+        },
+        {
+          "rule": "IS-T1-body-16",
+          "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+          "measured": "11.5 px < 16 px",
+          "where": "<span.chip.available> \"active\""
+        },
+        {
+          "rule": "IS-T1-body-16",
+          "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+          "measured": "11.5 px < 16 px",
+          "where": "<span.chip.available> \"active\""
+        },
+        {
+          "rule": "IS-T1-body-16",
+          "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+          "measured": "40 more below 16 px",
+          "where": ""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<span.chip.available> \"active\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<span.chip> \"closed\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<span.chip.available> \"active\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<span.chip.available> \"active\""
+        },
+        {
+          "rule": "IS-T4-absolute-12",
+          "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+          "measured": "11.5 px < 12 px",
+          "where": "<span.chip.available> \"active\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "6 px is off the 4 px grid",
+          "where": "<p.small> \"Access and safety only. Nothing here ran\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "3 px is off the 4 px grid",
+          "where": "<span.secondary.sentence> \"Khurja\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "14 px is off the 4 px grid",
+          "where": "<div.lead> \"Recorded actions\""
+        }
+      ]
+    },
+    {
+      "route": "operator-maker",
+      "path": "/operator/makers/{makerId}",
+      "archetype": "operator",
+      "findings": [
+        {
+          "rule": "IS-T1-body-16",
+          "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+          "measured": "14 px < 16 px",
+          "where": "<p.small> \"individual · Khurja ·\""
+        },
+        {
+          "rule": "IS-T1-body-16",
+          "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+          "measured": "14 px < 16 px",
+          "where": "<span.secondary.sentence> \"Report dismissed; the work is the maker'\""
+        },
+        {
+          "rule": "IS-T1-body-16",
+          "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+          "measured": "13 px < 16 px",
+          "where": "<span.secondary.meta> \"10 Nov 2026, 3:18 pm\""
+        },
+        {
+          "rule": "IS-T1-body-16",
+          "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+          "measured": "14 px < 16 px",
+          "where": "<span.secondary.sentence> \"Reported for impersonation; withheld whi\""
+        },
+        {
+          "rule": "IS-T1-body-16",
+          "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+          "measured": "13 px < 16 px",
+          "where": "<span.secondary.meta> \"10 Nov 2026, 3:17 pm\""
+        },
+        {
+          "rule": "IS-T1-body-16",
+          "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+          "measured": "14 px < 16 px",
+          "where": "<span.secondary.sentence> \"Report dismissed; the work is the maker'\""
+        },
+        {
+          "rule": "IS-T1-body-16",
+          "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+          "measured": "278 more below 16 px",
+          "where": ""
+        },
+        {
+          "rule": "IS-T2-label-16",
+          "says": "A form label is at least 16 px — as large as what is typed into the field.",
+          "measured": "13 px < 16 px",
+          "where": "<label> \"Reason\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "6 px is off the 4 px grid",
+          "where": "<div.help> \"What rule was broken, in words the maker\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "10 px is off the 4 px grid",
+          "where": "<button.btn.block> \"Suspend this maker\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "14 px is off the 4 px grid",
+          "where": "<div.lead> \"Record\""
+        },
+        {
+          "rule": "IS-L3-grid",
+          "says": "Spacing sits on the product's declared base unit (4 px).",
+          "measured": "3 px is off the 4 px grid",
+          "where": "<span.secondary.sentence> \"Report dismissed; the work is the maker'\""
+        }
+      ]
+    }
+  ]
+}

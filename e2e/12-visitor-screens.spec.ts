@@ -45,11 +45,16 @@ test("a work opens on its photograph on a phone, with Back, Share and the heart 
     expect(p.y).toBeLessThan(2);
     await page.getByRole("banner").getByRole("link", { name: "The Gallery" }).focus();
     expect((await header.boundingBox())!.height).toBeGreaterThan(40);
+    // One Back on a phone: the one over the photograph (the hidden header's own Back stays out).
+    await expect(page.getByRole("link", { name: "Back" })).toHaveCount(1);
     await expect(page.getByRole("link", { name: "Back" })).toBeVisible();
     await expect(page.getByRole("link", { name: "Back" })).toHaveAttribute("href", "/m/anika-rao");
   } else {
+    // Interface Standard IS-N1: from 900 px Back is in the top bar, once, and leads to the maker.
     await expect(page.locator("header.header")).toBeVisible();
-    await expect(page.getByRole("link", { name: "Back" })).toBeHidden();
+    await expect(page.getByRole("banner").getByRole("link", { name: "Back" })).toBeVisible();
+    await expect(page.getByRole("banner").getByRole("link", { name: "Back" })).toHaveAttribute("href", "/m/anika-rao");
+    await expect(page.locator(".photo-tools").getByRole("link", { name: "Back" })).toBeHidden();
   }
 });
 
@@ -205,8 +210,9 @@ test("Back steps back to where the visitor was once they have moved inside The G
   await page.goto("/search?q=monsoon");
   await page.locator(`a.tile[href="/work/${w.public_token}"]`).click();
   await page.waitForURL(`**/work/${w.public_token}`);
-  const back = page.getByTestId("back").first();
-  if (!(await back.isVisible())) return;   // from 900 px the header is the way back
+  // One visible Back at every width (IS-N1): over the photograph on a phone, in the header from 900 px.
+  const back = page.locator('[data-testid="back"]:visible');
+  await expect(back).toHaveCount(1);
   await back.click();
   await page.waitForURL(/\/search\?q=monsoon$/);
 });

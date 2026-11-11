@@ -1,0 +1,1478 @@
+{
+ "standard": "1.0.0",
+ "at": "2026-11-10T14:52:11.971Z",
+ "results": [
+  {
+   "ref": "govuk-question-page",
+   "viewport": "phone",
+   "url": "https://design-system.service.gov.uk/components/text-input/default/index.html",
+   "findings": [
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "352×40 px < 44×44",
+     "where": "<input.govuk-input> \"\""
+    },
+    {
+     "rule": "IS-N1-back",
+     "says": "Every screen that is not a top-level place shows Back (or Close / Cancel) in the top bar, at every width.",
+     "measured": "no visible back|close|cancel control in the top 96 px",
+     "where": "archetype flow-step"
+    },
+    {
+     "rule": "IS-F1-form-rhythm",
+     "says": "Forms breathe: label 4 px or more above its input, inputs at least 48 px tall, help text 4 px or more below its input, and 32 px or more between one field and the next.",
+     "measured": "input 40 px tall < 48",
+     "where": "<label.govuk-label.govuk-label--l> \"What is the name of the event?\""
+    }
+   ]
+  },
+  {
+   "ref": "govuk-date-input",
+   "viewport": "phone",
+   "url": "https://design-system.service.gov.uk/components/date-input/default/index.html",
+   "findings": [
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "52×40 px < 44×44",
+     "where": "<input.govuk-input.govuk-date-input__input> \"\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "52×40 px < 44×44",
+     "where": "<input.govuk-input.govuk-date-input__input> \"\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "86×40 px < 44×44",
+     "where": "<input.govuk-input.govuk-date-input__input> \"\""
+    },
+    {
+     "rule": "IS-N1-back",
+     "says": "Every screen that is not a top-level place shows Back (or Close / Cancel) in the top bar, at every width.",
+     "measured": "no visible back|close|cancel control in the top 96 px",
+     "where": "archetype flow-step"
+    },
+    {
+     "rule": "IS-F1-form-rhythm",
+     "says": "Forms breathe: label 4 px or more above its input, inputs at least 48 px tall, help text 4 px or more below its input, and 32 px or more between one field and the next.",
+     "measured": "input 40 px tall < 48",
+     "where": "<legend.govuk-fieldset__legend.govuk-fieldset__legend--l> \"When was your passport issued?\""
+    },
+    {
+     "rule": "IS-F1-form-rhythm",
+     "says": "Forms breathe: label 4 px or more above its input, inputs at least 48 px tall, help text 4 px or more below its input, and 32 px or more between one field and the next.",
+     "measured": "input 40 px tall < 48",
+     "where": "<label.govuk-label.govuk-date-input__label> \"Day\""
+    },
+    {
+     "rule": "IS-F1-form-rhythm",
+     "says": "Forms breathe: label 4 px or more above its input, inputs at least 48 px tall, help text 4 px or more below its input, and 32 px or more between one field and the next.",
+     "measured": "gap between fields -70 px < 32",
+     "where": "<label.govuk-label.govuk-date-input__label> \"Day\""
+    },
+    {
+     "rule": "IS-F1-form-rhythm",
+     "says": "Forms breathe: label 4 px or more above its input, inputs at least 48 px tall, help text 4 px or more below its input, and 32 px or more between one field and the next.",
+     "measured": "input 40 px tall < 48",
+     "where": "<label.govuk-label.govuk-date-input__label> \"Month\""
+    },
+    {
+     "rule": "IS-F1-form-rhythm",
+     "says": "Forms breathe: label 4 px or more above its input, inputs at least 48 px tall, help text 4 px or more below its input, and 32 px or more between one field and the next.",
+     "measured": "gap between fields -70 px < 32",
+     "where": "<label.govuk-label.govuk-date-input__label> \"Month\""
+    },
+    {
+     "rule": "IS-F1-form-rhythm",
+     "says": "Forms breathe: label 4 px or more above its input, inputs at least 48 px tall, help text 4 px or more below its input, and 32 px or more between one field and the next.",
+     "measured": "input 40 px tall < 48",
+     "where": "<label.govuk-label.govuk-date-input__label> \"Year\""
+    },
+    {
+     "rule": "IS-F1-form-rhythm",
+     "says": "Forms breathe: label 4 px or more above its input, inputs at least 48 px tall, help text 4 px or more below its input, and 32 px or more between one field and the next.",
+     "measured": "gap between fields -70 px < 32",
+     "where": "<label.govuk-label.govuk-date-input__label> \"Year\""
+    }
+   ]
+  },
+  {
+   "ref": "govuk-home",
+   "viewport": "phone",
+   "url": "https://www.gov.uk/",
+   "findings": [
+    {
+     "rule": "IS-T3-secondary-14",
+     "says": "Help text, captions and secondary lines are at least 14 px.",
+     "measured": "13.3333 px < 14 px",
+     "where": "<button.gem-c-search__submit> \"Search GOV.UK\""
+    },
+    {
+     "rule": "IS-T5-line-height",
+     "says": "Running text has a line height of at least 1.4.",
+     "measured": "line height 1.32 < 1.4",
+     "where": "<p.govuk-body.gem-c-cards__description> \"Includes eligibility, appeals, tax credi\""
+    },
+    {
+     "rule": "IS-T5-line-height",
+     "says": "Running text has a line height of at least 1.4.",
+     "measured": "line height 1.32 < 1.4",
+     "where": "<p.govuk-body.gem-c-cards__description> \"Parenting, civil partnerships, divorce a\""
+    },
+    {
+     "rule": "IS-T5-line-height",
+     "says": "Running text has a line height of at least 1.4.",
+     "measured": "line height 1.32 < 1.4",
+     "where": "<p.govuk-body.gem-c-cards__description> \"Includes giving birth, fostering, adopti\""
+    },
+    {
+     "rule": "IS-T5-line-height",
+     "says": "Running text has a line height of at least 1.4.",
+     "measured": "line height 1.32 < 1.4",
+     "where": "<p.govuk-body.gem-c-cards__description> \"Voting, community participation, life in\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "162×37 px < 44×44",
+     "where": "<a.govuk-header__homepage-link> \"Go to the GOV.UK homepage\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "81×23 px < 44×44",
+     "where": "<a.gem-c-image-card__title-link.govuk-link> \"Find a job\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "161×23 px < 44×44",
+     "where": "<a.gem-c-image-card__title-link.govuk-link> \"National Insurance\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "183×23 px < 44×44",
+     "where": "<a.gem-c-image-card__title-link.govuk-link> \"Cost of living support\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "173×23 px < 44×44",
+     "where": "<a.gem-c-image-card__title-link.govuk-link> \"Get the GOV.UK app\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "80×42 px < 44×44",
+     "where": "<button.govuk-button.gem-c-feedback__prompt-link> \"Yes\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "80×42 px < 44×44",
+     "where": "<button.govuk-button.gem-c-feedback__prompt-link> \"No\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "382×42 px < 44×44",
+     "where": "<button.govuk-button.gem-c-feedback__prompt-link> \"Report a problem with this page\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "258×23 px < 44×44",
+     "where": "<a.govuk-footer__link> \"Open Government Licence v3.0\""
+    },
+    {
+     "rule": "IS-L1-side-margin",
+     "says": "On a phone, text keeps at least 16 px from the screen edge.",
+     "measured": "text 15 px from the screen edge < 16",
+     "where": "<h2.gem-c-feedback__prompt-question> \"Is this page useful?\""
+    },
+    {
+     "rule": "IS-L3-grid",
+     "says": "Spacing sits on the product's declared base unit (4 px).",
+     "measured": "15 px is off the 4 px grid",
+     "where": "<header.homepage-header> \"The best place to find government servic\""
+    },
+    {
+     "rule": "IS-L3-grid",
+     "says": "Spacing sits on the product's declared base unit (4 px).",
+     "measured": "30 px is off the 4 px grid",
+     "where": "<h1.homepage-header__title> \"The best place to find government servic\""
+    },
+    {
+     "rule": "IS-L3-grid",
+     "says": "Spacing sits on the product's declared base unit (4 px).",
+     "measured": "6 px is off the 4 px grid",
+     "where": "<input.gem-c-search-with-autocomplete__input.gem-c-search-with-autocomplete__input--default> \"\""
+    },
+    {
+     "rule": "IS-L3-grid",
+     "says": "Spacing sits on the product's declared base unit (4 px).",
+     "measured": "50 px is off the 4 px grid",
+     "where": "<section.homepage-section.homepage-section--services-and-info> \"Services and information Benefits Includ\""
+    },
+    {
+     "rule": "IS-L3-grid",
+     "says": "Spacing sits on the product's declared base unit (4 px).",
+     "measured": "5 px is off the 4 px grid",
+     "where": "<li.gem-c-cards__list-item> \"Benefits Includes eligibility, appeals, \""
+    }
+   ]
+  },
+  {
+   "ref": "arena-about",
+   "viewport": "phone",
+   "url": "https://www.are.na/about",
+   "findings": [
+    {
+     "rule": "IS-T1-body-16",
+     "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+     "measured": "14.4 px < 16 px",
+     "where": "<div.c-lgwVNZ.c-lgwVNZ-crcoOa-size-sm> \"Up to 200 blocks\""
+    },
+    {
+     "rule": "IS-T1-body-16",
+     "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+     "measured": "14.4 px < 16 px",
+     "where": "<div.c-lgwVNZ.c-lgwVNZ-crcoOa-size-sm> \"Open, closed, or private channels\""
+    },
+    {
+     "rule": "IS-T1-body-16",
+     "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+     "measured": "14.4 px < 16 px",
+     "where": "<div.c-lgwVNZ.c-lgwVNZ-crcoOa-size-sm> \"Invite collaborators to channels\""
+    },
+    {
+     "rule": "IS-T1-body-16",
+     "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+     "measured": "14.4 px < 16 px",
+     "where": "<div.c-lgwVNZ.c-lgwVNZ-crcoOa-size-sm> \"Everything in Guest, plus\""
+    },
+    {
+     "rule": "IS-T1-body-16",
+     "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+     "measured": "14.4 px < 16 px",
+     "where": "<div.c-lgwVNZ.c-lgwVNZ-crcoOa-size-sm> \"Unlimited blocks\""
+    },
+    {
+     "rule": "IS-T1-body-16",
+     "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+     "measured": "14.4 px < 16 px",
+     "where": "<div.c-lgwVNZ.c-lgwVNZ-crcoOa-size-sm> \"Advanced search filters\""
+    },
+    {
+     "rule": "IS-T1-body-16",
+     "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+     "measured": "213 more below 16 px",
+     "where": ""
+    },
+    {
+     "rule": "IS-T3-secondary-14",
+     "says": "Help text, captions and secondary lines are at least 14 px.",
+     "measured": "12.5 px < 14 px",
+     "where": "<p.c-lgwVNZ.c-lgwVNZ-gyaQWK-size-xs> \"Save photos, notes, files, webpages and \""
+    },
+    {
+     "rule": "IS-T3-secondary-14",
+     "says": "Help text, captions and secondary lines are at least 14 px.",
+     "measured": "12.5 px < 14 px",
+     "where": "<div.c-lgwVNZ.c-lgwVNZ-gyaQWK-size-xs> \"Try Are.na at your own pace\""
+    },
+    {
+     "rule": "IS-T3-secondary-14",
+     "says": "Help text, captions and secondary lines are at least 14 px.",
+     "measured": "12.5 px < 14 px",
+     "where": "<div.c-lgwVNZ.c-lgwVNZ-gyaQWK-size-xs> \"Unlimited blocks, extra features\""
+    },
+    {
+     "rule": "IS-T3-secondary-14",
+     "says": "Help text, captions and secondary lines are at least 14 px.",
+     "measured": "10 px < 14 px",
+     "where": "<span.c-eZIjnL.c-eZIjnL-bqwxNI-variant-brand> \"Save 17 %\""
+    },
+    {
+     "rule": "IS-T3-secondary-14",
+     "says": "Help text, captions and secondary lines are at least 14 px.",
+     "measured": "12.5 px < 14 px",
+     "where": "<span.c-lgwVNZ.c-lgwVNZ-gyaQWK-size-xs> \"Yearly\""
+    },
+    {
+     "rule": "IS-T3-secondary-14",
+     "says": "Help text, captions and secondary lines are at least 14 px.",
+     "measured": "12.5 px < 14 px",
+     "where": "<span.c-lgwVNZ.c-lgwVNZ-gyaQWK-size-xs> \"Monthly\""
+    },
+    {
+     "rule": "IS-T3-secondary-14",
+     "says": "Help text, captions and secondary lines are at least 14 px.",
+     "measured": "105 more below 14 px",
+     "where": ""
+    },
+    {
+     "rule": "IS-T4-absolute-12",
+     "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+     "measured": "10 px < 12 px",
+     "where": "<span.c-eZIjnL.c-eZIjnL-bqwxNI-variant-brand> \"Save 17 %\""
+    },
+    {
+     "rule": "IS-T5-line-height",
+     "says": "Running text has a line height of at least 1.4.",
+     "measured": "line height 1.35 < 1.4",
+     "where": "<div.c-lgwVNZ.c-lgwVNZ-gyaQWK-size-xs> \"Invite friends and colleagues to collabo\""
+    },
+    {
+     "rule": "IS-T5-line-height",
+     "says": "Running text has a line height of at least 1.4.",
+     "measured": "line height 1.35 < 1.4",
+     "where": "<div.c-lgwVNZ.c-lgwVNZ-gyaQWK-size-xs> \"Make channels open to anyone, closed to \""
+    },
+    {
+     "rule": "IS-T5-line-height",
+     "says": "Running text has a line height of at least 1.4.",
+     "measured": "line height 1.35 < 1.4",
+     "where": "<div.c-lgwVNZ.c-lgwVNZ-gyaQWK-size-xs> \"Use our API and rich developer library t\""
+    },
+    {
+     "rule": "IS-T5-line-height",
+     "says": "Running text has a line height of at least 1.4.",
+     "measured": "line height 1.35 < 1.4",
+     "where": "<div.c-lgwVNZ.c-lgwVNZ-gyaQWK-size-xs> \"Chrome/Firefox/Safari extensions for sav\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "59×28 px < 44×44",
+     "where": "<a.PJLV> \"Are.na\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "382×41 px < 44×44",
+     "where": "<button.c-hTwdXI.c-hTwdXI-idcQJOb-css> \"See full comparison\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "382×23 px < 44×44",
+     "where": "<button.c-hTwdXI.c-hTwdXI-ikDPaeD-css> \"What are blocks and channels?\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "232×17 px < 44×44",
+     "where": "<a.PJLV.PJLV-icQFdVt-css> \"Are.na Community Dev Lounge\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "120×17 px < 44×44",
+     "where": "<a.c-lgwVNZ.c-lgwVNZ-gyaQWK-size-xs> \"View all articles\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "345×40 px < 44×44",
+     "where": "<a.PJLV.PJLV-icQFdVt-css> \"How do you describe Are.na at a party?\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "110×17 px < 44×44",
+     "where": "<a.PJLV.PJLV-icQFdVt-css> \"press archives\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "89×17 px < 44×44",
+     "where": "<a.PJLV.PJLV-icQFdVt-css> \"Help Center\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "96×17 px < 44×44",
+     "where": "<a.PJLV.PJLV-icQFdVt-css> \"help@are.na\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "11×17 px < 44×44",
+     "where": "<a.PJLV.PJLV-icQFdVt-css> \"X\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "41×17 px < 44×44",
+     "where": "<a.PJLV.PJLV-icQFdVt-css> \"Store\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "171×17 px < 44×44",
+     "where": "<a.PJLV.PJLV-icQFdVt-css> \"Community Guidelines\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "97×17 px < 44×44",
+     "where": "<a.PJLV.PJLV-icQFdVt-css> \"Terms of Use\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "105×17 px < 44×44",
+     "where": "<a.PJLV.PJLV-icQFdVt-css> \"Privacy Policy\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "65×17 px < 44×44",
+     "where": "<a.PJLV.PJLV-icQFdVt-css> \"Press kit\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "48×17 px < 44×44",
+     "where": "<a.PJLV.PJLV-icQFdVt-css> \"DMCA\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "52×17 px < 44×44",
+     "where": "<a> \"Next.js\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "44×17 px < 44×44",
+     "where": "<a> \"React\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "40×17 px < 44×44",
+     "where": "<a> \"Areal\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "58×17 px < 44×44",
+     "where": "<a> \"Dinamo\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "181×22 px < 44×44",
+     "where": "<a> \"Explore\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "181×22 px < 44×44",
+     "where": "<a> \"Search\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "181×22 px < 44×44",
+     "where": "<a> \"Are.na Editorial\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "181×22 px < 44×44",
+     "where": "<a> \"Community projects\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "181×22 px < 44×44",
+     "where": "<a> \"Annual books\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "181×22 px < 44×44",
+     "where": "<a> \"Gift Shop\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "181×22 px < 44×44",
+     "where": "<a> \"About & features\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "181×22 px < 44×44",
+     "where": "<a> \"Pricing & plans\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "181×22 px < 44×44",
+     "where": "<a> \"Roadmap\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "181×22 px < 44×44",
+     "where": "<a> \"Browser extensions\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "181×22 px < 44×44",
+     "where": "<a> \"Developers\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "181×22 px < 44×44",
+     "where": "<a> \"Team\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "181×22 px < 44×44",
+     "where": "<a> \"Press archive\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "181×22 px < 44×44",
+     "where": "<a> \"Editorial newsletter\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "181×22 px < 44×44",
+     "where": "<a> \"Instagram\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "181×22 px < 44×44",
+     "where": "<a> \"X\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "181×22 px < 44×44",
+     "where": "<a> \"Help Center\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "181×22 px < 44×44",
+     "where": "<a> \"Contact support\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "181×22 px < 44×44",
+     "where": "<a> \"Send feedback\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "181×22 px < 44×44",
+     "where": "<a> \"Community Guidelines\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "29×29 px < 44×44",
+     "where": "<a.PJLV.PJLV-idgNkYa-css> \"Download Are.na for iOS\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "29×29 px < 44×44",
+     "where": "<a.PJLV.PJLV-idgNkYa-css> \"Download Are.na for Android\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "29×29 px < 44×44",
+     "where": "<a.PJLV.PJLV-idgNkYa-css> \"Install the Are.na extension for Chrome\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "98×22 px < 44×44",
+     "where": "<button.c-edftXt.c-edftXt-ilkYlwf-css> \"Theme\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "34×17 px < 44×44",
+     "where": "<a> \"Terms\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "41×17 px < 44×44",
+     "where": "<a> \"Privacy\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "37×17 px < 44×44",
+     "where": "<a> \"DMCA\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "54×17 px < 44×44",
+     "where": "<a> \"Colophon\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "30×14 px < 44×44",
+     "where": "<a> \"Areal\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "43×14 px < 44×44",
+     "where": "<a> \"Dinamo\""
+    },
+    {
+     "rule": "IS-N1-back",
+     "says": "Every screen that is not a top-level place shows Back (or Close / Cancel) in the top bar, at every width.",
+     "measured": "no visible back|close|cancel control in the top 96 px",
+     "where": "archetype sub-screen"
+    },
+    {
+     "rule": "IS-L1-side-margin",
+     "says": "On a phone, text keeps at least 16 px from the screen edge.",
+     "measured": "text 15 px from the screen edge < 16",
+     "where": "<h1.c-lgwVNZ.c-lgwVNZ-hvnwLD-size-md> \"About\""
+    },
+    {
+     "rule": "IS-L3-grid",
+     "says": "Spacing sits on the product's declared base unit (4 px).",
+     "measured": "130 px is off the 4 px grid",
+     "where": "<div.PJLV.PJLV-igonjiY-css> \"Are.naAboutAboutAre.na is a place to sav\""
+    },
+    {
+     "rule": "IS-L3-grid",
+     "says": "Spacing sits on the product's declared base unit (4 px).",
+     "measured": "15 px is off the 4 px grid",
+     "where": "<div.PJLV.c-dDmWjQ> \"Are.naAboutAboutAre.na is a place to sav\""
+    },
+    {
+     "rule": "IS-L3-grid",
+     "says": "Spacing sits on the product's declared base unit (4 px).",
+     "measured": "10.2857 px is off the 4 px grid",
+     "where": "<div.PJLV.c-eogPdn> \"Are.na\""
+    },
+    {
+     "rule": "IS-L3-grid",
+     "says": "Spacing sits on the product's declared base unit (4 px).",
+     "measured": "10 px is off the 4 px grid",
+     "where": "<div.c-gBwTof> \"Are.na is a place to save content, creat\""
+    },
+    {
+     "rule": "IS-L3-grid",
+     "says": "Spacing sits on the product's declared base unit (4 px).",
+     "measured": "35 px is off the 4 px grid",
+     "where": "<section.PJLV.PJLV-ibeTnUS-css> \"How it worksCaptureSave photos, notes, f\""
+    }
+   ]
+  },
+  {
+   "ref": "govuk-question-page",
+   "viewport": "desktop",
+   "url": "https://design-system.service.gov.uk/components/text-input/default/index.html",
+   "findings": [
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "1220×40 px < 44×44",
+     "where": "<input.govuk-input> \"\""
+    },
+    {
+     "rule": "IS-N1-back",
+     "says": "Every screen that is not a top-level place shows Back (or Close / Cancel) in the top bar, at every width.",
+     "measured": "no visible back|close|cancel control in the top 96 px",
+     "where": "archetype flow-step"
+    },
+    {
+     "rule": "IS-F1-form-rhythm",
+     "says": "Forms breathe: label 4 px or more above its input, inputs at least 48 px tall, help text 4 px or more below its input, and 32 px or more between one field and the next.",
+     "measured": "input 40 px tall < 48",
+     "where": "<label.govuk-label.govuk-label--l> \"What is the name of the event?\""
+    }
+   ]
+  },
+  {
+   "ref": "govuk-date-input",
+   "viewport": "desktop",
+   "url": "https://design-system.service.gov.uk/components/date-input/default/index.html",
+   "findings": [
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "52×40 px < 44×44",
+     "where": "<input.govuk-input.govuk-date-input__input> \"\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "52×40 px < 44×44",
+     "where": "<input.govuk-input.govuk-date-input__input> \"\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "86×40 px < 44×44",
+     "where": "<input.govuk-input.govuk-date-input__input> \"\""
+    },
+    {
+     "rule": "IS-N1-back",
+     "says": "Every screen that is not a top-level place shows Back (or Close / Cancel) in the top bar, at every width.",
+     "measured": "no visible back|close|cancel control in the top 96 px",
+     "where": "archetype flow-step"
+    },
+    {
+     "rule": "IS-F1-form-rhythm",
+     "says": "Forms breathe: label 4 px or more above its input, inputs at least 48 px tall, help text 4 px or more below its input, and 32 px or more between one field and the next.",
+     "measured": "input 40 px tall < 48",
+     "where": "<legend.govuk-fieldset__legend.govuk-fieldset__legend--l> \"When was your passport issued?\""
+    },
+    {
+     "rule": "IS-F1-form-rhythm",
+     "says": "Forms breathe: label 4 px or more above its input, inputs at least 48 px tall, help text 4 px or more below its input, and 32 px or more between one field and the next.",
+     "measured": "input 40 px tall < 48",
+     "where": "<label.govuk-label.govuk-date-input__label> \"Day\""
+    },
+    {
+     "rule": "IS-F1-form-rhythm",
+     "says": "Forms breathe: label 4 px or more above its input, inputs at least 48 px tall, help text 4 px or more below its input, and 32 px or more between one field and the next.",
+     "measured": "gap between fields -70 px < 32",
+     "where": "<label.govuk-label.govuk-date-input__label> \"Day\""
+    },
+    {
+     "rule": "IS-F1-form-rhythm",
+     "says": "Forms breathe: label 4 px or more above its input, inputs at least 48 px tall, help text 4 px or more below its input, and 32 px or more between one field and the next.",
+     "measured": "input 40 px tall < 48",
+     "where": "<label.govuk-label.govuk-date-input__label> \"Month\""
+    },
+    {
+     "rule": "IS-F1-form-rhythm",
+     "says": "Forms breathe: label 4 px or more above its input, inputs at least 48 px tall, help text 4 px or more below its input, and 32 px or more between one field and the next.",
+     "measured": "gap between fields -70 px < 32",
+     "where": "<label.govuk-label.govuk-date-input__label> \"Month\""
+    },
+    {
+     "rule": "IS-F1-form-rhythm",
+     "says": "Forms breathe: label 4 px or more above its input, inputs at least 48 px tall, help text 4 px or more below its input, and 32 px or more between one field and the next.",
+     "measured": "input 40 px tall < 48",
+     "where": "<label.govuk-label.govuk-date-input__label> \"Year\""
+    },
+    {
+     "rule": "IS-F1-form-rhythm",
+     "says": "Forms breathe: label 4 px or more above its input, inputs at least 48 px tall, help text 4 px or more below its input, and 32 px or more between one field and the next.",
+     "measured": "gap between fields -70 px < 32",
+     "where": "<label.govuk-label.govuk-date-input__label> \"Year\""
+    }
+   ]
+  },
+  {
+   "ref": "govuk-home",
+   "viewport": "desktop",
+   "url": "https://www.gov.uk/",
+   "findings": [
+    {
+     "rule": "IS-T3-secondary-14",
+     "says": "Help text, captions and secondary lines are at least 14 px.",
+     "measured": "13.3333 px < 14 px",
+     "where": "<button.gem-c-search__submit> \"Search GOV.UK\""
+    },
+    {
+     "rule": "IS-T5-line-height",
+     "says": "Running text has a line height of at least 1.4.",
+     "measured": "line height 1.32 < 1.4",
+     "where": "<p.govuk-body.gem-c-cards__description> \"Includes eligibility, appeals, tax credi\""
+    },
+    {
+     "rule": "IS-T5-line-height",
+     "says": "Running text has a line height of at least 1.4.",
+     "measured": "line height 1.32 < 1.4",
+     "where": "<p.govuk-body.gem-c-cards__description> \"Parenting, civil partnerships, divorce a\""
+    },
+    {
+     "rule": "IS-T5-line-height",
+     "says": "Running text has a line height of at least 1.4.",
+     "measured": "line height 1.32 < 1.4",
+     "where": "<p.govuk-body.gem-c-cards__description> \"Includes giving birth, fostering, adopti\""
+    },
+    {
+     "rule": "IS-T5-line-height",
+     "says": "Running text has a line height of at least 1.4.",
+     "measured": "line height 1.32 < 1.4",
+     "where": "<p.govuk-body.gem-c-cards__description> \"Voting, community participation, life in\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "162×37 px < 44×44",
+     "where": "<a.govuk-header__homepage-link> \"Go to the GOV.UK homepage\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "81×23 px < 44×44",
+     "where": "<a.gem-c-image-card__title-link.govuk-link> \"Find a job\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "161×23 px < 44×44",
+     "where": "<a.gem-c-image-card__title-link.govuk-link> \"National Insurance\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "183×23 px < 44×44",
+     "where": "<a.gem-c-image-card__title-link.govuk-link> \"Cost of living support\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "173×23 px < 44×44",
+     "where": "<a.gem-c-image-card__title-link.govuk-link> \"Get the GOV.UK app\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "100×37 px < 44×44",
+     "where": "<button.govuk-button.gem-c-feedback__prompt-link> \"Yes\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "100×37 px < 44×44",
+     "where": "<button.govuk-button.gem-c-feedback__prompt-link> \"No\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "240×37 px < 44×44",
+     "where": "<button.govuk-button.gem-c-feedback__prompt-link> \"Report a problem with this page\""
+    },
+    {
+     "rule": "IS-L3-grid",
+     "says": "Spacing sits on the product's declared base unit (4 px).",
+     "measured": "30 px is off the 4 px grid",
+     "where": "<header.homepage-header> \"The best place to find government servic\""
+    },
+    {
+     "rule": "IS-L3-grid",
+     "says": "Spacing sits on the product's declared base unit (4 px).",
+     "measured": "15 px is off the 4 px grid",
+     "where": "<label.govuk-label.govuk-label--s> \"Search\""
+    },
+    {
+     "rule": "IS-L3-grid",
+     "says": "Spacing sits on the product's declared base unit (4 px).",
+     "measured": "6 px is off the 4 px grid",
+     "where": "<input.gem-c-search-with-autocomplete__input.gem-c-search-with-autocomplete__input--default> \"\""
+    },
+    {
+     "rule": "IS-L3-grid",
+     "says": "Spacing sits on the product's declared base unit (4 px).",
+     "measured": "5 px is off the 4 px grid",
+     "where": "<li.gem-c-cards__list-item> \"Benefits Includes eligibility, appeals, \""
+    },
+    {
+     "rule": "IS-L3-grid",
+     "says": "Spacing sits on the product's declared base unit (4 px).",
+     "measured": "10 px is off the 4 px grid",
+     "where": "<h3.gem-c-cards__sub-heading.govuk-heading-s> \"Benefits\""
+    }
+   ]
+  },
+  {
+   "ref": "arena-about",
+   "viewport": "desktop",
+   "url": "https://www.are.na/about",
+   "findings": [
+    {
+     "rule": "IS-T1-body-16",
+     "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+     "measured": "12.5 px < 16 px",
+     "where": "<div.c-lgwVNZ.c-lgwVNZ-gyaQWK-size-xs> \"Invite friends and colleagues to collabo\""
+    },
+    {
+     "rule": "IS-T1-body-16",
+     "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+     "measured": "12.5 px < 16 px",
+     "where": "<div.c-lgwVNZ.c-lgwVNZ-gyaQWK-size-xs> \"Download/export channel contents directl\""
+    },
+    {
+     "rule": "IS-T1-body-16",
+     "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+     "measured": "12.5 px < 16 px",
+     "where": "<div.c-lgwVNZ.c-lgwVNZ-gyaQWK-size-xs> \"Make channels open to anyone, closed to \""
+    },
+    {
+     "rule": "IS-T1-body-16",
+     "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+     "measured": "12.5 px < 16 px",
+     "where": "<div.c-lgwVNZ.c-lgwVNZ-gyaQWK-size-xs> \"Use our API and rich developer library t\""
+    },
+    {
+     "rule": "IS-T1-body-16",
+     "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+     "measured": "12.5 px < 16 px",
+     "where": "<div.c-lgwVNZ.c-lgwVNZ-gyaQWK-size-xs> \"Chrome/Firefox/Safari extensions for sav\""
+    },
+    {
+     "rule": "IS-T1-body-16",
+     "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+     "measured": "12.5 px < 16 px",
+     "where": "<div.c-lgwVNZ.c-lgwVNZ-gyaQWK-size-xs> \"Group features for working in teams, cla\""
+    },
+    {
+     "rule": "IS-T1-body-16",
+     "says": "Reading text (paragraphs, list items) is at least 16 px on a phone.",
+     "measured": "200 more below 16 px",
+     "where": ""
+    },
+    {
+     "rule": "IS-T3-secondary-14",
+     "says": "Help text, captions and secondary lines are at least 14 px.",
+     "measured": "12.5 px < 14 px",
+     "where": "<a.c-hTwdXI.c-bUIkFP> \"Log in\""
+    },
+    {
+     "rule": "IS-T3-secondary-14",
+     "says": "Help text, captions and secondary lines are at least 14 px.",
+     "measured": "12.5 px < 14 px",
+     "where": "<a.c-hTwdXI.c-bUIkFP> \"Sign up\""
+    },
+    {
+     "rule": "IS-T3-secondary-14",
+     "says": "Help text, captions and secondary lines are at least 14 px.",
+     "measured": "12.5 px < 14 px",
+     "where": "<p.c-lgwVNZ.c-lgwVNZ-gyaQWK-size-xs> \"Save photos, notes, files, webpages and \""
+    },
+    {
+     "rule": "IS-T3-secondary-14",
+     "says": "Help text, captions and secondary lines are at least 14 px.",
+     "measured": "12.5 px < 14 px",
+     "where": "<div.c-lgwVNZ.c-lgwVNZ-gyaQWK-size-xs> \"Try Are.na at your own pace\""
+    },
+    {
+     "rule": "IS-T3-secondary-14",
+     "says": "Help text, captions and secondary lines are at least 14 px.",
+     "measured": "12.5 px < 14 px",
+     "where": "<div.c-lgwVNZ.c-lgwVNZ-gyaQWK-size-xs> \"Unlimited blocks, extra features\""
+    },
+    {
+     "rule": "IS-T3-secondary-14",
+     "says": "Help text, captions and secondary lines are at least 14 px.",
+     "measured": "10 px < 14 px",
+     "where": "<span.c-eZIjnL.c-eZIjnL-bqwxNI-variant-brand> \"Save 17 %\""
+    },
+    {
+     "rule": "IS-T3-secondary-14",
+     "says": "Help text, captions and secondary lines are at least 14 px.",
+     "measured": "96 more below 14 px",
+     "where": ""
+    },
+    {
+     "rule": "IS-T4-absolute-12",
+     "says": "No text anywhere is under 12 px — eyebrows, tab names and metadata included.",
+     "measured": "10 px < 12 px",
+     "where": "<span.c-eZIjnL.c-eZIjnL-bqwxNI-variant-brand> \"Save 17 %\""
+    },
+    {
+     "rule": "IS-T5-line-height",
+     "says": "Running text has a line height of at least 1.4.",
+     "measured": "line height 1.35 < 1.4",
+     "where": "<div.c-lgwVNZ.c-lgwVNZ-gyaQWK-size-xs> \"Invite friends and colleagues to collabo\""
+    },
+    {
+     "rule": "IS-T5-line-height",
+     "says": "Running text has a line height of at least 1.4.",
+     "measured": "line height 1.35 < 1.4",
+     "where": "<div.c-lgwVNZ.c-lgwVNZ-gyaQWK-size-xs> \"Make channels open to anyone, closed to \""
+    },
+    {
+     "rule": "IS-T5-line-height",
+     "says": "Running text has a line height of at least 1.4.",
+     "measured": "line height 1.35 < 1.4",
+     "where": "<div.c-lgwVNZ.c-lgwVNZ-gyaQWK-size-xs> \"Use our API and rich developer library t\""
+    },
+    {
+     "rule": "IS-T5-line-height",
+     "says": "Running text has a line height of at least 1.4.",
+     "measured": "line height 1.35 < 1.4",
+     "where": "<div.c-lgwVNZ.c-lgwVNZ-gyaQWK-size-xs> \"Chrome/Firefox/Safari extensions for sav\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "65×40 px < 44×44",
+     "where": "<a.PJLV.PJLV-igNFQKw-css> \"Home\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "553×40 px < 44×44",
+     "where": "<button.c-hTwdXI.c-jrKTec> \"Search Are.na\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "58×24 px < 44×44",
+     "where": "<a.c-hTwdXI.c-bUIkFP> \"Log in\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "66×24 px < 44×44",
+     "where": "<a.c-hTwdXI.c-bUIkFP> \"Sign up\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "49×23 px < 44×44",
+     "where": "<a.PJLV> \"Are.na\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "152×34 px < 44×44",
+     "where": "<a.c-hTwdXI.c-bUIkFP> \"Sign up\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "152×34 px < 44×44",
+     "where": "<a.c-hTwdXI.c-bUIkFP> \"Upgrade\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "152×34 px < 44×44",
+     "where": "<a.c-hTwdXI.c-bUIkFP> \"Upgrade\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "568×23 px < 44×44",
+     "where": "<button.c-hTwdXI.c-hTwdXI-ikDPaeD-css> \"What happens if I reach the block limit \""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "568×23 px < 44×44",
+     "where": "<button.c-hTwdXI.c-hTwdXI-ikDPaeD-css> \"Can I pay month-to-month for my Are.na P\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "568×23 px < 44×44",
+     "where": "<button.c-hTwdXI.c-hTwdXI-ikDPaeD-css> \"Do you have discounts for students or ed\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "568×23 px < 44×44",
+     "where": "<button.c-hTwdXI.c-hTwdXI-ikDPaeD-css> \"Why do most people upgrade to Are.na Pre\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "568×23 px < 44×44",
+     "where": "<button.c-hTwdXI.c-hTwdXI-ikDPaeD-css> \"What are blocks and channels?\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "568×23 px < 44×44",
+     "where": "<button.c-hTwdXI.c-hTwdXI-ikDPaeD-css> \"How does Are.na process my payment? Can \""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "568×23 px < 44×44",
+     "where": "<button.c-hTwdXI.c-hTwdXI-ikDPaeD-css> \"Can I collaborate with other people on A\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "198×34 px < 44×44",
+     "where": "<a.c-hTwdXI.c-bUIkFP> \"View API documentation\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "241×34 px < 44×44",
+     "where": "<a.c-hTwdXI.c-bUIkFP> \"SDK, MCP, and other resources\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "556×40 px < 44×44",
+     "where": "<a.PJLV.PJLV-icQFdVt-css> \"Are.na Community Dev Lounge\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "180×17 px < 44×44",
+     "where": "<a.c-lgwVNZ.c-lgwVNZ-gyaQWK-size-xs> \"View all articles\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "182×34 px < 44×44",
+     "where": "<a.c-hTwdXI.c-bUIkFP> \"Download for iOS\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "211×34 px < 44×44",
+     "where": "<a.c-hTwdXI.c-bUIkFP> \"Download for Android\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "184×34 px < 44×44",
+     "where": "<a.c-hTwdXI.c-bUIkFP> \"Install for Chrome\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "171×34 px < 44×44",
+     "where": "<a.c-hTwdXI.c-bUIkFP> \"Install for Safari\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "177×34 px < 44×44",
+     "where": "<a.c-hTwdXI.c-bUIkFP> \"Install for Firefox\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "293×17 px < 44×44",
+     "where": "<a.PJLV.PJLV-icQFdVt-css> \"How do you describe Are.na at a party?\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "110×17 px < 44×44",
+     "where": "<a.PJLV.PJLV-icQFdVt-css> \"press archives\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "89×17 px < 44×44",
+     "where": "<a.PJLV.PJLV-icQFdVt-css> \"Help Center\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "96×17 px < 44×44",
+     "where": "<a.PJLV.PJLV-icQFdVt-css> \"help@are.na\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "11×17 px < 44×44",
+     "where": "<a.PJLV.PJLV-icQFdVt-css> \"X\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "41×17 px < 44×44",
+     "where": "<a.PJLV.PJLV-icQFdVt-css> \"Store\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "171×17 px < 44×44",
+     "where": "<a.PJLV.PJLV-icQFdVt-css> \"Community Guidelines\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "97×17 px < 44×44",
+     "where": "<a.PJLV.PJLV-icQFdVt-css> \"Terms of Use\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "105×17 px < 44×44",
+     "where": "<a.PJLV.PJLV-icQFdVt-css> \"Privacy Policy\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "65×17 px < 44×44",
+     "where": "<a.PJLV.PJLV-icQFdVt-css> \"Press kit\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "48×17 px < 44×44",
+     "where": "<a.PJLV.PJLV-icQFdVt-css> \"DMCA\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "52×17 px < 44×44",
+     "where": "<a> \"Next.js\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "44×17 px < 44×44",
+     "where": "<a> \"React\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "40×17 px < 44×44",
+     "where": "<a> \"Areal\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "58×17 px < 44×44",
+     "where": "<a> \"Dinamo\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "168×22 px < 44×44",
+     "where": "<a> \"Explore\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "168×22 px < 44×44",
+     "where": "<a> \"Search\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "168×22 px < 44×44",
+     "where": "<a> \"Are.na Editorial\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "168×22 px < 44×44",
+     "where": "<a> \"Community projects\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "168×22 px < 44×44",
+     "where": "<a> \"Annual books\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "168×22 px < 44×44",
+     "where": "<a> \"Gift Shop\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "168×22 px < 44×44",
+     "where": "<a> \"About & features\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "168×22 px < 44×44",
+     "where": "<a> \"Pricing & plans\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "168×22 px < 44×44",
+     "where": "<a> \"Roadmap\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "168×22 px < 44×44",
+     "where": "<a> \"Browser extensions\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "168×22 px < 44×44",
+     "where": "<a> \"Developers\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "168×22 px < 44×44",
+     "where": "<a> \"Team\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "168×22 px < 44×44",
+     "where": "<a> \"Press archive\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "168×22 px < 44×44",
+     "where": "<a> \"Editorial newsletter\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "168×22 px < 44×44",
+     "where": "<a> \"Instagram\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "168×22 px < 44×44",
+     "where": "<a> \"X\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "168×22 px < 44×44",
+     "where": "<a> \"Help Center\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "168×22 px < 44×44",
+     "where": "<a> \"Contact support\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "168×22 px < 44×44",
+     "where": "<a> \"Send feedback\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "168×22 px < 44×44",
+     "where": "<a> \"Community Guidelines\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "29×29 px < 44×44",
+     "where": "<a.PJLV.PJLV-idgNkYa-css> \"Download Are.na for iOS\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "29×29 px < 44×44",
+     "where": "<a.PJLV.PJLV-idgNkYa-css> \"Download Are.na for Android\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "29×29 px < 44×44",
+     "where": "<a.PJLV.PJLV-idgNkYa-css> \"Install the Are.na extension for Chrome\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "98×22 px < 44×44",
+     "where": "<button.c-edftXt.c-edftXt-ilkYlwf-css> \"Theme\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "34×17 px < 44×44",
+     "where": "<a> \"Terms\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "41×17 px < 44×44",
+     "where": "<a> \"Privacy\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "37×17 px < 44×44",
+     "where": "<a> \"DMCA\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "54×17 px < 44×44",
+     "where": "<a> \"Colophon\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "30×14 px < 44×44",
+     "where": "<a> \"Areal\""
+    },
+    {
+     "rule": "IS-H1-target-44",
+     "says": "Every control is at least 44 × 44 px, except a link inside a sentence.",
+     "measured": "43×14 px < 44×44",
+     "where": "<a> \"Dinamo\""
+    },
+    {
+     "rule": "IS-N1-back",
+     "says": "Every screen that is not a top-level place shows Back (or Close / Cancel) in the top bar, at every width.",
+     "measured": "no visible back|close|cancel control in the top 96 px",
+     "where": "archetype sub-screen"
+    },
+    {
+     "rule": "IS-L3-grid",
+     "says": "Spacing sits on the product's declared base unit (4 px).",
+     "measured": "130 px is off the 4 px grid",
+     "where": "<div.PJLV.PJLV-igonjiY-css> \"Are.naAboutAboutAre.na is a place to sav\""
+    },
+    {
+     "rule": "IS-L3-grid",
+     "says": "Spacing sits on the product's declared base unit (4 px).",
+     "measured": "35 px is off the 4 px grid",
+     "where": "<div.PJLV.c-dDmWjQ> \"Are.naAboutAboutAre.na is a place to sav\""
+    },
+    {
+     "rule": "IS-L3-grid",
+     "says": "Spacing sits on the product's declared base unit (4 px).",
+     "measured": "8.57143 px is off the 4 px grid",
+     "where": "<div.PJLV.c-eogPdn> \"Are.na\""
+    },
+    {
+     "rule": "IS-L3-grid",
+     "says": "Spacing sits on the product's declared base unit (4 px).",
+     "measured": "10 px is off the 4 px grid",
+     "where": "<div.c-gBwTof> \"Are.na is a place to save content, creat\""
+    },
+    {
+     "rule": "IS-L3-grid",
+     "says": "Spacing sits on the product's declared base unit (4 px).",
+     "measured": "15 px is off the 4 px grid",
+     "where": "<div.c-htoFbB> \"How it works\""
+    }
+   ]
+  }
+ ]
+}

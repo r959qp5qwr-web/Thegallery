@@ -25,7 +25,7 @@ export default async function ForMakers() {
 
   return (
     <>
-      <Header />
+      <Header back="/" />
       <main id="main" tabIndex={-1} className="for-makers has-workbar">
         {/* Decoration: the works stand for the room; their names are on the wall, not here. */}
         <div className="fm-pictures" aria-hidden data-testid="fm-pictures">

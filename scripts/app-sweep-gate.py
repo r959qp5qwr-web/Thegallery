@@ -21,16 +21,25 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 PROJECTS = ("phone", "desktop")
+# Two receipts per viewport: the governor's corrections (journey 14) and the Interface Standard
+# (journey 15, kit/interface-standard). Either missing, stale or failed keeps the gate shut.
+RECEIPTS = {"suite": "full journey suite", "app-sweep": "whole-app sweep", "interface": "interface standard", "interface-drill": "interface drill"}
 GUARDED = ("mcp__github__create_pull_request", "mcp__github__merge_pull_request")
-# The same list as EXTRA_FILES in e2e/14-whole-app.spec.ts: files outside src/ and public/ that
+# The same list as EXTRA_FILES in e2e/support/fingerprint.ts: files outside src/ and public/ that
 # change what renders or how the sweep sees it.
 EXTRA_FILES = ("ux/APP_RULES.json", "e2e/14-whole-app.spec.ts", "e2e/helpers.ts", "next.config.ts",
-               "next.config.js", "next.config.mjs", "package.json", "package-lock.json")
+               "next.config.js", "next.config.mjs", "package.json", "package-lock.json",
+               "ux/INTERFACE_PROFILE.json", "kit/interface-standard/STANDARD.json",
+               "kit/interface-standard/engine/measure.ts", "e2e/15-interface-standard.spec.ts",
+               "e2e/support/fingerprint.ts", "playwright.config.ts", "tsconfig.json",
+               "open-next.config.ts", "e2e/support/test-project.sql",
+               "e2e/16-interface-drill.spec.ts", "kit/interface-standard/drill/cases.ts",
+               "e2e/support/seed-test-project.ts")
 
 
 def fingerprint() -> str:
     """The same fingerprint e2e/14-whole-app.spec.ts writes (codeFingerprint)."""
-    files = [p for d in ("src", "public") for p in (ROOT / d).rglob("*") if p.is_file()]
+    files = [p for d in ("src", "public", "db/migrations") for p in (ROOT / d).rglob("*") if p.is_file()]
     rel = [p.relative_to(ROOT).as_posix() for p in files] + [f for f in EXTRA_FILES if (ROOT / f).is_file()]
     h = hashlib.sha256()
     for f in sorted(rel):
@@ -44,20 +53,34 @@ def verdict() -> tuple[bool, list[str]]:
     except Exception as e:  # noqa: BLE001 — any failure to read the code is a shut gate
         return False, [f"the code could not be fingerprinted ({e})"]
     problems = []
-    for project in PROJECTS:
-        path = ROOT / ".doctrine" / "runtime" / f"app-sweep-{project}.json"
+    try:
+        build = (ROOT / ".next" / "BUILD_ID").read_text().strip()
+    except Exception:  # noqa: BLE001 — no build is a shut gate for the standard's receipts
+        build = ""
+    # The build must be of this code: `npm run build` stamps the source fingerprint into .next/.
+    try:
+        stamped = (ROOT / ".next" / "SOURCE_FINGERPRINT").read_text().strip()
+    except Exception:  # noqa: BLE001
+        stamped = ""
+    if stamped != now:
+        problems.append("the build on disk is not of this code (rebuild with `npm run build`, which stamps .next/SOURCE_FINGERPRINT)")
+    for kind, project in [(k, p) for k in RECEIPTS for p in PROJECTS]:
+        path = ROOT / ".doctrine" / "runtime" / f"{kind}-{project}.json"
+        project = f"{RECEIPTS[kind]} ({project})"
         try:
             r = json.loads(path.read_text())
             if not isinstance(r, dict):
                 raise ValueError("not an object")
         except Exception:  # noqa: BLE001 — missing or unreadable is shut
-            problems.append(f"{project}: no readable sweep receipt — run the suite (bash e2e/run-hosted.sh --project={project})")
+            problems.append(f"{project}: no readable sweep receipt — run the full suite on this code")
             continue
         pages, swept = r.get("pages"), r.get("swept")
         if not (isinstance(pages, int) and isinstance(swept, int) and pages > 0):
             problems.append(f"{project}: the receipt does not say how many pages were swept")
             continue
-        if r.get("fingerprint") != now:
+        if kind == "interface" and r.get("build") != build:
+            problems.append(f"{project}: measured on build {r.get('build', '?')}, but the build on disk is {build or 'missing'}")
+        elif r.get("fingerprint") != now:
             problems.append(f"{project}: the sweep ran on other code ({r.get('at', '?')}); run it again on this code")
         elif r.get("result") != "PASS":
             n = sum(len(x.get("findings", [])) for x in r.get("findings", []))
@@ -68,6 +91,20 @@ def verdict() -> tuple[bool, list[str]]:
 
 
 def main() -> int:
+    if len(sys.argv) > 2 and sys.argv[1] == "suite-receipt":
+        # Written by e2e/run-hosted.sh only after a full, unfiltered run whose Playwright exit code was 0.
+        import datetime
+        out = ROOT / ".doctrine" / "runtime" / f"suite-{sys.argv[2]}.json"
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(json.dumps({"project": sys.argv[2], "result": "PASS", "fingerprint": fingerprint(), "pages": 1, "swept": 1,
+                                   "at": datetime.datetime.now(datetime.timezone.utc).isoformat()}, indent=2))
+        print(f"suite receipt written for {sys.argv[2]}")
+        return 0
+    if len(sys.argv) > 1 and sys.argv[1] == "stamp":
+        (ROOT / ".next").mkdir(exist_ok=True)
+        (ROOT / ".next" / "SOURCE_FINGERPRINT").write_text(fingerprint() + "\n")
+        print("stamped .next/SOURCE_FINGERPRINT")
+        return 0
     if len(sys.argv) > 1 and sys.argv[1] == "hook":
         # An indeterminate verdict is a denial: an unreadable payload or a crash shuts the gate.
         try:
