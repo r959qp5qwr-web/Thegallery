@@ -612,6 +612,8 @@ body:not(:has(nav.bar)) .actionbar { bottom: 0; }
 .flow.centred > h1 { margin-top: var(--s4); }
 .flow.centred .flow-line { max-width: 30ch; }
 .flow.centred .addr { overflow-wrap: anywhere; }
+.flow.centred .flow-links { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s1) var(--s4); margin-top: var(--s2); }
+.flow-alt { margin: var(--s4) 0 0; }
 .form.resend { margin-top: var(--s3); }
 .form.resend .inline-actions { padding: 0; justify-content: center; }
 .form.resend .btn { border: 0; background: none; color: var(--text); font: var(--t-action); text-decoration: underline;

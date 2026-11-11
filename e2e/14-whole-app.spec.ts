@@ -173,6 +173,14 @@ async function apply(page: Page, route: string): Promise<Finding[]> {
           if (!back && !wideNav) add("no visible Back on a screen reached from inside another");
           break;
         }
+        case "has-links": {
+          if (!(c.routes as string[]).some((r) => new RegExp(r).test(route))) break;
+          for (const h of c.hrefs as string[]) {
+            const there = Array.from(document.querySelectorAll(`main a[href^="${h}"]`)).some(seen);
+            if (!there) add(`no visible link to ${h} on a screen that waits for an email`);
+          }
+          break;
+        }
         case "paragraph-words": {
           for (const p of Array.from(document.querySelectorAll("p"))) {
             if (seen(p) && words(p.textContent ?? "") > c.max_words) add(`a paragraph of ${words(p.textContent ?? "")} words: "${short(p.textContent ?? "")}…"`);
