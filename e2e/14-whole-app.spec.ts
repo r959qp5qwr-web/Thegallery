@@ -176,7 +176,7 @@ async function apply(page: Page, route: string): Promise<Finding[]> {
         case "has-links": {
           if (!(c.routes as string[]).some((r) => new RegExp(r).test(route))) break;
           for (const h of c.hrefs as string[]) {
-            const there = Array.from(document.querySelectorAll(`main a[href^="${h}"]`)).some(seen);
+            const there = Array.from(document.querySelectorAll("main a[href]")).some((a) => new URL((a as HTMLAnchorElement).href).pathname === h && seen(a));
             if (!there) add(`no visible link to ${h} on a screen that waits for an email`);
           }
           break;

@@ -30,6 +30,7 @@
     { "id": "join-1",             "page": "/makers/create-account", "who": "visitor", "path": "/makers/create-account",     "archetype": "flow-step" },
     { "id": "join-1-errors",      "page": "/makers/create-account", "who": "visitor", "path": "/makers/create-account",     "archetype": "flow-step", "setup": "submit-empty" },
     { "id": "check-email",        "page": "/makers/check-email",    "who": "visitor", "path": "/makers/check-email?e=someone%40makers.example", "archetype": "flow-step" },
+    { "id": "check-email-expired", "page": "/makers/check-email",   "who": "visitor", "path": "/makers/check-email?expired=1", "archetype": "flow-step" },
     { "id": "sign-in",            "page": "/makers/sign-in",        "who": "visitor", "path": "/makers/sign-in",            "archetype": "flow-step" },
     { "id": "reset",              "page": "/makers/reset",          "who": "visitor", "path": "/makers/reset",              "archetype": "flow-step" },
     { "id": "reset-token",        "page": "/makers/reset/[token]",  "who": "visitor", "path": "/makers/reset/not-a-real-token", "archetype": "flow-step" },
