@@ -18,7 +18,7 @@ export PLAYWRIGHT_CHROMIUM="${PLAYWRIGHT_CHROMIUM:-$(ls /opt/pw-browsers/chromiu
 # killed; a new start then fails with EADDRINUSE and the old process answers with old page code
 # (while public/ CSS is read fresh from disk). It happened on 2026-11-06 (ledger GAL-L0018).
 BUILD_ID="$(cat .next/BUILD_ID 2>/dev/null || true)"
-if [ -z "$BUILD_ID" ] || ! curl -fsS "$GALLERY_BASE_URL/about" | grep -q "$BUILD_ID"; then
+if [ -z "$BUILD_ID" ] || ! curl -fsS "$GALLERY_BASE_URL/about" | grep -q -- "$BUILD_ID"; then
   echo "refusing: the server at $GALLERY_BASE_URL is not serving the current build (${BUILD_ID:-no .next/BUILD_ID})" >&2
   exit 2
 fi
