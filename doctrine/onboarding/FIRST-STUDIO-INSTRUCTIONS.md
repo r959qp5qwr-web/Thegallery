@@ -7,6 +7,7 @@ Do not paste the studio's name, email, number or photos into this repository (st
 
 | # | Check | Why | State |
 |---|---|---|---|
+| 0 | SEEN 2026-11-11: custom sender on, Resend; reset email arrived and its link opened a Studio | | done |
 | 1 | Supabase → project `thegallery` → Authentication → Emails → SMTP settings: is a custom sender switched on? | Supabase's built-in sender delivers only to the project team's own addresses and a few per hour. Without a custom sender the studio never gets the step 1 link. | UNKNOWN (this session's token cannot read the live project) |
 | 2 | Same project → Authentication → URL configuration: Site URL `https://atthegallery.in`, redirect list includes `https://atthegallery.in/**` | The email link must come back to the live site, not to a default address | UNKNOWN |
 | 3 | Sign up once yourself on the phone, using an address that is **not** on the Supabase team, and get as far as "Add a work" | Proves the email arrives and the signed-in screens work on a real phone. It is phone-walk steps 1–3 | NOT SEEN |
@@ -35,6 +36,7 @@ Enter your email and a password of at least 10 characters. Tap *Continue*.
 Open the email from The Gallery *on this same phone* and tap the link.
 No email after 5 minutes? Check Spam, then tap *Send it again*.
 If the link opens a sign-in page, sign in with the email and password from step 2.
+No email and you have tried The Gallery before? You may already have a gallery. Open atthegallery.in/makers/sign-in and tap *Forgot password*, or message me.
 
 *4. Your name and place*
 Name: your studio's name. Place: your town or city. Both are shown on your gallery.
