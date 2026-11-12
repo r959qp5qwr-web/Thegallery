@@ -73,6 +73,12 @@
       "says": "No screen is a wall of prose: no paragraph runs past 75 words.",
       "source": "governor 2026-11-09 ('like a doctor's notebook'); review of the live screens 2026-11-10",
       "check": { "kind": "paragraph-words", "max_words": 75 }
+    },
+    {
+      "id": "R13-no-dead-end",
+      "says": "A screen that waits for an email names the way out: a visible link to sign in and one to reset the password, because the address may already have an account, and then no email comes.",
+      "source": "governor 2026-11-11 (a real sign-up: 'when it says the email has been sent, no email received'); the site answers the same whether or not an address exists, so the screen carries the exit",
+      "check": { "kind": "has-links", "routes": ["^/makers/check-email$"], "hrefs": ["/makers/sign-in", "/makers/reset"] }
     }
   ]
 }

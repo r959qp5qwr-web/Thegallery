@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Header } from "@/components/Chrome";
 import { ActionForm, Field } from "@/components/ActionForm";
 import { createAccountAction } from "@/app/actions/account";
@@ -19,6 +20,7 @@ export default function CreateAccount() {
           <Field name="password" label="Password" type="password" required autoComplete="new-password"
                  help="At least 10 characters." />
         </ActionForm>
+        <p className="flow-alt"><Link className="textlink" href="/makers/sign-in">I already have a gallery</Link></p>
       </main>
     </>
   );

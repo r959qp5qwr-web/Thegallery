@@ -26,7 +26,15 @@ export default async function CheckEmail({ searchParams }: { searchParams: Promi
                     hidden={e ? { email: e } : undefined} className="form resend">
           {e ? null : <Field name="email" label="Email" type="email" required autoComplete="email" />}
         </ActionForm>
-        {expired ? <Link className="textlink" href="/makers/sign-in">Sign in</Link> : null}
+        {expired ? <Link className="textlink" href="/makers/sign-in">Sign in</Link> : (
+          <>
+            <p className="flow-line">No email? You may already have a gallery with this address.</p>
+            <div className="flow-links">
+              <Link className="textlink" href="/makers/sign-in">Sign in</Link>
+              <Link className="textlink" href="/makers/reset">Reset your password</Link>
+            </div>
+          </>
+        )}
       </main>
     </>
   );

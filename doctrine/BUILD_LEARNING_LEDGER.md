@@ -976,6 +976,31 @@ A gate that passes is only worth the ways it can fail. The first version measure
 **Related finding / decision IDs:** GAL-L0041; rule 19 (every check must be able to fail)  
 **Harvest status:** feeds H-INTERFACE-001
 
+### GAL-L0043
+
+**Date:** 2026-11-11  
+**Observed event:**  
+The governor, joining as a maker on the live site, put in an address that already had an account. The screen said "Tap the link we sent to …" and no email came, because the site answers the same whether or not an address has an account. The same address's password reset did arrive, which showed the account existed. The screen had no way out.
+
+**Evidence:**  
+- Governor's screenshots, 2026-11-11: "Check your email" with the resend notice, and the reset email received.
+- Control: rule R13 failed on `/makers/check-email` on the live code, naming both missing links, and nowhere else.
+- The same session found that the live project had no email sender and default email templates, so no confirmation could have reached a real maker. Sender (Resend) and the two templates were set by the governor.
+
+**Why it mattered:**  
+A real studio would meet the same dead end. A screen that waits for something the system may never send must say what to do instead.
+
+**What changed:**  
+- App rule R13 (a screen that waits for an email carries a sign-in link and a reset link), with its check kind `has-links` in journey 14.
+- "Check your email" gains the line "No email? You may already have a gallery with this address." with Sign in and Reset your password. Join step 1 gains "I already have a gallery".
+- Escape E08 in `kit/interface-standard/ESCAPES.md`.
+
+**Status:** RESOLVED when the receipt for this change is green  
+**Related finding / decision IDs:** GAL-L0041; E08; non-disclosure of whether an address has an account is kept  
+**Harvest status:** candidate: "a waiting screen names its exit"
+
+---
+
 ---
 
 ## Ledger rules
