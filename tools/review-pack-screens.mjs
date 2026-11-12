@@ -3,7 +3,6 @@
 // Captions come from ux/INTERFACE_PROFILE.json so each picture names its state and route.
 import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { join, resolve } from "node:path";
-import { pathToFileURL } from "node:url";
 import { chromium } from "playwright";
 
 const [shotsDir, outDir] = process.argv.slice(2).map((p) => resolve(p));
@@ -26,7 +25,8 @@ for (const vp of ["phone", "desktop"]) {
   const missing = listed ? [] : order.filter((id) => !files.includes(`${id}.png`));
   const cols = vp === "phone" ? 3 : 1;
   const figs = files.map((f, i) => {
-    const img = `<img src="${pathToFileURL(join(dir, f))}">`;
+    // Inline as data URIs: a page set with setContent is about:blank and may not load file:// URLs.
+    const img = `<img src="data:image/${f.endsWith(".jpg") ? "jpeg" : "png"};base64,${readFileSync(join(dir, f)).toString("base64")}">`;
     if (listed) return `<figure>${img}<figcaption>${esc(listed[i].caption)}</figcaption></figure>`;
     const s = byId[f.slice(0, -4)] ?? {};
     return `<figure>${img}<figcaption><b>${esc(f.slice(0, -4))}</b> · ${esc(s.path)} · ${esc(s.who)} · ${esc(s.archetype)}${s.setup ? " · setup: " + esc(s.setup) : ""}</figcaption></figure>`;
@@ -42,6 +42,9 @@ for (const vp of ["phone", "desktop"]) {
   <div class="g">${figs}</div>`;
   const page = await browser.newPage();
   await page.setContent(html, { waitUntil: "load" });
+  // Fail closed: a contact sheet of broken-image icons once passed as a 42-screen PDF.
+  const broken = await page.$$eval("img", (is) => is.filter((i) => !i.complete || i.naturalWidth < 100).length);
+  if (broken) throw new Error(`${broken} of ${files.length} ${vp} screenshots did not load`);
   await page.pdf({ path: join(outDir, `03-SCREENS-${vp}.pdf`), format: "A4", printBackground: true,
     margin: { top: "10mm", bottom: "10mm", left: "8mm", right: "8mm" } });
   await page.close();
