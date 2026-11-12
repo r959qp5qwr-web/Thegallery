@@ -186,7 +186,7 @@ from the pack and what evidence you would need, (c) anything in this brief you b
 | `00-READ-FIRST.md` | this brief |
 | `01-APP-SOURCE.md` | all application code, SQL migrations and policies, config, styles |
 | `02-PRODUCT-AND-TESTS.md` | product architecture and domain model, product state (decisions, refusals, promises), incident ledger, UX rules, all journey tests |
-| `03-SCREENS-phone.pdf`, `03-SCREENS-desktop.pdf` | every screen state rendered from the test project with synthetic makers (no real person's art) |
+| `03-SCREENS-phone.pdf`, `03-SCREENS-desktop.pdf` | screens at 390 px and 1280 px, from two sources, named in every caption. (a) Current code: the maker door and policy pages captured from the live site; pages that show a real studio's work were left out. (b) Earlier renders from the test project with synthetic makers (9–10 Nov 2026) for the home, browse, work, gallery and Studio screens. Those were made **before** the 11 Nov change to larger type, roomier forms and Back on every screen. Judge layout, states and copy from them, not type size or the Back control. A complete current set (every state in `ux/INTERFACE_PROFILE.json`) is made by journey 15 and will follow |
 | `04-PROMPTS.md` | the messages the governor uses to start each review |
 | `MANIFEST.txt` | commit id, file list with checksums, what was left out and why, secret scan result |
 
