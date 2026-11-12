@@ -4,6 +4,7 @@
 import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { chromium } from "playwright";
+import sharp from "sharp";
 
 const [shotsDir, outDir] = process.argv.slice(2).map((p) => resolve(p));
 const profile = JSON.parse(readFileSync("ux/INTERFACE_PROFILE.json", "utf8"));
@@ -24,9 +25,13 @@ for (const vp of ["phone", "desktop"]) {
     .sort((a, b) => (order.indexOf(a.slice(0, -4)) + 1 || 999) - (order.indexOf(b.slice(0, -4)) + 1 || 999));
   const missing = listed ? [] : order.filter((id) => !files.includes(`${id}.png`));
   const cols = vp === "phone" ? 3 : 1;
+  // Inline as data URIs: a page set with setContent is about:blank and may not load file:// URLs.
+  // JPEG at 2x print width keeps text legible and the PDF small enough for chat uploads.
+  const width = vp === "phone" ? 520 : 1600;
+  const data = await Promise.all(files.map(async (f) =>
+    (await sharp(readFileSync(join(dir, f))).resize({ width, withoutEnlargement: true }).flatten({ background: "#ffffff" }).jpeg({ quality: 78 }).toBuffer()).toString("base64")));
   const figs = files.map((f, i) => {
-    // Inline as data URIs: a page set with setContent is about:blank and may not load file:// URLs.
-    const img = `<img src="data:image/${f.endsWith(".jpg") ? "jpeg" : "png"};base64,${readFileSync(join(dir, f)).toString("base64")}">`;
+    const img = `<img src="data:image/jpeg;base64,${data[i]}">`;
     if (listed) return `<figure>${img}<figcaption>${esc(listed[i].caption)}</figcaption></figure>`;
     const s = byId[f.slice(0, -4)] ?? {};
     return `<figure>${img}<figcaption><b>${esc(f.slice(0, -4))}</b> · ${esc(s.path)} · ${esc(s.who)} · ${esc(s.archetype)}${s.setup ? " · setup: " + esc(s.setup) : ""}</figcaption></figure>`;
