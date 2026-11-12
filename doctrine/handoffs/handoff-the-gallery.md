@@ -1,4 +1,4 @@
-# active-memory handoff: The Gallery — first real studio goes live; PR #17 open, unmerged
+# active-memory handoff: The Gallery — first real studio is walking the live site; PR #17 merged
 
 **Handoff #10** · 2026-11-12 · Lineage:
 - **#1 (2026-11-05 → 06):** re-pinned to the new Builders' Doctrine; rebuilt the vanished Supabase project; e2e journeys on a test project; built Wave 1.
@@ -13,8 +13,8 @@
 - **#10 (2026-11-11 → 12):**
   - The governor chose a real studio over a demo run, so the phone walk was replaced by the studio's own walk.
   - Found the live Supabase project had no email sender and default templates; the governor set Resend as custom SMTP and the two templates.
-  - The governor's own sign-up showed a dead end ("Check your email", then nothing, because the address already had an account). Fix built and proved: PR #17 (rule R13, ledger GAL-L0043, escape E08), not merged.
-  - The first-studio WhatsApp message is final and ready for the governor to send.
+  - The governor's own sign-up showed a dead end ("Check your email", then nothing, because the address already had an account). Fix built and proved: PR #17 (rule R13, ledger GAL-L0043, escape E08), **merged "Merge it." and confirmed live**.
+  - The studio instructions were made as a PDF; **the governor has sent them to the real studio**. Their walk is in progress and nothing has come back yet.
 
 ## 0. Instructions for Claude (read first)
 
@@ -97,7 +97,7 @@ You are continuing work from a previous chat. That chat is gone; this file is th
 7. Run `python3 scripts/doctrine-orient.py orient` first, and again before a commit that follows governing-state changes (the pre-commit gate refuses otherwise).
 8. "No merge, deployment, purchase or schedule is authorized" unless the user says so. Merges are authorised case by case:
    - PR #4–#14: as recorded in earlier handoffs; PR #15, #16: "Yes.";
-   - **PR #17: NOT yet authorised.** Ask "Merge PR #17?" and wait.
+   - PR #17: "Merge it." (2026-11-12). Any later PR needs its own word.
 9. "the design system has to be adhered to" (user).
    - `public/gallery/tokens.css` and `system.css` must be byte-identical to `ux/reference/interface/`; journey 11 enforces it. Copy both whenever either changes.
    - App styling goes in `public/gallery/app.css`.
@@ -252,9 +252,10 @@ You are continuing work from a previous chat. That chat is gone; this file is th
 | Item | Value |
 |---|---|
 | Live site | https://atthegallery.in (Cloudflare Worker `thegallery`, auto-deploys the default branch within ~1 min) |
-| Repo / default branch | `r959qp5qwr-web/Thegallery`, `claude/the-gallery-foundation-7plo1e`, tip `5ae491c` (Merge PR #16) |
-| Working branch (session #10) | `claude/dreamy-lamport-f7efnw`, head `cbd1ecd73ad8e27680f05b0df895f4204bec3396` before this handoff's commit. A new session gets its own designated branch: create it from the default branch, or from this one if PR #17 is unmerged |
-| PR #17 | https://github.com/r959qp5qwr-web/Thegallery/pull/17, open, NOT merged. Head `cbd1ecd`, stamped build `-UYwxHaLcLJQvNW0l88Up`; phone **102 passed, 1 skipped** (33.4 min); desktop **103 passed** (31.4 min); gate OPEN; CI red (expected, `DOCTRINE_READ_TOKEN`: log NOT yet read this session) |
+| Repo / default branch | `r959qp5qwr-web/Thegallery`, `claude/the-gallery-foundation-7plo1e` |
+| Default branch tip | `de0401e70e522bcfc5565c7d9a0f5c007156d680` (Merge PR #17) |
+| Working branch (session #10) | `claude/dreamy-lamport-f7efnw`, fast-forwarded to `de0401e` (plus this handoff's commit). A new session gets its own designated branch: create it from the default branch |
+| PR #17 | https://github.com/r959qp5qwr-web/Thegallery/pull/17, **merged** → `de0401e` (head `09338a7`; tested code head `cbd1ecd`, stamped build `-UYwxHaLcLJQvNW0l88Up`). Phone **102 passed, 1 skipped** (33.4 min); desktop **103 passed** (31.4 min); gate OPEN. Both red CI runs read: only `DOCTRINE_READ_TOKEN` unset. Workers Builds green. Live confirmed 2026-11-12: Check your email shows "No email? You may already have a gallery with this address." with Sign in and Reset your password; Join step 1 shows "I already have a gallery" |
 | Doctrine repo | `r959qp5qwr-web/builders-doctrine`, main `6dc016c485ec…`, version 1.1.0 ACTIVE_PENDING_REPIN |
 | Live Supabase | `kemrceegbyizpcfewgri`, publishable `sb_publishable_joD-RqEyX63-Y1CwQSErxg_nuGsUB7N`. The proxy-injected management token cannot read it (403 "does not have the necessary privileges"); it can read the test project |
 | Test Supabase | `fbgrumcwlnoljkkbiqfe`, URL `https://fbgrumcwlnoljkkbiqfe.supabase.co`, publishable `sb_publishable_0KNPc4WopVsLNttgeBD43A_O6yyDiJd`, schema `gallery`, bucket `gallery-images`; default email templates; no SMTP |
@@ -309,9 +310,9 @@ You are continuing work from a previous chat. That chat is gone; this file is th
 | Drawing board parts 1–3 | live | PR #12–#14 | signed-in screens: the governor's Studio seen on an iPad (empty gallery) |
 | Whole-app sweep + policy screens | live | PR #15 | — |
 | Interface Standard + system change + Back everywhere | live | PR #16 → `5ae491c` | — |
-| **No dead end after sign-up (R13, exit links, expired state profiled, line height)** | **built, tested, PR open** | PR #17, head `cbd1ecd` | NOT merged; NOT live; CI log not read; no separate design skill run; no IS-M1 side-by-side against outside references |
+| No dead end after sign-up (R13, exit links, expired state profiled, line height) | live | PR #17 → `de0401e` | no separate design skill was run and no IS-M1 side-by-side against outside references was made (stated in the receipt) |
 | Live email sender + templates | set by the governor | Supabase `thegallery` + Resend | reset email SEEN; sign-up confirmation for a new address NOT SEEN |
-| First-studio WhatsApp message | final, handed to the governor to send | `doctrine/onboarding/FIRST-STUDIO-INSTRUCTIONS.md` | send status UNKNOWN |
+| Studio instructions | **sent by the governor to the real studio** | PDF `doctrine/onboarding/The-Gallery-opening-your-gallery.pdf`; HTML source beside it; text + checks in `FIRST-STUDIO-INSTRUCTIONS.md` | the studio's progress: NOT SEEN, nothing received yet |
 | Local test server | stopped (2 h limit) | port 3100 free | restart before any run |
 | Doctrine candidate H-INTERFACE-001 | DRAFT | `doctrine/harvests/` | governor: ACCEPT / MODIFY / REJECT |
 | CI | red on every PR | needs `DOCTRINE_READ_TOKEN` | gate receipts are local |
@@ -320,7 +321,7 @@ You are continuing work from a previous chat. That chat is gone; this file is th
 | Fixtures | reset by the last full runs | — | — |
 
 ## 11. Next steps
-1. **Next action:** the governor sends the WhatsApp message (section 10, file in section 9) to the real studio. Meanwhile, read the red CI log of PR #17 (confirm only `DOCTRINE_READ_TOKEN` unset), check the Cloudflare "Workers Builds" check, and ask "Merge PR #17?". On "Yes.": merge with `expectedHeadSha`, fast-forward the working branch, confirm the change live on `/makers/check-email`.
+1. **Next action:** wait for the studio's reports through the governor (screenshots, or "it worked"). Do not ask the governor to test anything himself. Orient, `.env.local`, `npm ci`, `npm run build` and the server only when a fix needs them.
 2. Handle what the studio reports. For each screenshot: reproduce by measurement, classify (C1–C4), fix the layer with a failing control, then every flagged state, then the full process (rule 14). Verify which email or screen the studio actually saw before recording anything as SEEN.
 3. After the studio's walk: write `PHONE-WALK-<date>.md` (SEEN / NOT SEEN / UNKNOWN), including the first confirmation email for a brand-new address, Publish time on the live site, and the public gallery page.
 4. Later:
@@ -337,13 +338,12 @@ You are continuing work from a previous chat. That chat is gone; this file is th
    - IS-M1 side-by-side images for PR #17 if the governor wants them.
 
 ## 12. Open questions ⚠️
-1. **Merge PR #17?** (Yes / not yet). Asked, no answer yet.
-2. **Doctrine candidate H-INTERFACE-001:** accept, modify or reject? (accept / modify / later)
-3. **`DOCTRINE_READ_TOKEN`:** created as a Thegallery repository secret (read-only on `builders-doctrine`)? (yes / not yet)
-4. **Live operator account:** does one exist? (yes / no / don't know)
-5. **Sweep + standard plugin** on the account so the gate follows into every session? (yes / later)
-6. **PR #17 design review:** want a design skill run and IS-M1 side-by-side images before merge? (yes / no)
-7. **Carried:**
+1. **Doctrine candidate H-INTERFACE-001:** accept, modify or reject? (accept / modify / later)
+2. **`DOCTRINE_READ_TOKEN`:** created as a Thegallery repository secret (read-only on `builders-doctrine`)? (yes / not yet)
+3. **Live operator account:** does one exist? (yes / no / don't know)
+4. **Sweep + standard plugin** on the account so the gate follows into every session? (yes / later)
+5. **PR #17 design review (after the fact):** want a design skill run and IS-M1 side-by-side images for the two changed screens? (yes / no)
+6. **Carried:**
    - R1 "save on pick" vs "draft saved on Save";
    - live migration for "no untitled publish";
    - uploads over 12 MB lose the label;
@@ -358,7 +358,7 @@ You are continuing work from a previous chat. That chat is gone; this file is th
    - Supabase auth email rate limit and Resend plan limit for the live project (UNKNOWN).
 
 ## 13. Re-attach checklist
-- [ ] Nothing has to be attached. This file is committed at `doctrine/handoffs/handoff-the-gallery.md` on the working branch `claude/dreamy-lamport-f7efnw` (and reaches the default branch when PR #17 merges). Open the new session on `r959qp5qwr-web/Thegallery` with `builders-doctrine` beside it, in environment "The Gallery (with Doctrine)", and point it to this file (or attach it).
+- [ ] Nothing has to be attached. This file is committed at `doctrine/handoffs/handoff-the-gallery.md` on the working branch `claude/dreamy-lamport-f7efnw` and, with the next merge, on the default branch. Open the new session on `r959qp5qwr-web/Thegallery` with `builders-doctrine` beside it, in environment "The Gallery (with Doctrine)", and point it to this file (or attach it).
 
 ---
 <sub>Audit: 13/13 sections · 32 rules · 42 corrections · 125 data points · secrets removed: yes · generated by active-memory</sub>
