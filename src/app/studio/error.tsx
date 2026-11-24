@@ -3,15 +3,16 @@ import Link from "next/link";
 import { StudioHeader, Band } from "@/components/Chrome";
 
 /** A Studio failure ends on a page that says what happened and what is safe, never the
- *  framework's default screen. The commonest cause is an image too large to send (over 12 MB). */
+ *  framework's default screen. It used to blame image size; photographs no longer pass through
+ *  the server (ledger GAL-L0044), so it names only what is true for every cause. */
 export default function StudioError({ reset }: { error: Error; reset: () => void }) {
   return (
     <>
       <StudioHeader title="Studio" back="/studio" />
       <main id="main" tabIndex={-1}>
         <Band kind="fail" label="That did not go through">
-          Nothing you had already saved is lost. If you were adding an image, it may be too large to
-          send: images up to 12 MB go up; export a larger one smaller and try again.
+          Nothing you had already saved is lost. Try again; if it happens again, come back to it in a
+          few minutes.
         </Band>
         <div className="inline-actions">
           <button className="btn" type="button" onClick={() => reset()}>Try again</button>

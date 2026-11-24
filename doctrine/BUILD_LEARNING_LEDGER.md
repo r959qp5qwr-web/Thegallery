@@ -1003,6 +1003,37 @@ A real studio would meet the same dead end. A screen that waits for something th
 
 ---
 
+### GAL-L0044
+
+**Date:** 2026-11-23 (observed) · 2026-11-24 (fixed)  
+**Observed event:**  
+The first real studio created its account, confirmed its email, joined and added its WhatsApp number on the live site. It then could not add a single photograph: the Studio showed a draft with "No image" and "That did not go through". Ordinary page loads in the same quarter-hour were also refused.
+
+**Evidence:**  
+- Governor's screenshots of the studio's screen, 2026-11-23 (kept out of the repository: a real studio).
+- Cloudflare Workers log export, 2026-11-22 to 2026-11-24 (kept out: holds the studio's address data). 43 of 129 requests between 11:28 and 11:45 UTC on 23 Nov ended "Worker exceeded CPU time limit", including both photo uploads (killed at 1,419 ms and 1,892 ms of CPU) and plain page loads killed at 10–16 ms. None outside that window. The account is on the Workers Free plan: 10 ms of CPU per request.
+- Local measure of the same codecs: a 4000×3000 photo takes 8–20 s of CPU and 720–850 MB; even 1000×750 takes ~2.5 s and ~150 MB.
+- Control: new journey 17 fails on the old code (codec found in the server build; 1,044 ms of server CPU for one photo against a 400 ms budget) and passes on the fix (60–79 ms).
+- The same log shows the sign-up confirmation email for a brand-new address worked: account created 10:00:21, signed in from the link at 10:00:54.
+
+**Why it mattered:**  
+No maker could finish a gallery. Every journey had passed because the suite runs the app under Node, which has no CPU limit; nobody had checked the hosting plan's limits against what the app does, and no photo had ever been uploaded on the live site.
+
+**What changed:**  
+- Photographs are prepared in the maker's browser (`src/lib/photo-prepare.ts`) and sent straight to storage on signed upload addresses; the server only reserves, checks and records (`beginPhotoAction`, `finishPhotoAction`, `finishNewWorkAction`). The codecs, their WebAssembly and the 12 MB server-action allowance are gone.
+- As a side effect, PNG, WebP and screenshots now work, photos of any size are reduced in the browser, and location data is still dropped by re-encoding.
+- Journey 17: no image codec in the server build; one photo costs the server little CPU.
+- Journey 04: a file that is not a photograph is refused before anything is stored; a transfer cut off half-way leaves a `failed` image shown as itself.
+- A local Supabase test stack (`e2e/local/up.sh`) because the hosted test project is paused.
+
+**Status:** RESOLVED when the receipt for this change is green and an upload is seen on the live site  
+**Related finding / decision IDs:** E09; governor 2026-11-24: Workers Paid plan "No", fix A, local test stack "Go"  
+**Harvest status:** candidate: "check the production runtime's limits, not only the test runtime's"
+
+**Open risk (recorded, not fixed here):** ordinary pages take ~13 ms of CPU (median, live log), over the Free plan's 10 ms. Cloudflare tolerated this at quiet times and refused pages once the session had overrun. The governor kept the Free plan; page cost is a separate change.
+
+---
+
 ## Ledger rules
 
 - Capture the event in the governed change that fixes or formally records it where feasible.

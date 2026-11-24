@@ -14,12 +14,9 @@
     "db:seed": "node --experimental-strip-types db/seed.ts",
     "test:policy": "node --experimental-strip-types tests/policy/run.ts",
     "test:e2e": "playwright test",
-    "db:sqlfile": "node --experimental-strip-types db/sqlfile.ts",
-    "build:wasm": "node src/lib/wasm/embed.mjs"
+    "db:sqlfile": "node --experimental-strip-types db/sqlfile.ts"
   },
   "dependencies": {
-    "@jsquash/jpeg": "^1.6.0",
-    "@jsquash/resize": "^2.1.1",
     "@opennextjs/cloudflare": "^1.20.6",
     "@supabase/ssr": "^0.12.6",
     "@supabase/supabase-js": "^2.115.0",

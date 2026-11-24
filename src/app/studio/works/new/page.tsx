@@ -3,11 +3,10 @@ import { redirect } from "next/navigation";
 import { currentAccount } from "@/lib/auth";
 import { studioContext, materials } from "@/lib/queries";
 import { client } from "@/lib/supabase";
-import { ActionForm } from "@/components/ActionForm";
 import { StudioHeader } from "@/components/Chrome";
 import { PhotoTiles } from "@/components/PhotoPicker";
 import { WorkLabelFields } from "@/components/WorkLabelFields";
-import { createWorkAction } from "@/app/actions/studio";
+import { NewWorkForm } from "@/components/PhotoForms";
 import { DraftButton } from "@/components/DraftButton";
 
 export const dynamic = "force-dynamic";
@@ -35,11 +34,11 @@ export default async function NewWork() {
                     end={<DraftButton form="new-work" />} />
       <main id="main" tabIndex={-1} className="flow editor has-workbar">
         <h1 className="sr-only">New work</h1>
-        <ActionForm action={createWorkAction} submitLabel="Publish" busyLabel="Publishing…" id="new-work"
-                    dock={{ name: "intent", value: "publish", otherBusy: "Publish" }}>
+        {/* The photo is prepared in the browser and sent straight to storage (ledger GAL-L0044). */}
+        <NewWorkForm>
           <PhotoTiles />
           <WorkLabelFields materials={mats} defaultMaterial={defaultMaterial} titleOptional />
-        </ActionForm>
+        </NewWorkForm>
       </main>
     </>
   );

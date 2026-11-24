@@ -24,10 +24,13 @@ test.describe("failure endings", () => {
     await expect(page.getByText("The label is saved")).toBeVisible();
   });
 
-  test("a file that is not an image fails alone and says what to do", async ({ page }) => {
+  test("a file that is not a photograph is refused before anything is stored, and says what to do", async ({ page }) => {
     await signIn(page, MAKER_B.email, MAKER_B.password);
     const work = await owner((c) => c.query<{ id: string }>(
       "SELECT id FROM works WHERE title = 'Unfinished Warp'"));
+    const count = async () => (await owner((c) => c.query(
+      "SELECT 1 FROM work_images WHERE work_id = $1", [work.rows[0].id]))).rowCount;
+    const before = await count();
     await page.goto(`/studio/works/${work.rows[0].id}`);
 
     await page.getByLabel("Choose a photograph").setInputFiles({
@@ -35,13 +38,28 @@ test.describe("failure endings", () => {
     });
     await page.getByRole("button", { name: "Add image" }).click();
     await expect(page.getByTestId("form-error")).toContainText("did not go up");
-    await expect(page.getByTestId("form-error")).toContainText("try again");
+    await expect(page.getByTestId("form-error")).toContainText("JPEG, PNG and WebP");
+    // The photo is opened in the browser first (ledger GAL-L0044): a file that is not one is
+    // refused there, so nothing half-made is left behind.
+    expect(await count()).toBe(before);
+    await expect(page.getByRole("heading", { name: "Unfinished Warp" })).toBeVisible();
+  });
 
-    // The failure is visible as itself, and the work is intact behind it.
+  test("a photo that stops half-way fails alone, visible as itself", async ({ page }) => {
+    await signIn(page, MAKER_B.email, MAKER_B.password);
+    const work = await owner((c) => c.query<{ id: string }>(
+      "SELECT id FROM works WHERE title = 'Unfinished Warp'"));
+    await page.goto(`/studio/works/${work.rows[0].id}`);
+    // A lost signal while the files travel to storage.
+    await page.route("**/storage/v1/object/upload/sign/**", (r) => r.abort());
+    await page.getByLabel("Choose a photograph").setInputFiles(join(process.cwd(), "e2e/fixtures/square-1x1.jpg"));
+    await page.getByRole("button", { name: "Add image" }).click();
+    await expect(page.getByTestId("form-error")).toContainText("did not finish sending");
+    await page.unroute("**/storage/v1/object/upload/sign/**");
+
     await page.goto(`/studio/works/${work.rows[0].id}`);
     await expect(page.getByText("An image did not go up")).toBeVisible();
     await expect(page.getByRole("heading", { name: "Unfinished Warp" })).toBeVisible();
-
     const rows = await owner((c) => c.query<{ state: string }>(
       "SELECT state FROM work_images WHERE work_id = $1", [work.rows[0].id]));
     expect(rows.rows.map((r) => r.state)).toContain("failed");
