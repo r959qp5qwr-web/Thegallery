@@ -13,6 +13,12 @@ import type { Page } from "@playwright/test";
  */
 export const TEST_REF = "fbgrumcwlnoljkkbiqfe";
 const LIVE_REF = "kemrceegbyizpcfewgri";
+/** The local stack (e2e/local/up.sh): used while the hosted test project is paused. Loopback only. */
+export const LOCAL_URL = "http://127.0.0.1:54321";
+const LOCAL_DB = "postgresql://postgres:postgres@127.0.0.1:54322/postgres";
+export const isLocal = () => (process.env.SUPABASE_URL ?? "") === LOCAL_URL;
+/** Where the journeys' Supabase lives: the hosted test project, or the local stack. */
+export const TEST_API = () => (isLocal() ? LOCAL_URL : `https://${TEST_REF}.supabase.co`);
 const SCHEMA = process.env.GALLERY_SCHEMA ?? "gallery";
 
 function guard(): void {
@@ -20,7 +26,9 @@ function guard(): void {
   const url = process.env.SUPABASE_URL ?? "";
   if (/atthegallery\.in/i.test(base)) throw new Error("journeys refuse the live site as GALLERY_BASE_URL");
   if (url.includes(LIVE_REF)) throw new Error("journeys refuse the live Supabase project");
-  if (url && !url.includes(TEST_REF)) throw new Error(`journeys run only against ${TEST_REF}, not ${url}`);
+  if (url && !url.includes(TEST_REF) && url !== LOCAL_URL) {
+    throw new Error(`journeys run only against ${TEST_REF} or the local stack, not ${url}`);
+  }
 }
 
 // Values are inlined as SQL literals: the Management API takes one query string. Only strings,
@@ -45,6 +53,21 @@ export function bind(text: string, params: unknown[] = []): string {
 export async function sql<R = Record<string, unknown>>(text: string, params: unknown[] = []): Promise<R[]> {
   guard();
   const query = `SET search_path = "${SCHEMA}", public;\n` + bind(text, params);
+  if (isLocal()) {
+    // The local stack's Postgres is on loopback; the same inlined query runs as its owner.
+    const { Client, types } = await import("pg");
+    // The Management API answers in JSON, where dates and times are strings. node-postgres would
+    // hand back Date objects instead, which journeys then pass on as parameters; keep them text.
+    const asText = (v: string) => v;
+    for (const oid of [1082, 1083, 1114, 1184, 1266]) types.setTypeParser(oid, asText);
+    const c = new Client({ connectionString: LOCAL_DB });
+    await c.connect();
+    try {
+      const res = await c.query(query);
+      const last = Array.isArray(res) ? res[res.length - 1] : res;
+      return (last?.rows ?? []) as R[];
+    } finally { await c.end(); }
+  }
   // A gateway error (502/503/504) from the Management API is the platform, not the product: one
   // retry after a pause. Only reads and idempotent writes go through here (SELECT, DELETE,
   // UPDATE to a fixed value), so a retried query cannot double an effect. Any other status fails

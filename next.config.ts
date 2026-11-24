@@ -8,7 +8,8 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
-  experimental: { serverActions: { bodySizeLimit: "12mb" } },
+  // No photograph passes through a server action any more (src/lib/photo-prepare.ts, ledger
+  // GAL-L0044), so the default 1 MB body limit stands; the old 12 MB allowance is gone.
 
   // `pg` reaches for pg-cloudflare's socket when it detects a Worker, and that package
   // publishes its real implementation only under the `workerd` export condition. The file

@@ -11,7 +11,14 @@ cd "$(dirname "$0")/.."
 export NODE_USE_ENV_PROXY=1                      # Node's fetch must go through the proxy that injects the token
 export NODE_EXTRA_CA_CERTS="${NODE_EXTRA_CA_CERTS:-/root/.ccr/ca-bundle.crt}"
 export GALLERY_BASE_URL="http://127.0.0.1:3100"
-export SUPABASE_URL="https://fbgrumcwlnoljkkbiqfe.supabase.co"
+# GALLERY_TEST_TARGET=local runs against the local stack (e2e/local/up.sh) while the hosted test
+# project is paused. Either way the helpers refuse the live project.
+if [ "${GALLERY_TEST_TARGET:-hosted}" = "local" ]; then
+  export SUPABASE_URL="http://127.0.0.1:54321"
+  export SUPABASE_PUBLISHABLE_KEY="sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH"   # the Supabase CLI default local key, public
+else
+  export SUPABASE_URL="https://fbgrumcwlnoljkkbiqfe.supabase.co"
+fi
 export PLAYWRIGHT_CHROMIUM="${PLAYWRIGHT_CHROMIUM:-$(ls /opt/pw-browsers/chromium-*/chrome-linux64/chrome 2>/dev/null | head -1)}"
 
 # Refuse to test a stale server. A previous `next start` can keep the port after its launcher is

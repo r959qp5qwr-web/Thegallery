@@ -58,7 +58,11 @@ test.describe("first impression", () => {
 
   test("no door into an empty room: the rail offers only materials with work, and an empty one leads to work", async ({ page }) => {
     await page.goto("/");
-    const offered = await page.getByRole("navigation", { name: "Material" }).getByRole("link").allTextContents();
+    // allTextContents() does not wait: read the rail once it has rendered, not the loading
+    // placeholder the entrance streams first (seen on the fast local stack, 2026-11-24).
+    const railLinks = page.getByRole("navigation", { name: "Material" }).getByRole("link");
+    await expect(railLinks.first()).toBeVisible();
+    const offered = await railLinks.allTextContents();
     expect(offered.length).toBeGreaterThan(0);
     for (const label of offered) {
       await page.goto("/");

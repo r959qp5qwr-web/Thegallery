@@ -1,6 +1,6 @@
-# active-memory handoff: The Gallery — first real studio goes live; PR #17 open, unmerged
+# active-memory handoff: The Gallery — photo uploads fixed in PR #18 (open); review pack out; shared-project hole and curator idea pending
 
-**Handoff #10** · 2026-11-12 · Lineage:
+**Handoff #11** · 2026-11-24 · Lineage:
 - **#1 (2026-11-05 → 06):** re-pinned to the new Builders' Doctrine; rebuilt the vanished Supabase project; e2e journeys on a test project; built Wave 1.
 - **#2 (2026-11-06):** Wave 1 (PR #4) and Wave 2 (PR #5); ledger GAL-L0019..22.
 - **#3 (2026-11-06 → 07):** Wave 3 (PR #6) and Wave 4 (PR #7); ledger GAL-L0023.
@@ -9,12 +9,13 @@
 - **#6 (2026-11-09):** Wave 5 judged a regression; drawing board (16 screens) approved; PR #11, #12; ledger GAL-L0031..33.
 - **#7 (2026-11-09 → 10):** part 2 (visitor screens) PR #13; ledger GAL-L0034.
 - **#8 (2026-11-10):** part 3 (maker screens) PR #14; whole-app sweep built; ledger GAL-L0035..38.
-- **#9 (2026-11-10 → 11):** PR #15 (sweep + policy screens) and PR #16 (the Interface Standard, larger type, roomier forms, Back everywhere) merged and live; ledger GAL-L0039..42; Doctrine candidate H-INTERFACE-001 drafted.
-- **#10 (2026-11-11 → 12):**
-  - The governor chose a real studio over a demo run, so the phone walk was replaced by the studio's own walk.
-  - Found the live Supabase project had no email sender and default templates; the governor set Resend as custom SMTP and the two templates.
-  - The governor's own sign-up showed a dead end ("Check your email", then nothing, because the address already had an account). Fix built and proved: PR #17 (rule R13, ledger GAL-L0043, escape E08), not merged.
-  - The first-studio WhatsApp message is final and ready for the governor to send.
+- **#9 (2026-11-10 → 11):** PR #15 and PR #16 merged and live; ledger GAL-L0039..42; Doctrine candidate H-INTERFACE-001 drafted.
+- **#10 (2026-11-11 → 12):** real studio instead of a demo; Resend SMTP + templates set by the governor; PR #17 (no dead end after sign-up, R13, GAL-L0043, E08) merged and live; studio instructions PDF sent to the studio.
+- **#11 (2026-11-12 → 24):**
+  - Pre-release review mechanism and pack built (`doctrine/review/`, `scripts/review-pack.py`); pack `43a97e8` sent to the governor for Gemini (broad audit) and Grok (adversarial). No findings back yet.
+  - Governor paused `thegallery-test` (option "C") to restart TreksFit.
+  - Another session's handoff: `thegallery` Supabase project will also host the paused apps and needs anonymous sign-ins; verified the hole (`maker_self_insert`); the governor proposed a **curator** role; options given; no answer yet.
+  - Real studio could not upload photos. Cloudflare log: **"Worker exceeded CPU time limit"** (Workers Free plan, 10 ms). Governor: Paid plan "No", fix "A", local test stack "Go". Built a local Supabase test stack and the fix; **PR #18 open, not merged**.
 
 ## 0. Instructions for Claude (read first)
 
@@ -29,27 +30,28 @@ You are continuing work from a previous chat. That chat is gone; this file is th
 
 ## 1. Mission
 - **Goal:**
-  - The Gallery (`https://atthegallery.in`), an artists' portal, built to the governor-approved drawing board. Every screen is held to every governor correction (the whole-app sweep) and to the measured Interface Standard.
-  - Now: a **real studio** goes through sign-up and creates its page on the live site, using the WhatsApp message in section 8. The studio's own walk replaces the governor's phone walk.
+  - The Gallery (`https://atthegallery.in`), an artists' portal, built to the governor-approved drawing board, held to every governor correction (whole-app sweep) and the measured Interface Standard.
+  - It is going consumer-facing soon. Governor (2026-11-12): "before that happens I want to be one hundred percent sure that there are no unforeseen glitches, oversights in this app… I want… the best chance possible."
+  - Now: the real studio must be able to upload photos and reach its public gallery (PR #18), then the pre-release review runs to its release gate.
 - **Done looks like:**
-  - The studio reaches its public gallery with one work on view; faults they report are fixed at the layer that missed them.
-  - Every change goes through the full process (rule 14) and the gate.
-  - A receipt `PHONE-WALK-<date>.md` records what the studio's walk showed (SEEN / NOT SEEN / UNKNOWN).
+  - The studio's gallery shows its works with photos on the live site; a receipt `PHONE-WALK-<date>.md` records what its walk showed (SEEN / NOT SEEN / UNKNOWN).
+  - Review: every finding from Gemini, Grok and Claude reproduced and marked CONFIRMED / NOT REPRODUCED / BY DESIGN / DUPLICATE in `doctrine/review/FINDINGS.md`; 0 open S1; 0 open S2 unless the governor accepts in writing; receipt `RELEASE-READINESS-<date>.md`; governor says "Release".
+  - Every change through the full process (rule 14) and the gate.
 - **Why it matters (user's words):**
   - "This is artists oriented portal… aesthetic look is the priority… maintain that highest standard of design orientation… be cutting edge."
-  - 2026-11-11: "Instead of a demo run, I would like a real studio to go through the process of uploading and creating their page."
-  - 2026-11-11, when asked to test the flow himself: "Stop fucking around, I told you we will get these checked with a real studio."
-  - Earlier: "Give me a mechanism level solution, that's replicable, rigid, and learns from itself."
+  - "Instead of a demo run, I would like a real studio to go through the process of uploading and creating their page."
+  - "Stop fucking around, I told you we will get these checked with a real studio."
+  - "Give me a mechanism level solution, that's replicable, rigid, and learns from itself."
 
 ## 2. About the user (as relevant to this work)
-- Systems-minded wellness entrepreneur and capability designer.
-- The **Governor** of products built under the Builders' Doctrine (The Gallery, Ahoy, maa.se, Ustaad, TreksFit, Swasthya…).
-- Uses ChatGPT for sense-making, Claude for building, another tool for research.
-- Works on an Android phone (Chrome) and an iPad. Reaches the Supabase, Cloudflare, Resend (new), Railway and GitHub dashboards in a browser.
+- Systems-minded wellness entrepreneur and capability designer; the **Governor** of products under the Builders' Doctrine (The Gallery, Ahoy, maa.se, Ustaad, TreksFit, Swasthya, my neighbourhood, Nukkad…).
+- Uses ChatGPT for sense-making, Claude for building, another tool for research; plans to use **Gemini** (broad review) and **Grok 4.7** (adversarial review) on The Gallery.
+- Works on an Android phone (Chrome) and an iPad; reaches Supabase, Cloudflare, Resend, Railway and GitHub dashboards in a browser. Can export Cloudflare Worker logs as CSV.
 - Has installed many design skills and expects them to be used on anything people see.
-- Answers tersely: "Yes", "Go.", "Merge.", "Approved.", "Yes.", "Continue.", "It came.", "Got here."
-- Reviews by sending screenshots of the live site and of dashboards.
-- Is irritated by being asked to do testing he has already assigned elsewhere.
+- Answers tersely: "Yes", "Go.", "C", "A", "Paid plan. No.", "Merge it.", "Where".
+- Reviews by sending screenshots of the live site and dashboards; forwards the studio's screenshots.
+- Is irritated by being asked to do testing he has assigned elsewhere.
+- Cost-conscious: chose to keep Supabase Free (pause the test project) and Cloudflare Workers Free.
 
 ## 3. Style & communication
 - **Language:** English.
@@ -60,89 +62,68 @@ You are continuing work from a previous chat. That chat is gone; this file is th
   - report SEEN / NOT SEEN / UNKNOWN separately;
   - plain words, not code names, in user-facing summaries;
   - send renders and sheets as images (SendUserFile) or published artifacts;
-  - messages for third parties (the studio) are given as paste-ready WhatsApp text.
+  - messages for third parties (the studio) as paste-ready WhatsApp text;
+  - decisions as one-word answers with a recommendation.
 - **Working style:**
   - Layers (architecture → domain → workflow → templates). Containers over tips.
-  - Give a few options with a recommendation, then treat the choice as fixed; turn decisions into one-word replies.
-  - Ask only when it materially affects design, safety or implementation. Resolve things rather than hand over chores. Never hand the governor a test he has assigned to someone else.
-  - When something is "was going to be blocked", report as: "Was going to be blocked by X. Workaround: Y. Status: done / running / needs your one word."
+  - Give a few options with a recommendation, then treat the choice as fixed.
+  - Ask only when it materially affects design, safety or implementation. Resolve rather than hand over chores. Never hand the governor a test he has assigned to someone else.
+  - "Was going to be blocked by X. Workaround: Y. Status: done / running / needs your one word."
   - Show visual decisions as rendered pages or images.
   - Each change set ends with a summary, decisions, and "Merge PR #n?".
   - On long waits, give short progress lines.
-  - When the governor sends a screen with a fault: follow `.claude/skills/interface-standard/SKILL.md` and `.claude/skills/gallery-app-sweep/SKILL.md`.
-    - Measure the state.
-    - Classify the escape (C1 coverage / C2 measure / C3 standard / C4 judgement).
-    - Fix the layer first with a failing control.
-    - Then fix every flagged state, app-wide.
+  - When the governor sends a screen with a fault: follow `.claude/skills/interface-standard/SKILL.md` and `.claude/skills/gallery-app-sweep/SKILL.md` — measure, classify the escape (C1 coverage / C2 measure / C3 standard / C4 judgement), fix the layer first with a failing control, then every flagged state.
+  - For a runtime fault on the live site: get the Cloudflare log (Workers & Pages → `thegallery` → Observability, or CSV export) before naming a cause.
 - **Avoid:**
-  - reopening settled decisions;
-  - vague best practices;
-  - claiming green without a receipt;
-  - asking for secrets in chat (API keys go only into the dashboard form);
-  - naming a cause before a control run;
+  - reopening settled decisions; vague best practices;
+  - claiming green without a receipt; naming a cause before evidence or a control run;
+  - asking for secrets in chat;
   - calling a design reviewed when no design skill was run;
   - settling a FIXED or OPEN decision through copy or visuals;
-  - machine-sounding copy: "quiet", "not X, not Y" or "not X, or not Y" lists, doubled negatives, groups of three, abstract nouns;
+  - machine-sounding copy: "quiet", "not X, not Y" lists, doubled negatives, groups of three (including lists of three formats like "JPEG, PNG and WebP"), abstract nouns, jargon for makers;
   - sentences in monospace; document-style pages;
-  - shrinking type or spacing to make things fit;
-  - recording something as SEEN before naming exactly which email or screen was seen.
+  - shrinking type or spacing to fit;
+  - recording something as SEEN before naming exactly which email, screen or log line was seen.
 
 ## 4. Hard rules (word for word)
 1. "Never write to `builders-doctrine`. The guard denies it; the rule stands without the guard."
 2. "Work on a branch; the default branch is merged through review."
-3. "No real person's art, address, phone number or email in fixtures, screenshots or tests." Third-party reference screenshots stay out of the repository, in the scratchpad. The real studio's name, email, number and photos never go into the repository.
+3. "No real person's art, address, phone number or email in fixtures, screenshots or tests." The real studio's name, email, number, photos, screenshots and the Cloudflare log CSV (it holds their address data) never go into the repository or the review pack.
 4. "Report what was SEEN, NOT SEEN and UNKNOWN. A green claim needs a receipt."
 5. "An indeterminate verdict is a denial."
 6. "Read `active_stage.next_acceptance_condition` in `PRODUCT_STATE.json` before building anything. Do not silently settle an OPEN decision through code."
-7. Run `python3 scripts/doctrine-orient.py orient` first, and again before a commit that follows governing-state changes (the pre-commit gate refuses otherwise).
-8. "No merge, deployment, purchase or schedule is authorized" unless the user says so. Merges are authorised case by case:
-   - PR #4–#14: as recorded in earlier handoffs; PR #15, #16: "Yes.";
-   - **PR #17: NOT yet authorised.** Ask "Merge PR #17?" and wait.
-9. "the design system has to be adhered to" (user).
-   - `public/gallery/tokens.css` and `system.css` must be byte-identical to `ux/reference/interface/`; journey 11 enforces it. Copy both whenever either changes.
-   - App styling goes in `public/gallery/app.css`.
-   - Token and system changes are SYSTEM CHANGES and need the governor's word. (This session overrode a token only inside `app.css`: `.flow-line { line-height: 1.5 }`.)
-10. Journeys only touch the test project; `e2e/helpers.ts` refuses the live project and site.
+7. Run `python3 scripts/doctrine-orient.py orient` first, and `python3 scripts/doctrine-orient.py check` before commits (the pre-commit gate refuses otherwise).
+8. "No merge, deployment, purchase or schedule is authorized" unless the user says so. Merges are authorised case by case: PR #4–#16 as recorded; PR #17 "Merge it."; **PR #18 not yet authorised**. Purchases refused so far: Supabase Pro (chose "C"), Cloudflare Workers Paid ("Paid plan. No.").
+9. "the design system has to be adhered to" (user). `public/gallery/tokens.css` and `system.css` byte-identical to `ux/reference/interface/` (journey 11). App styling in `public/gallery/app.css`. Token/system changes are SYSTEM CHANGES and need the governor's word.
+10. Journeys only touch a test target; `e2e/helpers.ts` refuses the live project (`kemrceegbyizpcfewgri`) and the live site. Allowed targets: hosted test project `fbgrumcwlnoljkkbiqfe`, or the local stack `http://127.0.0.1:54321` (loopback only).
 11. Secrets go only through the environment's secure form or the dashboard's own form, never in chat.
-12. Never test a server whose served page lacks the current `.next/BUILD_ID` (`e2e/run-hosted.sh` enforces it; it now uses `grep -q --` because a build id can start with a dash).
+12. Never test a server whose served page lacks the current `.next/BUILD_ID` (`e2e/run-hosted.sh` enforces it).
 13. Running suites:
-    - Run one journey suite at a time (runner lock). Nothing heavy beside a suite.
-    - Each suite is its own background command with timeout 3600000.
-    - Start `next start -p 3100` as its own background command with timeout 7200000. It dies at 2 h, so restart it before a 35-minute suite if it has run for more than about 80 minutes. Kill the old server (`pkill -f next-server; pkill -f "next start"`) before starting a new one, or the port stays held (EADDRINUSE) and the runner refuses.
-    - Read results from the summary line, never from a wrapper's exit code ("completed (exit 0)" notices are meaningless).
-14. Every change set needs all of the following:
-    - full suite, phone and desktop;
-    - independent review (builder-reviewer);
-    - design skills run and named;
-    - axe, keyboard and reflow checks;
-    - before/after renders;
-    - a receipt `doctrine/receipts/…md`;
-    - a ledger entry per incident;
-    - a PR;
-    - merge only on the user's word;
-    - live confirmed afterwards.
-15. Before merging:
-    - a clean tree;
-    - the PR head is the tested head (merge with `expectedHeadSha`);
-    - the red CI log has been read and confirmed to be only `DOCTRINE_READ_TOKEN` unset, and the merge message says so;
-    - the Cloudflare "Workers Builds" check is green.
+    - One suite at a time (runner lock). Nothing heavy beside a suite. Each suite its own background command (timeout 3600000).
+    - Start `next start -p 3100` as its own background command; kill the old one first (`pkill -f next-server; pkill -f "next start"`).
+    - Read results from the summary line, never from a wrapper's exit code.
+    - Never wait with a bare `sleep`; use a background `until` loop.
+14. Every change set needs: full suite phone and desktop; independent review (builder-reviewer); design skills run and named; axe/keyboard/reflow (journey 15); before/after renders; receipt `doctrine/receipts/…md`; ledger entry per incident; a PR; merge only on the user's word; live confirmed afterwards.
+15. Before merging: clean tree; PR head = tested head (merge with `expectedHeadSha`); red CI log read and confirmed to be only `DOCTRINE_READ_TOKEN` unset, said in the merge message; Cloudflare "Workers Builds" check green.
 16. After a merge, fast-forward the working branch to the default branch (`git merge --ff-only`, then push). Never force-push.
 17. A Stop hook refuses to end a turn with uncommitted or untracked files: commit and push before ending each turn.
-18. FIXED decisions keep their meaning whatever a drawing shows (GAL-C1, GAL-P1, P-11, GAL-PR-02, GAL-OD-04, GAL-OD-02/03/15).
-19. Each new or changed test must be able to fail. Prove it with a planted defect or a control build.
+18. FIXED decisions keep their meaning whatever a drawing shows (GAL-C1, GAL-P1, P-11, GAL-PR-02, GAL-OD-04, GAL-OD-02/03/15, GAL-14, GAL-R10).
+19. Each new or changed test must be able to fail. Prove it with a planted defect or a control build (run the new test against the previous build).
 20. Before restoring a file from history, list the rules added after that point and carry each forward or drop it on purpose.
 21. A design review compares rendered screens against named external references and lists what each change removes.
 22. A subset run that skips fixture-producing journeys (03, 04) is indicative only; the full suite is the receipt.
-23. `ui-consistency:verifying` uses a separate agent, calibrated first on a copy with one planted difference, found by reading.
-24. CLAUDE.md standing rule 7: the whole-app sweep (journey 14, `ux/APP_RULES.json`) must pass before showing any screen or opening a PR. Each correction becomes a rule, proved to fail.
-25. Never delete or loosen an `APP_RULES` rule or an Interface Standard rule to pass. A wrong rule changes on the governor's word, recorded in the ledger or `ESCAPES.md`.
-26. After an interrupted suite, check the shared fixtures ("Monsoon Vessel No. 4" Sold; "Unfinished Warp" retired), or let a full run reset them (a full run reseeds).
-27. CLAUDE.md standing rule 8: every screen state is measured against the Interface Standard by `e2e/15-interface-standard.spec.ts`; every state, with its archetype, is in `ux/INTERFACE_PROFILE.json`. Before building or changing a screen, and whenever anyone finds an interface fault, follow `.claude/skills/interface-standard/SKILL.md`. "Never shrink type or spacing to fit, and never loosen a rule to pass."
-28. **Build with `npm run build`, never `npx next build`.** Its postbuild stamps `.next/SOURCE_FINGERPRINT`. The gate is SHUT for a build not stamped with the current code.
-29. **The gate** (`python3 scripts/app-sweep-gate.py`) needs four PASS receipts per viewport on this code: suite, app-sweep, interface, interface-drill. `e2e/run-hosted.sh` writes the suite receipt only after a full, unfiltered run whose Playwright exit code is 0.
-30. A new screen state goes into `ux/INTERFACE_PROFILE.json` before it is built. A redirect is never an exemption.
-31. **Editing any fingerprinted file (src/, public/, `ux/APP_RULES.json`, `ux/INTERFACE_PROFILE.json`, `e2e/14-…`, `e2e/15-…`, kit STANDARD/engine, `e2e/support/…`) voids the build stamp and the running suite.** Stop the suite, rebuild with `npm run build`, restart the server, rerun. Docs, ledger, receipts and `kit/interface-standard/ESCAPES.md` are outside the fingerprint.
+23. `ui-consistency:verifying` uses a separate agent, calibrated first on a copy with one planted difference.
+24. CLAUDE.md standing rule 7: the whole-app sweep (journey 14, `ux/APP_RULES.json`) must pass before showing any screen or opening a PR.
+25. Never delete or loosen an `APP_RULES` rule or an Interface Standard rule to pass. A wrong rule changes on the governor's word.
+26. After an interrupted suite, check the shared fixtures or let a full run reseed.
+27. CLAUDE.md standing rule 8: every screen state measured by journey 15 and listed in `ux/INTERFACE_PROFILE.json`; follow `.claude/skills/interface-standard/SKILL.md`. "Never shrink type or spacing to fit, and never loosen a rule to pass."
+28. **Build with `npm run build`, never `npx next build`.** Its postbuild stamps `.next/SOURCE_FINGERPRINT`. `npx opennextjs-cloudflare build` also rebuilds `.next` and **shuts the gate**: run `npm run build` again and re-run both suites afterwards.
+29. **The gate** (`python3 scripts/app-sweep-gate.py`) needs four PASS receipts per viewport on the build on disk: suite, app-sweep, interface, interface-drill.
+30. A new screen state goes into `ux/INTERFACE_PROFILE.json` before it is built.
+31. Editing any fingerprinted file (src/, public/, db/migrations, `ux/APP_RULES.json`, `ux/INTERFACE_PROFILE.json`, `e2e/helpers.ts`, `e2e/14-…`, `e2e/15-…`, `e2e/16-…`, `e2e/support/…`, kit STANDARD/engine, package.json, next.config.ts, open-next.config.ts, tsconfig, playwright.config) voids the build stamp and the running suite: stop it, rebuild, restart, rerun. Docs, ledger, receipts, `doctrine/review/`, `scripts/`, `tools/`, `ESCAPES.md` are outside the fingerprint.
 32. The site answers the same whether or not an address has an account (non-disclosure). Copy near sign-up says "may", never "does".
+33. The server must stay within Cloudflare Workers Free (10 ms CPU per request): no image processing or other heavy compute on the server; journey 17 enforces no codec in the build and a server-CPU budget per photo.
+34. Reviewers (Gemini, Grok, any agent) never run active tests against the live site; live checks by Claude are read-only and anonymous. A reviewer's finding is not acted on until reproduced.
 
 ## 5. Corrections log
 | # | Claude did | The user wanted |
@@ -183,182 +164,148 @@ You are continuing work from a previous chat. That chat is gone; this file is th
 | 34 | Wrote a doubled negative in the sweep change | Never; rule R03 |
 | 35 | About's policy headings h1→h3 (axe heading-order) | Fixed to h2 (GAL-L0039) |
 | 36 | R03 missed "not X, or not Y" | R03 widened, proved on the old copy (GAL-L0040) |
-| 37 | Join step 2 shipped with no Back, 13 px labels and 24 px field gaps; the governor caught it by eye again | A measured standard on every state; escapes fixed at their layer (GAL-L0041) |
-| 38 | The first Interface Standard could pass bad screens (21 holes found by two reviews) | Fail-closed engine, policed profile, exact drill, stamped builds (GAL-L0042) |
+| 37 | Join step 2 shipped with no Back, 13 px labels and 24 px field gaps | A measured standard on every state (GAL-L0041) |
+| 38 | The first Interface Standard could pass bad screens | Fail-closed engine, policed profile, exact drill, stamped builds (GAL-L0042) |
 | 39 | The gate opened while the full suite was red | Suite receipt required beside the others |
-| 40 | Kept steering the governor into a phone-walk step (Add a work) after he had said a real studio would be the test | "Stop fucking around, I told you we will get these checked with a real studio." Give the studio message; never route the test back to him |
-| 41 | Recorded "It came" as the sign-up confirmation email arrived; it was the password-reset email | Name which email or screen was seen before recording SEEN; ask for a screenshot when unsure |
-| 42 | Left the sign-up screen with no way out when the address already had an account | A screen that waits for something the system may never send names the exit (R13, GAL-L0043) |
+| 40 | Kept steering the governor into a phone-walk step after he had said a real studio would be the test | "Stop fucking around, I told you we will get these checked with a real studio." Never route the test back to him |
+| 41 | Recorded "It came" as the sign-up email; it was the password-reset email | Name which email or screen was seen before recording SEEN |
+| 42 | Left the sign-up screen with no way out when the address already had an account | A waiting screen names the exit (R13, GAL-L0043) |
+| 43 | Named Worker *memory* as the likely cause of the upload failure before seeing logs | The log showed CPU time. Get the Cloudflare log before naming a cause |
+| 44 | Review-pack PDFs held 42 broken-image icons each and the tool reported success | Tools refuse to write output with any image unloaded (proved with a planted copy) |
+| 45 | A new try/catch swallowed Next's server-action redirect, so a successful publish landed on "did not finish sending" (full suite caught it) | Let `NEXT_REDIRECT`/`NEXT_NOT_FOUND` digests pass through every catch |
+| 46 | A new stuck-upload test passed on the old build (another failure on the page showed the band) | Run each new test against the previous build; make it target the exact thing |
+| 47 | Did not check the hosting plan's limits against the app before going live (GAL-L0044) | Check production runtime limits, not only the test runtime |
 
 ## 6. Decisions
 | Decision | Why |
 |---|---|
 | Doctrine pin `6dc016c485ec1ddf31163534d84e02e0f74772f0` | user |
-| Live Supabase `thegallery` (`kemrceegbyizpcfewgri`); journeys on `thegallery-test` (`fbgrumcwlnoljkkbiqfe`) | user |
+| Live Supabase `thegallery` (`kemrceegbyizpcfewgri`); hosted test project `thegallery-test` (`fbgrumcwlnoljkkbiqfe`) **paused** | governor "C" (2026-11-12) |
+| Supabase stays on the **Free plan**; two active projects: `treksfit-prod` and `thegallery` | governor ("C"; the other session's handoff) |
+| Cloudflare stays on **Workers Free** (10 ms CPU) | governor "Paid plan. No." (2026-11-24) |
+| **Photo fix A:** photos prepared in the maker's browser, sent straight to storage on signed upload URLs; server only reserves, checks, records | governor "A" |
+| **Test place: local Supabase stack** in the session (Docker) | governor "Go." |
+| Pre-release review: three independent readers (Gemini broad, Grok adversarial, Claude live-behaviour), triage register, release gate (`doctrine/review/REVIEW-PLAN.md`) | governor asked; plan built |
+| A real studio, not a demo, is the first walk of sign-up and upload | governor 2026-11-11 |
+| Auth email through Resend as Supabase custom SMTP; Confirm and Reset templates link to `/makers/confirm/{token}` and `/makers/reset/{token}` | set by the governor |
+| Sign-up keeps non-disclosure and names an exit (R13) | governor "Yes. Do that fix." |
 | Vocabulary: work · maker · gallery · Studio · The Gallery · on view · retired · taken down · ways to contact; "By enquiry", "Not for sale" | Wave 3 |
-| Price rule (`labelPrice`): no price beside Sold or Not for sale; tiles show every status but "Available" | governor; P-11 / GAL-PR-02 |
-| Tile→hero morph; "Hang this first" | governor |
-| App icon option 4 | "Option 4." |
-| Original look restored (2026-09-06 tokens and system) + app layer | governor |
-| Bottom bar Home · Search · Saved · Studio; none on screens that dock their own action; from 900 px in the header | board |
-| Workshops hidden until the first workshop exists (page reachable) | "hide" |
-| About + Participation + Privacy as one screen; `/participation`, `/privacy` stay | governor |
-| Footer (colophon) = "The Gallery · About" (on About, the name only); no Privacy link added back | governor 2026-11-10; not reopened |
-| GAL-C1 sheet sentence word for word, above the route rows | fixed |
+| Price rule (`labelPrice`): no price beside Sold or Not for sale; tiles show every status but "Available" | P-11 / GAL-PR-02 |
 | The Gallery names no city of its own | GAL-OD-04 |
-| Whole-app sweep (rules, journey 14, gate, SWEEP-1, skill, rule 7) | governor |
-| Interface Standard (kit, profile, journeys 15–16, gate, guard, skill, rule 8, ESCAPES.md) | governor 2026-11-10: "mechanism level solution" |
-| SYSTEM CHANGE approved: `--t-field-label` 16 px; `--t-label` 12; `--t-nav` 12; `--t-meta` 14; `--t-caption` 14; `--bar-h` 64; `.field` 32 px apart; help 8 px under its field; spacing on the 4 px grid | "I will go by your recommendations. Do the most reliable thing." |
-| Standard → Doctrine via option A (candidate drafted; only the governor promotes) | same words |
-| Back on every non-top-level state at every width | standard IS-N1 |
-| Journey waits 120 s per test, 20 s per expect | measured test-project latency |
-| Decision C (price "On enquiry" vs status "By enquiry") → later, its own change | governor 2026-11-09 |
-| Merged PR #11–#16 over red CI (`DOCTRINE_READ_TOKEN` unset) | governor's word per PR |
-| **A real studio, not a demo, is the first walk of the sign-up and upload flow** | governor 2026-11-11 |
-| **Auth email goes through Resend as Supabase custom SMTP; the Confirm sign up and Reset password templates link to the app's own routes with the token hash** | the app's `/makers/confirm/{token}` and `/makers/reset/{token}` routes need it; governor set it |
-| **The sign-up screen keeps non-disclosure and adds an exit: "No email? You may already have a gallery with this address." + Sign in + Reset your password; Join step 1 gets "I already have a gallery"** | governor "Yes. Do that fix." |
-| R13 compares exact paths; the expired check-email state is in the profile; `.flow-line` line height 1.5 in `app.css` (token untouched) | review + new profile state's finding |
+| Bottom bar Home · Search · Saved · Studio; Back on every non-top-level state | board; IS-N1 |
+| Footer = "The Gallery · About"; About + Participation + Privacy as one screen | governor |
+| Workshops hidden until the first workshop exists | "hide" |
+| SYSTEM CHANGE approved: `--t-field-label` 16 px; `--t-label` 12; `--t-nav` 12; `--t-meta` 14; `--t-caption` 14; `--bar-h` 64; `.field` 32 px apart; help 8 px under its field; 4 px grid | governor |
+| Standard → Doctrine via option A (candidate drafted; only the governor promotes) | governor |
+| Decision C (price "On enquiry" vs status "By enquiry") → later | governor 2026-11-09 |
+| Merged PR #11–#17 over red CI (`DOCTRINE_READ_TOKEN` unset) | governor's word per PR |
 
 ## 7. Changed / rejected
-- A2 / B2 → original registers; the bar of four everywhere.
-- Words-only empty states → the plinth back on the empty home.
-- Bookmark Save → round heart over the photo.
-- Search button and Clear → one field.
-- Saved as a list → picture grid.
-- Colophon "The Gallery, Bengaluru" → "The Gallery" → "The Gallery · About".
-- Sheet intent choices → removed ("Keep").
-- Maker gallery one-column hang → profile head with three-across squares.
-- For Makers numbered steps → board screen 7.
-- Join long form → three steps.
-- "Fair use" page and policy footer links → About-style policy screens.
-- Back hidden from 900 px wide → Back at every width.
-- R11 Back on a hand-written route list → IS-N1 by archetype, fail-closed.
-- Checking pages → checking every screen state (no redirect exemption).
-- Type 10.5–13 px for labels, tabs and metadata → 12–16 px.
-- 24 px form rhythm → 32 px.
-- `npx next build` → `npm run build` (stamped).
-- Gate on sweep receipts only → four receipts per viewport.
-- A repo-only Claude hook as enforcement → insufficient; the suite and gate are the chokepoint.
-- **Governor's own phone walk against the live site → the real studio's walk.**
-- **Supabase default email sender and templates → Resend SMTP and custom templates.**
-- ❌ Footer Privacy link: the governor's footer decision stands.
-- ❌ Rewording "Makers, studios and collectives": GAL-OD-02 wording.
-- ❌ "Available · ₹6,800" on the home label; an "All" chip on Search.
-- ❌ Journeys on the live site; restoring the old Supabase project; force-push; claiming "It is free"; icon options 1–3; a report row before a report route exists; the board's sample photos on For Makers.
-- ❌ Telling the sign-up screen whether an address has an account (non-disclosure stays).
-- ❌ A reviewer's claim that new text links are under 44 px (`system.css:67` gives `.textlink` min-height `var(--target)`; journey 15 measured it).
+- Governor's own phone walk → the real studio's walk.
+- Supabase default email sender → Resend SMTP and custom templates.
+- Server-side photo processing (WASM codecs in the Worker) → browser-side preparation (PR #18).
+- Hosted test project for journeys → local Supabase stack while it is paused.
+- Studio error page "images up to 12 MB go up…" → "Nothing you had already saved is lost. Try again. If it keeps happening, come back in a few minutes."
+- ❌ Supabase Pro plan (offered so test + TreksFit + live run together, with backups): governor chose "C".
+- ❌ Cloudflare Workers Paid plan: "Paid plan. No."
+- ❌ Option C for photos (slim the server codecs): cannot get under limits.
+- ❌ Asking the studio to retry with small photos as a stopgap: not reliable.
+- A2 / B2 → original registers; words-only empty states → plinth back; bookmark Save → round heart; Search button + Clear → one field; Saved list → picture grid; colophon "The Gallery, Bengaluru" → "The Gallery · About"; sheet intent choices → removed; maker gallery one-column → three-across; Join long form → three steps; Back hidden from 900 px → Back at every width; type 10.5–13 px → 12–16 px; 24 px rhythm → 32 px; `npx next build` → `npm run build`.
+- ❌ Footer Privacy link; rewording "Makers, studios and collectives"; "Available · ₹6,800" on the home label; an "All" chip on Search; journeys on the live site; restoring the old Supabase project; force-push; "It is free"; icon options 1–3; a report row before a report route exists; board sample photos on For Makers; telling sign-up whether an address has an account.
 
 ## 8. Data & facts (exact)
 | Item | Value |
 |---|---|
-| Live site | https://atthegallery.in (Cloudflare Worker `thegallery`, auto-deploys the default branch within ~1 min) |
-| Repo / default branch | `r959qp5qwr-web/Thegallery`, `claude/the-gallery-foundation-7plo1e`, tip `5ae491c` (Merge PR #16) |
-| Working branch (session #10) | `claude/dreamy-lamport-f7efnw`, head `cbd1ecd73ad8e27680f05b0df895f4204bec3396` before this handoff's commit. A new session gets its own designated branch: create it from the default branch, or from this one if PR #17 is unmerged |
-| PR #17 | https://github.com/r959qp5qwr-web/Thegallery/pull/17, open, NOT merged. Head `cbd1ecd`, stamped build `-UYwxHaLcLJQvNW0l88Up`; phone **102 passed, 1 skipped** (33.4 min); desktop **103 passed** (31.4 min); gate OPEN; CI red (expected, `DOCTRINE_READ_TOKEN`: log NOT yet read this session) |
-| Doctrine repo | `r959qp5qwr-web/builders-doctrine`, main `6dc016c485ec…`, version 1.1.0 ACTIVE_PENDING_REPIN |
-| Live Supabase | `kemrceegbyizpcfewgri`, publishable `sb_publishable_joD-RqEyX63-Y1CwQSErxg_nuGsUB7N`. The proxy-injected management token cannot read it (403 "does not have the necessary privileges"); it can read the test project |
-| Test Supabase | `fbgrumcwlnoljkkbiqfe`, URL `https://fbgrumcwlnoljkkbiqfe.supabase.co`, publishable `sb_publishable_0KNPc4WopVsLNttgeBD43A_O6yyDiJd`, schema `gallery`, bucket `gallery-images`; default email templates; no SMTP |
-| `.env.local` (gitignored; recreate) | `SUPABASE_URL` (test), `SUPABASE_PUBLISHABLE_KEY` (test), `SUPABASE_STORAGE_BUCKET=gallery-images`, `GALLERY_SCHEMA=gallery`, `GALLERY_BASE_URL=http://127.0.0.1:3100` |
-| Setup | `npm ci`; `npm run build`; server `NODE_USE_ENV_PROXY=1 NODE_EXTRA_CA_CERTS=/root/.ccr/ca-bundle.crt npx next start -p 3100` (own background command) |
-| Suite command | `bash e2e/run-hosted.sh --project=phone --trace off --reporter=line` (and `--project=desktop`), each its own background command |
-| Environment | "The Gallery (with Doctrine)" `env_015jqYRQ2fkV9xhRroHttVvw`; `api.supabase.com` token proxy-injected [secret removed: re-enter it]; reaches the test project only |
-| Live auth email (set by the governor 2026-11-11) | Custom SMTP ON. Host `smtp.resend.com`, port `465`, username `resend`, password = the Resend API key [secret removed: re-enter it], sender `no-reply@atthegallery.in`, sender name `The Gallery`. Resend domain `atthegallery.in` verified. Site URL must be `https://atthegallery.in` (reported checked but not confirmed by screenshot) |
-| Live email templates (set by the governor) | Confirm sign up link: `{{ .SiteURL }}/makers/confirm/{{ .TokenHash }}`. Reset password link: `{{ .SiteURL }}/makers/reset/{{ .TokenHash }}` |
-| Email seen working | Reset password email arrived from "The Gallery" and its link opened the governor's own existing Studio (SEEN 2026-11-11). Sign-up confirmation email for a brand-new address: NOT SEEN |
-| Rate limits (UNKNOWN) | Supabase custom-SMTP auth email rate limit (default reported 30/hour, adjustable in Authentication → Rate Limits); Resend free plan limits not checked |
-| Interface Standard | version 1.3.0; 16 rules (IS-T1…T7, IS-H1, IS-N1, IS-A1, IS-F1, IS-L1…L4, IS-X1); **36 profile states** (added `check-email-expired`); drill 38 cases per viewport |
-| Key thresholds | body ≥16 px; labels ≥16; secondary ≥14; nothing <12; typed text ≥16; line height ≥1.4; ≤80 chars/line; targets ≥44×44; inputs ≥48 tall; fields ≥32 apart; help ≥4 under input; side margin ≥16 on phone; 4 px grid; one primary (exactly one on an editor); Back in the top 96 px; axe WCAG 2.2 AA |
-| App rules | R01–R13; **R13-no-dead-end** (check kind `has-links`, `routes ["^/makers/check-email$"]`, `hrefs ["/makers/sign-in","/makers/reset"]`, exact pathname, visible, inside `main`) |
-| Journeys | 01–16; 14 = whole-app sweep; 15 = Interface Standard; 16 = drill; phone 103 tests |
-| Ledger latest | GAL-L0043 (escape E08 in `kit/interface-standard/ESCAPES.md`) |
+| Live site | https://atthegallery.in (Cloudflare Worker `thegallery`, Workers **Free** plan, auto-deploys the default branch within ~1 min; observability logs on) |
+| Repo / default branch | `r959qp5qwr-web/Thegallery`, `claude/the-gallery-foundation-7plo1e` |
+| Default branch tip | `de0401e70e522bcfc5565c7d9a0f5c007156d680` (Merge PR #17) |
+| Working branch (session #11) | `claude/modest-wozniak-rhqebe` (a new session gets its own designated branch: create it from the default branch, or continue PR #18's branch if instructed) |
+| PR #18 | https://github.com/r959qp5qwr-web/Thegallery/pull/18 — "Photos are prepared in the maker's browser (uploads were cut off on the Free plan)". Tested code head `29c8516333a63866fc56437af82367028e8a6bf8` (this handoff adds a docs-only commit after it; docs are outside the fingerprint). Commits: b29514e, f4e57a0, 903945d, 43a97e8 (review pack), 9d5e1a4 (local stack), f62ee24 (fix), 29c8516 (review fixes, copy, receipt). Workers Builds: success. "Orientation, gates and drill": failure (expected `DOCTRINE_READ_TOKEN`; log not yet read). **Not merged** |
+| PR #18 results (local stack) | build `22b13d0gXFCgXiN9ztuuT`; phone **107 passed, 1 skipped** (5.3 min); desktop **108 passed** (3.6 min); gate OPEN; journey 17 server CPU per photo 60–199 ms across runs (budget 400; old code 1,044 ms) |
+| Worker size | `wrangler deploy --dry-run`: 7,274.49 KiB / gzip 1,465.94 KiB (Free limit 3 MB) |
+| Cloudflare log (23 Nov, UTC) | studio session: account created 10:00:21; signed in from link 10:00:54 (`/makers/sign-in?confirmed=1`); join 10:02:01; WhatsApp 10:02:12; upload POST `/studio/works/new` 11:28:52 **exceededCpu** at 1,419 ms; POST `/studio/works/{id}?confirm=remove-{id}` 11:36:26 **exceededCpu** at 1,892 ms; 43 of 129 requests killed 11:28–11:45, plain pages killed at 10–16 ms; 0 kills outside that window. Export covered 2026-11-22T03:19 → 2026-11-24T02:04, 898 invocations; ok median CPU 13 ms, max 927 ms (cold starts). CSV kept out of the repo |
+| Local codec measure (Node) | 4000×3000: ~720–850 MB, 8–20 s CPU; 2400×1800: ~330 MB, 4 s; 1000×750: ~150 MB, 2.5 s |
+| Live Supabase | `kemrceegbyizpcfewgri`, publishable `sb_publishable_joD-RqEyX63-Y1CwQSErxg_nuGsUB7N`. The proxy-injected management token cannot read it (403) |
+| Hosted test Supabase (paused) | `fbgrumcwlnoljkkbiqfe`, publishable `sb_publishable_0KNPc4WopVsLNttgeBD43A_O6yyDiJd`, schema `gallery`, bucket `gallery-images` |
+| Local test stack | `bash e2e/local/up.sh` (Docker; starts dockerd if needed; images from `public.ecr.aws` because Docker Hub returns 429; Supabase CLI `supabase@2.122.1`; Postgres 15). API `http://127.0.0.1:54321`, DB `postgresql://postgres:postgres@127.0.0.1:54322/postgres`, mail `http://127.0.0.1:54324`, publishable key `sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH` (CLI default, public). Config `e2e/local/supabase/config.toml`; migrations generated into `e2e/local/supabase/migrations/` (gitignored) from `db/migrations` + `e2e/support/test-project.sql` + bucket |
+| `.env.local` for the local stack (gitignored; recreate) | `SUPABASE_URL=http://127.0.0.1:54321`, `SUPABASE_PUBLISHABLE_KEY=sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH`, `SUPABASE_STORAGE_BUCKET=gallery-images`, `GALLERY_SCHEMA=gallery`, `GALLERY_BASE_URL=http://127.0.0.1:3100` |
+| Setup | `npm ci`; `bash e2e/local/up.sh`; `npm run build`; server `npx next start -p 3100` (own background command; for the hosted target add `NODE_USE_ENV_PROXY=1 NODE_EXTRA_CA_CERTS=/root/.ccr/ca-bundle.crt`) |
+| Suite command | `GALLERY_TEST_TARGET=local bash e2e/run-hosted.sh --project=phone --trace off --reporter=line` (and `--project=desktop`); without `GALLERY_TEST_TARGET=local` it targets the hosted test project |
+| Environment | "The Gallery (with Doctrine)" `env_015jqYRQ2fkV9xhRroHttVvw`; `api.supabase.com` token proxy-injected [secret removed: re-enter it] |
+| Live auth email | Custom SMTP on: `smtp.resend.com`, port `465`, username `resend`, password = Resend API key [secret removed: re-enter it], sender `no-reply@atthegallery.in`, name `The Gallery`. Templates: Confirm `{{ .SiteURL }}/makers/confirm/{{ .TokenHash }}`; Reset `{{ .SiteURL }}/makers/reset/{{ .TokenHash }}` |
+| Email seen working | Reset email (2026-11-11). Sign-up confirmation for a brand-new address: **SEEN in the Cloudflare log** (studio, 23 Nov, 33 s from create to sign-in) |
+| Photo pipeline (PR #18) | Browser: `createImageBitmap(file,{imageOrientation:"from-image"})` with fallbacks; original long edge ≤ 3000 px (JPEG 0.9); variants w320/w640/w1280/w1920 (JPEG 0.82), never enlarged except w320; min 200 px each side on the sent size; files `original.jpg`, `w320.jpg`… Server: `beginPhotoAction` (row `uploading`, signed upload URLs), `finishPhotoAction` (list, sizes ≤ 6 MB, mark `ready` with variants `{w320:"w320.jpg",…}` or `failed`), `finishNewWorkAction`. Uploads `uploading` > 10 min show as failed. Default 1 MB server-action body limit (12 MB allowance removed) |
+| Interface Standard | version 1.3.0; 16 rules; 36 profile states; drill 38 cases per viewport |
+| Key thresholds | body ≥16 px; labels ≥16; secondary ≥14; nothing <12; typed text ≥16; line height ≥1.4; ≤80 chars/line; targets ≥44×44; inputs ≥48 tall; fields ≥32 apart; side margin ≥16 on phone; 4 px grid; one primary; Back in the top 96 px; axe WCAG 2.2 AA |
+| App rules | R01–R13 (R13-no-dead-end) |
+| Journeys | 01–17 (14 sweep, 15 standard, 16 drill, **17 server budget**); phone 108 tests |
+| Ledger latest | **GAL-L0044** (photo uploads cut off on Workers Free); escapes latest **E09** (C1 runtime coverage) in `kit/interface-standard/ESCAPES.md` |
 | Test seeds | Maker A `anika.rao@makers.example` / `kiln-and-monsoon-9` (anika-rao, Khurja); Maker B `studio@dhaaga.example` / `warp-and-weft-11` (dhaaga-studio, Jaipur); Operator `operator@thegallery.example` / `operator-of-record-7` |
-| Test works | "Monsoon Vessel No. 4" (Maker A, Sold after a full run); "Unfinished Warp" (Maker B, retired after a full run) |
-| Upload limit | `bodySizeLimit: "12mb"`; only JPEG is read (screenshots/PNG and HEIC fail) |
-| Publish time | up to about 10 s on the test project (live UNKNOWN); a double tap on Publish could create the work twice |
-| Breakpoints / widths | 600 / 900 px; page max 1200; Studio column 760; forms ≤ 560; `--bar-h` 64 px |
-| Spacing scale | `--s1` 4 · `--s2` 8 · `--s3` 16 · `--s4` 24 · `--s5` 32 · `--s6` 48 · `--s7` 64 px |
+| Test works | "Monsoon Vessel No. 4" (Maker A), "Unfinished Warp" (Maker B, retired) |
+| Shared-project plan (from the my neighbourhood session, 2026-11-13) | `thegallery` will also host AHOY RIDESHARING APP (`mupctqclstbnvrvxycep`: my neighbourhood, Ahoy, Ustaad, Nukkad) and maase (`mrazsrziwmbwrlsbzglq`) in `public` or own schemas; anonymous sign-ins to be switched on project-wide; order: Gallery fixes first, then the owner switches anonymous on, then data copied in |
+| Hole verified | `gallery.makers` policy `maker_self_insert` = `WITH CHECK (user_id = auth.uid())` (`db/migrations/002…sql:103`); `operational_failures` `failure_insert` `WITH CHECK (true)` (line 144); `is_operator()` reads the `operators` table (safe); storage writes need an active maker (safe). With anonymous sign-ins on, anyone with the public key can become a maker by API |
+| Review pack | commit `43a97e8`; files `00-READ-FIRST.md`, `01-APP-SOURCE.md` (~102K tokens), `02-PRODUCT-AND-TESTS.md` (~140K), `03-SCREENS-phone.pdf` / `-desktop.pdf` (42 screens each, mixed sources labelled), `04-PROMPTS.md`, `MANIFEST.txt`; zip 2.5 MB. Rebuild: `python3 scripts/review-pack.py <out> --screens <dir>` (needs a clean tree) |
+| Breakpoints / widths | 600 / 900 px; page max 1200; Studio column 760; forms ≤ 560 |
 | Colours | paper #F8F3EA, paper-deep #F0E9DC, limestone #E7DECF, ink #221E1A, ink-soft rgb(61, 54, 48), amber #A5501F, amber-deep #8A3F14 |
-| Artifacts (private) | Approved board https://claude.ai/artifact/NhfhLaQztV53zwQpYaho7g · phone-walk checklist v2 https://claude.ai/artifact/TXrno4ACqCY1pEdD8vKKz7 · Wave 5 design pass https://claude.ai/artifact/NrK3jfHcXvEXurUAx5NiVp |
-| axe | `axe-core@4.10.2` devDependency (journey 15 injects it) |
-| Studio flow (live code) | `/makers` For Makers → `/makers/create-account` (Step 1 of 3: Email, Password ≥10) → `/makers/check-email` → link `/makers/confirm/{token}` → `/studio/join` (Step 2 of 3: Name, Place, How you work: On my own / A studio / A collective) → `/studio/whatsapp?join=1` (Step 3 of 3: WhatsApp number with + and country code) → `/studio` ("Add a work") → `/studio/works/new` (Add photo, Title, Material, Status, Price: Fixed price / On enquiry / Made to order, Amount ₹, Medium, size, Year, About this work; Publish docked, Save draft in header) → work page; gallery opens with the first work. Public page `/m/<handle>` |
+| Artifacts (private) | Board https://claude.ai/artifact/NhfhLaQztV53zwQpYaho7g · checklist v2 https://claude.ai/artifact/TXrno4ACqCY1pEdD8vKKz7 · Wave 5 pass https://claude.ai/artifact/NrK3jfHcXvEXurUAx5NiVp |
+| Studio flow (live code) | `/makers` → `/makers/create-account` (Step 1 of 3) → `/makers/check-email` → `/makers/confirm/{token}` → `/studio/join` (Step 2) → `/studio/whatsapp?join=1` (Step 3) → `/studio` → `/studio/works/new` → work page; public `/m/<handle>` |
 
 ## 9. People, terms & names
-- **People:** the user = the Governor. The first real studio = a studio the governor knows (name, email, number, photos stay out of the repository).
+- **People:** the user = the Governor. The first real studio = a studio the governor knows (name, email, number, photos stay out of the repository). "my neighbourhood build session" = another Claude session preparing the shared Supabase project.
 - **Terms:**
-  - "drawing board" = the 16-screen restart, parts 1–3 live.
-  - "docked action" = the one solid ink bar at a screen's foot.
-  - "the sweep" = journey 14; "the standard" = journey 15; "the drill" = journey 16; "the gate" = `scripts/app-sweep-gate.py`.
-  - SWEEP-1 / GUARD-3 = guard rules in `scripts/doctrine-hook.py`.
-  - "escape" = a fault found by a person after the gate was open, classed C1 coverage / C2 measure / C3 standard / C4 judgement.
-  - archetypes: root, flow-step, sub-screen, editor, dialog, operator.
-  - "phone walk" = the live proof on a physical phone; now carried out by the real studio.
-  - SYSTEM CHANGE = touches tokens.css or system.css.
+  - "drawing board" = the 16-screen restart; "docked action" = the solid ink bar at a screen's foot.
+  - "the sweep" = journey 14; "the standard" = journey 15; "the drill" = journey 16; "server budget" = journey 17; "the gate" = `scripts/app-sweep-gate.py`.
+  - "escape" = a fault found after the gate was open: C1 coverage / C2 measure / C3 standard / C4 judgement.
+  - "phone walk" = live proof on a physical phone; now the real studio's walk.
+  - "review pack" = the files given to Gemini and Grok; "release gate" = phase 7 of `REVIEW-PLAN.md`.
+  - "curator" = governor's proposed role that reviews and approves maker requests (scope not decided).
+  - "local stack" = Supabase in Docker in the session.
 - **Names in use:**
-  - Kit `kit/interface-standard/` (STANDARD.json, engine/measure.ts, calibrate.ts, REFERENCES.json, CALIBRATION.json, CONTROL-2026-11-10-{phone,desktop}.json, drill/cases.ts, ESCAPES.md, SKILL.md, README.md).
-  - Product side: `ux/INTERFACE_PROFILE.json`, `ux/APP_RULES.json`, `e2e/14-whole-app.spec.ts`, `e2e/15-interface-standard.spec.ts`, `e2e/16-interface-drill.spec.ts`, `e2e/support/fingerprint.ts`, `e2e/run-hosted.sh`.
-  - Receipts in `.doctrine/runtime/`: `suite-*`, `app-sweep-*`, `interface-*`, `interface-drill-*`; `.next/SOURCE_FINGERPRINT`.
-  - Skills: `.claude/skills/interface-standard/SKILL.md`, `.claude/skills/gallery-app-sweep/SKILL.md`.
-  - Written this session: `doctrine/onboarding/FIRST-STUDIO-INSTRUCTIONS.md` (checks + the WhatsApp message), `doctrine/receipts/CHECK-EMAIL-EXIT-2026-11-11.md`, `doctrine/receipts/check-email-exit/` (six renders at 390 px, `-before` from the live site, `-after` from the new build).
-  - Components touched: `src/app/makers/check-email/page.tsx` (`.flow-links`), `src/app/makers/create-account/page.tsx` (`.flow-alt`), `public/gallery/app.css`.
-  - Doctrine candidate: `doctrine/harvests/PRODUCT_HARVEST-GALLERY-H-INTERFACE-001.md` (DRAFT); a second candidate idea: "a waiting screen names its exit".
+  - Review: `doctrine/review/REVIEW-BRIEF.md`, `REVIEW-PLAN.md`, `REVIEW-PROMPTS.md`; `scripts/review-pack.py`; `tools/review-pack-screens.mjs`.
+  - Photo fix: `src/lib/photo-prepare.ts`, `src/components/PhotoForms.tsx` (`AddPhotoForm`, `NewWorkForm`, `rethrowNavigation`), `src/app/actions/studio.ts` (`beginPhotoAction`, `finishPhotoAction`, `finishNewWorkAction`, `createWorkAction` returns `{created}` when `photo=1`), `src/lib/storage.ts` (`readVariant`, `BUCKET`), `worker-entry.ts` (re-export only), `e2e/17-server-budget.spec.ts`.
+  - Local stack: `e2e/local/up.sh`, `e2e/local/supabase/config.toml`; helpers `LOCAL_URL`, `isLocal`, `TEST_API`.
+  - Receipts: `doctrine/receipts/PHOTO-UPLOAD-WORKER-CPU-2026-11-24.md`, `doctrine/receipts/photo-upload/after-*.png` (synthetic).
+  - Skills: `.claude/skills/interface-standard/SKILL.md`, `.claude/skills/gallery-app-sweep/SKILL.md`; design skill used this session: `design-skills:ux-writing`.
   - This file: `doctrine/handoffs/handoff-the-gallery.md`.
 
 ## 10. Work state
 | Item | Status | Version / location | Notes |
 |---|---|---|---|
-| Drawing board parts 1–3 | live | PR #12–#14 | signed-in screens: the governor's Studio seen on an iPad (empty gallery) |
-| Whole-app sweep + policy screens | live | PR #15 | — |
-| Interface Standard + system change + Back everywhere | live | PR #16 → `5ae491c` | — |
-| **No dead end after sign-up (R13, exit links, expired state profiled, line height)** | **built, tested, PR open** | PR #17, head `cbd1ecd` | NOT merged; NOT live; CI log not read; no separate design skill run; no IS-M1 side-by-side against outside references |
-| Live email sender + templates | set by the governor | Supabase `thegallery` + Resend | reset email SEEN; sign-up confirmation for a new address NOT SEEN |
-| First-studio WhatsApp message | final, handed to the governor to send | `doctrine/onboarding/FIRST-STUDIO-INSTRUCTIONS.md` | send status UNKNOWN |
-| Local test server | stopped (2 h limit) | port 3100 free | restart before any run |
-| Doctrine candidate H-INTERFACE-001 | DRAFT | `doctrine/harvests/` | governor: ACCEPT / MODIFY / REJECT |
+| Photo upload fix | **PR #18 open, awaiting the governor's word** | head `29c8516` (+ handoff commit) | read the red CI log before merging; then live confirm with the studio's retry and the Worker log |
+| Local test stack | working | `e2e/local/` | containers die with the session; rerun `up.sh` |
+| Hosted test project | paused | — | journeys use the local stack |
+| Review pack | sent to the governor | `43a97e8` | Gemini and Grok findings NOT received |
+| Claude's own review (step 3c) | not started | `REVIEW-PLAN.md` | governor's yes/no not given |
+| Shared-project anonymous-sign-in fix | **not started; urgent before anonymous sign-ins switch on** | — | the other session waits for Gallery's confirmation |
+| Curator role | idea; options given | — | governor's answer pending |
+| Drawing board parts 1–3, sweep, standard, R13 | live | PR #12–#17 | — |
+| Studio walk | stalled at photo upload | live site | draft with a stuck "Uploading" image row; now shows as failed after merge |
+| Doctrine candidate H-INTERFACE-001 | DRAFT | `doctrine/harvests/` | governor: accept / modify / reject |
 | CI | red on every PR | needs `DOCTRINE_READ_TOKEN` | gate receipts are local |
-| Live operator account | UNKNOWN | — | needed to take a work down |
-| Report route | not built | — | — |
-| Fixtures | reset by the last full runs | — | — |
+| `PRODUCT_STATE.json` | stale (says nothing deployed; architecture names Vercel) | — | drift finding for the review |
+| Pre-existing UI oddity | noted | work edit screen of a retired work | "Title" label shows with no visible field above "Save label" |
 
 ## 11. Next steps
-1. **Next action:** the governor sends the WhatsApp message (section 10, file in section 9) to the real studio. Meanwhile, read the red CI log of PR #17 (confirm only `DOCTRINE_READ_TOKEN` unset), check the Cloudflare "Workers Builds" check, and ask "Merge PR #17?". On "Yes.": merge with `expectedHeadSha`, fast-forward the working branch, confirm the change live on `/makers/check-email`.
-2. Handle what the studio reports. For each screenshot: reproduce by measurement, classify (C1–C4), fix the layer with a failing control, then every flagged state, then the full process (rule 14). Verify which email or screen the studio actually saw before recording anything as SEEN.
-3. After the studio's walk: write `PHONE-WALK-<date>.md` (SEEN / NOT SEEN / UNKNOWN), including the first confirmation email for a brand-new address, Publish time on the live site, and the public gallery page.
-4. Later:
-   - the governor's decision on the Doctrine candidate;
-   - `DOCTRINE_READ_TOKEN`;
-   - a sweep/standard plugin so the gate follows into every session;
-   - non-text contrast (WCAG 1.4.11);
-   - decision C;
-   - the report route;
-   - the live operator account;
-   - a "Continue" tap before confirming email links (scanners can spend them);
-   - a server-side create key for works (double Publish);
-   - JPEG-only vs iPhone HEIC;
-   - IS-M1 side-by-side images for PR #17 if the governor wants them.
+1. **Next action:** ask "Merge PR #18?". On the word: read the red CI log (confirm only `DOCTRINE_READ_TOKEN`), confirm Workers Builds green, merge with `expectedHeadSha`, fast-forward the branch, confirm live, then give the governor the studio message: "The photo problem is fixed. Please open your Studio and add your photos again. If anything doesn't work, send me a screenshot." Then check the Cloudflare log for the studio's upload (no exceededCpu).
+2. The anonymous-sign-in fix for the shared project (before the owner switches anonymous on): block anonymous identities at `maker_self_insert` and `failure_insert` (proposed `coalesce((auth.jwt() ->> 'is_anonymous')::boolean, false) = false`), prove with the local stack (enable anonymous sign-ins there), full process. Tell the other session (through the governor) when it is live.
+3. Curator role, once the governor chooses a scope.
+4. Receive Gemini and Grok findings; build `doctrine/review/FINDINGS.md`; reproduce each; fix by area.
+5. After the studio's walk: `PHONE-WALK-<date>.md`.
+6. Later: page CPU (~13 ms vs 10 ms on Free); real-device checks (iPhone Safari iOS 15–17, mid-range Android Chrome, 48–50 MP photos); bucket size/type limits; Doctrine candidate; `DOCTRINE_READ_TOKEN`; report route; live operator account; "Continue" tap before confirm links; HEIC on Android; decision C; the missing Title field.
 
 ## 12. Open questions ⚠️
-1. **Merge PR #17?** (Yes / not yet). Asked, no answer yet.
-2. **Doctrine candidate H-INTERFACE-001:** accept, modify or reject? (accept / modify / later)
-3. **`DOCTRINE_READ_TOKEN`:** created as a Thegallery repository secret (read-only on `builders-doctrine`)? (yes / not yet)
-4. **Live operator account:** does one exist? (yes / no / don't know)
-5. **Sweep + standard plugin** on the account so the gate follows into every session? (yes / later)
-6. **PR #17 design review:** want a design skill run and IS-M1 side-by-side images before merge? (yes / no)
-7. **Carried:**
-   - R1 "save on pick" vs "draft saved on Save";
-   - live migration for "no untitled publish";
-   - uploads over 12 MB lose the label;
-   - JPEG-only vs iPhone HEIC;
-   - foundation conflicts §4 vs §10 and §5 vs §11;
-   - field-error colour;
-   - restore Ahoy and treksfit-prod;
-   - rotate test credentials after testing;
-   - decision C;
-   - an email scanner can spend the confirmation link;
-   - a retried Publish could create a second work;
-   - Supabase auth email rate limit and Resend plan limit for the live project (UNKNOWN).
+1. **Merge PR #18?** (yes / not yet)
+2. **Curator scope:** A taste gatekeeper (reverses GAL-OD-03, GAL-14, GAL-R10) / **B admission steward (recommended:** reviews join requests against the participation rules only, approve or decline with reason and appeal, no public badge; amends OD-03) / C inviter (invitations only).
+3. **Pending makers may prepare works privately before approval?** (yes / no)
+4. **Start the anonymous-sign-in fix now?** (go / wait)
+5. **Claude's own live-behaviour review (step 3c, including read-only anonymous checks of the live site)?** (yes / no)
+6. **Dashboard screenshots for the review** (backups, auth settings, rate limits, Resend limits, operator account): now / later.
+7. Carried: Doctrine candidate H-INTERFACE-001 (accept / modify / later); `DOCTRINE_READ_TOKEN` (yes / not yet); live operator account (yes / no / don't know); sweep + standard plugin (yes / later); PR #17 after-the-fact design review (yes / no); decision C; rotate test credentials; Supabase auth email rate limit and Resend plan limit (UNKNOWN); shared Free-plan quotas (500 MB DB, 1 GB storage, 5 GB egress) across all apps on `thegallery`; shared email templates would send other apps' sign-ups as "The Gallery".
 
 ## 13. Re-attach checklist
-- [ ] Nothing has to be attached. This file is committed at `doctrine/handoffs/handoff-the-gallery.md` on the working branch `claude/dreamy-lamport-f7efnw` (and reaches the default branch when PR #17 merges). Open the new session on `r959qp5qwr-web/Thegallery` with `builders-doctrine` beside it, in environment "The Gallery (with Doctrine)", and point it to this file (or attach it).
+- [ ] Nothing has to be attached. This file is committed at `doctrine/handoffs/handoff-the-gallery.md` on `claude/modest-wozniak-rhqebe` (PR #18). Open the new session on `r959qp5qwr-web/Thegallery` with `builders-doctrine` beside it, in environment "The Gallery (with Doctrine)", and point it to this file.
+- [ ] Optional: the review pack zip (`the-gallery-review-pack-43a97e8.zip`) if the governor wants it re-sent; otherwise rebuild it with `scripts/review-pack.py` at a clean commit.
+- [ ] Gemini's and Grok's findings files, when they exist.
 
 ---
-<sub>Audit: 13/13 sections · 32 rules · 42 corrections · 125 data points · secrets removed: yes · generated by active-memory</sub>
+<sub>Audit: 13/13 sections · 34 rules · 47 corrections · 140 data points · secrets removed: yes · generated by active-memory</sub>

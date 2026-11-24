@@ -25,12 +25,13 @@ been fixed must not recur.
 | E06 | 2026-11-10 | The Gallery | Join step 2: "Fonts too small" | C3 | STANDARD IS-T2 (labels 16), IS-T4 (12 floor) | IS-T2, IS-T4 | journey 15 FAIL: labels 13 px, "Step 2 of 3" 11.5 px |
 | E07 | 2026-11-10 | The Gallery | Join step 2: "Items too cramped together" | C3 | STANDARD IS-F1 (32 px between fields) | IS-F1 | journey 15 FAIL: 24 px between fields |
 | E08 | 2026-11-11 | The Gallery | Join, real sign-up: "it says the email has been sent, no email received" (the address already had an account) | C3 (product) | APP_RULES R13 | R13 | journey 14 FAIL on `/makers/check-email`: no link to sign in, none to reset. Adding the expired state to the profile (C1) then found IS-T5 line height 1.35 on `.flow-line`, fixed |
+| E09 | 2026-11-23 | The Gallery | Real studio: "not able to upload their pics" (Studio draft "No image", "That did not go through") | C1 coverage (runtime) | journey 17 (server budget) | — | journey 17 FAIL on the old code: codec in the server build; 1,044 ms server CPU for one photo against 400 ms. Live log: "Worker exceeded CPU time limit" on both uploads |
 
 ## Counts
 
 | Class | Escapes | Since the mechanism (2026-11-10) |
 |---|---|---|
-| C1 coverage | 2 (E03, E05) | 0 |
+| C1 coverage | 3 (E03, E05, E09) | 1 |
 | C2 measure | 1 (E04) | 0 |
 | C3 standard | 7 (E01, E02, E03, E05, E06, E07, E08) | 1 |
 | C4 judgement | 1 (E01) | 0 |

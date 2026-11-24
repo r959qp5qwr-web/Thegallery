@@ -11,9 +11,9 @@
  *
  * Run: NODE_USE_ENV_PROXY=1 node --experimental-strip-types e2e/support/seed-test-project.ts
  */
-import { sql, TEST_REF, MAKER_A, MAKER_B, OPERATOR } from "../helpers.ts";
+import { sql, TEST_API, MAKER_A, MAKER_B, OPERATOR } from "../helpers.ts";
 
-const AUTH = `https://${TEST_REF}.supabase.co/auth/v1`;
+const AUTH = `${TEST_API()}/auth/v1`;
 // The publishable key is meant to be public; it is the same value the app is given.
 const KEY = process.env.SUPABASE_PUBLISHABLE_KEY ?? "sb_publishable_0KNPc4WopVsLNttgeBD43A_O6yyDiJd";
 const REDIRECT = `${process.env.GALLERY_BASE_URL ?? "http://127.0.0.1:3100"}/makers/confirm`;

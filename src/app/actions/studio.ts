@@ -3,10 +3,12 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { currentAccount } from "@/lib/auth";
 import { client } from "@/lib/supabase";
-import { ingestImage } from "@/lib/storage";
+import { BUCKET } from "@/lib/storage";
 import { validateRoute } from "@/lib/format";
 
-export type FormState = { error?: string; notice?: string; field?: string; values?: Record<string, string> };
+export type FormState = { error?: string; notice?: string; field?: string; values?: Record<string, string>;
+  /** A draft created for a photo the browser will now send (createWorkAction). */
+  created?: string };
 
 async function requireActiveMaker() {
   const account = await currentAccount();
@@ -254,8 +256,11 @@ export async function createWorkAction(_prev: FormState, form: FormData): Promis
   // Decision R1 (2026-11-06): the draft is created on the first image. A maker who starts with a
   // picture is not stopped for a title; the draft is named for now and the title is asked for
   // before publishing. Without an image, the title is required as before.
-  const file = form.get("image");
-  const hasImage = file instanceof File && file.size > 0;
+  //
+  // The photograph itself never comes here. The maker's browser has already prepared it
+  // (src/lib/photo-prepare.ts) and says so with `photo=1`; once the draft exists, the browser
+  // sends the files straight to storage and then calls finishNewWorkAction (ledger GAL-L0044).
+  const hasImage = form.get("photo") === "1";
   // Drawing board 13: the docked Publish creates and publishes in one go; the header's Save
   // draft keeps it in the Studio. Publishing needs a photograph and a title.
   const publishing = form.get("intent") === "publish";
@@ -281,25 +286,30 @@ export async function createWorkAction(_prev: FormState, form: FormData): Promis
 
   if (error || !data?.length) return { error: "We could not save that work. Nothing was created." + again, values: typed(form) };
   const id = (data[0] as { id: string }).id;
-  // The image goes up after the draft exists; if it fails, the draft is kept and the reason is
-  // carried to the work's page, never lost behind a generic notice.
-  if (hasImage) {
-    const problem = await storeImage(db, id, file as File, String(form.get("alt_text") ?? "").trim() || null);
-    // A code, never the message: text in a URL can be planted by anyone who sends a link.
-    if (problem) {
-      const code = problem.includes("12 MB") ? "too_large" : problem.includes("not yours") ? "not_yours" : "failed";
-      redirect(`/studio/works/${id}?created=1&image_problem=${code}`);
-    }
-    if (publishing) {
-      // One key for this one press: the work was created just now, so a repeat cannot meet it.
-      const { error: pubError } = await db.rpc("publish_work", { p_work_id: id, p_intent_key: `publish:${id}:${crypto.randomUUID()}` });
-      revalidatePath("/", "layout");
-      // A refused publish leaves a saved draft, and the work's page says what is missing.
-      redirect(pubError ? `/studio/works/${id}?created=image&not_published=1` : `/studio/works/${id}?published=1`);
-    }
-    redirect(`/studio/works/${id}?created=image`);
-  }
+  if (hasImage) return { created: id };
   redirect(`/studio/works/${id}?created=1`);
+}
+
+/** After the browser has sent a new work's first photo (or failed to): publish if that was the
+ *  press, and land on the work's page saying what happened. A failed photo keeps the draft and
+ *  says so there, never behind a generic notice. */
+export async function finishNewWorkAction(input: { workId: string; publishing: boolean; photoOk: boolean }): Promise<void> {
+  await requireActiveMaker();
+  const id = String(input.workId);
+  if (!/^[0-9a-f-]{36}$/i.test(id)) redirect("/studio");
+  if (!input.photoOk) redirect(`/studio/works/${id}?created=1&image_problem=failed`);
+  if (input.publishing) {
+    const db = await client();
+    // The same rule as publishWorkAction: a work is never published as "Untitled work".
+    const { data: named } = await db.from("works").select("title").eq("id", id).limit(1);
+    if ((named?.[0] as { title: string } | undefined)?.title === UNTITLED) redirect(`/studio/works/${id}?created=image`);
+    // One key for this one press: the work was created just now, so a repeat cannot meet it.
+    const { error: pubError } = await db.rpc("publish_work", { p_work_id: id, p_intent_key: `publish:${id}:${crypto.randomUUID()}` });
+    revalidatePath("/", "layout");
+    // A refused publish leaves a saved draft, and the work's page says what is missing.
+    redirect(pubError ? `/studio/works/${id}?created=image&not_published=1` : `/studio/works/${id}?published=1`);
+  }
+  redirect(`/studio/works/${id}?created=image`);
 }
 
 /** Correct a work's label after it was saved. Without this a typo in a title or a price was
@@ -317,47 +327,88 @@ export async function updateWorkLabelAction(_prev: FormState, form: FormData): P
   return { notice: "The label is updated. Every page that shows this work now shows the change." };
 }
 
-type Db = Awaited<ReturnType<typeof client>>;
+/** The files a prepared photo is made of (src/lib/photo-prepare.ts). Nothing else is accepted. */
+const PHOTO_FILES = ["original.jpg", "w320.jpg", "w640.jpg", "w1280.jpg", "w1920.jpg"] as const;
+const MAX_FILE_BYTES = 6 * 1024 * 1024;   // a 3000 px JPEG at quality 0.9 is well under this
 
-/** Store one image for a work: the row first (`uploading`), then the bytes, then `ready` — or
- *  `failed`, visible as itself, never blocking the other images (DOMAIN_MODEL §2.4). */
-async function storeImage(db: Db, workId: string, file: File, alt: string | null): Promise<string | null> {
-  if (file.size > 12 * 1024 * 1024) return "That image is larger than 12 MB. Export it smaller.";
-  // The storage key is chosen HERE and written before a single byte is uploaded. The storage
-  // policy that decides whether an object is this maker's own looks the key up in this table,
-  // so a key written afterwards would make the maker's own upload unauthorised.
+export type UploadTicket =
+  | { error: string }
+  | { imageId: string; uploads: { name: string; url: string }[] };
+
+/**
+ * Step 1 of adding a photo. The maker's browser has already made the JPEGs; this records the
+ * image as `uploading` and hands back one signed upload address per file, so the bytes go
+ * straight from the browser to storage and never through this Worker (10 ms CPU, Free plan).
+ * The storage policy admits an object only under a key this maker's own image row holds, and
+ * the row is written first, exactly as before.
+ */
+export async function beginPhotoAction(input:
+  { workId: string; width: number; height: number; alt: string | null; files: string[] }): Promise<UploadTicket> {
+  await requireActiveMaker();
+  const { workId, width, height } = input;
+  const files = [...new Set(input.files)];
+  if (!files.includes("original.jpg") || !files.includes("w320.jpg")
+      || files.some((f) => !(PHOTO_FILES as readonly string[]).includes(f))) {
+    return { error: "That photo was not prepared the way the Studio expects. Reload the page and try again." };
+  }
+  if (!Number.isInteger(width) || !Number.isInteger(height) || width < 200 || height < 200 || width > 3000 || height > 3000) {
+    return { error: "That photo's size could not be read. Reload the page and try again." };
+  }
+  const db = await client();
   const storageKey = crypto.randomUUID();
   const { data: siblings } = await db.from("work_images").select("position").eq("work_id", workId);
-  const { data: created, error: insertError } = await db.from("work_images").insert({
+  const { data: created, error } = await db.from("work_images").insert({
     work_id: workId, position: await nextPosition(siblings as { position: number }[] | null),
-    storage_key: storageKey, width: 0, height: 0, alt_text: alt, state: "uploading",
+    storage_key: storageKey, width, height, alt_text: input.alt?.trim() || null, state: "uploading",
   }).select("id").limit(1);
-  if (insertError || !created?.length) return "That work is not yours to add images to.";
+  if (error || !created?.length) return { error: "That work is not yours to add photos to." };
   const imageId = (created[0] as { id: string }).id;
-  try {
-    const bytes = new Uint8Array(await file.arrayBuffer());
-    const ingested = await ingestImage(bytes, db, storageKey);
-    await db.from("work_images").update({
-      width: ingested.width, height: ingested.height, variants: ingested.variants, state: "ready",
-    }).eq("id", imageId);
-    return null;
-  } catch (e) {
-    await db.from("work_images").update({ state: "failed" }).eq("id", imageId);
-    const why = e instanceof Error ? e.message : "we could not read that file";
-    return `That image did not go up — ${why}. The other images are untouched; try again.`;
+
+  const uploads: { name: string; url: string }[] = [];
+  for (const name of files) {
+    const { data, error: signError } = await db.storage.from(BUCKET()).createSignedUploadUrl(`${storageKey}/${name}`);
+    if (signError || !data) {
+      await db.from("work_images").update({ state: "failed" }).eq("id", imageId);
+      return { error: "The photo could not be sent just now. Nothing else changed; try again." };
+    }
+    uploads.push({ name, url: data.signedUrl });
   }
+  return { imageId, uploads };
 }
 
-export async function addImageAction(_prev: FormState, form: FormData): Promise<FormState> {
+/**
+ * Step 2. The browser says the files are sent; this checks they are really there, at a sensible
+ * size, before the image counts as `ready`. A browser that stops half-way leaves `failed`, which
+ * the work's page shows as itself, never blocking the other images (DOMAIN_MODEL §2.4).
+ */
+export async function finishPhotoAction(input: { imageId: string; workId: string; ok: boolean }):
+  Promise<{ error?: string }> {
   await requireActiveMaker();
-  const workId = String(form.get("work_id") ?? "");
-  const alt = String(form.get("alt_text") ?? "").trim() || null;
-  const file = form.get("image");
-  if (!(file instanceof File) || file.size === 0) return { error: "Choose an image file." };
-  const problem = await storeImage(await client(), workId, file, alt);
-  if (problem) return { error: problem };
-  revalidatePath(`/studio/works/${workId}`);
-  return { notice: "Image added." };
+  const db = await client();
+  const { data: rows } = await db.from("work_images").select("id, storage_key, state")
+    .eq("id", input.imageId).eq("work_id", input.workId).limit(1);
+  const row = rows?.[0] as { id: string; storage_key: string; state: string } | undefined;
+  if (!row) return { error: "That photo is not part of this work." };
+  const fail = async (msg: string) => {
+    await db.from("work_images").update({ state: "failed" }).eq("id", row.id);
+    return { error: msg };
+  };
+  if (!input.ok) return fail("The photo did not finish sending. Remove it and try again; the other photos are safe.");
+  const { data: listed } = await db.storage.from(BUCKET()).list(row.storage_key);
+  const present = new Map((listed ?? []).map((o) => [o.name, Number((o.metadata as { size?: number } | null)?.size ?? 0)]));
+  if (!present.get("original.jpg") || !present.get("w320.jpg")) {
+    return fail("The photo did not finish sending. Remove it and try again; the other photos are safe.");
+  }
+  if ([...present.values()].some((size) => size <= 0 || size > MAX_FILE_BYTES)) {
+    return fail("That photo arrived damaged. Remove it and try again.");
+  }
+  const variants: Record<string, string> = {};
+  for (const name of present.keys()) if (/^w\d+\.jpg$/.test(name)) variants[name.slice(0, -4)] = name;
+  const { data: updated } = await db.from("work_images").update({ state: "ready", variants }).eq("id", row.id).select("id");
+  // Under row-level security a refused update is silent: no rows, no error.
+  if (!updated?.length) return { error: "We could not save the photo. Reload the page and try again." };
+  revalidatePath(`/studio/works/${input.workId}`);
+  return {};
 }
 
 export async function removeImageAction(form: FormData): Promise<void> {

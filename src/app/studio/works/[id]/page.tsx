@@ -6,8 +6,9 @@ import { currentAccount } from "@/lib/auth";
 import { client } from "@/lib/supabase";
 import { StudioHeader, Band } from "@/components/Chrome";
 import { ActionForm, Field } from "@/components/ActionForm";
+import { AddPhotoForm } from "@/components/PhotoForms";
 import { PublishButton } from "@/components/PublishButton";
-import { addImageAction, removeImageAction, setStatusAction, retireWorkAction, restoreWorkAction,
+import { removeImageAction, setStatusAction, retireWorkAction, restoreWorkAction,
          updateWorkLabelAction, hangFirstAction } from "@/app/actions/studio";
 import { STATUS_LABEL, STATUS_ORDER, price, labelPrice, dimensions } from "@/lib/format";
 import { materials } from "@/lib/queries";
@@ -17,9 +18,8 @@ export const dynamic = "force-dynamic";
 
 /** What the first image's failure means, by code (the URL carries only the code). */
 const IMAGE_PROBLEM: Record<string, string> = {
-  too_large: "That image is larger than 12 MB; export it smaller.",
   not_yours: "That work could not take images.",
-  failed: "We could not read that file; a JPEG works best.",
+  failed: "The photo did not finish sending.",
 };
 export const metadata = { title: "Your work" };
 
@@ -48,10 +48,17 @@ export default async function EditWork(
     .eq("id", id).limit(1);
   const w = (workRows?.[0] as unknown as Row | undefined) ?? null;
   const { data: imageRows } = w
-    ? await db.from("work_images").select("id,position,width,height,alt_text,state")
+    ? await db.from("work_images").select("id,position,width,height,alt_text,state,created_at")
         .eq("work_id", id).order("position")
     : { data: [] };
-  const data = w ? { work: w, images: (imageRows ?? []) as unknown as Img[] } : null;
+  // An upload the browser abandoned (a phone switching apps, a closed tab) never reports back.
+  // After ten minutes it is shown as what it is, failed, so the maker is told to remove it and
+  // try again instead of watching "Uploading" forever (ledger GAL-L0044).
+  const STUCK_MS = 10 * 60 * 1000;
+  const now = Date.now();
+  const settled = ((imageRows ?? []) as unknown as (Img & { created_at: string })[]).map((i) =>
+    i.state === "uploading" && now - Date.parse(i.created_at) > STUCK_MS ? { ...i, state: "failed" } : i);
+  const data = w ? { work: w, images: settled as unknown as Img[] } : null;
   if (!data) notFound();
   const { work, images } = data;
 
@@ -166,12 +173,11 @@ export default async function EditWork(
         </Band>
       ) : null}
 
-      <ActionForm action={addImageAction} submitLabel="Add image" busyLabel="Uploading…"
-                  hidden={{ work_id: work.id }}>
+      <AddPhotoForm workId={work.id}>
         <PhotoPicker required help={<>Portrait, landscape or square: the shape you shot is the shape shown.
           Nothing is cropped.</>} />
         <Field name="alt_text" label="Describe the image" help="For anyone who cannot see it." />
-      </ActionForm>
+      </AddPhotoForm>
 
       <div className="group" style={{ margin: "28px var(--pad-x-studio) 0" }}>
         <div className="ghead">{work.lifecycle === "published" ? "Status" : "Publish"}</div>
