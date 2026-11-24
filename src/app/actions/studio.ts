@@ -300,6 +300,9 @@ export async function finishNewWorkAction(input: { workId: string; publishing: b
   if (!input.photoOk) redirect(`/studio/works/${id}?created=1&image_problem=failed`);
   if (input.publishing) {
     const db = await client();
+    // The same rule as publishWorkAction: a work is never published as "Untitled work".
+    const { data: named } = await db.from("works").select("title").eq("id", id).limit(1);
+    if ((named?.[0] as { title: string } | undefined)?.title === UNTITLED) redirect(`/studio/works/${id}?created=image`);
     // One key for this one press: the work was created just now, so a repeat cannot meet it.
     const { error: pubError } = await db.rpc("publish_work", { p_work_id: id, p_intent_key: `publish:${id}:${crypto.randomUUID()}` });
     revalidatePath("/", "layout");
@@ -401,7 +404,9 @@ export async function finishPhotoAction(input: { imageId: string; workId: string
   }
   const variants: Record<string, string> = {};
   for (const name of present.keys()) if (/^w\d+\.jpg$/.test(name)) variants[name.slice(0, -4)] = name;
-  await db.from("work_images").update({ state: "ready", variants }).eq("id", row.id);
+  const { data: updated } = await db.from("work_images").update({ state: "ready", variants }).eq("id", row.id).select("id");
+  // Under row-level security a refused update is silent: no rows, no error.
+  if (!updated?.length) return { error: "We could not save the photo. Reload the page and try again." };
   revalidatePath(`/studio/works/${input.workId}`);
   return {};
 }

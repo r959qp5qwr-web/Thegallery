@@ -48,10 +48,17 @@ export default async function EditWork(
     .eq("id", id).limit(1);
   const w = (workRows?.[0] as unknown as Row | undefined) ?? null;
   const { data: imageRows } = w
-    ? await db.from("work_images").select("id,position,width,height,alt_text,state")
+    ? await db.from("work_images").select("id,position,width,height,alt_text,state,created_at")
         .eq("work_id", id).order("position")
     : { data: [] };
-  const data = w ? { work: w, images: (imageRows ?? []) as unknown as Img[] } : null;
+  // An upload the browser abandoned (a phone switching apps, a closed tab) never reports back.
+  // After ten minutes it is shown as what it is, failed, so the maker is told to remove it and
+  // try again instead of watching "Uploading" forever (ledger GAL-L0044).
+  const STUCK_MS = 10 * 60 * 1000;
+  const now = Date.now();
+  const settled = ((imageRows ?? []) as unknown as (Img & { created_at: string })[]).map((i) =>
+    i.state === "uploading" && now - Date.parse(i.created_at) > STUCK_MS ? { ...i, state: "failed" } : i);
+  const data = w ? { work: w, images: settled as unknown as Img[] } : null;
   if (!data) notFound();
   const { work, images } = data;
 

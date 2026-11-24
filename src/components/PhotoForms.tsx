@@ -1,4 +1,5 @@
 "use client";
+import { useRef } from "react";
 import { useRouter } from "next/navigation";
 import { ActionForm, type FormState } from "./ActionForm";
 import { preparePhoto, PhotoProblem, type PreparedPhoto } from "@/lib/photo-prepare";
@@ -13,20 +14,31 @@ import { beginPhotoAction, finishPhotoAction, createWorkAction, finishNewWorkAct
  * check and record it. Each server step is a few milliseconds of work, inside the Worker's 10 ms.
  */
 
+/** Next delivers a server action's redirect (and its not-found) by throwing to the caller. Those
+ *  are navigation, not failure: they must pass through every catch below. */
+function rethrowNavigation(e: unknown): void {
+  const digest = (e as { digest?: unknown } | null)?.digest;
+  if (typeof digest === "string" && /^NEXT_(REDIRECT|HTTP_ERROR_FALLBACK|NOT_FOUND)/.test(digest)) throw e;
+}
+
 function chosenFile(form: FormData): File | null {
   const f = form.get("image");
   return f instanceof File && f.size > 0 ? f : null;
 }
 
 function problemText(e: unknown): string {
-  return e instanceof PhotoProblem ? e.message : "We could not prepare that photo. Try again, or choose another.";
+  return e instanceof PhotoProblem ? e.message : "We could not get that photo ready. Try again, or choose another.";
 }
 
 /** Reserve, send each file straight to storage, confirm. Null when the photo is ready. */
 async function sendPhoto(workId: string, photo: PreparedPhoto, alt: string | null): Promise<string | null> {
-  const ticket = await beginPhotoAction({
-    workId, width: photo.width, height: photo.height, alt, files: photo.files.map((f) => f.name),
-  });
+  const lost = "The photo did not finish sending. Your work is saved; try the photo again.";
+  let ticket: Awaited<ReturnType<typeof beginPhotoAction>>;
+  try {
+    ticket = await beginPhotoAction({
+      workId, width: photo.width, height: photo.height, alt, files: photo.files.map((f) => f.name),
+    });
+  } catch (e) { rethrowNavigation(e); return lost; }    // a dropped connection: nothing was reserved, or it shows as uploading
   if ("error" in ticket) return ticket.error;
   let ok = true;
   for (const f of photo.files) {
@@ -36,8 +48,16 @@ async function sendPhoto(workId: string, photo: PreparedPhoto, alt: string | nul
       if (!res?.ok) { ok = false; break; }
     } catch { ok = false; break; }
   }
-  const done = await finishPhotoAction({ imageId: ticket.imageId, workId, ok });
-  return done.error ?? null;
+  try {
+    const done = await finishPhotoAction({ imageId: ticket.imageId, workId, ok });
+    return done.error ?? null;
+  } catch (e) {
+    rethrowNavigation(e);
+    // Best effort: mark it failed so the page says so; the page also treats a long-stuck
+    // upload as failed.
+    try { await finishPhotoAction({ imageId: ticket.imageId, workId, ok: false }); } catch { /* shown as stuck */ }
+    return lost;
+  }
 }
 
 /** The work page's "Add image". */
@@ -53,7 +73,7 @@ export function AddPhotoForm({ workId, children }: { workId: string; children: R
     }
     const problem = await sendPhoto(workId, photo, alt);
     router.refresh();
-    return problem ? { error: problem } : { notice: "Image added." };
+    return problem ? { error: problem, values: { alt_text: alt ?? "" } } : { notice: "Image added." };
   }
   return (
     <ActionForm action={add} submitLabel="Add image" busyLabel="Uploading…">
@@ -66,7 +86,10 @@ export function AddPhotoForm({ workId, children }: { workId: string; children: R
  *  unreadable file is refused with nothing created; the draft is then created, the photo sent,
  *  and the server lands the maker on the work's page (published, or saved as a draft). */
 export function NewWorkForm({ children }: { children: React.ReactNode }) {
+  // Once a draft exists the page is leaving; a second press must not create a second work.
+  const leaving = useRef(false);
   async function create(prev: FormState, form: FormData): Promise<FormState> {
+    if (leaving.current) return new Promise<FormState>(() => {});
     const file = chosenFile(form);
     const alt = String(form.get("alt_text") ?? "").trim() || null;
     let photo: PreparedPhoto | null = null;
@@ -82,9 +105,18 @@ export function NewWorkForm({ children }: { children: React.ReactNode }) {
     if (photo) sent.set("photo", "1");
     const state = await createWorkAction(prev, sent);
     if (!state.created || !photo) return state;
-    const problem = await sendPhoto(state.created, photo, alt);
-    await finishNewWorkAction({ workId: state.created, publishing: form.get("intent") === "publish", photoOk: !problem });
-    return {};
+    leaving.current = true;
+    const id = state.created;
+    const problem = await sendPhoto(id, photo, alt);
+    try {
+      await finishNewWorkAction({ workId: id, publishing: form.get("intent") === "publish", photoOk: !problem });
+    } catch (e) {
+      rethrowNavigation(e);
+      // The draft exists; land on it rather than on an error page that invites a second work.
+      window.location.assign(`/studio/works/${id}?created=1&image_problem=failed`);
+    }
+    // Navigation is under way: never settle, so the form neither resets nor accepts another press.
+    return new Promise<FormState>(() => {});
   }
   return (
     <ActionForm action={create} submitLabel="Publish" busyLabel="Publishing…" id="new-work"

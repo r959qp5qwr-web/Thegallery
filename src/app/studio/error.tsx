@@ -11,8 +11,8 @@ export default function StudioError({ reset }: { error: Error; reset: () => void
       <StudioHeader title="Studio" back="/studio" />
       <main id="main" tabIndex={-1}>
         <Band kind="fail" label="That did not go through">
-          Nothing you had already saved is lost. Try again; if it happens again, come back to it in a
-          few minutes.
+          Nothing you had already saved is lost. Try again. If it keeps happening, come back in a few
+          minutes.
         </Band>
         <div className="inline-actions">
           <button className="btn" type="button" onClick={() => reset()}>Try again</button>
